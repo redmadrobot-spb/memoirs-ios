@@ -6,11 +6,181 @@
 //  Copyright © 2019 Redmadrobot. All rights reserved.
 //
 
-public protocol Logger {
-    typealias Key = Int
+/// The `Robolog` is a global point to call log methods.
+/// The `Robolog` redirects everyone log event to all `(Logger)` - implementations.
+public enum Robolog {
+    private static var logQueue: DispatchQueue?
+    private static var loggers: Set<AnyLogger> = []
 
+    /// `configure` is a one-time configuration function which globally setup logging system
+    /// `configure` can be called at maximum once, calling it more than once will
+    /// lead to undefined behaviour, most likely a crash.
+    /// - Parameter label: Unique label
+    public static func configure(label: String) {
+        precondition(logQueue == nil, "Robolog can only be configured once")
+        logQueue = DispatchQueue(label: label, attributes: .concurrent)
+    }
+
+    /// Adding `(Logger)` - implementation which will handle everyone log event
+    /// - Parameter logger: `(Logger)` - implementation which should be added
+    public static func add(logger: Logger) {
+        checkReadiness()
+        logQueue?.async(flags: .barrier) {
+            let typeErased = AnyLogger(source: logger)
+            Self.loggers.insert(typeErased)
+        }
+    }
+
+    /// Adding several `(Logger)` - implementations which will handle everyone log event
+    /// - Parameter loggers: Array of `(Logger)` - implementations which should be added
+    public static func add(loggers: [Logger]) {
+        checkReadiness()
+        logQueue?.async(flags: .barrier) {
+            let typeErased = loggers.reduce(into: Set<AnyLogger>()) { $0.insert(AnyLogger(source: $1)) }
+            Self.loggers.formUnion(typeErased)
+        }
+    }
+
+    /// Removing concrete `(Logger)` - implementation
+    /// - Parameter logger: `Logger` which should be removed
+    public static func remove(logger: Logger) {
+        checkReadiness()
+        logQueue?.async(flags: .barrier) {
+            let typeErased = AnyLogger(source: logger)
+            Self.loggers.remove(typeErased)
+        }
+    }
+
+    /// Method that reports the log event with `verbose` log-level.
+    /// - Parameters:
+    ///   - file: The path to the file from which the method was called
+    ///   - function: The function name from which the method was called
+    ///   - line: The line of code from which the method was called
+    ///   - label: Label describing log catergory
+    ///   - message: Message describing log event
+    ///   - meta: Additional log information in key-value format
     @inlinable
-    func log(
+    public static func verbose(
+        file: StaticString = #file,
+        function: StaticString = #function,
+        line: UInt = #line,
+        label: @autoclosure () -> String? = nil,
+        message: @autoclosure () -> String,
+        meta: @autoclosure () -> [String: Any]? = nil
+    ) {
+        log(priority: .verbose, file: file, function: function, line: line, label: label(), message: message(), meta: meta())
+    }
+
+    /// Method that reports the log event with `debug` log-level.
+    /// - Parameters:
+    ///   - file: The path to the file from which the method was called
+    ///   - function: The function name from which the method was called
+    ///   - line: The line of code from which the method was called
+    ///   - label: Label describing log catergory
+    ///   - message: Message describing log event
+    ///   - meta: Additional log information in key-value format
+    @inlinable
+    public static func debug(
+        file: StaticString = #file,
+        function: StaticString = #function,
+        line: UInt = #line,
+        label: @autoclosure () -> String? = nil,
+        message: @autoclosure () -> String,
+        meta: @autoclosure () -> [String: Any]? = nil
+    ) {
+        log(priority: .debug, file: file, function: function, line: line, label: label(), message: message(), meta: meta())
+    }
+
+    /// Method that reports the log event with `info` log-level.
+    /// - Parameters:
+    ///   - file: The path to the file from which the method was called
+    ///   - function: The function name from which the method was called
+    ///   - line: The line of code from which the method was called
+    ///   - label: Label describing log catergory
+    ///   - message: Message describing log event
+    ///   - meta: Additional log information in key-value format
+    @inlinable
+    public static func info(
+        file: StaticString = #file,
+        function: StaticString = #function,
+        line: UInt = #line,
+        label: @autoclosure () -> String? = nil,
+        message: @autoclosure () -> String,
+        meta: @autoclosure () -> [String: Any]? = nil
+    ) {
+        log(priority: .info, file: file, function: function, line: line, label: label(), message: message(), meta: meta())
+    }
+
+    /// Method that reports the log event with `warning` log-level.
+    /// - Parameters:
+    ///   - file: The path to the file from which the method was called
+    ///   - function: The function name from which the method was called
+    ///   - line: The line of code from which the method was called
+    ///   - label: Label describing log catergory
+    ///   - message: Message describing log event
+    ///   - meta: Additional log information in key-value format
+    @inlinable
+    public static func warning(
+        file: StaticString = #file,
+        function: StaticString = #function,
+        line: UInt = #line,
+        label: @autoclosure () -> String? = nil,
+        message: @autoclosure () -> String,
+        meta: @autoclosure () -> [String: Any]? = nil
+    ) {
+        log(priority: .warning, file: file, function: function, line: line, label: label(), message: message(), meta: meta())
+    }
+
+    /// Method that reports the log event with `error` log-level.
+    /// - Parameters:
+    ///   - file: The path to the file from which the method was called
+    ///   - function: The function name from which the method was called
+    ///   - line: The line of code from which the method was called
+    ///   - label: Label describing log catergory
+    ///   - message: Message describing log event
+    ///   - meta: Additional log information in key-value format
+    @inlinable
+    public static func error(
+        file: StaticString = #file,
+        function: StaticString = #function,
+        line: UInt = #line,
+        label: @autoclosure () -> String? = nil,
+        message: @autoclosure () -> String,
+        meta: @autoclosure () -> [String: Any]? = nil
+    ) {
+        log(priority: .error, file: file, function: function, line: line, label: label(), message: message(), meta: meta())
+    }
+
+    /// Method that reports the log event with `assert` log-level.
+    /// - Parameters:
+    ///   - file: The path to the file from which the method was called
+    ///   - function: The function name from which the method was called
+    ///   - line: The line of code from which the method was called
+    ///   - label: Label describing log catergory
+    ///   - message: Message describing log event
+    ///   - meta: Additional log information in key-value format
+    @inlinable
+    public static func assert(
+        file: StaticString = #file,
+        function: StaticString = #function,
+        line: UInt = #line,
+        label: @autoclosure () -> String? = nil,
+        message: @autoclosure () -> String,
+        meta: @autoclosure () -> [String: Any]? = nil
+    ) {
+        log(priority: .assert, file: file, function: function, line: line, label: label(), message: message(), meta: meta())
+    }
+
+    /// Common method that reports the log event.
+    /// - Parameters:
+    ///   - priority: Log-level
+    ///   - file: The path to the file from which the method was called
+    ///   - function: The function name from which the method was called
+    ///   - line: The line of code from which the method was called
+    ///   - label: Label describing log catergory
+    ///   - message: Message describing log event
+    ///   - meta: Additional log information in key-value format
+    public static func log(
         priority: LogPriority,
         file: StaticString,
         function: StaticString,
@@ -18,178 +188,17 @@ public protocol Logger {
         label: @autoclosure () -> String?,
         message: @autoclosure () -> String,
         meta: @autoclosure () -> [String: Any]?
-    )
-}
-
-public enum LogPriority: UInt, CaseIterable {
-    case verbose = 0
-    case debug
-    case info
-    case warning
-    case error
-    case assert
-}
-
-extension LogPriority: Comparable {
-    public static func < (lhs: LogPriority, rhs: LogPriority) -> Bool {
-        return lhs.rawValue < rhs.rawValue
-    }
-}
-
-@usableFromInline
-struct AnyLogger {
-    let uuidHash: Int = UUID().hashValue
-    @usableFromInline
-    let rawLogger: Logger
-}
-
-extension AnyLogger: Hashable, Equatable {
-
-    @usableFromInline
-    static func == (lhs: AnyLogger, rhs: AnyLogger) -> Bool {
-        return lhs.uuidHash == rhs.uuidHash
-    }
-
-    @usableFromInline
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(uuidHash)
-    }
-}
-
-public enum Robolog {
-    @usableFromInline
-    static var logQueue: DispatchQueue!
-    @usableFromInline
-    static var loggers: Dictionary<Logger.Key, AnyLogger> = [ : ]
-
-    public static func add(logger: Logger) -> Logger.Key {
-        logQueue.sync {
-            let typeErased = AnyLogger(rawLogger: logger)
-            Self.loggers[typeErased.uuidHash] = typeErased
-            return typeErased.uuidHash
-        }
-    }
-
-    public static func add(loggers: [Logger]) -> Set<Logger.Key> {
-        logQueue.sync {
-            let typeErasedPairs = loggers.reduce(into: [Logger.Key: AnyLogger]()) { (dictionary, logger) in
-                let typeErased = AnyLogger(rawLogger: logger)
-                dictionary[typeErased.uuidHash] = typeErased
-            }
-            Self.loggers.merge(typeErasedPairs) { (current, _) in current }
-            return Set(typeErasedPairs.keys)
-        }
-    }
-
-    public static func removeLogger(by key: Logger.Key) {
-        logQueue.sync {
-            Self.loggers[key] = nil
-        }
-    }
-}
-
-public extension Robolog {
-    @inlinable
-    static func verbose(
-        file: StaticString = #file,
-        function: StaticString = #function,
-        line: UInt = #line,
-        label: @autoclosure () -> String? = nil,
-        message: @autoclosure () -> String,
-        meta: @autoclosure () -> [String: Any]? = nil
     ) {
-        Self.log(priority: .verbose, file: file, function: function, line: line, label: label(), message: message(), meta: meta())
-    }
-
-    @inlinable
-    static func debug(
-        file: StaticString = #file,
-        function: StaticString = #function,
-        line: UInt = #line,
-        label: @autoclosure () -> String? = nil,
-        message: @autoclosure () -> String,
-        meta: @autoclosure () -> [String: Any]? = nil
-    ) {
-        Self.log(priority: .debug, file: file, function: function, line: line, label: label(), message: message(), meta: meta())
-    }
-
-    @inlinable
-    static func info(
-        file: StaticString = #file,
-        function: StaticString = #function,
-        line: UInt = #line,
-        label: @autoclosure () -> String? = nil,
-        message: @autoclosure () -> String,
-        meta: @autoclosure () -> [String: Any]? = nil
-    ) {
-        Self.log(priority: .info, file: file, function: function, line: line, label: label(), message: message(), meta: meta())
-    }
-
-    @inlinable
-    static func warning(
-        file: StaticString = #file,
-        function: StaticString = #function,
-        line: UInt = #line,
-        label: @autoclosure () -> String? = nil,
-        message: @autoclosure () -> String,
-        meta: @autoclosure () -> [String: Any]? = nil
-    ) {
-        Self.log(priority: .warning, file: file, function: function, line: line, label: label(), message: message(), meta: meta())
-    }
-
-    @inlinable
-    static func error(
-        file: StaticString = #file,
-        function: StaticString = #function,
-        line: UInt = #line,
-        label: @autoclosure () -> String? = nil,
-        message: @autoclosure () -> String,
-        meta: @autoclosure () -> [String: Any]? = nil
-    ) {
-        Self.log(priority: .error, file: file, function: function, line: line, label: label(), message: message(), meta: meta())
-    }
-
-    @inlinable
-    static func assert(
-        file: StaticString = #file,
-        function: StaticString = #function,
-        line: UInt = #line,
-        label: @autoclosure () -> String? = nil,
-        message: @autoclosure () -> String,
-        meta: @autoclosure () -> [String: Any]? = nil
-    ) {
-        Self.log(priority: .assert, file: file, function: function, line: line, label: label(), message: message(), meta: meta())
-    }
-
-    @inlinable
-    static func log(
-        priority: LogPriority,
-        file: StaticString = #file,
-        function: StaticString = #function,
-        line: UInt = #line,
-        label: @autoclosure () -> String? = nil,
-        message: @autoclosure () -> String,
-        meta: @autoclosure () -> [String: Any]? = nil
-    ) {
-        Self.logQueue.sync {
-            Self.loggers.values.forEach { anyLogger in
-                anyLogger.rawLogger
+        checkReadiness()
+        logQueue?.sync {
+            loggers.forEach { anyLogger in
+                anyLogger.source
                     .log(priority: priority, file: file, function: function, line: line, label: label(), message: message(), meta: meta())
             }
         }
     }
-}
 
-public struct DefaultPrintLogger: Logger {
-    public func log(
-        priority: LogPriority,
-        file: StaticString = #file,
-        function: StaticString = #function,
-        line: UInt = #line,
-        label: @autoclosure () -> String? = nil,
-        message: @autoclosure () -> String,
-        meta: @autoclosure () -> [String: Any]? = nil
-    ) {
-
+    private static func checkReadiness() {
+        precondition(logQueue != nil, "Robolog must be configured")
     }
 }
