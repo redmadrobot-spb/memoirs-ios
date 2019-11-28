@@ -12,6 +12,10 @@ public struct DefaultPrintLogger: Logger {
         Date().description
     }
 
+    public let key: Int = {
+        UUID().hashValue
+    }()
+
     public init() { }
 
     public func log(

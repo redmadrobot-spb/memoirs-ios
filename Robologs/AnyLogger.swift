@@ -8,13 +8,13 @@
 
 /// Type erased wrapper for implement `Hashable` - protocol in `Logger`
 struct AnyLogger: Hashable, Equatable {
-    public let source: Logger
+    public let base: Logger
 
     static func == (lhs: AnyLogger, rhs: AnyLogger) -> Bool {
-        lhs.source.key == rhs.source.key
+        lhs.base.key == rhs.base.key
     }
 
     func hash(into hasher: inout Hasher) {
-        hasher.combine(source.key)
+        hasher.combine(base.key)
     }
 }

@@ -11,6 +11,15 @@ public protocol Logger {
     /// A unique key that allows conveniently store each logger
     var key: Int { get }
 
+    /// Required method that reports the log event.
+    /// - Parameters:
+    ///   - priority: Log-level
+    ///   - file: The path to the file from which the method was called
+    ///   - function: The function name from which the method was called
+    ///   - line: The line of code from which the method was called
+    ///   - label: Label describing log catergory
+    ///   - message: Message describing log event
+    ///   - meta: Additional log information in key-value format
     func log(
         priority: LogPriority,
         file: StaticString,
@@ -20,11 +29,4 @@ public protocol Logger {
         message: @autoclosure () -> String,
         meta: @autoclosure () -> [String: Any]?
     )
-}
-
-extension Logger {
-    /// The default key that uses the type name
-    public var key: Int {
-        return String(describing: Self.self).hashValue
-    }
 }

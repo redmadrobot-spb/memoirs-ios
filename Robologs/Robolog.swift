@@ -26,8 +26,8 @@ public enum Robolog {
     public static func add(logger: Logger) {
         checkReadiness()
         logQueue?.async(flags: .barrier) {
-            let typeErased = AnyLogger(source: logger)
-            Self.loggers.insert(typeErased)
+            let wrapped = AnyLogger(base: logger)
+            loggers.insert(wrapped)
         }
     }
 
@@ -36,8 +36,8 @@ public enum Robolog {
     public static func add(loggers: [Logger]) {
         checkReadiness()
         logQueue?.async(flags: .barrier) {
-            let typeErased = loggers.reduce(into: Set<AnyLogger>()) { $0.insert(AnyLogger(source: $1)) }
-            Self.loggers.formUnion(typeErased)
+            let wrapped = loggers.reduce(into: Set<AnyLogger>()) { $0.insert(AnyLogger(base: $1)) }
+            Self.loggers.formUnion(wrapped)
         }
     }
 
@@ -46,8 +46,8 @@ public enum Robolog {
     public static func remove(logger: Logger) {
         checkReadiness()
         logQueue?.async(flags: .barrier) {
-            let typeErased = AnyLogger(source: logger)
-            Self.loggers.remove(typeErased)
+            let wrapped = AnyLogger(base: logger)
+            loggers.remove(wrapped)
         }
     }
 
@@ -192,7 +192,7 @@ public enum Robolog {
         checkReadiness()
         logQueue?.sync {
             loggers.forEach { anyLogger in
-                anyLogger.source
+                anyLogger.base
                     .log(priority: priority, file: file, function: function, line: line, label: label(), message: message(), meta: meta())
             }
         }
