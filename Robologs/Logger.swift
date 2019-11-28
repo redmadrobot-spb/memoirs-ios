@@ -8,9 +8,6 @@
 
 /// Protocol describing requirements for work with `Robolog` logging system.
 public protocol Logger {
-    /// A unique key that allows conveniently store each logger
-    var key: Int { get }
-
     /// Required method that reports the log event.
     /// - Parameters:
     ///   - priority: Log-level

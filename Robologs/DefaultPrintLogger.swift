@@ -12,10 +12,6 @@ public struct DefaultPrintLogger: Logger {
         Date().description
     }
 
-    public let key: Int = {
-        UUID().hashValue
-    }()
-
     public init() { }
 
     public func log(
@@ -30,7 +26,7 @@ public struct DefaultPrintLogger: Logger {
         let descriptionArray: [CustomStringConvertible?] = [
             timestamp,
             prettyString(from: priority),
-            "\(file):\(function):\(line)",
+            "\(function):\(line)",
             label(),
             message(),
             meta()

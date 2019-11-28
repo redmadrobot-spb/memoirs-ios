@@ -8,48 +8,8 @@
 
 /// The `Robolog` is a global point to call log methods.
 /// The `Robolog` redirects everyone log event to all `(Logger)` - implementations.
-public enum Robolog {
-    private static var logQueue: DispatchQueue?
-    private static var loggers: Set<AnyLogger> = []
-
-    /// `configure` is a one-time configuration function which globally setup logging system
-    /// `configure` can be called at maximum once, calling it more than once will
-    /// lead to undefined behaviour, most likely a crash.
-    /// - Parameter label: Unique label
-    public static func configure(label: String) {
-        precondition(logQueue == nil, "Robolog can only be configured once")
-        logQueue = DispatchQueue(label: label, attributes: .concurrent)
-    }
-
-    /// Adding `(Logger)` - implementation which will handle everyone log event
-    /// - Parameter logger: `(Logger)` - implementation which should be added
-    public static func add(logger: Logger) {
-        checkReadiness()
-        logQueue?.async(flags: .barrier) {
-            let wrapped = AnyLogger(base: logger)
-            loggers.insert(wrapped)
-        }
-    }
-
-    /// Adding several `(Logger)` - implementations which will handle everyone log event
-    /// - Parameter loggers: Array of `(Logger)` - implementations which should be added
-    public static func add(loggers: [Logger]) {
-        checkReadiness()
-        logQueue?.async(flags: .barrier) {
-            let wrapped = loggers.reduce(into: Set<AnyLogger>()) { $0.insert(AnyLogger(base: $1)) }
-            Self.loggers.formUnion(wrapped)
-        }
-    }
-
-    /// Removing concrete `(Logger)` - implementation
-    /// - Parameter logger: `Logger` which should be removed
-    public static func remove(logger: Logger) {
-        checkReadiness()
-        logQueue?.async(flags: .barrier) {
-            let wrapped = AnyLogger(base: logger)
-            loggers.remove(wrapped)
-        }
-    }
+public struct Robolog {
+    public let loggers: [ Logger ]
 
     /// Method that reports the log event with `verbose` log-level.
     /// - Parameters:
@@ -59,8 +19,7 @@ public enum Robolog {
     ///   - label: Label describing log catergory
     ///   - message: Message describing log event
     ///   - meta: Additional log information in key-value format
-    @inlinable
-    public static func verbose(
+    public func verbose(
         file: StaticString = #file,
         function: StaticString = #function,
         line: UInt = #line,
@@ -79,8 +38,7 @@ public enum Robolog {
     ///   - label: Label describing log catergory
     ///   - message: Message describing log event
     ///   - meta: Additional log information in key-value format
-    @inlinable
-    public static func debug(
+    public func debug(
         file: StaticString = #file,
         function: StaticString = #function,
         line: UInt = #line,
@@ -99,8 +57,7 @@ public enum Robolog {
     ///   - label: Label describing log catergory
     ///   - message: Message describing log event
     ///   - meta: Additional log information in key-value format
-    @inlinable
-    public static func info(
+    public func info(
         file: StaticString = #file,
         function: StaticString = #function,
         line: UInt = #line,
@@ -119,8 +76,7 @@ public enum Robolog {
     ///   - label: Label describing log catergory
     ///   - message: Message describing log event
     ///   - meta: Additional log information in key-value format
-    @inlinable
-    public static func warning(
+    public func warning(
         file: StaticString = #file,
         function: StaticString = #function,
         line: UInt = #line,
@@ -139,8 +95,7 @@ public enum Robolog {
     ///   - label: Label describing log catergory
     ///   - message: Message describing log event
     ///   - meta: Additional log information in key-value format
-    @inlinable
-    public static func error(
+    public func error(
         file: StaticString = #file,
         function: StaticString = #function,
         line: UInt = #line,
@@ -159,8 +114,7 @@ public enum Robolog {
     ///   - label: Label describing log catergory
     ///   - message: Message describing log event
     ///   - meta: Additional log information in key-value format
-    @inlinable
-    public static func critical(
+    public func critical(
         file: StaticString = #file,
         function: StaticString = #function,
         line: UInt = #line,
@@ -180,7 +134,7 @@ public enum Robolog {
     ///   - label: Label describing log catergory
     ///   - message: Message describing log event
     ///   - meta: Additional log information in key-value format
-    public static func log(
+    public func log(
         priority: LogPriority,
         file: StaticString,
         function: StaticString,
@@ -189,16 +143,8 @@ public enum Robolog {
         message: @autoclosure () -> String,
         meta: @autoclosure () -> [String: Any]?
     ) {
-        checkReadiness()
-        logQueue?.sync {
-            loggers.forEach { anyLogger in
-                anyLogger.base
-                    .log(priority: priority, file: file, function: function, line: line, label: label(), message: message(), meta: meta())
-            }
+        loggers.forEach { logger in
+            logger.log(priority: priority, file: file, function: function, line: line, label: label(), message: message(), meta: meta())
         }
-    }
-
-    private static func checkReadiness() {
-        precondition(logQueue != nil, "Robolog must be configured")
     }
 }
