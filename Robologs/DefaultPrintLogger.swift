@@ -48,7 +48,7 @@ public struct DefaultPrintLogger: Logger {
             case .info: return "ℹ️ INFO"
             case .warning: return "⚠️ WARNING"
             case .error: return "🔥 ERROR"
-            case .assert: return "❕ASSERT"
+            case .critical: return "💥 CRITICAL"
         }
     }
 }

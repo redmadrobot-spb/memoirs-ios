@@ -160,7 +160,7 @@ public enum Robolog {
     ///   - message: Message describing log event
     ///   - meta: Additional log information in key-value format
     @inlinable
-    public static func assert(
+    public static func critical(
         file: StaticString = #file,
         function: StaticString = #function,
         line: UInt = #line,
@@ -168,7 +168,7 @@ public enum Robolog {
         message: @autoclosure () -> String,
         meta: @autoclosure () -> [String: Any]? = nil
     ) {
-        log(priority: .assert, file: file, function: function, line: line, label: label(), message: message(), meta: meta())
+        log(priority: .critical, file: file, function: function, line: line, label: label(), message: message(), meta: meta())
     }
 
     /// Common method that reports the log event.
