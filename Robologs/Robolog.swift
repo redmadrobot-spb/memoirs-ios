@@ -9,7 +9,13 @@
 /// The `Robolog` is a global point to call log methods.
 /// The `Robolog` redirects everyone log event to all `(Logger)` - implementations.
 public struct Robolog {
-    public let loggers: [ Logger ]
+    /// Registered `Logger` - implementations
+    @usableFromInline
+    let loggers: [ Logger ]
+
+    public init(loggers: [ Logger ]) {
+        self.loggers = loggers
+    }
 
     /// Method that reports the log event with `verbose` log-level.
     /// - Parameters:
@@ -19,6 +25,7 @@ public struct Robolog {
     ///   - label: Label describing log catergory
     ///   - message: Message describing log event
     ///   - meta: Additional log information in key-value format
+    @inlinable
     public func verbose(
         file: StaticString = #file,
         function: StaticString = #function,
@@ -38,6 +45,7 @@ public struct Robolog {
     ///   - label: Label describing log catergory
     ///   - message: Message describing log event
     ///   - meta: Additional log information in key-value format
+    @inlinable
     public func debug(
         file: StaticString = #file,
         function: StaticString = #function,
@@ -57,6 +65,7 @@ public struct Robolog {
     ///   - label: Label describing log catergory
     ///   - message: Message describing log event
     ///   - meta: Additional log information in key-value format
+    @inlinable
     public func info(
         file: StaticString = #file,
         function: StaticString = #function,
@@ -76,6 +85,7 @@ public struct Robolog {
     ///   - label: Label describing log catergory
     ///   - message: Message describing log event
     ///   - meta: Additional log information in key-value format
+    @inlinable
     public func warning(
         file: StaticString = #file,
         function: StaticString = #function,
@@ -95,6 +105,7 @@ public struct Robolog {
     ///   - label: Label describing log catergory
     ///   - message: Message describing log event
     ///   - meta: Additional log information in key-value format
+    @inlinable
     public func error(
         file: StaticString = #file,
         function: StaticString = #function,
@@ -114,6 +125,7 @@ public struct Robolog {
     ///   - label: Label describing log catergory
     ///   - message: Message describing log event
     ///   - meta: Additional log information in key-value format
+    @inlinable
     public func critical(
         file: StaticString = #file,
         function: StaticString = #function,
@@ -134,6 +146,7 @@ public struct Robolog {
     ///   - label: Label describing log catergory
     ///   - message: Message describing log event
     ///   - meta: Additional log information in key-value format
+    @inlinable
     public func log(
         priority: LogPriority,
         file: StaticString,

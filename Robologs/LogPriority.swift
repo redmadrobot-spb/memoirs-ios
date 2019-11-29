@@ -21,7 +21,7 @@ public enum LogPriority: CaseIterable, Comparable {
     /// Describes a critical error, after which the application will be terminated.
     case critical
 
-    var naturalIntegralValue: UInt {
+    var naturalIntegralValue: Int {
         switch self {
             case .verbose: return 0
             case .debug: return 1

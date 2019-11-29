@@ -26,7 +26,7 @@ public struct DefaultPrintLogger: Logger {
         let descriptionArray: [CustomStringConvertible?] = [
             timestamp,
             prettyString(from: priority),
-            "\(function):\(line)",
+            "\(file):\(function):\(line)",
             label(),
             message(),
             meta()
@@ -39,7 +39,7 @@ public struct DefaultPrintLogger: Logger {
 
     private func prettyString(from priority: LogPriority) -> String {
         switch priority {
-            case .verbose: return "🔍 INFO"
+            case .verbose: return "🔍 VERBOSE"
             case .debug: return "⚙️ DEBUG"
             case .info: return "ℹ️ INFO"
             case .warning: return "⚠️ WARNING"

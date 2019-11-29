@@ -17,6 +17,7 @@ public protocol Logger {
     ///   - label: Label describing log catergory
     ///   - message: Message describing log event
     ///   - meta: Additional log information in key-value format
+    @inlinable
     func log(
         priority: LogPriority,
         file: StaticString,
