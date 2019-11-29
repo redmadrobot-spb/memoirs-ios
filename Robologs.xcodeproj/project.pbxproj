@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		46131F5D238EADD800612712 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46131F5C238EADD800612712 /* Logger.swift */; };
 		46131F5F238EADF900612712 /* LogPriority.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46131F5E238EADF900612712 /* LogPriority.swift */; };
-		46131F61238EAE8200612712 /* DefaultPrintLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46131F60238EAE8200612712 /* DefaultPrintLogger.swift */; };
+		46131F61238EAE8200612712 /* PrintLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46131F60238EAE8200612712 /* PrintLogger.swift */; };
 		46AE559F238D683C00774F9E /* Robologs.h in Headers */ = {isa = PBXBuildFile; fileRef = 46AE559D238D683C00774F9E /* Robologs.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		46AE55A6238D684F00774F9E /* Robolog.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46AE55A5238D684F00774F9E /* Robolog.swift */; };
 /* End PBXBuildFile section */
@@ -17,7 +17,7 @@
 /* Begin PBXFileReference section */
 		46131F5C238EADD800612712 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		46131F5E238EADF900612712 /* LogPriority.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogPriority.swift; sourceTree = "<group>"; };
-		46131F60238EAE8200612712 /* DefaultPrintLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DefaultPrintLogger.swift; sourceTree = "<group>"; };
+		46131F60238EAE8200612712 /* PrintLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrintLogger.swift; sourceTree = "<group>"; };
 		46AE559A238D683C00774F9E /* Robologs.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Robologs.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		46AE559D238D683C00774F9E /* Robologs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Robologs.h; sourceTree = "<group>"; };
 		46AE559E238D683C00774F9E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -35,6 +35,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		46131F7023911AB100612712 /* Loggers */ = {
+			isa = PBXGroup;
+			children = (
+				46131F60238EAE8200612712 /* PrintLogger.swift */,
+			);
+			path = Loggers;
+			sourceTree = "<group>";
+		};
 		46AE5590238D683B00774F9E = {
 			isa = PBXGroup;
 			children = (
@@ -56,9 +64,9 @@
 			children = (
 				46AE559D238D683C00774F9E /* Robologs.h */,
 				46AE55A5238D684F00774F9E /* Robolog.swift */,
-				46131F5C238EADD800612712 /* Logger.swift */,
 				46131F5E238EADF900612712 /* LogPriority.swift */,
-				46131F60238EAE8200612712 /* DefaultPrintLogger.swift */,
+				46131F5C238EADD800612712 /* Logger.swift */,
+				46131F7023911AB100612712 /* Loggers */,
 				46AE559E238D683C00774F9E /* Info.plist */,
 			);
 			path = Robologs;
@@ -167,7 +175,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				46131F5F238EADF900612712 /* LogPriority.swift in Sources */,
-				46131F61238EAE8200612712 /* DefaultPrintLogger.swift in Sources */,
+				46131F61238EAE8200612712 /* PrintLogger.swift in Sources */,
 				46AE55A6238D684F00774F9E /* Robolog.swift in Sources */,
 				46131F5D238EADD800612712 /* Logger.swift in Sources */,
 			);
@@ -316,6 +324,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				MARKETING_VERSION = 0.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.redmadrobot.spb.robologs.dev;
 				PRODUCT_NAME = Robologs;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -349,6 +358,7 @@
 					"@executable_path/Frameworks",
 					"@loader_path/Frameworks",
 				);
+				MARKETING_VERSION = 0.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.redmadrobot.spb.robologs.dev;
 				PRODUCT_NAME = Robologs;
 				PROVISIONING_PROFILE_SPECIFIER = "";

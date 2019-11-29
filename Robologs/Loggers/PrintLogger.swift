@@ -1,5 +1,5 @@
 //
-//  DefaultPrintLogger.swift
+//  PrintLogger.swift
 //  Robologs
 //
 //  Created by Dmitry Shadrin on 27.11.2019.
@@ -7,7 +7,7 @@
 //
 
 /// Default `(Logger)` - implementation which just `print()` log event in LLDB-console in pretty format.
-public struct DefaultPrintLogger: Logger {
+public struct PrintLogger: Logger {
     private var timestamp: String {
         Date().description
     }
