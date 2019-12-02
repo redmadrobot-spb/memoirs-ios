@@ -6,20 +6,19 @@
 //  Copyright © 2019 Redmadrobot. All rights reserved.
 //
 
+import Foundation
+
 /// Default `(Logger)` - implementation which just `print()` log event in LLDB-console in pretty format.
 public struct PrintLogger: Logger {
-    @usableFromInline
-    var timestamp: String {
+    /// Current timestamp.
+    private var timestamp: String {
         Date().description
     }
-    @usableFromInline
-    let minimalLogLevel: LogPriority = .verbose
 
     public init() { }
 
-    @inlinable
     public func log(
-        priority: LogPriority,
+        priority: Priority,
         file: StaticString = #file,
         function: StaticString = #function,
         line: UInt = #line,
@@ -27,8 +26,6 @@ public struct PrintLogger: Logger {
         message: () -> String,
         meta: () -> [String: Any]?
     ) {
-        guard priority <= minimalLogLevel else { return }
-
         let descriptionArray: [CustomStringConvertible?] = [
             timestamp,
             prettyString(from: priority),
@@ -43,21 +40,20 @@ public struct PrintLogger: Logger {
         print(logString)
     }
 
-    @usableFromInline
-    func prettyString(from priority: LogPriority) -> String {
+    private func prettyString(from priority: Priority) -> String {
         switch priority {
             case .verbose:
-                return "🔍 VERBOSE"
+                return "🟣 VERBOSE"
             case .debug:
-                return "⚙️ DEBUG"
+                return "🔵 DEBUG"
             case .info:
-                return "ℹ️ INFO"
+                return "🟢 INFO"
             case .warning:
-                return "⚠️ WARNING"
+                return "🟡 WARNING"
             case .error:
-                return "🔥 ERROR"
+                return "🟠 ERROR"
             case .critical:
-                return "💥 CRITICAL"
+                return "🔴 CRITICAL"
         }
     }
 }
