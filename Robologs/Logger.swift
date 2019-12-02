@@ -23,8 +23,8 @@ public protocol Logger {
         file: StaticString,
         function: StaticString,
         line: UInt,
-        label: @autoclosure () -> String?,
-        message: @autoclosure () -> String,
-        meta: @autoclosure () -> [String: Any]?
+        label: () -> String?,
+        message: () -> String,
+        meta: () -> [String: Any]?
     )
 }

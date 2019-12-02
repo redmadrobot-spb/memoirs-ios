@@ -34,7 +34,7 @@ public struct Robolog {
         message: @autoclosure () -> String,
         meta: @autoclosure () -> [String: Any]? = nil
     ) {
-        log(priority: .verbose, file: file, function: function, line: line, label: label(), message: message(), meta: meta())
+        log(priority: .verbose, file: file, function: function, line: line, label: label, message: message, meta: meta)
     }
 
     /// Method that reports the log event with `debug` log-level.
@@ -54,7 +54,7 @@ public struct Robolog {
         message: @autoclosure () -> String,
         meta: @autoclosure () -> [String: Any]? = nil
     ) {
-        log(priority: .debug, file: file, function: function, line: line, label: label(), message: message(), meta: meta())
+        log(priority: .debug, file: file, function: function, line: line, label: label, message: message, meta: meta)
     }
 
     /// Method that reports the log event with `info` log-level.
@@ -74,7 +74,7 @@ public struct Robolog {
         message: @autoclosure () -> String,
         meta: @autoclosure () -> [String: Any]? = nil
     ) {
-        log(priority: .info, file: file, function: function, line: line, label: label(), message: message(), meta: meta())
+        log(priority: .info, file: file, function: function, line: line, label: label, message: message, meta: meta)
     }
 
     /// Method that reports the log event with `warning` log-level.
@@ -94,7 +94,7 @@ public struct Robolog {
         message: @autoclosure () -> String,
         meta: @autoclosure () -> [String: Any]? = nil
     ) {
-        log(priority: .warning, file: file, function: function, line: line, label: label(), message: message(), meta: meta())
+        log(priority: .warning, file: file, function: function, line: line, label: label, message: message, meta: meta)
     }
 
     /// Method that reports the log event with `error` log-level.
@@ -114,7 +114,7 @@ public struct Robolog {
         message: @autoclosure () -> String,
         meta: @autoclosure () -> [String: Any]? = nil
     ) {
-        log(priority: .error, file: file, function: function, line: line, label: label(), message: message(), meta: meta())
+        log(priority: .error, file: file, function: function, line: line, label: label, message: message, meta: meta)
     }
 
     /// Method that reports the log event with `assert` log-level.
@@ -134,7 +134,7 @@ public struct Robolog {
         message: @autoclosure () -> String,
         meta: @autoclosure () -> [String: Any]? = nil
     ) {
-        log(priority: .critical, file: file, function: function, line: line, label: label(), message: message(), meta: meta())
+        log(priority: .critical, file: file, function: function, line: line, label: label, message: message, meta: meta)
     }
 
     /// Common method that reports the log event.
@@ -152,12 +152,12 @@ public struct Robolog {
         file: StaticString,
         function: StaticString,
         line: UInt,
-        label: @autoclosure () -> String?,
-        message: @autoclosure () -> String,
-        meta: @autoclosure () -> [String: Any]?
+        label: () -> String?,
+        message: () -> String,
+        meta: () -> [String: Any]?
     ) {
         loggers.forEach { logger in
-            logger.log(priority: priority, file: file, function: function, line: line, label: label(), message: message(), meta: meta())
+            logger.log(priority: priority, file: file, function: function, line: line, label: label, message: message, meta: meta)
         }
     }
 }

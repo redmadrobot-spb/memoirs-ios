@@ -19,9 +19,9 @@ public struct PrintLogger: Logger {
         file: StaticString = #file,
         function: StaticString = #function,
         line: UInt = #line,
-        label: @autoclosure () -> String? = nil,
-        message: @autoclosure () -> String,
-        meta: @autoclosure () -> [String: Any]? = nil
+        label: () -> String?,
+        message: () -> String,
+        meta: () -> [String: Any]?
     ) {
         let descriptionArray: [CustomStringConvertible?] = [
             timestamp,
