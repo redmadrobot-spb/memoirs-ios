@@ -8,12 +8,16 @@
 
 /// Default `(Logger)` - implementation which just `print()` log event in LLDB-console in pretty format.
 public struct PrintLogger: Logger {
-    private var timestamp: String {
+    @usableFromInline
+    var timestamp: String {
         Date().description
     }
+    @usableFromInline
+    let minimalLogLevel: LogPriority = .verbose
 
     public init() { }
 
+    @inlinable
     public func log(
         priority: LogPriority,
         file: StaticString = #file,
@@ -23,6 +27,8 @@ public struct PrintLogger: Logger {
         message: () -> String,
         meta: () -> [String: Any]?
     ) {
+        guard priority <= minimalLogLevel else { return }
+
         let descriptionArray: [CustomStringConvertible?] = [
             timestamp,
             prettyString(from: priority),
@@ -37,14 +43,21 @@ public struct PrintLogger: Logger {
         print(logString)
     }
 
-    private func prettyString(from priority: LogPriority) -> String {
+    @usableFromInline
+    func prettyString(from priority: LogPriority) -> String {
         switch priority {
-            case .verbose: return "🔍 VERBOSE"
-            case .debug: return "⚙️ DEBUG"
-            case .info: return "ℹ️ INFO"
-            case .warning: return "⚠️ WARNING"
-            case .error: return "🔥 ERROR"
-            case .critical: return "💥 CRITICAL"
+            case .verbose:
+                return "🔍 VERBOSE"
+            case .debug:
+                return "⚙️ DEBUG"
+            case .info:
+                return "ℹ️ INFO"
+            case .warning:
+                return "⚠️ WARNING"
+            case .error:
+                return "🔥 ERROR"
+            case .critical:
+                return "💥 CRITICAL"
         }
     }
 }

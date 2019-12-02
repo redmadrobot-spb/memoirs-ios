@@ -23,12 +23,18 @@ public enum LogPriority: CaseIterable, Comparable {
 
     var naturalIntegralValue: Int {
         switch self {
-            case .verbose: return 0
-            case .debug: return 1
-            case .info: return 2
-            case .warning: return 3
-            case .error: return 4
-            case .critical: return 5
+            case .verbose:
+                return 0
+            case .debug:
+                return 1
+            case .info:
+                return 2
+            case .warning:
+                return 3
+            case .error:
+                return 4
+            case .critical:
+                return 5
         }
     }
 

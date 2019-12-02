@@ -146,8 +146,8 @@ public struct Robolog {
     ///   - label: Label describing log catergory
     ///   - message: Message describing log event
     ///   - meta: Additional log information in key-value format
-    @inlinable
-    public func log(
+    @usableFromInline
+    func log(
         priority: LogPriority,
         file: StaticString,
         function: StaticString,
