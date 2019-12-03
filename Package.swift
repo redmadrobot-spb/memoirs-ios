@@ -11,7 +11,7 @@ let package = Package(
             targets: [ "Robologs" ]),
     ],
     targets: [
-        .target(name: "Robologs")
+        .target(name: "Robologs", path: "Sources")
     ],
     swiftLanguageVersions: [.v5]
 )
