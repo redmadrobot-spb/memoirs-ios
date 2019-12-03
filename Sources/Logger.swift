@@ -23,9 +23,9 @@ public protocol Logger {
         file: StaticString,
         function: StaticString,
         line: UInt,
-        label: @autoclosure () -> String?,
+        label: @autoclosure () -> String,
         message: @autoclosure () -> String,
-        meta: @autoclosure () -> [String: Any]?
+        meta: @autoclosure () -> [ String: Any ]?
     )
 }
 
@@ -43,9 +43,9 @@ extension Logger {
         file: StaticString = #file,
         function: StaticString = #function,
         line: UInt = #line,
-        label: @autoclosure () -> String? = nil,
+        label: @autoclosure () -> String,
         message: @autoclosure () -> String,
-        meta: @autoclosure () -> [String: Any]? = nil
+        meta: @autoclosure () -> [ String: Any ]? = nil
     ) {
         log(priority: .verbose, file: file, function: function, line: line, label: label(), message: message(), meta: meta())
     }
@@ -63,9 +63,9 @@ extension Logger {
         file: StaticString = #file,
         function: StaticString = #function,
         line: UInt = #line,
-        label: @autoclosure () -> String? = nil,
+        label: @autoclosure () -> String,
         message: @autoclosure () -> String,
-        meta: @autoclosure () -> [String: Any]? = nil
+        meta: @autoclosure () -> [ String: Any ]? = nil
     ) {
         log(priority: .debug, file: file, function: function, line: line, label: label(), message: message(), meta: meta())
     }
@@ -83,9 +83,9 @@ extension Logger {
         file: StaticString = #file,
         function: StaticString = #function,
         line: UInt = #line,
-        label: @autoclosure () -> String? = nil,
+        label: @autoclosure () -> String,
         message: @autoclosure () -> String,
-        meta: @autoclosure () -> [String: Any]? = nil
+        meta: @autoclosure () -> [ String: Any ]? = nil
     ) {
         log(priority: .info, file: file, function: function, line: line, label: label(), message: message(), meta: meta())
     }
@@ -103,9 +103,9 @@ extension Logger {
         file: StaticString = #file,
         function: StaticString = #function,
         line: UInt = #line,
-        label: @autoclosure () -> String? = nil,
+        label: @autoclosure () -> String,
         message: @autoclosure () -> String,
-        meta: @autoclosure () -> [String: Any]? = nil
+        meta: @autoclosure () -> [ String: Any ]? = nil
     ) {
         log(priority: .warning, file: file, function: function, line: line, label: label(), message: message(), meta: meta())
     }
@@ -123,9 +123,9 @@ extension Logger {
         file: StaticString = #file,
         function: StaticString = #function,
         line: UInt = #line,
-        label: @autoclosure () -> String? = nil,
+        label: @autoclosure () -> String,
         message: @autoclosure () -> String,
-        meta: @autoclosure () -> [String: Any]? = nil
+        meta: @autoclosure () -> [ String: Any ]? = nil
     ) {
         log(priority: .error, file: file, function: function, line: line, label: label(), message: message(), meta: meta())
     }
@@ -143,10 +143,16 @@ extension Logger {
         file: StaticString = #file,
         function: StaticString = #function,
         line: UInt = #line,
-        label: @autoclosure () -> String? = nil,
+        label: @autoclosure () -> String,
         message: @autoclosure () -> String,
-        meta: @autoclosure () -> [String: Any]? = nil
+        meta: @autoclosure () -> [ String: Any ]? = nil
     ) {
         log(priority: .critical, file: file, function: function, line: line, label: label(), message: message(), meta: meta())
+    }
+
+    func prepareMessage(_ parts: CustomStringConvertible?...) -> String {
+        return parts
+            .compactMap { $0?.description }
+            .joined(separator: " | ")
     }
 }

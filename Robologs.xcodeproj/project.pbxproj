@@ -112,6 +112,7 @@
 		46AE5591238D683B00774F9E /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 1120;
 				LastUpgradeCheck = 1120;
 				ORGANIZATIONNAME = Redmadrobot;
 				TargetAttributes = {

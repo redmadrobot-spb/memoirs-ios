@@ -11,8 +11,8 @@ import Foundation
 /// Default `(Logger)` - implementation which just `print()` log event in LLDB-console in pretty format.
 public struct PrintLogger: Logger {
     /// Current timestamp.
-    private var timestamp: String {
-        Date().description
+    private var timestamp: Date {
+        Date()
     }
 
     public init() { }
@@ -22,38 +22,11 @@ public struct PrintLogger: Logger {
         file: StaticString = #file,
         function: StaticString = #function,
         line: UInt = #line,
-        label: () -> String?,
+        label: () -> String,
         message: () -> String,
-        meta: () -> [String: Any]?
+        meta: () -> [ String: Any ]?
     ) {
-        let descriptionArray: [CustomStringConvertible?] = [
-            timestamp,
-            prettyString(from: priority),
-            "\(file):\(function):\(line)",
-            label(),
-            message(),
-            meta()
-        ]
-        let logString = descriptionArray
-            .compactMap { $0?.description }
-            .joined(separator: " | ")
-        print(logString)
-    }
-
-    private func prettyString(from priority: Priority) -> String {
-        switch priority {
-            case .verbose:
-                return "🟣 VERBOSE"
-            case .debug:
-                return "🔵 DEBUG"
-            case .info:
-                return "🟢 INFO"
-            case .warning:
-                return "🟡 WARNING"
-            case .error:
-                return "🟠 ERROR"
-            case .critical:
-                return "🔴 CRITICAL"
-        }
+        let description = prepareMessage(timestamp, priority, "\(file):\(function):\(line)", label(), message(), meta())
+        print(description)
     }
 }
