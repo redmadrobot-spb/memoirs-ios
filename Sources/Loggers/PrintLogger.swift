@@ -11,9 +11,7 @@ import Foundation
 /// Default `(Logger)` - implementation which just `print()` log event in LLDB-console in pretty format.
 public struct PrintLogger: Logger {
     /// Current timestamp.
-    private var timestamp: Date {
-        Date()
-    }
+    private var timestamp: Date { Date() }
 
     /// Creates a `(Logger)` - implementation object.
     public init() { }
@@ -23,11 +21,11 @@ public struct PrintLogger: Logger {
         file: StaticString = #file,
         function: StaticString = #function,
         line: UInt = #line,
-        label: () -> String,
+        label: String,
         message: () -> String,
-        meta: () -> [ String: Any ]?
+        meta: () -> [String: Any]?
     ) {
-        let description = prepareMessage(timestamp, priority, "\(file):\(function):\(line)", label(), message(), meta())
+        let description = prepareMessage(timestamp, priority, "\(file):\(function):\(line)", label, message(), meta())
         print(description)
     }
 }

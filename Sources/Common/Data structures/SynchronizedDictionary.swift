@@ -8,13 +8,13 @@
 
 import Foundation
 
-class SynchronizedDictionary<Key, Value> where Key: Hashable {
-    private var dictionary: [ Key: Value ]
+class SynchronizedDictionary<Key, Value>: ExpressibleByDictionaryLiteral where Key: Hashable {
+    private var dictionary: [Key: Value]
     private let queue: DispatchQueue
 
-    init(label: String, elements: ( Key, Value )...) {
+    required init(dictionaryLiteral elements: (Key, Value)...) {
         dictionary = Dictionary(uniqueKeysWithValues: elements)
-        queue = DispatchQueue(label: label, attributes: .concurrent)
+        queue = DispatchQueue(label: "com.redmadrobot.robologs.synchronizedDictionary", attributes: .concurrent)
     }
 
     subscript(key: Key) -> Value? {
