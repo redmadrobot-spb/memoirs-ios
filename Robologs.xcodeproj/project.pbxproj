@@ -11,6 +11,7 @@
 		46131F5F238EADF900612712 /* Priority.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46131F5E238EADF900612712 /* Priority.swift */; };
 		4626E60B23956D5800BD14B8 /* PrintLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46131F60238EAE8200612712 /* PrintLogger.swift */; };
 		4626E6112396709A00BD14B8 /* OSLogLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4626E6102396709700BD14B8 /* OSLogLogger.swift */; };
+		46E239082397A748006539C5 /* SynchronizedDictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46E239072397A748006539C5 /* SynchronizedDictionary.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -20,6 +21,7 @@
 		4626E6102396709700BD14B8 /* OSLogLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OSLogLogger.swift; sourceTree = "<group>"; };
 		46AE559A238D683C00774F9E /* Robologs.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Robologs.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		46AE559E238D683C00774F9E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		46E239072397A748006539C5 /* SynchronizedDictionary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SynchronizedDictionary.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -48,6 +50,7 @@
 				46131F5C238EADD800612712 /* Logger.swift */,
 				46131F5E238EADF900612712 /* Priority.swift */,
 				46131F7023911AB100612712 /* Loggers */,
+				46E239062397A71A006539C5 /* Common */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
@@ -75,6 +78,22 @@
 				46AE559A238D683C00774F9E /* Robologs.framework */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		46E239062397A71A006539C5 /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				46E239092397B6B8006539C5 /* Data structures */,
+			);
+			path = Common;
+			sourceTree = "<group>";
+		};
+		46E239092397B6B8006539C5 /* Data structures */ = {
+			isa = PBXGroup;
+			children = (
+				46E239072397A748006539C5 /* SynchronizedDictionary.swift */,
+			);
+			path = "Data structures";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -183,6 +202,7 @@
 				4626E60B23956D5800BD14B8 /* PrintLogger.swift in Sources */,
 				46131F5F238EADF900612712 /* Priority.swift in Sources */,
 				46131F5D238EADD800612712 /* Logger.swift in Sources */,
+				46E239082397A748006539C5 /* SynchronizedDictionary.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

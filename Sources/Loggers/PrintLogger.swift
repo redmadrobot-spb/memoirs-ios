@@ -15,6 +15,7 @@ public struct PrintLogger: Logger {
         Date()
     }
 
+    /// Creates a `(Logger)` - implementation object.
     public init() { }
 
     public func log(

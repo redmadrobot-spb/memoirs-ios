@@ -10,17 +10,22 @@ import Foundation
 import os.log
 
 @available(iOS 12.0, *)
-class OSLogLogger: Logger {
+/// `(Logger)` - implementation which use `os.log` logging system.
+public struct OSLogLogger: Logger {
     private let subsystem: String
-    private let queue: DispatchQueue
-    private var loggers: [ String: OSLog ] = [:]
+    private var loggers: SynchronizedDictionary<String, OSLog>
 
-    init(subsystem: String) {
+    /// Creates a `(Logger)` - implementation object.
+    /// - Parameter subsystem: An identifier string, in reverse DNS notation, representing the subsystem that’s performing logging.
+    ///                        For example, com.your_company.your_subsystem_name.
+    ///                        The subsystem is used for categorization and filtering of related log messages,
+    ///                        as well as for grouping related logging settings.
+    public init(subsystem: String) {
         self.subsystem = subsystem
-        queue = DispatchQueue(label: subsystem, attributes: .concurrent)
+        loggers = SynchronizedDictionary(label: subsystem)
     }
 
-    func log(
+    public func log(
         priority: Priority,
         file: StaticString = #file,
         function: StaticString = #function,
@@ -29,9 +34,8 @@ class OSLogLogger: Logger {
         message: () -> String,
         meta: () -> [ String: Any ]?
     ) {
-        let logLabel = label()
-        let description = prepareMessage(priority, "\(file):\(function):\(line)", logLabel, message(), meta())
-        os_log(logType(from: priority), log: logger(with: logLabel), "%{public}@", description)
+        let description = prepareMessage("\(file):\(function):\(line)", message(), meta())
+        os_log(logType(from: priority), log: logger(with: label()), "%{public}@", description)
     }
 
     private func logType(from priority: Priority) -> OSLogType {
