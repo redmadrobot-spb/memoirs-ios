@@ -152,10 +152,5 @@ extension Logger {
 
     func prepareMessage(_ parts: Any?...) -> String {
         parts.compactMap { $0.map(String.init(describing:)) }.joined(separator: " | ")
-            guard let part = part else { return nil }
-
-            return String(describing: part)
-        }
-        .joined(separator: " | ")
     }
 }
