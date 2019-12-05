@@ -1,5 +1,5 @@
 //
-//  FilterLogger.swift
+//  FilteringLogger.swift
 //  Robologs
 //
 //  Created by Dmitry Shadrin on 05.12.2019.
@@ -7,7 +7,7 @@
 //
 
 /// Logger that filter log events by priority and redirects them to the target logger.
-public struct FilterLogger: Logger {
+public struct FilteringLogger: Logger {
     /// The logger for which log events will be filtered.
     public let logger: Logger
     /// Labels associated with their log priority.
