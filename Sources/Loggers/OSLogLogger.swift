@@ -9,8 +9,8 @@
 import Foundation
 import os.log
 
-@available(iOS 12.0, *)
 /// `(Logger)` - implementation which use `os.log` logging system.
+@available(iOS 12.0, *)
 public struct OSLogLogger: Logger {
     /// An identifier string, in reverse DNS notation, representing the subsystem that’s performing logging.
     /// For example, `com.your_company.your_subsystem_name`.
@@ -20,12 +20,12 @@ public struct OSLogLogger: Logger {
 
     public func log(
         priority: Priority,
-        file: StaticString = #file,
-        function: StaticString = #function,
-        line: UInt = #line,
         label: String,
         message: () -> String,
-        meta: () -> [ String: Any ]?
+        meta: () -> [ String: Any ]?,
+        file: StaticString = #file,
+        function: StaticString = #function,
+        line: UInt = #line
     ) {
         let description = prepareMessage("\(file):\(function):\(line)", message(), meta())
         os_log(logType(from: priority), log: logger(with: label), "%{public}@", description)
