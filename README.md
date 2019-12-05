@@ -7,25 +7,25 @@ Robologs is a logging framework for Swift.
 
 There is a protocol `Logger` - that requires only one function to be implemented:
 ```swift
-   /// Required method that reports the log event.
-   /// - Parameters:
-   ///   - priority: Log-level.
-   ///   - file: The path to the file from which the method was called.
-   ///   - function: The function name from which the method was called.
-   ///   - line: The line of code from which the method was called.
-   ///   - label: Label describing log category.
-   ///   - message: Message describing log event.
-   ///   - meta: Additional log information in key-value format.
-   @inlinable
-   func log(
-       priority: Priority,
-       file: StaticString,
-       function: StaticString,
-       line: UInt,
-       label: String,
-       message: () -> String,
-       meta: () -> [String: Any]?
-   )
+/// Required method that reports the log event.
+/// - Parameters:
+///   - priority: Log-level.
+///   - file: The path to the file from which the method was called.
+///   - function: The function name from which the method was called.
+///   - line: The line of code from which the method was called.
+///   - label: Label describing log category.
+///   - message: Message describing log event.
+///   - meta: Additional log information in key-value format.
+@inlinable
+func log(
+    priority: Priority,
+    file: StaticString,
+    function: StaticString,
+    line: UInt,
+    label: String,
+    message: () -> String,
+    meta: () -> [String: Any]?
+)
 ```
 #### Log levels (Priority)
 
@@ -46,12 +46,12 @@ If your custom logger needs to handle a certain log level, just compare it with 
 As default implementation `Logger` has list of functions each of which corresponds to specific log level. For convenience, it is recommended to use them when logging.
 
 ```swift
-    func verbose(file:function:line:label:message:meta:)
-    func debug(file:function:line:label:message:meta:)
-    func info(file:function:line:label:message:meta:)
-    func warning(file:function:line:label:message:meta:)
-    func error(file:function:line:label:message:meta:)
-    func critical(file:function:line:label:message:meta:)
+func verbose(file:function:line:label:message:meta:)
+func debug(file:function:line:label:message:meta:)
+func info(file:function:line:label:message:meta:)
+func warning(file:function:line:label:message:meta:)
+func error(file:function:line:label:message:meta:)
+func critical(file:function:line:label:message:meta:)
 ```
 
 ## Usage
@@ -79,14 +79,22 @@ The logging system under the hood retrieves log information using protocols:
 Therefore, you need to implement a simple `@propertyWrapper` into your project that will clear private information in accordance with your rules:
 
 ```swift
-    @propertyWrapper
-    struct Sensitive<Value>: CustomStringConvertible, CustomDebugStringConvertible,
-            CustomReflectable, CustomLeafReflectable {
-        var wrappedValue: Value
-        var description: String { "<private>" }
-        var debugDescription: String { "<private>" }
-        var customMirror: Mirror { Mirror(reflecting: "<private>") }
-    }
+@propertyWrapper
+struct Sensitive<Value>: CustomStringConvertible, CustomDebugStringConvertible,
+        CustomReflectable, CustomLeafReflectable {
+    var wrappedValue: Value
+    var description: String { "<private>" }
+    var debugDescription: String { "<private>" }
+    var customMirror: Mirror { Mirror(reflecting: "<private>") }
+}
+```
+And use it in your data models like this:
+
+```swift
+struct User {
+    let name: String
+    @Sensitive private(set) var cardNumber: String
+}
 ```
 
 ## Requirements
@@ -103,9 +111,9 @@ Therefore, you need to implement a simple `@propertyWrapper` into your project t
 
   To install Robologs with Carthage, add the following line to your `Cartfile`.
 
-  ```
-  git "https://git.redmadrobot.com/RedMadRobot/SPb/robologs-ios.git"
-  ```
+```
+git "https://git.redmadrobot.com/RedMadRobot/SPb/robologs-ios.git"
+```
 
   Then run `carthage update --no-use-binaries` command or just `carthage update`.
   
@@ -113,10 +121,10 @@ Therefore, you need to implement a simple `@propertyWrapper` into your project t
 
 To install Robologs with SwiftPM using XCode 11+, add package in project settings "Swift Packages" tab using url:
 ```
-   "https://git.redmadrobot.com/RedMadRobot/SPb/robologs-ios.git"
+"https://git.redmadrobot.com/RedMadRobot/SPb/robologs-ios.git"
 ```
 or add the following package to your Package.swift file: 
 ```swift
-.package(url: "https://git.redmadrobot.com/RedMadRobot/SPb/robologs-ios.git"),
+.package(url: "https://git.redmadrobot.com/RedMadRobot/SPb/robologs-ios.git")
 ```
 
