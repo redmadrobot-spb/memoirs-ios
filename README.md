@@ -5,7 +5,7 @@ Robologs is a logging framework for Swift.
 
 ## The core concepts
 
-There is a protocol ```Logger``` - that requires only one function to be implemented:
+There is a protocol `Logger` - that requires only one function to be implemented:
 ```swift
    /// Required method that reports the log event.
    /// - Parameters:
@@ -38,9 +38,12 @@ The following log levels are supported:
 - `error` - Describes a non-critical application error.
 - `critical` - Describes a critical error, after which the application will be terminated.
 
+Log levels implement the `Comparable` protocol and their priority is in ascending order from `verbose` to `critical`.
+If your custom logger needs to handle a certain log level, just compare it with `priority` parameter in  `log` - function.
+
 #### Convenience interface
 
-As default implementation ```Logger``` has list of functions each of which corresponds to specific log level. For convenience, it is recommended to use them when logging.
+As default implementation `Logger` has list of functions each of which corresponds to specific log level. For convenience, it is recommended to use them when logging.
 
 ```swift
     func verbose(file:function:line:label:message:meta:)
@@ -53,15 +56,38 @@ As default implementation ```Logger``` has list of functions each of which corre
 
 ## Usage
 
-Create your own ```Logger``` implementation or take out of the box and use it like this:
+Create your own `Logger` implementation or take out of the box and use it like this:
 ```swift
 let logger: Logger: = MyLogger()
 logger.debug(label: "Network", message: "User data request",
-meta: [ "RequestId": UUID().uuidString ])
+             meta: [ "RequestId": UUID().uuidString ])
 ```
 Several implementations are available out of the box (the list will be updated):
-- ```PrintLogger``` which just prints log message in LLDB-console.
-- ```OSLogLogger``` which incapsulates ```os.log``` logging system.
+- `PrintLogger` which just prints log message in LLDB-console.
+- `OSLogLogger` which incapsulates `os.log` logging system.
+
+## Logging sensitive data
+
+When logging events, the confidentiality of certain data must be considered.
+
+The logging system under the hood retrieves log information using protocols:
+- `CustomStringConvertible`
+- `CustomDebugStringConvertible`
+- `CustomReflectable`
+- `CustomLeafReflectable`
+
+Therefore, you need to implement a simple `@propertyWrapper` into your project that will clear private information in accordance with your rules:
+
+```swift
+    @propertyWrapper
+    struct Sensitive<Value>: CustomStringConvertible, CustomDebugStringConvertible,
+            CustomReflectable, CustomLeafReflectable {
+        var wrappedValue: Value
+        var description: String { "<private>" }
+        var debugDescription: String { "<private>" }
+        var customMirror: Mirror { Mirror(reflecting: "<private>") }
+    }
+```
 
 ## Requirements
 
@@ -73,7 +99,7 @@ Several implementations are available out of the box (the list will be updated):
 
   Robologs is available through [Carthage](https://github.com/Carthage/Carthage) or [SwiftPM](https://swift.org/package-manager/)
   
-  #### Carthage
+#### Carthage
 
   To install Robologs with Carthage, add the following line to your `Cartfile`.
 
@@ -81,9 +107,9 @@ Several implementations are available out of the box (the list will be updated):
   git "https://git.redmadrobot.com/RedMadRobot/SPb/robologs-ios.git"
   ```
 
-  Then run `carthage update --no-use-binaries` command or just `carthage update`. For details of the installation and usage of Carthage, visit [its project page](https://github.com/Carthage/Carthage).
+  Then run `carthage update --no-use-binaries` command or just `carthage update`.
   
-  #### SwiftPM
+#### SwiftPM
 
 To install Robologs with SwiftPM using XCode 11+, add package in project settings "Swift Packages" tab using url:
 ```
