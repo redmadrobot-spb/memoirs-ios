@@ -7,15 +7,6 @@ Robologs is a logging framework for Swift.
 
 There is a protocol `Logger` - that requires only one function to be implemented:
 ```swift
-/// Required method that reports the log event.
-/// - Parameters:
-///   - priority: Log-level.
-///   - file: The path to the file from which the method was called.
-///   - function: The function name from which the method was called.
-///   - line: The line of code from which the method was called.
-///   - label: Label describing log category.
-///   - message: Message describing log event.
-///   - meta: Additional log information in key-value format.
 @inlinable
 func log(
     priority: Priority,

@@ -18,12 +18,12 @@ public struct PrintLogger: Logger {
 
     public func log(
         priority: Priority,
-        file: StaticString = #file,
-        function: StaticString = #function,
-        line: UInt = #line,
         label: String,
         message: () -> String,
-        meta: () -> [String: Any]?
+        meta: () -> [String: Any]?,
+        file: StaticString = #file,
+        function: StaticString = #function,
+        line: UInt = #line
     ) {
         let description = prepareMessage(timestamp, priority, "\(file):\(function):\(line)", label, message(), meta())
         print(description)
