@@ -67,7 +67,7 @@ extension Logger {
         function: StaticString = #function,
         line: UInt = #line
     ) {
-        log(priority: .verbose, label: label, message: message, meta: meta, file: file, function: function, line: line)
+        log(priority: .debug, label: label, message: message, meta: meta, file: file, function: function, line: line)
     }
 
     /// Method that reports the log event with `info` log-level.
@@ -87,7 +87,7 @@ extension Logger {
         function: StaticString = #function,
         line: UInt = #line
     ) {
-        log(priority: .verbose, label: label, message: message, meta: meta, file: file, function: function, line: line)
+        log(priority: .info, label: label, message: message, meta: meta, file: file, function: function, line: line)
     }
 
     /// Method that reports the log event with `warning` log-level.
@@ -107,7 +107,7 @@ extension Logger {
         function: StaticString = #function,
         line: UInt = #line
     ) {
-        log(priority: .verbose, label: label, message: message, meta: meta, file: file, function: function, line: line)
+        log(priority: .warning, label: label, message: message, meta: meta, file: file, function: function, line: line)
     }
 
     /// Method that reports the log event with `error` log-level.
@@ -127,7 +127,7 @@ extension Logger {
         function: StaticString = #function,
         line: UInt = #line
     ) {
-        log(priority: .verbose, label: label, message: message, meta: meta, file: file, function: function, line: line)
+        log(priority: .error, label: label, message: message, meta: meta, file: file, function: function, line: line)
     }
 
     /// Method that reports the log event with `assert` log-level.
@@ -147,7 +147,7 @@ extension Logger {
         function: StaticString = #function,
         line: UInt = #line
     ) {
-        log(priority: .verbose, label: label, message: message, meta: meta, file: file, function: function, line: line)
+        log(priority: .critical, label: label, message: message, meta: meta, file: file, function: function, line: line)
     }
 
     func prepareMessage(_ parts: Any?...) -> String {
