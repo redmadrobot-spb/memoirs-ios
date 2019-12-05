@@ -10,12 +10,12 @@ There is a protocol `Logger` - that requires only one function to be implemented
 @inlinable
 func log(
     priority: Priority,
-    file: StaticString,
-    function: StaticString,
-    line: UInt,
     label: String,
     message: () -> String,
-    meta: () -> [String: Any]?
+    meta: () -> [String: Any]?,
+    file: StaticString,
+    function: StaticString,
+    line: UInt
 )
 ```
 #### Log levels (Priority)
@@ -36,12 +36,12 @@ If your custom logger needs to handle a certain log level, just compare it with 
 
 As default implementation `Logger` has list of functions each of which corresponds to specific log level. For convenience, it is recommended to use them when logging.
 ```swift
-func verbose(file:function:line:label:message:meta:)
-func debug(file:function:line:label:message:meta:)
-func info(file:function:line:label:message:meta:)
-func warning(file:function:line:label:message:meta:)
-func error(file:function:line:label:message:meta:)
-func critical(file:function:line:label:message:meta:)
+func verbose(label:message:meta:file:function:line:)
+func debug(label:message:meta:file:function:line:)
+func info(label:message:meta:file:function:line:)
+func warning(label:message:meta:file:function:line:)
+func error(label:message:meta:file:function:line:)
+func critical(label:message:meta:file:function:line:)
 ```
 
 ## Usage
