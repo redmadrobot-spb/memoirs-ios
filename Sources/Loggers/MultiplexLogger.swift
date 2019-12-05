@@ -14,15 +14,15 @@ public struct MultiplexLogger: Logger {
     @inlinable
     public func log(
         priority: Priority,
-        file: StaticString,
-        function: StaticString,
-        line: UInt,
         label: String,
         message: () -> String,
-        meta: () -> [String: Any]?
+        meta: () -> [String: Any]?,
+        file: StaticString,
+        function: StaticString,
+        line: UInt
     ) {
         loggers.forEach {
-            $0.log(priority: priority, file: file, function: function, line: line, label: label, message: message, meta: meta)
+            $0.log(priority: priority, label: label, message: message, meta: meta, file: file, function: function, line: line)
         }
     }
 }
