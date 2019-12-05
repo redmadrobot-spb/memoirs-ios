@@ -7,7 +7,7 @@
 //
 
 /// Log-level priority
-public enum Priority: CaseIterable, Comparable {
+public enum Priority: CaseIterable, Comparable, CustomStringConvertible {
     /// Describes the same events as in the debug-level but in more detail.
     case verbose
     /// Describes messages that contain information typically used only when debugging a program.
@@ -35,6 +35,23 @@ public enum Priority: CaseIterable, Comparable {
                 return 4
             case .critical:
                 return 5
+        }
+    }
+
+    public var description: String {
+        switch self {
+            case .verbose:
+                return "🟣 VERBOSE"
+            case .debug:
+                return "🔵 DEBUG"
+            case .info:
+                return "🟢 INFO"
+            case .warning:
+                return "🟡 WARNING"
+            case .error:
+                return "🟠 ERROR"
+            case .critical:
+                return "🔴 CRITICAL"
         }
     }
 
