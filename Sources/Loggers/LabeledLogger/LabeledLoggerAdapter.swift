@@ -18,12 +18,13 @@ public struct LabeledLoggerAdapter: LabeledLogger {
 
     public func log(
         priority: Priority,
+        label: String,
         message: () -> String,
         meta: () -> [String: Any]?,
         file: StaticString,
         function: StaticString,
         line: UInt
     ) {
-        adaptee.log(priority: priority, label: label, message: message, meta: meta, file: file, function: function, line: line)
+        adaptee.log(priority: priority, label: self.label, message: message, meta: meta, file: file, function: function, line: line)
     }
 }

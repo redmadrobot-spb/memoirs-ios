@@ -33,14 +33,13 @@ extension LabeledLogger {
     @inlinable
     public func log(
         priority: Priority,
-        label: String,
         message: () -> String,
         meta: () -> [String: Any]?,
         file: StaticString,
         function: StaticString,
         line: UInt
     ) {
-        log(priority: priority, message: message, meta: meta, file: file, function: function, line: line)
+        log(priority: priority, label: label, message: message, meta: meta, file: file, function: function, line: line)
     }
 
     /// Method that reports the log event with `verbose` log-level.
