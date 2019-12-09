@@ -1,5 +1,5 @@
 //
-//  MultiplexLogger.swift
+//  MultiplexingLogger.swift
 //  Robologs
 //
 //  Created by Dmitry Shadrin on 05.12.2019.
@@ -7,7 +7,7 @@
 //
 
 /// A logger that stores several loggers in itself and redirects all log events to them. It has no side effects.
-public struct MultiplexLogger: Logger {
+public struct MultiplexingLogger: Logger {
     /// An array of loggers to which all log events will be redirected.
     public let loggers: [Logger]
 
