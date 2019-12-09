@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		4611FCEF239904CC00E23B25 /* FilteringLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4611FCEE239904CC00E23B25 /* FilteringLogger.swift */; };
+		4611FCED2398FEF100E23B25 /* MultiplexingLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4611FCEC2398FEF100E23B25 /* MultiplexingLogger.swift */; };
 		4611FCF723995F3300E23B25 /* NSLogLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4611FCF623995F3300E23B25 /* NSLogLogger.swift */; };
 		4611FCFC239A4D4E00E23B25 /* LabeledLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4611FCFB239A4D4E00E23B25 /* LabeledLogger.swift */; };
 		46131F5D238EADD800612712 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46131F5C238EADD800612712 /* Logger.swift */; };
@@ -20,6 +21,7 @@
 
 /* Begin PBXFileReference section */
 		4611FCEE239904CC00E23B25 /* FilteringLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilteringLogger.swift; sourceTree = "<group>"; };
+		4611FCEC2398FEF100E23B25 /* MultiplexingLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiplexingLogger.swift; sourceTree = "<group>"; };
 		4611FCF623995F3300E23B25 /* NSLogLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSLogLogger.swift; sourceTree = "<group>"; };
 		4611FCFB239A4D4E00E23B25 /* LabeledLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabeledLogger.swift; sourceTree = "<group>"; };
 		46131F5C238EADD800612712 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
@@ -49,6 +51,7 @@
 				46131F60238EAE8200612712 /* PrintLogger.swift */,
 				4626E6102396709700BD14B8 /* OSLogLogger.swift */,
 				4611FCEE239904CC00E23B25 /* FilteringLogger.swift */,
+				4611FCEC2398FEF100E23B25 /* MultiplexingLogger.swift */,
 				4611FCF623995F3300E23B25 /* NSLogLogger.swift */,
 				4655B6E5239A5B8200CB552B /* LabeledLogger */,
 			);
@@ -218,6 +221,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4611FCED2398FEF100E23B25 /* MultiplexingLogger.swift in Sources */,
 				4626E6112396709A00BD14B8 /* OSLogLogger.swift in Sources */,
 				4611FCEF239904CC00E23B25 /* FilteringLogger.swift in Sources */,
 				4611FCFC239A4D4E00E23B25 /* LabeledLogger.swift in Sources */,
