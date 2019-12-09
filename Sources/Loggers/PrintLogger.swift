@@ -20,12 +20,13 @@ public struct PrintLogger: Logger {
         priority: Priority,
         label: String,
         message: () -> String,
-        meta: () -> [String: Any]?,
+        meta: () -> [String: String]?,
         file: StaticString = #file,
         function: StaticString = #function,
         line: UInt = #line
     ) {
-        let description = prepareMessage(timestamp, priority, "\(file):\(function):\(line)", label, message(), meta())
+        let descriptionParts: [Any?] = [timestamp, priority, "\(file):\(function):\(line)", label, message(), meta()]
+        let description = descriptionParts.compactMap { $0.map(String.init(describing:)) }.joined(separator: " | ")
         print(description)
     }
 }

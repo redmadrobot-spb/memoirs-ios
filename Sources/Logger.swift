@@ -22,7 +22,7 @@ public protocol Logger {
         priority: Priority,
         label: String,
         message: () -> String,
-        meta: () -> [String: Any]?,
+        meta: () -> [String: String]?,
         file: StaticString,
         function: StaticString,
         line: UInt
@@ -42,7 +42,7 @@ extension Logger {
     public func verbose(
         label: String,
         message: @autoclosure () -> String,
-        meta: @autoclosure () -> [String: Any]? = nil,
+        meta: @autoclosure () -> [String: String]? = nil,
         file: StaticString = #file,
         function: StaticString = #function,
         line: UInt = #line
@@ -62,7 +62,7 @@ extension Logger {
     public func debug(
         label: String,
         message: @autoclosure () -> String,
-        meta: @autoclosure () -> [String: Any]? = nil,
+        meta: @autoclosure () -> [String: String]? = nil,
         file: StaticString = #file,
         function: StaticString = #function,
         line: UInt = #line
@@ -82,7 +82,7 @@ extension Logger {
     public func info(
         label: String,
         message: @autoclosure () -> String,
-        meta: @autoclosure () -> [String: Any]? = nil,
+        meta: @autoclosure () -> [String: String]? = nil,
         file: StaticString = #file,
         function: StaticString = #function,
         line: UInt = #line
@@ -102,7 +102,7 @@ extension Logger {
     public func warning(
         label: String,
         message: @autoclosure () -> String,
-        meta: @autoclosure () -> [String: Any]? = nil,
+        meta: @autoclosure () -> [String: String]? = nil,
         file: StaticString = #file,
         function: StaticString = #function,
         line: UInt = #line
@@ -122,7 +122,7 @@ extension Logger {
     public func error(
         label: String,
         message: @autoclosure () -> String,
-        meta: @autoclosure () -> [String: Any]? = nil,
+        meta: @autoclosure () -> [String: String]? = nil,
         file: StaticString = #file,
         function: StaticString = #function,
         line: UInt = #line
@@ -142,15 +142,11 @@ extension Logger {
     public func critical(
         label: String,
         message: @autoclosure () -> String,
-        meta: @autoclosure () -> [String: Any]? = nil,
+        meta: @autoclosure () -> [String: String]? = nil,
         file: StaticString = #file,
         function: StaticString = #function,
         line: UInt = #line
     ) {
         log(priority: .critical, label: label, message: message, meta: meta, file: file, function: function, line: line)
-    }
-
-    func prepareMessage(_ parts: Any?...) -> String {
-        parts.compactMap { $0.map(String.init(describing:)) }.joined(separator: " | ")
     }
 }
