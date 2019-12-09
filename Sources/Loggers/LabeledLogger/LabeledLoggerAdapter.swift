@@ -25,6 +25,6 @@ public struct LabeledLoggerAdapter: LabeledLogger {
         function: StaticString,
         line: UInt
     ) {
-        adaptee.log(priority: priority, label: self.label, message: message, meta: meta, file: file, function: function, line: line)
+        adaptee.log(priority: priority, label: label, message: message, meta: meta, file: file, function: function, line: line)
     }
 }
