@@ -10,7 +10,8 @@
 public struct FilteringLogger: Logger {
     /// The logger for which log events will be filtered.
     public let logger: Logger
-    /// Labels associated with their log priority.
+    /// Logging levels associated with registered label.
+    /// If your label is not registered here, then the default log level will be used.
     public let loggingLevelForLabels: [String: Priority]
     /// Default minimal log priority.
     public let defaultPriority: Priority
