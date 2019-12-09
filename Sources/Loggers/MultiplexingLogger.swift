@@ -16,7 +16,7 @@ public struct MultiplexingLogger: Logger {
         priority: Priority,
         label: String,
         message: () -> String,
-        meta: () -> [String: Any]?,
+        meta: () -> [String: String]?,
         file: StaticString,
         function: StaticString,
         line: UInt
