@@ -11,7 +11,7 @@ public struct FilteringLogger: Logger {
     /// The logger for which log events will be filtered.
     public let logger: Logger
     /// Labels associated with their log priority.
-    public let labelPriorities: [String: Priority]
+    public let loggingLevelForLabels: [String: Priority]
     /// Default minimal log priority.
     public let defaultPriority: Priority
 
@@ -25,7 +25,7 @@ public struct FilteringLogger: Logger {
         function: StaticString,
         line: UInt
     ) {
-        guard priority <= labelPriorities[label] ?? defaultPriority else { return }
+        guard priority <= loggingLevelForLabels[label] ?? defaultPriority else { return }
 
         logger.log(priority: priority, label: label, message: message, meta: meta, file: file, function: function, line: line)
     }
