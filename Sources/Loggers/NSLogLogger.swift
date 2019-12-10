@@ -21,8 +21,6 @@ public struct NSLogLogger: Logger {
         function: StaticString,
         line: UInt
     ) {
-        let descriptionParts: [Any?] = [priority, "\(file):\(function):\(line)", label, message(), meta()]
-        let description = descriptionParts.compactMap { $0.map(String.init(describing:)) }.joined(separator: " | ")
-        NSLog("%@", description)
+        NSLog("%@", "\(priority) | \(file):\(function):\(line) | \(label) | \(message()) | \(meta().map(String.init) ?? "")")
     }
 }
