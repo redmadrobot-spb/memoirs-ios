@@ -11,6 +11,10 @@ public struct LabeledLoggerAdapter: LabeledLogger {
     public let label: String
     private let adaptee: Logger
 
+    /// Creates a new instance of `LabeledLoggerAdapter`.
+    /// - Parameters:
+    ///   - label: Label which describing log category.
+    ///   - adaptee: Adaptable `Logger`.
     public init(label: String, adaptee: Logger) {
         self.label = label
         self.adaptee = adaptee

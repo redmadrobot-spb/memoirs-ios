@@ -10,6 +10,7 @@ import Foundation
 
 /// Logger which incapsulate NSLog logging system.
 public struct NSLogLogger: Logger {
+    /// Creates a new instance of `NSLogLogger`.
     public init() {}
 
     public func log(
