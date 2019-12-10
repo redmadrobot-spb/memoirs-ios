@@ -21,6 +21,10 @@ public struct NSLogLogger: Logger {
         function: StaticString,
         line: UInt
     ) {
-        NSLog("%@", "\(priority) | \(file):\(function):\(line) | \(label) | \(message()) | \(meta().map(String.init) ?? "")")
+        var metaDescription = ""
+        if let meta = meta() {
+            metaDescription = " | \(meta)"
+        }
+        NSLog("%@%@", "\(priority) | \(file):\(function):\(line) | \(label) | \(message())", metaDescription)
     }
 }
