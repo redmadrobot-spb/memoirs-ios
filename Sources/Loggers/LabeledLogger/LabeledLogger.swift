@@ -22,7 +22,7 @@ public protocol LabeledLogger: Logger {
     func log(
         priority: Priority,
         message: () -> String,
-        meta: () -> [String: Any]?,
+        meta: () -> [String: String]?,
         file: StaticString,
         function: StaticString,
         line: UInt
@@ -34,7 +34,7 @@ extension LabeledLogger {
     public func log(
         priority: Priority,
         message: () -> String,
-        meta: () -> [String: Any]?,
+        meta: () -> [String: String]?,
         file: StaticString,
         function: StaticString,
         line: UInt
@@ -52,7 +52,7 @@ extension LabeledLogger {
     @inlinable
     public func verbose(
         message: @autoclosure () -> String,
-        meta: @autoclosure () -> [String: Any]? = nil,
+        meta: @autoclosure () -> [String: String]? = nil,
         file: StaticString = #file,
         function: StaticString = #function,
         line: UInt = #line
@@ -70,7 +70,7 @@ extension LabeledLogger {
     @inlinable
     public func debug(
         message: @autoclosure () -> String,
-        meta: @autoclosure () -> [String: Any]? = nil,
+        meta: @autoclosure () -> [String: String]? = nil,
         file: StaticString = #file,
         function: StaticString = #function,
         line: UInt = #line
@@ -88,7 +88,7 @@ extension LabeledLogger {
     @inlinable
     public func info(
         message: @autoclosure () -> String,
-        meta: @autoclosure () -> [String: Any]? = nil,
+        meta: @autoclosure () -> [String: String]? = nil,
         file: StaticString = #file,
         function: StaticString = #function,
         line: UInt = #line
@@ -106,7 +106,7 @@ extension LabeledLogger {
     @inlinable
     public func warning(
         message: @autoclosure () -> String,
-        meta: @autoclosure () -> [String: Any]? = nil,
+        meta: @autoclosure () -> [String: String]? = nil,
         file: StaticString = #file,
         function: StaticString = #function,
         line: UInt = #line
@@ -124,7 +124,7 @@ extension LabeledLogger {
     @inlinable
     public func error(
         message: @autoclosure () -> String,
-        meta: @autoclosure () -> [String: Any]? = nil,
+        meta: @autoclosure () -> [String: String]? = nil,
         file: StaticString = #file,
         function: StaticString = #function,
         line: UInt = #line
@@ -142,7 +142,7 @@ extension LabeledLogger {
     @inlinable
     public func critical(
         message: @autoclosure () -> String,
-        meta: @autoclosure () -> [String: Any]? = nil,
+        meta: @autoclosure () -> [String: String]? = nil,
         file: StaticString = #file,
         function: StaticString = #function,
         line: UInt = #line

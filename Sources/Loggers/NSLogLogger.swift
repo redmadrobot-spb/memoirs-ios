@@ -16,12 +16,15 @@ public struct NSLogLogger: Logger {
         priority: Priority,
         label: String,
         message: () -> String,
-        meta: () -> [String: Any]?,
+        meta: () -> [String: String]?,
         file: StaticString,
         function: StaticString,
         line: UInt
     ) {
-        let description = prepareMessage(priority, "\(file):\(function):\(line)", label, message(), meta())
-        NSLog("%@", description)
+        var metaDescription = ""
+        if let meta = meta() {
+            metaDescription = " | \(meta)"
+        }
+        NSLog("%@%@", "\(priority) | \(file):\(function):\(line) | \(label) | \(message())", metaDescription)
     }
 }
