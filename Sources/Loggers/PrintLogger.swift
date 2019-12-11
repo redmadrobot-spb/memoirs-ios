@@ -13,7 +13,7 @@ public struct PrintLogger: Logger {
     /// Current timestamp.
     private var timestamp: Date { Date() }
 
-    /// Creates a `(Logger)` - implementation object.
+    /// Creates a new instance of `PrintLogger`.
     public init() { }
 
     public func log(

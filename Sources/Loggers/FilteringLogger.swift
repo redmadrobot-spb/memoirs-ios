@@ -8,13 +8,24 @@
 
 /// Logger that filter log events by priority and redirects them to the target logger.
 public struct FilteringLogger: Logger {
-    /// The logger for which log events will be filtered.
-    public let logger: Logger
+    @usableFromInline
+    let logger: Logger
     /// Logging levels associated with registered label.
     /// If your label is not registered here, then the default log level will be used.
     public let loggingLevelForLabels: [String: Priority]
     /// Default minimal log priority.
     public let defaultPriority: Priority
+
+    /// Creates a new instance of `FilteringLogger`.
+    /// - Parameters:
+    ///   - logger: The logger for which log events will be filtered.
+    ///   - loggingLevelForLabels: Logging levels associated with registered label.
+    ///   - defaultPriority: Default minimal log priority.
+    public init(logger: Logger, loggingLevelForLabels: [String: Priority], defaultPriority: Priority) {
+        self.logger = logger
+        self.loggingLevelForLabels = loggingLevelForLabels
+        self.defaultPriority = defaultPriority
+    }
 
     @inlinable
     public func log(

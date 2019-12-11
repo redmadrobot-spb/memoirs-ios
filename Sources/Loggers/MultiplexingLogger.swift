@@ -8,8 +8,14 @@
 
 /// A logger that stores several loggers in itself and redirects all log events to them. It has no side effects.
 public struct MultiplexingLogger: Logger {
-    /// An array of loggers to which all log events will be redirected.
-    public let loggers: [Logger]
+    @usableFromInline
+    let loggers: [Logger]
+
+    /// Creates a new instance of `MultiplexingLogger`.
+    /// - Parameter loggers: An array of loggers to which all log events will be redirected.
+    public init(loggers: [Logger]) {
+        self.loggers = loggers
+    }
 
     @inlinable
     public func log(
