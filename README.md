@@ -12,7 +12,7 @@ func log(
     priority: Priority,
     label: String,
     message: () -> String,
-    meta: () -> [String: Any]?,
+    meta: () -> [String: String]?,
     file: StaticString,
     function: StaticString,
     line: UInt
@@ -53,37 +53,13 @@ logger.debug(label: "Network", message: "User data request",
              meta: [ "RequestId": UUID().uuidString ])
 ```
 Several implementations are available out of the box (the list will be updated):
-- `PrintLogger` which just prints log message in LLDB-console.
-- `OSLogLogger` which incapsulates `os.log` logging system.
 
-## Logging sensitive data
-
-When logging events, the confidentiality of certain data must be considered.
-
-The logging system under the hood retrieves log information using protocols:
-- `CustomStringConvertible`
-- `CustomDebugStringConvertible`
-- `CustomReflectable`
-- `CustomLeafReflectable`
-
-Therefore, you need to implement a simple `@propertyWrapper` into your project that will clear private information in accordance with your rules:
-```swift
-@propertyWrapper
-struct Sensitive<Value>: CustomStringConvertible, CustomDebugStringConvertible,
-        CustomReflectable, CustomLeafReflectable {
-    var wrappedValue: Value
-    var description: String { "<private>" }
-    var debugDescription: String { "<private>" }
-    var customMirror: Mirror { Mirror(reflecting: "<private>") }
-}
-```
-And use it in your data models like this:
-```swift
-struct User {
-    let name: String
-    @Sensitive private(set) var cardNumber: String
-}
-```
+- `FilteringLogger`, which incapsulate some logger and filters incoming log-events by labels with priorities or minimal default priority.
+- `MultiplexingLogger`, which stores several loggers and redirects all log events to them.
+- `LabeledLoggerAdapter`, which adapts any implementation of  `Logger` to `LabeledLogger` - protocol that allows you to bind logger to only one label.
+- `PrintLogger`, which just prints log message in LLDB-console.
+- `OSLogLogger`, which incapsulates `os.log` logging system.
+- `NSLogLogger`, which incapsulates `NSLog` logging system.
 
 ## Requirements
 
