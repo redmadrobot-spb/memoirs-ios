@@ -26,7 +26,7 @@ public struct PrintLogger: Logger {
         line: UInt = #line
     ) {
         let descriptionParts: [Any?] = [timestamp, priority, "\(file):\(function):\(line)", label, message(), meta()]
-        let description = descriptionParts.compactMap { $0.map(String.init(describing:)) }.joined(separator: " | ")
+        let description = descriptionParts.compactMap { $0.map(String.init(describing:)) }.joined(separator: " ")
         print(description)
     }
 }
