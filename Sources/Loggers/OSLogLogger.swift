@@ -34,8 +34,11 @@ public struct OSLogLogger: Logger {
         function: StaticString = #function,
         line: UInt = #line
     ) {
-        let descriptionParts: [Any?] = ["\(file):\(function):\(line)", message(), meta()]
-        let description = descriptionParts.compactMap { $0.map(String.init(describing:)) }.joined(separator: " ")
+        let description = [
+            "\(file):\(function):\(line)", message(), meta().map { "\($0)" }
+        ]
+        .compactMap { $0 }
+        .joined(separator: " ")
         os_log(logType(from: priority), log: logger(with: label), "%{public}@", description)
     }
 
