@@ -24,8 +24,8 @@ public struct NSLogLogger: Logger {
     ) {
         var metaDescription = ""
         if let meta = meta() {
-            metaDescription = " | \(meta)"
+            metaDescription = " \(meta)"
         }
-        NSLog("%@%@", "\(priority) | \(file):\(function):\(line) | \(label) | \(message())", metaDescription)
+        NSLog("%@%@", "\(priority) \(file):\(function):\(line) \(label) \(message())", metaDescription)
     }
 }
