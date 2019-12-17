@@ -13,19 +13,24 @@ public struct PrintLogger: Logger {
     /// Current timestamp.
     private var timestamp: Date { Date() }
 
-    /// Creates a `(Logger)` - implementation object.
+    /// Creates a new instance of `PrintLogger`.
     public init() { }
 
     public func log(
         priority: Priority,
         label: String,
         message: () -> String,
-        meta: () -> [String: Any]?,
+        meta: () -> [String: String]?,
         file: StaticString = #file,
         function: StaticString = #function,
         line: UInt = #line
     ) {
-        let description = prepareMessage(timestamp, priority, "\(file):\(function):\(line)", label, message(), meta())
+        let description =
+            [
+                "\(timestamp)", "\(priority)", "\(file):\(function):\(line)", "\(label)", message(), meta().map { "\($0)" }
+            ]
+            .compactMap { $0 }
+            .joined(separator: " ")
         print(description)
     }
 }

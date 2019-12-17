@@ -15,19 +15,28 @@ public struct OSLogLogger: Logger {
     /// An identifier string, in reverse DNS notation, representing the subsystem that’s performing logging.
     /// For example, `com.your_company.your_subsystem_name`.
     /// The subsystem is used for categorization and filtering of related log messages, as well as for grouping related logging settings.
-    let subsystem: String
+    public let subsystem: String
     private var loggers: SynchronizedDictionary<String, OSLog>
+
+    /// Creates a new instance of `OSLogLogger`.
+    /// - Parameter subsystem: An identifier string, in reverse DNS notation, representing the subsystem that’s performing logging.
+    public init(subsystem: String) {
+        self.subsystem = subsystem
+        self.loggers = [:]
+    }
 
     public func log(
         priority: Priority,
         label: String,
         message: () -> String,
-        meta: () -> [ String: Any ]?,
+        meta: () -> [String: String]?,
         file: StaticString = #file,
         function: StaticString = #function,
         line: UInt = #line
     ) {
-        let description = prepareMessage("\(file):\(function):\(line)", message(), meta())
+        let description = [ "\(file):\(function):\(line)", message(), meta().map { "\($0)" } ]
+            .compactMap { $0 }
+            .joined(separator: " ")
         os_log(logType(from: priority), log: logger(with: label), "%{public}@", description)
     }
 
