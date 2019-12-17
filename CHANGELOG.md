@@ -6,7 +6,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 
-## [Unreleased]
+## [1.0](https://git.redmadrobot.com/RedMadRobot/SPb/robologs-ios/tags/1.0) - 2019-12-17
 ### Added
 - [FilteringLogger](https://git.redmadrobot.com/RedMadRobot/SPb/robologs-ios/blob/master/Sources/Loggers/FilteringLogger.swift)
 - [MultiplexingLogger](https://git.redmadrobot.com/RedMadRobot/SPb/robologs-ios/blob/master/Sources/Loggers/MultiplexingLogger.swift)
