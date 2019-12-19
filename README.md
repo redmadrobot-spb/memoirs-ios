@@ -63,7 +63,7 @@ Several implementations are available out of the box (the list will be updated):
 
 ## Requirements
 
-- iOS 10.0+
+- iOS 9.0+
 - Swift 5.0+
   - Xcode 10.2+
   
