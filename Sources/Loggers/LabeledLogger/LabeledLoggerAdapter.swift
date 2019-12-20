@@ -21,7 +21,7 @@ public struct LabeledLoggerAdapter: LabeledLogger {
     }
 
     public func log(
-        priority: Priority,
+        level: Level,
         label: String,
         message: () -> String,
         meta: () -> [String: String]?,
@@ -29,6 +29,6 @@ public struct LabeledLoggerAdapter: LabeledLogger {
         function: StaticString,
         line: UInt
     ) {
-        adaptee.log(priority: priority, label: label, message: message, meta: meta, file: file, function: function, line: line)
+        adaptee.log(level: level, label: label, message: message, meta: meta, file: file, function: function, line: line)
     }
 }
