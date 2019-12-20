@@ -30,7 +30,7 @@ The following log levels are supported:
 - `critical` - Describes a critical error, after which the application will be terminated.
 
 Log levels implement the `Comparable` protocol and their priority is in ascending order from `verbose` to `critical`.
-If your custom logger needs to handle a certain log level, just compare it with `Level` parameter in  `log` - function.
+If your custom logger needs to handle a certain log level, just compare it with `level` parameter in  `log` - function.
 
 #### Convenience interface
 
