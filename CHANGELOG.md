@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## Unreleased
 ### Changed
 - Minimum deployment target to iOS 9.0
+- Logging level `Priority` renamed to `Level`
 
 ## [1.0](https://git.redmadrobot.com/RedMadRobot/SPb/robologs-ios/tags/1.0) - 2019-12-17
 ### Added
