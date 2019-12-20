@@ -10,7 +10,7 @@
 public protocol Logger {
     /// Required method that reports the log event.
     /// - Parameters:
-    ///   - priority: Log-level.
+    ///   - level: Logging level.
     ///   - label: Label describing log category.
     ///   - message: Message describing log event.
     ///   - meta: Additional log information in key-value format.
@@ -19,7 +19,7 @@ public protocol Logger {
     ///   - line: The line of code from which the method was called.
     @inlinable
     func log(
-        priority: Priority,
+        level: Level,
         label: String,
         message: () -> String,
         meta: () -> [String: String]?,
@@ -30,7 +30,7 @@ public protocol Logger {
 }
 
 extension Logger {
-    /// Method that reports the log event with `verbose` log-level.
+    /// Method that reports the log event with `verbose` logging level.
     /// - Parameters:
     ///   - label: Label describing log category.
     ///   - message: Message describing log event.
@@ -47,10 +47,10 @@ extension Logger {
         function: StaticString = #function,
         line: UInt = #line
     ) {
-        log(priority: .verbose, label: label, message: message, meta: meta, file: file, function: function, line: line)
+        log(level: .verbose, label: label, message: message, meta: meta, file: file, function: function, line: line)
     }
 
-    /// Method that reports the log event with `debug` log-level.
+    /// Method that reports the log event with `debug` logging level.
     /// - Parameters:
     ///   - label: Label describing log category.
     ///   - message: Message describing log event.
@@ -67,10 +67,10 @@ extension Logger {
         function: StaticString = #function,
         line: UInt = #line
     ) {
-        log(priority: .debug, label: label, message: message, meta: meta, file: file, function: function, line: line)
+        log(level: .debug, label: label, message: message, meta: meta, file: file, function: function, line: line)
     }
 
-    /// Method that reports the log event with `info` log-level.
+    /// Method that reports the log event with `info` logging level.
     /// - Parameters:
     ///   - label: Label describing log category.
     ///   - message: Message describing log event.
@@ -87,10 +87,10 @@ extension Logger {
         function: StaticString = #function,
         line: UInt = #line
     ) {
-        log(priority: .info, label: label, message: message, meta: meta, file: file, function: function, line: line)
+        log(level: .info, label: label, message: message, meta: meta, file: file, function: function, line: line)
     }
 
-    /// Method that reports the log event with `warning` log-level.
+    /// Method that reports the log event with `warning` logging level.
     /// - Parameters:
     ///   - label: Label describing log category.
     ///   - message: Message describing log event.
@@ -107,10 +107,10 @@ extension Logger {
         function: StaticString = #function,
         line: UInt = #line
     ) {
-        log(priority: .warning, label: label, message: message, meta: meta, file: file, function: function, line: line)
+        log(level: .warning, label: label, message: message, meta: meta, file: file, function: function, line: line)
     }
 
-    /// Method that reports the log event with `error` log-level.
+    /// Method that reports the log event with `error` logging level.
     /// - Parameters:
     ///   - label: Label describing log category.
     ///   - message: Message describing log event.
@@ -127,10 +127,10 @@ extension Logger {
         function: StaticString = #function,
         line: UInt = #line
     ) {
-        log(priority: .error, label: label, message: message, meta: meta, file: file, function: function, line: line)
+        log(level: .error, label: label, message: message, meta: meta, file: file, function: function, line: line)
     }
 
-    /// Method that reports the log event with `assert` log-level.
+    /// Method that reports the log event with `assert` logging level.
     /// - Parameters:
     ///   - label: Label describing log category.
     ///   - message: Message describing log event.
@@ -147,6 +147,6 @@ extension Logger {
         function: StaticString = #function,
         line: UInt = #line
     ) {
-        log(priority: .critical, label: label, message: message, meta: meta, file: file, function: function, line: line)
+        log(level: .critical, label: label, message: message, meta: meta, file: file, function: function, line: line)
     }
 }

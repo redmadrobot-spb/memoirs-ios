@@ -14,7 +14,7 @@ public struct NSLogLogger: Logger {
     public init() {}
 
     public func log(
-        priority: Priority,
+        level: Level,
         label: String,
         message: () -> String,
         meta: () -> [String: String]?,
@@ -26,6 +26,6 @@ public struct NSLogLogger: Logger {
         if let meta = meta() {
             metaDescription = " \(meta)"
         }
-        NSLog("%@%@", "\(priority) \(file):\(function):\(line) \(label) \(message())", metaDescription)
+        NSLog("%@%@", "\(level) \(file):\(function):\(line) \(label) \(message())", metaDescription)
     }
 }

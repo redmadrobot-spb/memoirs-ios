@@ -6,30 +6,30 @@
 //  Copyright © 2019 Redmadrobot. All rights reserved.
 //
 
-/// Logger that filter log events by priority and redirects them to the target logger.
+/// Logger that filter log events by level and redirects them to the target logger.
 public struct FilteringLogger: Logger {
     @usableFromInline
     let logger: Logger
     /// Logging levels associated with registered label.
     /// If your label is not registered here, then the default log level will be used.
-    public let loggingLevelForLabels: [String: Priority]
-    /// Default minimal log priority.
-    public let defaultPriority: Priority
+    public let loggingLevelForLabels: [String: Level]
+    /// Default minimal log level.
+    public let defaultLevel: Level
 
     /// Creates a new instance of `FilteringLogger`.
     /// - Parameters:
     ///   - logger: The logger for which log events will be filtered.
     ///   - loggingLevelForLabels: Logging levels associated with registered label.
-    ///   - defaultPriority: Default minimal log priority.
-    public init(logger: Logger, loggingLevelForLabels: [String: Priority], defaultPriority: Priority) {
+    ///   - defaultLevel: Default minimal log level.
+    public init(logger: Logger, loggingLevelForLabels: [String: Level], defaultLevel: Level) {
         self.logger = logger
         self.loggingLevelForLabels = loggingLevelForLabels
-        self.defaultPriority = defaultPriority
+        self.defaultLevel = defaultLevel
     }
 
     @inlinable
     public func log(
-        priority: Priority,
+        level: Level,
         label: String,
         message: () -> String,
         meta: () -> [String: String]?,
@@ -37,8 +37,8 @@ public struct FilteringLogger: Logger {
         function: StaticString,
         line: UInt
     ) {
-        guard priority <= loggingLevelForLabels[label] ?? defaultPriority else { return }
+        guard level <= loggingLevelForLabels[label] ?? defaultLevel else { return }
 
-        logger.log(priority: priority, label: label, message: message, meta: meta, file: file, function: function, line: line)
+        logger.log(level: level, label: label, message: message, meta: meta, file: file, function: function, line: line)
     }
 }

@@ -1,13 +1,13 @@
 //
-//  Priority.swift
+//  Level.swift
 //  Robologs
 //
 //  Created by Dmitry Shadrin on 27.11.2019.
 //  Copyright © 2019 Redmadrobot. All rights reserved.
 //
 
-/// Log-level priority
-public enum Priority: CaseIterable, Comparable, CustomStringConvertible {
+/// Logging level
+public enum Level: CaseIterable, Comparable, CustomStringConvertible {
     /// Describes the same events as in the debug-level but in more detail.
     case verbose
     /// Describes messages that contain information typically used only when debugging a program.
@@ -55,19 +55,19 @@ public enum Priority: CaseIterable, Comparable, CustomStringConvertible {
         }
     }
 
-    public static func < (lhs: Priority, rhs: Priority) -> Bool {
+    public static func < (lhs: Level, rhs: Level) -> Bool {
         lhs.naturalIntegralValue < rhs.naturalIntegralValue
     }
 
-    public static func <= (lhs: Priority, rhs: Priority) -> Bool {
+    public static func <= (lhs: Level, rhs: Level) -> Bool {
         lhs.naturalIntegralValue <= rhs.naturalIntegralValue
     }
 
-    public static func >= (lhs: Priority, rhs: Priority) -> Bool {
+    public static func >= (lhs: Level, rhs: Level) -> Bool {
         lhs.naturalIntegralValue >= rhs.naturalIntegralValue
     }
 
-    public static func > (lhs: Priority, rhs: Priority) -> Bool {
+    public static func > (lhs: Level, rhs: Level) -> Bool {
         lhs.naturalIntegralValue > rhs.naturalIntegralValue
     }
 }

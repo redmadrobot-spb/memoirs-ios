@@ -17,7 +17,7 @@ public struct PrintLogger: Logger {
     public init() { }
 
     public func log(
-        priority: Priority,
+        level: Level,
         label: String,
         message: () -> String,
         meta: () -> [String: String]?,
@@ -27,7 +27,7 @@ public struct PrintLogger: Logger {
     ) {
         let description =
             [
-                "\(timestamp)", "\(priority)", "\(file):\(function):\(line)", "\(label)", message(), meta().map { "\($0)" }
+                "\(timestamp)", "\(level)", "\(file):\(function):\(line)", "\(label)", message(), meta().map { "\($0)" }
             ]
             .compactMap { $0 }
             .joined(separator: " ")

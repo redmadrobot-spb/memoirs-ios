@@ -12,7 +12,7 @@
 		4611FCF723995F3300E23B25 /* NSLogLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4611FCF623995F3300E23B25 /* NSLogLogger.swift */; };
 		4611FCFC239A4D4E00E23B25 /* LabeledLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4611FCFB239A4D4E00E23B25 /* LabeledLogger.swift */; };
 		46131F5D238EADD800612712 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46131F5C238EADD800612712 /* Logger.swift */; };
-		46131F5F238EADF900612712 /* Priority.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46131F5E238EADF900612712 /* Priority.swift */; };
+		46131F5F238EADF900612712 /* Level.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46131F5E238EADF900612712 /* Level.swift */; };
 		4626E60B23956D5800BD14B8 /* PrintLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46131F60238EAE8200612712 /* PrintLogger.swift */; };
 		4626E6112396709A00BD14B8 /* OSLogLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4626E6102396709700BD14B8 /* OSLogLogger.swift */; };
 		4655B6E7239A5BD900CB552B /* LabeledLoggerAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4655B6E6239A5BD900CB552B /* LabeledLoggerAdapter.swift */; };
@@ -25,7 +25,7 @@
 		4611FCF623995F3300E23B25 /* NSLogLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSLogLogger.swift; sourceTree = "<group>"; };
 		4611FCFB239A4D4E00E23B25 /* LabeledLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabeledLogger.swift; sourceTree = "<group>"; };
 		46131F5C238EADD800612712 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
-		46131F5E238EADF900612712 /* Priority.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Priority.swift; sourceTree = "<group>"; };
+		46131F5E238EADF900612712 /* Level.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Level.swift; sourceTree = "<group>"; };
 		46131F60238EAE8200612712 /* PrintLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrintLogger.swift; sourceTree = "<group>"; };
 		4626E6102396709700BD14B8 /* OSLogLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OSLogLogger.swift; sourceTree = "<group>"; };
 		4655B6E6239A5BD900CB552B /* LabeledLoggerAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabeledLoggerAdapter.swift; sourceTree = "<group>"; };
@@ -62,7 +62,7 @@
 			isa = PBXGroup;
 			children = (
 				46131F5C238EADD800612712 /* Logger.swift */,
-				46131F5E238EADF900612712 /* Priority.swift */,
+				46131F5E238EADF900612712 /* Level.swift */,
 				46131F7023911AB100612712 /* Loggers */,
 				46E239062397A71A006539C5 /* Common */,
 			);
@@ -226,7 +226,7 @@
 				4611FCEF239904CC00E23B25 /* FilteringLogger.swift in Sources */,
 				4611FCFC239A4D4E00E23B25 /* LabeledLogger.swift in Sources */,
 				4626E60B23956D5800BD14B8 /* PrintLogger.swift in Sources */,
-				46131F5F238EADF900612712 /* Priority.swift in Sources */,
+				46131F5F238EADF900612712 /* Level.swift in Sources */,
 				4611FCF723995F3300E23B25 /* NSLogLogger.swift in Sources */,
 				46131F5D238EADD800612712 /* Logger.swift in Sources */,
 				4655B6E7239A5BD900CB552B /* LabeledLoggerAdapter.swift in Sources */,

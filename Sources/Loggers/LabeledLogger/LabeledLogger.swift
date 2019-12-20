@@ -12,7 +12,7 @@ public protocol LabeledLogger: Logger {
 
     /// Required method that reports the log event.
     /// - Parameters:
-    ///   - priority: Log-level.
+    ///   - level: Logging level.
     ///   - message: Message describing log event.
     ///   - meta: Additional log information in key-value format.
     ///   - file: The path to the file from which the method was called.
@@ -20,7 +20,7 @@ public protocol LabeledLogger: Logger {
     ///   - line: The line of code from which the method was called.
     @inlinable
     func log(
-        priority: Priority,
+        level: Level,
         message: () -> String,
         meta: () -> [String: String]?,
         file: StaticString,
@@ -32,17 +32,17 @@ public protocol LabeledLogger: Logger {
 extension LabeledLogger {
     @inlinable
     public func log(
-        priority: Priority,
+        level: Level,
         message: () -> String,
         meta: () -> [String: String]?,
         file: StaticString,
         function: StaticString,
         line: UInt
     ) {
-        log(priority: priority, label: label, message: message, meta: meta, file: file, function: function, line: line)
+        log(level: level, label: label, message: message, meta: meta, file: file, function: function, line: line)
     }
 
-    /// Method that reports the log event with `verbose` log-level.
+    /// Method that reports the log event with `verbose` logging level.
     /// - Parameters:
     ///   - message: Message describing log event.
     ///   - meta: Additional log information in key-value format.
@@ -57,10 +57,10 @@ extension LabeledLogger {
         function: StaticString = #function,
         line: UInt = #line
     ) {
-        log(priority: .verbose, message: message, meta: meta, file: file, function: function, line: line)
+        log(level: .verbose, message: message, meta: meta, file: file, function: function, line: line)
     }
 
-    /// Method that reports the log event with `debug` log-level.
+    /// Method that reports the log event with `debug` logging level.
     /// - Parameters:
     ///   - message: Message describing log event.
     ///   - meta: Additional log information in key-value format.
@@ -75,10 +75,10 @@ extension LabeledLogger {
         function: StaticString = #function,
         line: UInt = #line
     ) {
-        log(priority: .debug, message: message, meta: meta, file: file, function: function, line: line)
+        log(level: .debug, message: message, meta: meta, file: file, function: function, line: line)
     }
 
-    /// Method that reports the log event with `info` log-level.
+    /// Method that reports the log event with `info` logging level.
     /// - Parameters:
     ///   - message: Message describing log event.
     ///   - meta: Additional log information in key-value format.
@@ -93,10 +93,10 @@ extension LabeledLogger {
         function: StaticString = #function,
         line: UInt = #line
     ) {
-        log(priority: .info, message: message, meta: meta, file: file, function: function, line: line)
+        log(level: .info, message: message, meta: meta, file: file, function: function, line: line)
     }
 
-    /// Method that reports the log event with `warning` log-level.
+    /// Method that reports the log event with `warning` logging level.
     /// - Parameters:
     ///   - message: Message describing log event.
     ///   - meta: Additional log information in key-value format.
@@ -111,10 +111,10 @@ extension LabeledLogger {
         function: StaticString = #function,
         line: UInt = #line
     ) {
-        log(priority: .warning, message: message, meta: meta, file: file, function: function, line: line)
+        log(level: .warning, message: message, meta: meta, file: file, function: function, line: line)
     }
 
-    /// Method that reports the log event with `error` log-level.
+    /// Method that reports the log event with `error` logging level.
     /// - Parameters:
     ///   - message: Message describing log event.
     ///   - meta: Additional log information in key-value format.
@@ -129,10 +129,10 @@ extension LabeledLogger {
         function: StaticString = #function,
         line: UInt = #line
     ) {
-        log(priority: .error, message: message, meta: meta, file: file, function: function, line: line)
+        log(level: .error, message: message, meta: meta, file: file, function: function, line: line)
     }
 
-    /// Method that reports the log event with `assert` log-level.
+    /// Method that reports the log event with `assert` logging level.
     /// - Parameters:
     ///   - message: Message describing log event.
     ///   - meta: Additional log information in key-value format.
@@ -147,6 +147,6 @@ extension LabeledLogger {
         function: StaticString = #function,
         line: UInt = #line
     ) {
-        log(priority: .critical, message: message, meta: meta, file: file, function: function, line: line)
+        log(level: .critical, message: message, meta: meta, file: file, function: function, line: line)
     }
 }

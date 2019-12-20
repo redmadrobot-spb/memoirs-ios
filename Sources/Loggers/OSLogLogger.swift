@@ -26,7 +26,7 @@ public struct OSLogLogger: Logger {
     }
 
     public func log(
-        priority: Priority,
+        level: Level,
         label: String,
         message: () -> String,
         meta: () -> [String: String]?,
@@ -37,11 +37,11 @@ public struct OSLogLogger: Logger {
         let description = [ "\(file):\(function):\(line)", message(), meta().map { "\($0)" } ]
             .compactMap { $0 }
             .joined(separator: " ")
-        os_log(logType(from: priority), log: logger(with: label), "%{public}@", description)
+        os_log(logType(from: level), log: logger(with: label), "%{public}@", description)
     }
 
-    private func logType(from priority: Priority) -> OSLogType {
-        switch priority {
+    private func logType(from level: Level) -> OSLogType {
+        switch level {
             case .verbose:
                 return .debug
             case .debug:
