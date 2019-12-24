@@ -18,8 +18,8 @@ public struct NSLogLogger: Logger {
         label: String,
         message: () -> String,
         meta: () -> [String: String]?,
-        file: StaticString,
-        function: StaticString,
+        file: String,
+        function: String,
         line: UInt
     ) {
         var metaDescription = ""

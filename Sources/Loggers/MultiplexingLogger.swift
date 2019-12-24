@@ -23,8 +23,8 @@ public struct MultiplexingLogger: Logger {
         label: String,
         message: () -> String,
         meta: () -> [String: String]?,
-        file: StaticString,
-        function: StaticString,
+        file: String,
+        function: String,
         line: UInt
     ) {
         loggers.forEach {

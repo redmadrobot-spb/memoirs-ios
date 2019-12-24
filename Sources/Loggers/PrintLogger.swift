@@ -21,8 +21,8 @@ public struct PrintLogger: Logger {
         label: String,
         message: () -> String,
         meta: () -> [String: String]?,
-        file: StaticString = #file,
-        function: StaticString = #function,
+        file: String = #file,
+        function: String = #function,
         line: UInt = #line
     ) {
         let description =

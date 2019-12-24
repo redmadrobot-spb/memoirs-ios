@@ -23,8 +23,8 @@ public protocol LabeledLogger: Logger {
         level: Level,
         message: () -> String,
         meta: () -> [String: String]?,
-        file: StaticString,
-        function: StaticString,
+        file: String,
+        function: String,
         line: UInt
     )
 }
@@ -35,8 +35,8 @@ extension LabeledLogger {
         level: Level,
         message: () -> String,
         meta: () -> [String: String]?,
-        file: StaticString,
-        function: StaticString,
+        file: String,
+        function: String,
         line: UInt
     ) {
         log(level: level, label: label, message: message, meta: meta, file: file, function: function, line: line)
@@ -53,8 +53,8 @@ extension LabeledLogger {
     public func verbose(
         message: @autoclosure () -> String,
         meta: @autoclosure () -> [String: String]? = nil,
-        file: StaticString = #file,
-        function: StaticString = #function,
+        file: String = #file,
+        function: String = #function,
         line: UInt = #line
     ) {
         log(level: .verbose, message: message, meta: meta, file: file, function: function, line: line)
@@ -71,8 +71,8 @@ extension LabeledLogger {
     public func debug(
         message: @autoclosure () -> String,
         meta: @autoclosure () -> [String: String]? = nil,
-        file: StaticString = #file,
-        function: StaticString = #function,
+        file: String = #file,
+        function: String = #function,
         line: UInt = #line
     ) {
         log(level: .debug, message: message, meta: meta, file: file, function: function, line: line)
@@ -89,8 +89,8 @@ extension LabeledLogger {
     public func info(
         message: @autoclosure () -> String,
         meta: @autoclosure () -> [String: String]? = nil,
-        file: StaticString = #file,
-        function: StaticString = #function,
+        file: String = #file,
+        function: String = #function,
         line: UInt = #line
     ) {
         log(level: .info, message: message, meta: meta, file: file, function: function, line: line)
@@ -107,8 +107,8 @@ extension LabeledLogger {
     public func warning(
         message: @autoclosure () -> String,
         meta: @autoclosure () -> [String: String]? = nil,
-        file: StaticString = #file,
-        function: StaticString = #function,
+        file: String = #file,
+        function: String = #function,
         line: UInt = #line
     ) {
         log(level: .warning, message: message, meta: meta, file: file, function: function, line: line)
@@ -125,8 +125,8 @@ extension LabeledLogger {
     public func error(
         message: @autoclosure () -> String,
         meta: @autoclosure () -> [String: String]? = nil,
-        file: StaticString = #file,
-        function: StaticString = #function,
+        file: String = #file,
+        function: String = #function,
         line: UInt = #line
     ) {
         log(level: .error, message: message, meta: meta, file: file, function: function, line: line)
@@ -143,8 +143,8 @@ extension LabeledLogger {
     public func critical(
         message: @autoclosure () -> String,
         meta: @autoclosure () -> [String: String]? = nil,
-        file: StaticString = #file,
-        function: StaticString = #function,
+        file: String = #file,
+        function: String = #function,
         line: UInt = #line
     ) {
         log(level: .critical, message: message, meta: meta, file: file, function: function, line: line)
