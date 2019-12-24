@@ -34,7 +34,7 @@ public struct OSLogLogger: Logger {
         function: String = #function,
         line: UInt = #line
     ) {
-        let context = [ file, function, "\(line)" ].filter { !$0.isEmpty }.joined(separator: ":")
+        let context = [ file, function, (line == 0 ? "" : "\(line)") ].filter { !$0.isEmpty }.joined(separator: ":")
         let description = [ context, message(), meta().map { "\($0)" } ]
             .compactMap { $0 }
             .filter { !$0.isEmpty }

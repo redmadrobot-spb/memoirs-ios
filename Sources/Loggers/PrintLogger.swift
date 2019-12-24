@@ -16,7 +16,7 @@ public struct PrintLogger: Logger {
     /// Creates a new instance of `PrintLogger`.
     public init() {
         formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSS Z"
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSSZ"
     }
 
     public func log(
@@ -28,7 +28,7 @@ public struct PrintLogger: Logger {
         function: String = #function,
         line: UInt = #line
     ) {
-        let context = [ file, function, "\(line)" ].filter { !$0.isEmpty }.joined(separator: ":")
+        let context = [ file, function, (line == 0 ? "" : "\(line)") ].filter { !$0.isEmpty }.joined(separator: ":")
         let description = [ "\(timestamp)", "\(level)", context, "\(label)", message(), meta().map { "\($0)" } ]
             .compactMap { $0 }
             .filter { !$0.isEmpty }
