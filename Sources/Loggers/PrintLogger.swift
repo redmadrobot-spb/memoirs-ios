@@ -25,11 +25,10 @@ public struct PrintLogger: Logger {
         function: String = #function,
         line: UInt = #line
     ) {
-        let description =
-            [
-                "\(timestamp)", "\(level)", "\(file):\(function):\(line)", "\(label)", message(), meta().map { "\($0)" }
-            ]
+        let context = [ file, function, "\(line)" ].filter { !$0.isEmpty }.joined(separator: ":")
+        let description = [ "\(timestamp)", "\(level)", context, "\(label)", message(), meta().map { "\($0)" } ]
             .compactMap { $0 }
+            .filter { !$0.isEmpty }
             .joined(separator: " ")
         print(description)
     }
