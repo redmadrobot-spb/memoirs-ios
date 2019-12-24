@@ -25,8 +25,8 @@ public struct LabeledLoggerAdapter: LabeledLogger {
         label: String,
         message: () -> String,
         meta: () -> [String: String]?,
-        file: StaticString,
-        function: StaticString,
+        file: String,
+        function: String,
         line: UInt
     ) {
         adaptee.log(level: level, label: label, message: message, meta: meta, file: file, function: function, line: line)

@@ -33,8 +33,8 @@ public struct FilteringLogger: Logger {
         label: String,
         message: () -> String,
         meta: () -> [String: String]?,
-        file: StaticString,
-        function: StaticString,
+        file: String,
+        function: String,
         line: UInt
     ) {
         guard level <= loggingLevelForLabels[label] ?? defaultLevel else { return }

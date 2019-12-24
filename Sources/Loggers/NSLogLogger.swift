@@ -18,14 +18,15 @@ public struct NSLogLogger: Logger {
         label: String,
         message: () -> String,
         meta: () -> [String: String]?,
-        file: StaticString,
-        function: StaticString,
+        file: String,
+        function: String,
         line: UInt
     ) {
-        var metaDescription = ""
-        if let meta = meta() {
-            metaDescription = " \(meta)"
-        }
-        NSLog("%@%@", "\(level) \(file):\(function):\(line) \(label) \(message())", metaDescription)
+        let context = [ file, function, (line == 0 ? "" : "\(line)") ].filter { !$0.isEmpty }.joined(separator: ":")
+        let description = [ "\(level)", context, label, message(), meta().map { "\($0)" } ]
+            .compactMap { $0 }
+            .filter { !$0.isEmpty }
+            .joined(separator: " ")
+        NSLog("%@", description)
     }
 }

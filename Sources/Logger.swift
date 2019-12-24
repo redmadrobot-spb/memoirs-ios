@@ -23,8 +23,8 @@ public protocol Logger {
         label: String,
         message: () -> String,
         meta: () -> [String: String]?,
-        file: StaticString,
-        function: StaticString,
+        file: String,
+        function: String,
         line: UInt
     )
 }
@@ -43,8 +43,8 @@ extension Logger {
         label: String,
         message: @autoclosure () -> String,
         meta: @autoclosure () -> [String: String]? = nil,
-        file: StaticString = #file,
-        function: StaticString = #function,
+        file: String = #file,
+        function: String = #function,
         line: UInt = #line
     ) {
         log(level: .verbose, label: label, message: message, meta: meta, file: file, function: function, line: line)
@@ -63,8 +63,8 @@ extension Logger {
         label: String,
         message: @autoclosure () -> String,
         meta: @autoclosure () -> [String: String]? = nil,
-        file: StaticString = #file,
-        function: StaticString = #function,
+        file: String = #file,
+        function: String = #function,
         line: UInt = #line
     ) {
         log(level: .debug, label: label, message: message, meta: meta, file: file, function: function, line: line)
@@ -83,8 +83,8 @@ extension Logger {
         label: String,
         message: @autoclosure () -> String,
         meta: @autoclosure () -> [String: String]? = nil,
-        file: StaticString = #file,
-        function: StaticString = #function,
+        file: String = #file,
+        function: String = #function,
         line: UInt = #line
     ) {
         log(level: .info, label: label, message: message, meta: meta, file: file, function: function, line: line)
@@ -103,8 +103,8 @@ extension Logger {
         label: String,
         message: @autoclosure () -> String,
         meta: @autoclosure () -> [String: String]? = nil,
-        file: StaticString = #file,
-        function: StaticString = #function,
+        file: String = #file,
+        function: String = #function,
         line: UInt = #line
     ) {
         log(level: .warning, label: label, message: message, meta: meta, file: file, function: function, line: line)
@@ -123,8 +123,8 @@ extension Logger {
         label: String,
         message: @autoclosure () -> String,
         meta: @autoclosure () -> [String: String]? = nil,
-        file: StaticString = #file,
-        function: StaticString = #function,
+        file: String = #file,
+        function: String = #function,
         line: UInt = #line
     ) {
         log(level: .error, label: label, message: message, meta: meta, file: file, function: function, line: line)
@@ -143,8 +143,8 @@ extension Logger {
         label: String,
         message: @autoclosure () -> String,
         meta: @autoclosure () -> [String: String]? = nil,
-        file: StaticString = #file,
-        function: StaticString = #function,
+        file: String = #file,
+        function: String = #function,
         line: UInt = #line
     ) {
         log(level: .critical, label: label, message: message, meta: meta, file: file, function: function, line: line)
