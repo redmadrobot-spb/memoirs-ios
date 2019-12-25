@@ -30,6 +30,27 @@ public protocol Logger {
 }
 
 extension Logger {
+    /// Method that reports the log event with custom logging level.
+    /// - Parameters:
+    ///   - level: Logging level.
+    ///   - label: Label describing log category.
+    ///   - message: Message describing log event.
+    ///   - meta: Additional log information in key-value format.
+    ///   - file: The path to the file from which the method was called.
+    ///   - function: The function name from which the method was called.
+    ///   - line: The line of code from which the method was called.
+    @inlinable
+    public func log(
+        level: Level,
+        label: String,
+        message: @autoclosure () -> String,
+        meta: @autoclosure () -> [String: String]? = nil,
+        file: String = #file,
+        function: String = #function,
+        line: UInt = #line
+    ) {
+        log(level: level, label: label, message: message, meta: meta, file: file, function: function, line: line)
+    }
     /// Method that reports the log event with `verbose` logging level.
     /// - Parameters:
     ///   - label: Label describing log category.
