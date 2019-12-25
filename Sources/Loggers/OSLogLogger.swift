@@ -26,22 +26,24 @@ public struct OSLogLogger: Logger {
     }
 
     public func log(
-        priority: Priority,
+        level: Level,
         label: String,
         message: () -> String,
         meta: () -> [String: String]?,
-        file: StaticString = #file,
-        function: StaticString = #function,
+        file: String = #file,
+        function: String = #function,
         line: UInt = #line
     ) {
-        let description = [ "\(file):\(function):\(line)", message(), meta().map { "\($0)" } ]
+        let context = [ file, function, (line == 0 ? "" : "\(line)") ].filter { !$0.isEmpty }.joined(separator: ":")
+        let description = [ context, message(), meta().map { "\($0)" } ]
             .compactMap { $0 }
+            .filter { !$0.isEmpty }
             .joined(separator: " ")
-        os_log(logType(from: priority), log: logger(with: label), "%{public}@", description)
+        os_log(logType(from: level), log: logger(with: label), "%{public}@", description)
     }
 
-    private func logType(from priority: Priority) -> OSLogType {
-        switch priority {
+    private func logType(from level: Level) -> OSLogType {
+        switch level {
             case .verbose:
                 return .debug
             case .debug:

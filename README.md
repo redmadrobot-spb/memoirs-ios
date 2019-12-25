@@ -9,20 +9,20 @@ There is a protocol `Logger` - that requires only one function to be implemented
 ```swift
 @inlinable
 func log(
-    priority: Priority,
+    level: Level,
     label: String,
     message: () -> String,
     meta: () -> [String: String]?,
-    file: StaticString,
-    function: StaticString,
+    file: String,
+    function: String,
     line: UInt
 )
 ```
-#### Log levels (Priority)
+#### Log levels (Level)
 
 The following log levels are supported:
 
-- `verbose` - Describes the same events as in the debug-level but in more detail.
+- `verbose` - Describes the same events as in the debug level but in more detail.
 - `debug` - Describes messages that contain information typically used only when debugging a program.
 - `info` - Describes informational messages.
 - `warning` - Describes conditions that are not erroneous, but may require special processing.
@@ -30,7 +30,7 @@ The following log levels are supported:
 - `critical` - Describes a critical error, after which the application will be terminated.
 
 Log levels implement the `Comparable` protocol and their priority is in ascending order from `verbose` to `critical`.
-If your custom logger needs to handle a certain log level, just compare it with `priority` parameter in  `log` - function.
+If your custom logger needs to handle a certain log level, just compare it with `level` parameter in  `log` - function.
 
 #### Convenience interface
 
@@ -54,7 +54,7 @@ logger.debug(label: "Network", message: "User data request",
 ```
 Several implementations are available out of the box (the list will be updated):
 
-- `FilteringLogger`, which incapsulate some logger and filters incoming log-events by labels with priorities or minimal default priority.
+- `FilteringLogger`, which incapsulate some logger and filters incoming log-events by labels with levels or minimal default level.
 - `MultiplexingLogger`, which stores several loggers and redirects all log events to them.
 - `LabeledLoggerAdapter`, which adapts any implementation of  `Logger` to `LabeledLogger` - protocol that allows you to bind logger to only one label.
 - `PrintLogger`, which just prints log message in LLDB-console.
@@ -63,7 +63,7 @@ Several implementations are available out of the box (the list will be updated):
 
 ## Requirements
 
-- iOS 10.0+
+- iOS 9.0+
 - Swift 5.0+
   - Xcode 10.2+
   

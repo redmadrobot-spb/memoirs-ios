@@ -19,16 +19,16 @@ public struct MultiplexingLogger: Logger {
 
     @inlinable
     public func log(
-        priority: Priority,
+        level: Level,
         label: String,
         message: () -> String,
         meta: () -> [String: String]?,
-        file: StaticString,
-        function: StaticString,
+        file: String,
+        function: String,
         line: UInt
     ) {
         loggers.forEach {
-            $0.log(priority: priority, label: label, message: message, meta: meta, file: file, function: function, line: line)
+            $0.log(level: level, label: label, message: message, meta: meta, file: file, function: function, line: line)
         }
     }
 }
