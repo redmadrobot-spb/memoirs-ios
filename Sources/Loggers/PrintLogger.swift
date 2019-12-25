@@ -9,13 +9,16 @@
 import Foundation
 
 /// Default `(Logger)` - implementation which just `print()` log event in LLDB-console in pretty format.
-@available(iOS 10.0, *)
 public struct PrintLogger: Logger {
-    private let formatter = ISO8601DateFormatter()
+    private let formatter: DateFormatter
     private var timestamp: String { formatter.string(from: Date()) }
 
     /// Creates a new instance of `PrintLogger`.
-    public init() {}
+    public init() {
+        formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSSZ"
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+    }
 
     public func log(
         level: Level,
