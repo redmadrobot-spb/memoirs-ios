@@ -74,7 +74,7 @@ Robologs is available through [Carthage](https://github.com/Carthage/Carthage) o
 #### Carthage
 
 To install Robologs with Carthage, add the following line to your `Cartfile`.
-```
+```swift
 git "https://git.redmadrobot.com/RedMadRobot/SPb/robologs-ios.git"
 ```
 Then run `carthage update --no-use-binaries` command or just `carthage update`.
@@ -82,7 +82,7 @@ Then run `carthage update --no-use-binaries` command or just `carthage update`.
 #### SwiftPM
 
 To install Robologs with SwiftPM using XCode 11+, add package in project settings "Swift Packages" tab using url:
-```
+```swift
 "https://git.redmadrobot.com/RedMadRobot/SPb/robologs-ios.git"
 ```
 or add the following package to your Package.swift file: 
