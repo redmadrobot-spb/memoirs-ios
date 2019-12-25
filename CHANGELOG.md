@@ -5,7 +5,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## Unreleased
+## [1.2.0](https://git.redmadrobot.com/RedMadRobot/SPb/robologs-ios/tags/1.2.0) - 2019-12-25
+### Changed
+- `StaticString` to `String` in `log`-functions
+
+### Fixed
+- Appearance of empty log parameters in print loggers
+
+## [1.1.0](https://git.redmadrobot.com/RedMadRobot/SPb/robologs-ios/tags/1.1.0) - 2019-12-24
 ### Changed
 - Minimum deployment target to iOS 9.0
 - Logging level `Priority` renamed to `Level`
