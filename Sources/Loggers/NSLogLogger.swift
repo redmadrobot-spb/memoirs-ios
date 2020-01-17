@@ -23,7 +23,7 @@ public struct NSLogLogger: Logger {
         line: UInt
     ) {
         let context = [ file, function, (line == 0 ? "" : "\(line)") ].filter { !$0.isEmpty }.joined(separator: ":")
-        let description = [ "\(level)", context, label, message(), meta().map { "\($0)" } ]
+        let description = [ "\(level)", context, label, message(), meta().map { $0.isEmpty ? "" : "\($0)" } ]
             .compactMap { $0 }
             .filter { !$0.isEmpty }
             .joined(separator: " ")
