@@ -21,8 +21,8 @@ public protocol Logger {
     func log(
         level: Level,
         label: String,
-        message: () -> String,
-        meta: () -> [String: String]?,
+        message: () -> LogString,
+        meta: () -> [String: LogString]?,
         file: String,
         function: String,
         line: UInt
@@ -43,8 +43,8 @@ extension Logger {
     public func log(
         level: Level,
         label: String,
-        message: @autoclosure () -> String,
-        meta: @autoclosure () -> [String: String]? = nil,
+        message: @autoclosure () -> LogString,
+        meta: @autoclosure () -> [String: LogString]? = nil,
         file: String = #file,
         function: String = #function,
         line: UInt = #line
@@ -62,8 +62,8 @@ extension Logger {
     @inlinable
     public func verbose(
         label: String,
-        message: @autoclosure () -> String,
-        meta: @autoclosure () -> [String: String]? = nil,
+        message: @autoclosure () -> LogString,
+        meta: @autoclosure () -> [String: LogString]? = nil,
         file: String = #file,
         function: String = #function,
         line: UInt = #line
@@ -82,8 +82,8 @@ extension Logger {
     @inlinable
     public func debug(
         label: String,
-        message: @autoclosure () -> String,
-        meta: @autoclosure () -> [String: String]? = nil,
+        message: @autoclosure () -> LogString,
+        meta: @autoclosure () -> [String: LogString]? = nil,
         file: String = #file,
         function: String = #function,
         line: UInt = #line
@@ -102,8 +102,8 @@ extension Logger {
     @inlinable
     public func info(
         label: String,
-        message: @autoclosure () -> String,
-        meta: @autoclosure () -> [String: String]? = nil,
+        message: @autoclosure () -> LogString,
+        meta: @autoclosure () -> [String: LogString]? = nil,
         file: String = #file,
         function: String = #function,
         line: UInt = #line
@@ -122,8 +122,8 @@ extension Logger {
     @inlinable
     public func warning(
         label: String,
-        message: @autoclosure () -> String,
-        meta: @autoclosure () -> [String: String]? = nil,
+        message: @autoclosure () -> LogString,
+        meta: @autoclosure () -> [String: LogString]? = nil,
         file: String = #file,
         function: String = #function,
         line: UInt = #line
@@ -142,8 +142,8 @@ extension Logger {
     @inlinable
     public func error(
         label: String,
-        message: @autoclosure () -> String,
-        meta: @autoclosure () -> [String: String]? = nil,
+        message: @autoclosure () -> LogString,
+        meta: @autoclosure () -> [String: LogString]? = nil,
         file: String = #file,
         function: String = #function,
         line: UInt = #line
@@ -162,8 +162,8 @@ extension Logger {
     @inlinable
     public func critical(
         label: String,
-        message: @autoclosure () -> String,
-        meta: @autoclosure () -> [String: String]? = nil,
+        message: @autoclosure () -> LogString,
+        meta: @autoclosure () -> [String: LogString]? = nil,
         file: String = #file,
         function: String = #function,
         line: UInt = #line
