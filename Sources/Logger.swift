@@ -12,8 +12,8 @@ public protocol Logger {
     /// - Parameters:
     ///   - level: Logging level.
     ///   - label: Label describing log category.
-    ///   - message: Message describing log event.
-    ///   - meta: Additional log information in key-value format.
+    ///   - message: Message describing log event. Can be privacy managed.
+    ///   - meta: Additional log information in key-value format. Values can be privacy managed.
     ///   - file: The path to the file from which the method was called.
     ///   - function: The function name from which the method was called.
     ///   - line: The line of code from which the method was called.
@@ -33,8 +33,8 @@ extension Logger {
     /// Method that reports the log event with `verbose` logging level.
     /// - Parameters:
     ///   - label: Label describing log category.
-    ///   - message: Message describing log event.
-    ///   - meta: Additional log information in key-value format.
+    ///   - message: Message describing log event. Can be privacy managed.
+    ///   - meta: Additional log information in key-value format. Values can be privacy managed.
     ///   - file: The path to the file from which the method was called.
     ///   - function: The function name from which the method was called.
     ///   - line: The line of code from which the method was called.
@@ -53,8 +53,8 @@ extension Logger {
     /// Method that reports the log event with `debug` logging level.
     /// - Parameters:
     ///   - label: Label describing log category.
-    ///   - message: Message describing log event.
-    ///   - meta: Additional log information in key-value format.
+    ///   - message: Message describing log event. Can be privacy managed.
+    ///   - meta: Additional log information in key-value format. Values can be privacy managed.
     ///   - file: The path to the file from which the method was called.
     ///   - function: The function name from which the method was called.
     ///   - line: The line of code from which the method was called.
@@ -73,8 +73,8 @@ extension Logger {
     /// Method that reports the log event with `info` logging level.
     /// - Parameters:
     ///   - label: Label describing log category.
-    ///   - message: Message describing log event.
-    ///   - meta: Additional log information in key-value format.
+    ///   - message: Message describing log event. Can be privacy managed.
+    ///   - meta: Additional log information in key-value format. Values can be privacy managed.
     ///   - file: The path to the file from which the method was called.
     ///   - function: The function name from which the method was called.
     ///   - line: The line of code from which the method was called.
@@ -93,8 +93,8 @@ extension Logger {
     /// Method that reports the log event with `warning` logging level.
     /// - Parameters:
     ///   - label: Label describing log category.
-    ///   - message: Message describing log event.
-    ///   - meta: Additional log information in key-value format.
+    ///   - message: Message describing log event. Can be privacy managed.
+    ///   - meta: Additional log information in key-value format. Values can be privacy managed.
     ///   - file: The path to the file from which the method was called.
     ///   - function: The function name from which the method was called.
     ///   - line: The line of code from which the method was called.
@@ -113,8 +113,8 @@ extension Logger {
     /// Method that reports the log event with `error` logging level.
     /// - Parameters:
     ///   - label: Label describing log category.
-    ///   - message: Message describing log event.
-    ///   - meta: Additional log information in key-value format.
+    ///   - message: Message describing log event. Can be privacy managed.
+    ///   - meta: Additional log information in key-value format. Values can be privacy managed.
     ///   - file: The path to the file from which the method was called.
     ///   - function: The function name from which the method was called.
     ///   - line: The line of code from which the method was called.
@@ -133,8 +133,8 @@ extension Logger {
     /// Method that reports the log event with `assert` logging level.
     /// - Parameters:
     ///   - label: Label describing log category.
-    ///   - message: Message describing log event.
-    ///   - meta: Additional log information in key-value format.
+    ///   - message: Message describing log event. Can be privacy managed.
+    ///   - meta: Additional log information in key-value format. Values can be privacy managed.
     ///   - file: The path to the file from which the method was called.
     ///   - function: The function name from which the method was called.
     ///   - line: The line of code from which the method was called.

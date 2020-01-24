@@ -62,13 +62,13 @@
 			path = Loggers;
 			sourceTree = "<group>";
 		};
-		461A55E023DA07BF00A28F38 /* Sensitive */ = {
+		461A55E023DA07BF00A28F38 /* LogString */ = {
 			isa = PBXGroup;
 			children = (
 				461A55E523DA07FC00A28F38 /* LogString.swift */,
 				461A55E123DA07BF00A28F38 /* LogStringInterpolation.swift */,
 			);
-			path = Sensitive;
+			path = LogString;
 			sourceTree = "<group>";
 		};
 		4626E60C2395707500BD14B8 /* Sources */ = {
@@ -119,7 +119,7 @@
 		46E239062397A71A006539C5 /* Common */ = {
 			isa = PBXGroup;
 			children = (
-				461A55E023DA07BF00A28F38 /* Sensitive */,
+				461A55E023DA07BF00A28F38 /* LogString */,
 				46E239092397B6B8006539C5 /* Data structures */,
 			);
 			path = Common;

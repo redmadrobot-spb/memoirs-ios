@@ -16,12 +16,14 @@ public struct OSLogLogger: Logger {
     /// For example, `com.your_company.your_subsystem_name`.
     /// The subsystem is used for categorization and filtering of related log messages, as well as for grouping related logging settings.
     public let subsystem: String
+    private let isSensitive: Bool
     private var loggers: SynchronizedDictionary<String, OSLog>
 
     /// Creates a new instance of `OSLogLogger`.
     /// - Parameter subsystem: An identifier string, in reverse DNS notation, representing the subsystem that’s performing logging.
-    public init(subsystem: String) {
+    public init(subsystem: String, isSensitive: Bool = true) {
         self.subsystem = subsystem
+        self.isSensitive = isSensitive
         self.loggers = [:]
     }
 
@@ -35,7 +37,8 @@ public struct OSLogLogger: Logger {
         line: UInt = #line
     ) {
         let context = [ file, function, (line == 0 ? "" : "\(line)") ].filter { !$0.isEmpty }.joined(separator: ":")
-        let description = [ context, "\(message())", meta().map { $0.isEmpty ? "" : "\($0)" } ]
+        let metaDescription = meta().map { $0.isEmpty ? "" : "\($0.mapValues { $0.privateExcluded(isSensitive) })" }
+        let description = [ context, message().privateExcluded(isSensitive), metaDescription ]
             .compactMap { $0 }
             .filter { !$0.isEmpty }
             .joined(separator: " ")
