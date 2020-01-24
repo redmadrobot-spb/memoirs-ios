@@ -7,20 +7,27 @@
 //
 
 public struct LogStringInterpolation: StringInterpolationProtocol {
-    var interpolations: [String] = []
+    enum Kind {
+        case literal(String)
+        case `public`(Any)
+        case `private`(Any)
+    }
+
+    var interpolations: [Kind] = []
 
     public init(literalCapacity: Int, interpolationCount: Int) {
         interpolations.reserveCapacity(literalCapacity * 2)
     }
 
     public mutating func appendLiteral(_ literal: String) {
-        interpolations.append(literal)
+        interpolations.append(.literal(literal))
     }
 
-    public mutating func appendInterpolation(_ interpolation: Sensitive) {
-        interpolations.append("<private>")
-    }
     public mutating func appendInterpolation(_ interpolation: Any) {
-        interpolations.append("\(interpolation)")
+        interpolations.append(.private(interpolation))
+    }
+
+    public mutating func appendInterpolation(public interpolation: Any) {
+        interpolations.append(.public(interpolation))
     }
 }
