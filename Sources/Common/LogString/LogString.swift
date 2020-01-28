@@ -9,19 +9,15 @@
 /// String with additional functionality used inside the logging system.
 /// Allows you to conveniently manage data privacy.
 /// Data privacy is controlled by interpolation. The default interpolation is used to mark the parameter as private.
-/// In order to be able to transfer a parameter that is not sensitive to privacy, it is necessary to indicate the label `public:` inside the interpolation.
+/// In order to be able to transfer a parameter that is not sensitive to privacy,
+/// it is necessary to indicate the label `public:` inside the interpolation.
 ///
 /// Usage:
 ///
 ///     let logString: LogString = "Username: \(public: user.name), cardNumber: \(user.cardNumber)"
 ///
-public struct LogString: ExpressibleByStringLiteral, ExpressibleByStringInterpolation,
-CustomStringConvertible, CustomDebugStringConvertible, CustomReflectable, CustomLeafReflectable {
+public struct LogString: ExpressibleByStringLiteral, ExpressibleByStringInterpolation {
     private let interpolations: [LogStringInterpolation.Kind]
-
-    public var description: String { privateExcluded(true) }
-    public var debugDescription: String { privateExcluded(true) }
-    public var customMirror: Mirror { Mirror(reflecting: privateExcluded(true)) }
 
     public init(stringLiteral value: String) {
         interpolations = [ .literal(value) ]
