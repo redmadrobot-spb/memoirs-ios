@@ -16,8 +16,12 @@
 ///
 ///     let logString: LogString = "Username: \(public: user.name), cardNumber: \(user.cardNumber)"
 ///
-public struct LogString: ExpressibleByStringLiteral, ExpressibleByStringInterpolation {
+public struct LogString: CustomStringConvertible, ExpressibleByStringLiteral, ExpressibleByStringInterpolation {
     private let interpolations: [LogStringInterpolation.Kind]
+
+    /// Converts `LogString` to `String` with erasing private data.
+    public var sensitiveErased: String { privateExcluded(true) }
+    public var description: String { privateExcluded(false) }
 
     public init(stringLiteral value: String) {
         interpolations = [ .literal(value) ]
@@ -27,9 +31,7 @@ public struct LogString: ExpressibleByStringLiteral, ExpressibleByStringInterpol
         interpolations = stringInterpolation.interpolations
     }
 
-    /// Converts `LogString` to `String` with erasing private data.
-    /// - Parameter isExcluded: Flag indicating the need to erase.
-    public func privateExcluded(_ isExcluded: Bool) -> String {
+    private func privateExcluded(_ isExcluded: Bool) -> String {
         interpolations.map { interpolation in
             switch interpolation {
                 case .literal(let string):
