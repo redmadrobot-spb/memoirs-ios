@@ -11,6 +11,7 @@ public struct LogStringInterpolation: StringInterpolationProtocol {
         case literal(String)
         case `public`(Any)
         case `private`(Any)
+        case dump(Loggable)
     }
 
     var interpolations: [Kind] = []
@@ -29,5 +30,9 @@ public struct LogStringInterpolation: StringInterpolationProtocol {
 
     public mutating func appendInterpolation(public interpolation: Any) {
         interpolations.append(.public(interpolation))
+    }
+
+    public mutating func appendInterpolation(_ interpolation: Loggable) {
+        interpolations.append(.dump(interpolation))
     }
 }

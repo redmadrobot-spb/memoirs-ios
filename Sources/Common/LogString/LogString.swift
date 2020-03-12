@@ -40,6 +40,8 @@ public struct LogString: CustomStringConvertible, ExpressibleByStringLiteral, Ex
                     return "\(value)"
                 case .private(let value):
                     return isExcluded ? "<private>" : "\(value)"
+                case .dump(let value):
+                    return "\(value.logDescription(isSensitiveExcluded: isExcluded))"
             }
         }
         .joined()
