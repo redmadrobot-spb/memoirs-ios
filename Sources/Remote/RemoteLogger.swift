@@ -18,9 +18,9 @@ public struct LogRecord {
     let meta: [String: String]?
 }
 
-/// Responsible for buffering log records while transport is not available
+/// Responsible for buffering log records while transport is not available.
 public protocol RemoteLoggerBuffering {
-    /// Should return `true` if contains any not sended records
+    /// Should return `true` if contains any not sended records.
     var haveBufferedData: Bool { get }
 
     /// Add record to the buffer. Remote logger should use this method
@@ -37,7 +37,7 @@ public protocol RemoteLoggerBuffering {
 
 /// Responsible for sending log records to remote logs storage.
 public protocol RemoteLoggerTransport {
-    /// Should return `false` if transport is not available
+    /// Should return `false` if transport is not available.
     var isAvailable: Bool { get }
 
     /// Remote logger call this method to send log records to remote storage.

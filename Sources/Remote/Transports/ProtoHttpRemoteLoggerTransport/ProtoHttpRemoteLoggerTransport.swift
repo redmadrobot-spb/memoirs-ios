@@ -61,7 +61,7 @@ public class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
             request.httpMethod = "POST"
             request.httpBody = data
 
-            let task = session.dataTask(with: request) { _, response, error in
+            let task = session.dataTask(with: request) { _, _, error in
                 if let error = error {
                     completion(.failure(error))
                 } else {
