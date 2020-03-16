@@ -38,6 +38,7 @@ public class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
     }
 
     public let isAvailable = true
+    public var shouldRemoveSensitive = true
 
     public func send(_ records: [LogRecord], completion: @escaping (Result<Void, Error>) -> Void) {
         guard let record = records.first else {
@@ -62,9 +63,10 @@ public class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
                     }
                 }()
                 message.label = record.label
-                message.message = record.message
+                message.message = record.message.string(withoutSensitive: shouldRemoveSensitive)
+                message.source = "\(record.file):\(record.line)"
                 message.timestampMs = Int64(record.timestamp * 1000)
-                message.meta = record.meta ?? [:]
+                message.meta = record.meta?.mapValues { $0.string(withoutSensitive: shouldRemoveSensitive) } ?? [:]
             }
 
             let data = try message.serializedData()
