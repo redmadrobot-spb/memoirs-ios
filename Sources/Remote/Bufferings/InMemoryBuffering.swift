@@ -9,8 +9,7 @@
 /// Simplest buffering - just keeps log records in memory.
 public class InMemoryBuffering: RemoteLoggerBuffering {
     /// Creates new instance of `InMemoryBuffering`
-    public init() {
-    }
+    public init() {}
 
     private var records: [LogRecord] = []
 
@@ -23,8 +22,8 @@ public class InMemoryBuffering: RemoteLoggerBuffering {
     }
 
     public func retrieve(_ actions: @escaping ([LogRecord], @escaping (Bool) -> Void) -> Void) {
-        actions(records) { finished in
-            if finished {
+        actions(records) { isFinished in
+            if isFinished {
                 self.records = []
             }
         }

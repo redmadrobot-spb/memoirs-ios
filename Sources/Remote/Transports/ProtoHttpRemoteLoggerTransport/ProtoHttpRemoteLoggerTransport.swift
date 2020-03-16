@@ -16,11 +16,11 @@ public class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
             didReceive challenge: URLAuthenticationChallenge,
             completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?
         ) -> Void) {
-            guard let trust = challenge.protectionSpace.serverTrust else {
-                return completionHandler(.performDefaultHandling, nil)
+            if let trust = challenge.protectionSpace.serverTrust {
+                completionHandler(.useCredential, URLCredential(trust: trust))
+            } else {
+                completionHandler(.performDefaultHandling, nil)
             }
-
-            completionHandler(.useCredential, URLCredential(trust: trust))
         }
     }
 
@@ -37,9 +37,7 @@ public class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
         session = URLSession(configuration: configuration, delegate: delegateObject, delegateQueue: nil)
     }
 
-    public var isAvailable: Bool {
-        true
-    }
+    public let isAvailable = true
 
     public func send(_ records: [LogRecord], completion: @escaping (Result<Void, Error>) -> Void) {
         guard let record = records.first else {

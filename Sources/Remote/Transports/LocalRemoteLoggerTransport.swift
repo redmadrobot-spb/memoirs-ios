@@ -14,9 +14,7 @@ public class LocalRemoteLoggerTransport: RemoteLoggerTransport {
         self.localLogger = localLogger
     }
 
-    public var isAvailable: Bool {
-        true
-    }
+    public let isAvailable = true
 
     public func send(_ records: [LogRecord], completion: (Result<Void, Error>) -> Void) {
         records.forEach { record in
