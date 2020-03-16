@@ -19,12 +19,12 @@ struct LogRecord {
 protocol RemoteLoggerBuffering {
     var haveBufferedData: Bool { get }
     func append(record: LogRecord)
-    func retrieve(_ actions: @escaping (_ records: [LogRecord], _ finished: (Bool) -> Void) -> Void)
+    func retrieve(_ actions: @escaping (_ records: [LogRecord], _ finished: @escaping (Bool) -> Void) -> Void)
 }
 
 protocol RemoteLoggerTransport {
     var isAvailable: Bool { get }
-    func send(_ records: [LogRecord], completion: (Result<Void, Error>) -> Void)
+    func send(_ records: [LogRecord], completion: @escaping (Result<Void, Error>) -> Void)
 }
 
 class RemoteLogger: Logger {
@@ -40,7 +40,7 @@ class RemoteLogger: Logger {
         level: Level,
         label: String,
         message: @autoclosure () -> String,
-        meta: @autoclosure () -> [String : String]? = nil,
+        meta: @autoclosure () -> [String: String]? = nil,
         file: String = #file,
         function: String = #function,
         line: UInt = #line

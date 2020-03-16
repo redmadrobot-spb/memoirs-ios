@@ -10,6 +10,9 @@ let package = Package(
             name: "Robologs",
             targets: [ "Robologs" ]),
     ],
+    dependencies: [
+        .package(url: "https://github.com/apple/swift-protobuf.git", from: "1.8.0")
+    ],
     targets: [
         .target(name: "Robologs", path: "Sources")
     ],

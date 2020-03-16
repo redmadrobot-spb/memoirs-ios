@@ -17,10 +17,10 @@ class InMemoryBuffering: RemoteLoggerBuffering {
         records.append(record)
     }
 
-    func retrieve(_ actions: @escaping ([LogRecord], (Bool) -> Void) -> Void) {
+    func retrieve(_ actions: @escaping ([LogRecord], @escaping (Bool) -> Void) -> Void) {
         actions(records) { finished in
             if finished {
-                records = []
+                self.records = []
             }
         }
     }
