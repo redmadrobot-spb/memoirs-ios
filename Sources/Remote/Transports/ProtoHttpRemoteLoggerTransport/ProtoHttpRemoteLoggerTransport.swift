@@ -8,7 +8,7 @@
 
 import Foundation
 
-class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
+public class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
     private class URLSessionDelegateObject: NSObject, URLSessionDelegate {
         func urlSession(
             _ session: URLSession,
@@ -27,18 +27,18 @@ class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
     private let delegateObject: URLSessionDelegateObject
     private let session: URLSession
 
-    init(endpoint: URL) {
+    public init(endpoint: URL) {
         let configuration = URLSessionConfiguration.default
         self.endpoint = endpoint
         delegateObject = URLSessionDelegateObject()
         session = URLSession(configuration: configuration, delegate: delegateObject, delegateQueue: nil)
     }
 
-    var isAvailable: Bool {
+    public var isAvailable: Bool {
         true
     }
 
-    func send(_ records: [LogRecord], completion: @escaping (Result<Void, Error>) -> Void) {
+    public func send(_ records: [LogRecord], completion: @escaping (Result<Void, Error>) -> Void) {
         guard let record = records.first else {
             return
         }

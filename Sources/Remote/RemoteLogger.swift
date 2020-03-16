@@ -8,7 +8,7 @@
 
 import Foundation
 
-struct LogRecord {
+public struct LogRecord {
     let timestamp: TimeInterval
     let label: String
     let level: Level
@@ -16,27 +16,27 @@ struct LogRecord {
     let meta: [String: String]?
 }
 
-protocol RemoteLoggerBuffering {
+public protocol RemoteLoggerBuffering {
     var haveBufferedData: Bool { get }
     func append(record: LogRecord)
     func retrieve(_ actions: @escaping (_ records: [LogRecord], _ finished: @escaping (Bool) -> Void) -> Void)
 }
 
-protocol RemoteLoggerTransport {
+public protocol RemoteLoggerTransport {
     var isAvailable: Bool { get }
     func send(_ records: [LogRecord], completion: @escaping (Result<Void, Error>) -> Void)
 }
 
-class RemoteLogger: Logger {
+public class RemoteLogger: Logger {
     private let buffering: RemoteLoggerBuffering
     private let transport: RemoteLoggerTransport
 
-    init(buffering: RemoteLoggerBuffering, transport: RemoteLoggerTransport) {
+    public init(buffering: RemoteLoggerBuffering, transport: RemoteLoggerTransport) {
         self.buffering = buffering
         self.transport = transport
     }
 
-    func log(
+    public func log(
         level: Level,
         label: String,
         message: @autoclosure () -> String,
