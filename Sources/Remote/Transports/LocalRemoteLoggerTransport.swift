@@ -6,18 +6,19 @@
 //  Copyright © 2020 RedMadRobot. All rights reserved.
 //
 
-class LocalRemoteLoggerTransport: RemoteLoggerTransport {
+/// Mock remote logger transport. Simply redirects log records to specified logger (for example PrintLogger).
+public class LocalRemoteLoggerTransport: RemoteLoggerTransport {
     private let localLogger: Logger
 
     init(localLogger: Logger) {
         self.localLogger = localLogger
     }
 
-    var isAvailable: Bool {
+    public var isAvailable: Bool {
         true
     }
 
-    func send(_ records: [LogRecord], completion: (Result<Void, Error>) -> Void) {
+    public func send(_ records: [LogRecord], completion: (Result<Void, Error>) -> Void) {
         records.forEach { record in
             localLogger.log(
                 level: record.level,

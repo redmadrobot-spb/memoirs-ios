@@ -8,6 +8,7 @@
 
 import Foundation
 
+/// Remote logger transport that uses HTTP2 + Protubuf.
 public class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
     private class URLSessionDelegateObject: NSObject, URLSessionDelegate {
         func urlSession(
@@ -27,6 +28,8 @@ public class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
     private let delegateObject: URLSessionDelegateObject
     private let session: URLSession
 
+    /// Creates new instance of `ProtoHttpRemoteLoggerTransport`.
+    /// - Parameter endpoint: URL to server endpoint supporting this kind of transport.
     public init(endpoint: URL) {
         let configuration = URLSessionConfiguration.default
         self.endpoint = endpoint
@@ -59,7 +62,6 @@ public class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
             request.httpBody = data
 
             let task = session.dataTask(with: request) { _, response, error in
-                print(response as Any)
                 if let error = error {
                     completion(.failure(error))
                 } else {

@@ -6,7 +6,9 @@
 //  Copyright © 2020 RedMadRobot. All rights reserved.
 //
 
+/// Simplest buffering - just keeps log records in memory
 public class InMemoryBuffering: RemoteLoggerBuffering {
+    /// Creates new instance of `InMemoryBuffering`
     public init() {
     }
 

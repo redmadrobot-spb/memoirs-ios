@@ -8,6 +8,8 @@
 
 import Foundation
 
+/// Intermidiate structure used in transport and buffering to store
+/// log message parameters.
 public struct LogRecord {
     let timestamp: TimeInterval
     let label: String
@@ -16,21 +18,44 @@ public struct LogRecord {
     let meta: [String: String]?
 }
 
+/// Responsible for buffering log records while transport is not available
 public protocol RemoteLoggerBuffering {
+    /// Should return `true` if contains any not sended records
     var haveBufferedData: Bool { get }
+
+    /// Add record to the buffer. Remote logger should use this method
+    /// to store log records while transport is not available.
+    /// - Parameter record: Buffering record
     func append(record: LogRecord)
-    func retrieve(_ actions: @escaping (_ records: [LogRecord], _ finished: @escaping (Bool) -> Void) -> Void)
+
+    /// Remote logger call this method to fetch buffered records when transport become available.
+    /// `finished` callback should be called with `true` if retrieved records was sent successfully and
+    /// then remove this records from buffering storage.
+    /// - Parameter completion: Completion block in which remote logger should try to send buffered messages.
+    func retrieve(_ completion: @escaping (_ records: [LogRecord], _ finished: @escaping (Bool) -> Void) -> Void)
 }
 
+/// Responsible for sending log records to remote logs storage.
 public protocol RemoteLoggerTransport {
+    /// Should return `false` if transport is not available
     var isAvailable: Bool { get }
+
+    /// Remote logger call this method to send log records to remote storage.
+    /// - Parameters:
+    ///   - records: Sending records
+    ///   - completion: Completion called when transport finish sending.
     func send(_ records: [LogRecord], completion: @escaping (Result<Void, Error>) -> Void)
 }
 
+/// Logger that sends log messages to remote storage.
 public class RemoteLogger: Logger {
     private let buffering: RemoteLoggerBuffering
     private let transport: RemoteLoggerTransport
 
+    /// Creates new instance of remote logger.
+    /// - Parameters:
+    ///   - buffering: Buffering policy used to keep log records while transport is not available.
+    ///   - transport: Transport describing how and where to log message will be sent.
     public init(buffering: RemoteLoggerBuffering, transport: RemoteLoggerTransport) {
         self.buffering = buffering
         self.transport = transport
