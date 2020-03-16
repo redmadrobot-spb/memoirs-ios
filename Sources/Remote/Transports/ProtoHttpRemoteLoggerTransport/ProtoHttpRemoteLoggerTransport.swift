@@ -38,7 +38,7 @@ public class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
     }
 
     public let isAvailable = true
-    public var shouldRemoveSensitive = true
+    private let shouldRemoveSensitive = true
 
     public func send(_ records: [LogRecord], completion: @escaping (Result<Void, Error>) -> Void) {
         guard let record = records.first else {
