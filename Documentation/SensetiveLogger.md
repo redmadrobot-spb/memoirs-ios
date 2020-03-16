@@ -29,8 +29,8 @@ sensitiveLogger.debug(label: "", message: "\(message)")
 2. `<private>`
 
 ### Erase using property wrappers
-For your conviniance you can mark special propeties to make them erased.
-You need to implement Loggable protocol and mark sensetive properties using `@Sensetive` propperty wrapper to make property values erased on object logging.
+If you need you can dump your whole structures into logs if you mark them as `Loggable`. 
+In this case you can mark sensitive information with `@Sensitive` property wrapper and they will be erased when needed.
 
 #### Example
 ```swift
