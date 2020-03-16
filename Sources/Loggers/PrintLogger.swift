@@ -23,14 +23,14 @@ public struct PrintLogger: Logger {
     public func log(
         level: Level,
         label: String,
-        message: () -> String,
-        meta: () -> [String: String]?,
+        message: () -> LogString,
+        meta: () -> [String: LogString]?,
         file: String = #file,
         function: String = #function,
         line: UInt = #line
     ) {
         let context = [ file, function, (line == 0 ? "" : "\(line)") ].filter { !$0.isEmpty }.joined(separator: ":")
-        let description = [ "\(timestamp)", "\(level)", context, "\(label)", message(), meta().map { "\($0)" } ]
+        let description = [ "\(timestamp)", "\(level)", context, "\(label)", "\(message())", meta().map { $0.isEmpty ? "" : "\($0)" } ]
             .compactMap { $0 }
             .filter { !$0.isEmpty }
             .joined(separator: " ")

@@ -12,8 +12,8 @@ public protocol Logger {
     /// - Parameters:
     ///   - level: Logging level.
     ///   - label: Label describing log category.
-    ///   - message: Message describing log event.
-    ///   - meta: Additional log information in key-value format.
+    ///   - message: Message describing log event. Can be privacy managed.
+    ///   - meta: Additional log information in key-value format. Values can be privacy managed.
     ///   - file: The path to the file from which the method was called.
     ///   - function: The function name from which the method was called.
     ///   - line: The line of code from which the method was called.
@@ -21,8 +21,8 @@ public protocol Logger {
     func log(
         level: Level,
         label: String,
-        message: () -> String,
-        meta: () -> [String: String]?,
+        message: () -> LogString,
+        meta: () -> [String: LogString]?,
         file: String,
         function: String,
         line: UInt
@@ -30,40 +30,19 @@ public protocol Logger {
 }
 
 extension Logger {
-    /// Method that reports the log event with custom logging level.
-    /// - Parameters:
-    ///   - level: Logging level.
-    ///   - label: Label describing log category.
-    ///   - message: Message describing log event.
-    ///   - meta: Additional log information in key-value format.
-    ///   - file: The path to the file from which the method was called.
-    ///   - function: The function name from which the method was called.
-    ///   - line: The line of code from which the method was called.
-    @inlinable
-    public func log(
-        level: Level,
-        label: String,
-        message: @autoclosure () -> String,
-        meta: @autoclosure () -> [String: String]? = nil,
-        file: String = #file,
-        function: String = #function,
-        line: UInt = #line
-    ) {
-        log(level: level, label: label, message: message, meta: meta, file: file, function: function, line: line)
-    }
     /// Method that reports the log event with `verbose` logging level.
     /// - Parameters:
     ///   - label: Label describing log category.
-    ///   - message: Message describing log event.
-    ///   - meta: Additional log information in key-value format.
+    ///   - message: Message describing log event. Can be privacy managed.
+    ///   - meta: Additional log information in key-value format. Values can be privacy managed.
     ///   - file: The path to the file from which the method was called.
     ///   - function: The function name from which the method was called.
     ///   - line: The line of code from which the method was called.
     @inlinable
     public func verbose(
         label: String,
-        message: @autoclosure () -> String,
-        meta: @autoclosure () -> [String: String]? = nil,
+        message: @autoclosure () -> LogString,
+        meta: @autoclosure () -> [String: LogString]? = nil,
         file: String = #file,
         function: String = #function,
         line: UInt = #line
@@ -74,16 +53,16 @@ extension Logger {
     /// Method that reports the log event with `debug` logging level.
     /// - Parameters:
     ///   - label: Label describing log category.
-    ///   - message: Message describing log event.
-    ///   - meta: Additional log information in key-value format.
+    ///   - message: Message describing log event. Can be privacy managed.
+    ///   - meta: Additional log information in key-value format. Values can be privacy managed.
     ///   - file: The path to the file from which the method was called.
     ///   - function: The function name from which the method was called.
     ///   - line: The line of code from which the method was called.
     @inlinable
     public func debug(
         label: String,
-        message: @autoclosure () -> String,
-        meta: @autoclosure () -> [String: String]? = nil,
+        message: @autoclosure () -> LogString,
+        meta: @autoclosure () -> [String: LogString]? = nil,
         file: String = #file,
         function: String = #function,
         line: UInt = #line
@@ -94,16 +73,16 @@ extension Logger {
     /// Method that reports the log event with `info` logging level.
     /// - Parameters:
     ///   - label: Label describing log category.
-    ///   - message: Message describing log event.
-    ///   - meta: Additional log information in key-value format.
+    ///   - message: Message describing log event. Can be privacy managed.
+    ///   - meta: Additional log information in key-value format. Values can be privacy managed.
     ///   - file: The path to the file from which the method was called.
     ///   - function: The function name from which the method was called.
     ///   - line: The line of code from which the method was called.
     @inlinable
     public func info(
         label: String,
-        message: @autoclosure () -> String,
-        meta: @autoclosure () -> [String: String]? = nil,
+        message: @autoclosure () -> LogString,
+        meta: @autoclosure () -> [String: LogString]? = nil,
         file: String = #file,
         function: String = #function,
         line: UInt = #line
@@ -114,16 +93,16 @@ extension Logger {
     /// Method that reports the log event with `warning` logging level.
     /// - Parameters:
     ///   - label: Label describing log category.
-    ///   - message: Message describing log event.
-    ///   - meta: Additional log information in key-value format.
+    ///   - message: Message describing log event. Can be privacy managed.
+    ///   - meta: Additional log information in key-value format. Values can be privacy managed.
     ///   - file: The path to the file from which the method was called.
     ///   - function: The function name from which the method was called.
     ///   - line: The line of code from which the method was called.
     @inlinable
     public func warning(
         label: String,
-        message: @autoclosure () -> String,
-        meta: @autoclosure () -> [String: String]? = nil,
+        message: @autoclosure () -> LogString,
+        meta: @autoclosure () -> [String: LogString]? = nil,
         file: String = #file,
         function: String = #function,
         line: UInt = #line
@@ -134,16 +113,16 @@ extension Logger {
     /// Method that reports the log event with `error` logging level.
     /// - Parameters:
     ///   - label: Label describing log category.
-    ///   - message: Message describing log event.
-    ///   - meta: Additional log information in key-value format.
+    ///   - message: Message describing log event. Can be privacy managed.
+    ///   - meta: Additional log information in key-value format. Values can be privacy managed.
     ///   - file: The path to the file from which the method was called.
     ///   - function: The function name from which the method was called.
     ///   - line: The line of code from which the method was called.
     @inlinable
     public func error(
         label: String,
-        message: @autoclosure () -> String,
-        meta: @autoclosure () -> [String: String]? = nil,
+        message: @autoclosure () -> LogString,
+        meta: @autoclosure () -> [String: LogString]? = nil,
         file: String = #file,
         function: String = #function,
         line: UInt = #line
@@ -154,16 +133,16 @@ extension Logger {
     /// Method that reports the log event with `assert` logging level.
     /// - Parameters:
     ///   - label: Label describing log category.
-    ///   - message: Message describing log event.
-    ///   - meta: Additional log information in key-value format.
+    ///   - message: Message describing log event. Can be privacy managed.
+    ///   - meta: Additional log information in key-value format. Values can be privacy managed.
     ///   - file: The path to the file from which the method was called.
     ///   - function: The function name from which the method was called.
     ///   - line: The line of code from which the method was called.
     @inlinable
     public func critical(
         label: String,
-        message: @autoclosure () -> String,
-        meta: @autoclosure () -> [String: String]? = nil,
+        message: @autoclosure () -> LogString,
+        meta: @autoclosure () -> [String: LogString]? = nil,
         file: String = #file,
         function: String = #function,
         line: UInt = #line
