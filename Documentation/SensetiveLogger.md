@@ -1,5 +1,5 @@
 # SensetiveLogger
-Logger, destinations for erasing sensitive fields.
+Logger that serves to erase sensitive fields.
 
 ## Usage
 
@@ -27,8 +27,6 @@ sensitiveLogger.debug(label: "", message: "\(message)")
 #### Output
 1. `Test message`
 2. `<private>`
-
-
 
 ### Erase using property wrappers
 For your conviniance you can mark special propeties to make them erased.
