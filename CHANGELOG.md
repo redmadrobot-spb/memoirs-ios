@@ -9,6 +9,9 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Removed
 - Default `log`-function in `Logger`
 
+## Added
+- Add SensetiveLogger
+
 ## [1.3.0](https://git.redmadrobot.com/RedMadRobot/SPb/robologs-ios/tags/1.3.0) - 2019-12-25
 ### Added
 - Default `log`-function in `Logger`
