@@ -19,9 +19,9 @@
 public struct LogString: CustomStringConvertible, ExpressibleByStringLiteral, ExpressibleByStringInterpolation {
     private let interpolations: [LogStringInterpolation.Kind]
 
-    /// Converts `LogString` to `String` with erasing private data.
-    public var sensitiveErased: String { privateExcluded(true) }
-    public var description: String { privateExcluded(false) }
+    public var description: String {
+        string(withoutSensitive: false)
+    }
 
     public init(stringLiteral value: String) {
         interpolations = [ .literal(value) ]
@@ -31,7 +31,7 @@ public struct LogString: CustomStringConvertible, ExpressibleByStringLiteral, Ex
         interpolations = stringInterpolation.interpolations
     }
 
-    private func privateExcluded(_ isExcluded: Bool) -> String {
+    func string(withoutSensitive isSensitiveExcluded: Bool) -> String {
         interpolations.map { interpolation in
             switch interpolation {
                 case .literal(let string):
@@ -39,9 +39,9 @@ public struct LogString: CustomStringConvertible, ExpressibleByStringLiteral, Ex
                 case .public(let value):
                     return "\(value)"
                 case .private(let value):
-                    return isExcluded ? "<private>" : "\(value)"
+                    return isSensitiveExcluded ? "<private>" : "\(value)"
                 case .dump(let value):
-                    return "\(value.logDescription(isSensitiveExcluded: isExcluded))"
+                    return "\(value.logDescription(withoutSensitive: isSensitiveExcluded))"
             }
         }
         .joined()

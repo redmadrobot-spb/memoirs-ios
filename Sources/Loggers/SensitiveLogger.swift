@@ -33,8 +33,8 @@ public class SensitiveLogger: Logger {
             logger.log(
                 level: level,
                 label: label,
-                message: { "\(excludeSensitive ? message().sensitiveErased : message())" },
-                meta: { meta()?.mapValues { "\(excludeSensitive ? $0.sensitiveErased : $0)" } },
+                message: { "\(excludeSensitive ? message().string(withoutSensitive: true) : message())" },
+                meta: { meta()?.mapValues { "\(excludeSensitive ? $0.string(withoutSensitive: true) : $0)" } },
                 file: file,
                 function: function,
                 line: line
@@ -43,7 +43,7 @@ public class SensitiveLogger: Logger {
     }
 
     /// Sets the need to erase all sensitive data. Thread-safe.
-    public func excludeSensitive(_ isExcluded: Bool) {
+    func excludeSensitive(_ isExcluded: Bool) {
         queue.async(flags: .barrier) {
             self.excludeSensitive = isExcluded
         }
@@ -69,7 +69,7 @@ public struct Sensitive<T>: SensitiveWrapper {
 }
 
 extension Loggable {
-    func logDescription(isSensitiveExcluded: Bool) -> String {
+    func logDescription(withoutSensitive isSensitiveExcluded: Bool) -> String {
         let mirror = Mirror(reflecting: self)
         return mirror.children.enumerated().reduce(into: "") { result, child in
             guard let label = child.element.label else { return }
@@ -78,7 +78,7 @@ extension Loggable {
             if let sensitiveWrapper = child.element.value as? SensitiveWrapper {
                 result += isSensitiveExcluded ? "<private>" : "\(sensitiveWrapper.value)"
             } else if let childModel = child.element.value as? Loggable {
-                result += "(\(childModel.logDescription(isSensitiveExcluded: isSensitiveExcluded)))"
+                result += "(\(childModel.logDescription(withoutSensitive: isSensitiveExcluded)))"
             } else {
                 result += "\(child.element.value)"
             }
