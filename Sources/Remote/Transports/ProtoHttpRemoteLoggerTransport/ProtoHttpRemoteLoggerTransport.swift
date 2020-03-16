@@ -51,10 +51,22 @@ public class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
             request.setValue("application/x-protobuf", forHTTPHeaderField: "Content-Type")
 
             let message = TestLogMessage.with { message in
-                message.priority = .error
+                message.priority = {
+                    switch record.level {
+                        case .critical, .error:
+                            return .error
+                        case .warning:
+                            return .warn
+                        case .info:
+                            return .info
+                        case .debug, .verbose:
+                            return .debug
+                    }
+                }()
                 message.label = record.label
                 message.message = record.message
                 message.timestampMs = Int64(record.timestamp * 1000)
+                message.meta = record.meta ?? [:]
             }
 
             let data = try message.serializedData()
