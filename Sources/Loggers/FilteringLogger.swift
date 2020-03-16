@@ -31,8 +31,8 @@ public struct FilteringLogger: Logger {
     public func log(
         level: Level,
         label: String,
-        message: () -> String,
-        meta: () -> [String: String]?,
+        message: () -> LogString,
+        meta: () -> [String: LogString]?,
         file: String,
         function: String,
         line: UInt

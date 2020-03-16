@@ -6,7 +6,7 @@
 //  Copyright © 2019 Redmadrobot. All rights reserved.
 //
 
-import Foundation
+import Dispatch
 
 class SynchronizedDictionary<Key, Value>: ExpressibleByDictionaryLiteral where Key: Hashable {
     private var dictionary: [Key: Value]
