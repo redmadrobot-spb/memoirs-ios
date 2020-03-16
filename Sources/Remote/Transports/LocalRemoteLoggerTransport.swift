@@ -10,7 +10,7 @@
 public class LocalRemoteLoggerTransport: RemoteLoggerTransport {
     private let localLogger: Logger
 
-    init(localLogger: Logger) {
+    public init(localLogger: Logger) {
         self.localLogger = localLogger
     }
 
