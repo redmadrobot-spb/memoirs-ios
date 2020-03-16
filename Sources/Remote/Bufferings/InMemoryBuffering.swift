@@ -7,6 +7,9 @@
 //
 
 public class InMemoryBuffering: RemoteLoggerBuffering {
+    public init() {
+    }
+
     private var records: [LogRecord] = []
 
     public var haveBufferedData: Bool {
