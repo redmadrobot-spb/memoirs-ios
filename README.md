@@ -1,5 +1,4 @@
-Robologs
-========
+# Robologs
 
 Robologs is a logging framework for Swift.
 
@@ -53,7 +52,7 @@ logger.debug(label: "Network", message: "User data request",
              meta: [ "RequestId": UUID().uuidString ])
 ```
 Several implementations are available out of the box (the list will be updated):
-
+- [SensetiveLogger](https://git.redmadrobot.com/RedMadRobot/SPb/robologs-ios/tree/master/Documentation/SensetiveLogger.md), which incapsulate some logger, and the logic of erasing sensitive fields.
 - `FilteringLogger`, which incapsulate some logger and filters incoming log-events by labels with levels or minimal default level.
 - `MultiplexingLogger`, which stores several loggers and redirects all log events to them.
 - `LabeledLoggerAdapter`, which adapts any implementation of  `Logger` to `LabeledLogger` - protocol that allows you to bind logger to only one label.
@@ -65,7 +64,7 @@ Several implementations are available out of the box (the list will be updated):
 
 - iOS 9.0+
 - Swift 5.0+
-  - Xcode 10.2+
+- Xcode 10.2+
   
 ## Installation
 
@@ -89,4 +88,3 @@ or add the following package to your Package.swift file:
 ```swift
 .package(url: "https://git.redmadrobot.com/RedMadRobot/SPb/robologs-ios.git")
 ```
-
