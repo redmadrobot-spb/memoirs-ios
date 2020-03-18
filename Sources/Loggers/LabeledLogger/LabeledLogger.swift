@@ -21,8 +21,8 @@ public protocol LabeledLogger: Logger {
     @inlinable
     func log(
         level: Level,
-        message: () -> LogString,
-        meta: () -> [String: LogString]?,
+        message: () -> String,
+        meta: () -> [String: String]?,
         file: String,
         function: String,
         line: UInt
@@ -33,8 +33,8 @@ extension LabeledLogger {
     @inlinable
     public func log(
         level: Level,
-        message: () -> LogString,
-        meta: () -> [String: LogString]?,
+        message: () -> String,
+        meta: () -> [String: String]?,
         file: String,
         function: String,
         line: UInt
@@ -51,8 +51,8 @@ extension LabeledLogger {
     ///   - line: The line of code from which the method was called.
     @inlinable
     public func verbose(
-        message: @autoclosure () -> LogString,
-        meta: @autoclosure () -> [String: LogString]? = nil,
+        message: @autoclosure () -> String,
+        meta: @autoclosure () -> [String: String]? = nil,
         file: String = #file,
         function: String = #function,
         line: UInt = #line
@@ -69,8 +69,8 @@ extension LabeledLogger {
     ///   - line: The line of code from which the method was called.
     @inlinable
     public func debug(
-        message: @autoclosure () -> LogString,
-        meta: @autoclosure () -> [String: LogString]? = nil,
+        message: @autoclosure () -> String,
+        meta: @autoclosure () -> [String: String]? = nil,
         file: String = #file,
         function: String = #function,
         line: UInt = #line
@@ -87,8 +87,8 @@ extension LabeledLogger {
     ///   - line: The line of code from which the method was called.
     @inlinable
     public func info(
-        message: @autoclosure () -> LogString,
-        meta: @autoclosure () -> [String: LogString]? = nil,
+        message: @autoclosure () -> String,
+        meta: @autoclosure () -> [String: String]? = nil,
         file: String = #file,
         function: String = #function,
         line: UInt = #line
@@ -105,8 +105,8 @@ extension LabeledLogger {
     ///   - line: The line of code from which the method was called.
     @inlinable
     public func warning(
-        message: @autoclosure () -> LogString,
-        meta: @autoclosure () -> [String: LogString]? = nil,
+        message: @autoclosure () -> String,
+        meta: @autoclosure () -> [String: String]? = nil,
         file: String = #file,
         function: String = #function,
         line: UInt = #line
@@ -123,8 +123,8 @@ extension LabeledLogger {
     ///   - line: The line of code from which the method was called.
     @inlinable
     public func error(
-        message: @autoclosure () -> LogString,
-        meta: @autoclosure () -> [String: LogString]? = nil,
+        message: @autoclosure () -> String,
+        meta: @autoclosure () -> [String: String]? = nil,
         file: String = #file,
         function: String = #function,
         line: UInt = #line
@@ -141,8 +141,8 @@ extension LabeledLogger {
     ///   - line: The line of code from which the method was called.
     @inlinable
     public func critical(
-        message: @autoclosure () -> LogString,
-        meta: @autoclosure () -> [String: LogString]? = nil,
+        message: @autoclosure () -> String,
+        meta: @autoclosure () -> [String: String]? = nil,
         file: String = #file,
         function: String = #function,
         line: UInt = #line
