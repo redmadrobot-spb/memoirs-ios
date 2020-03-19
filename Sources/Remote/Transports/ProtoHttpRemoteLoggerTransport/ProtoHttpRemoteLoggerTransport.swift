@@ -46,8 +46,43 @@ public class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
     public let isAvailable = true
     private let shouldRemoveSensitive = true
 
-    private func getAuthToken(_ completion: @escaping () -> Void) {
-        let request = URLRequest(url: endpoint.appendingPathComponent("api/v1/source"))
+    private func getAuthToken(_ completion: @escaping (Result<Void, Error>) -> Void) {
+        let completion = { result in
+            DispatchQueue.main.async {
+                completion(result)
+            }
+        }
+
+        do {
+            var request = URLRequest(url: endpoint.appendingPathComponent("api/v1/source"))
+            let sourceRequest = SenderTokenRequest.with { request in
+                request.secret = secret
+                request.sender = SenderTokenRequest.Sender.with { sender in
+                    let enviromentInfo = EnviromentInfo.current
+                    sender.appID = enviromentInfo.appId ?? ""
+                    sender.appName = enviromentInfo.appName ?? ""
+                    sender.appVersion = enviromentInfo.appVersion ?? ""
+                    sender.appBuildVersion = enviromentInfo.appBuild ?? ""
+                    sender.operationSystem = enviromentInfo.operationSystem ?? ""
+                    sender.operationSystemVersion = enviromentInfo.operationSystemVersion ?? ""
+                    sender.deviceModel = enviromentInfo.deviceModel ?? ""
+                }
+            }
+
+            request.httpMethod = "POST"
+            request.httpBody = try sourceRequest.serializedData()
+
+            let task = session.dataTask(with: request) { _, _, error in
+                if let error = error {
+                    completion(.failure(error))
+                } else {
+                    completion(.success(()))
+                }
+            }
+            task.resume()
+        } catch let error {
+            completion(.failure(error))
+        }
     }
 
     public func send(_ records: [LogRecord], completion: @escaping (Result<Void, Error>) -> Void) {
@@ -55,12 +90,18 @@ public class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
             return
         }
 
+        let completion = { result in
+            DispatchQueue.main.async {
+                completion(result)
+            }
+        }
+
         do {
             var request = URLRequest(url: endpoint.appendingPathComponent("api/v1/send"))
             request.setValue("application/x-protobuf", forHTTPHeaderField: "Content-Type")
             request.setValue(liveSessionToken, forHTTPHeaderField: "X-C6-Marker")
 
-            let message = TestLogMessage.with { message in
+            let message = LogMessage.with { message in
                 message.priority = {
                     switch record.level {
                         case .critical, .error:
@@ -80,9 +121,8 @@ public class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
                 message.meta = record.meta?.mapValues { $0.string(withoutSensitive: shouldRemoveSensitive) } ?? [:]
             }
 
-            let data = try message.serializedData()
             request.httpMethod = "POST"
-            request.httpBody = data
+            request.httpBody = try message.serializedData()
 
             let task = session.dataTask(with: request) { _, _, error in
                 if let error = error {

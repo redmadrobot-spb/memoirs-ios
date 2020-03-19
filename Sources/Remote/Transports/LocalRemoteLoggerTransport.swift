@@ -30,4 +30,10 @@ public class LocalRemoteLoggerTransport: RemoteLoggerTransport {
         }
         completion(.success(()))
     }
+
+    public func startLiveSession(_ liveSessionToken: String) {
+    }
+
+    public func finishLiveSession() {
+    }
 }
