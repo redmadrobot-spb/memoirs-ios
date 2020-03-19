@@ -21,8 +21,8 @@ public struct MultiplexingLogger: Logger {
     public func log(
         level: Level,
         label: String,
-        message: () -> LogString,
-        meta: () -> [String: LogString]?,
+        message: () -> String,
+        meta: () -> [String: String]?,
         file: String,
         function: String,
         line: UInt
