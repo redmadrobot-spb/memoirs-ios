@@ -25,14 +25,20 @@ public class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
     }
 
     private let endpoint: URL
+    private let secret: String
     private let delegateObject: URLSessionDelegateObject
     private let session: URLSession
+    private var liveSessionToken: String?
+    private var sourceToken: String?
+    private var authToken: String?
 
     /// Creates new instance of `ProtoHttpRemoteLoggerTransport`.
     /// - Parameter endpoint: URL to server endpoint supporting this kind of transport.
-    public init(endpoint: URL) {
+    /// - Parameter secret: Secret key received from Robologs admin panel.
+    public init(endpoint: URL, secret: String) {
         let configuration = URLSessionConfiguration.default
         self.endpoint = endpoint
+        self.secret = secret
         delegateObject = URLSessionDelegateObject()
         session = URLSession(configuration: configuration, delegate: delegateObject, delegateQueue: nil)
     }
@@ -40,14 +46,19 @@ public class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
     public let isAvailable = true
     private let shouldRemoveSensitive = true
 
+    private func getAuthToken(_ completion: @escaping () -> Void) {
+        let request = URLRequest(url: endpoint.appendingPathComponent("api/v1/source"))
+    }
+
     public func send(_ records: [LogRecord], completion: @escaping (Result<Void, Error>) -> Void) {
         guard let record = records.first else {
             return
         }
 
         do {
-            var request = URLRequest(url: endpoint.appendingPathComponent("http/saveProto"))
+            var request = URLRequest(url: endpoint.appendingPathComponent("api/v1/send"))
             request.setValue("application/x-protobuf", forHTTPHeaderField: "Content-Type")
+            request.setValue(liveSessionToken, forHTTPHeaderField: "X-C6-Marker")
 
             let message = TestLogMessage.with { message in
                 message.priority = {
@@ -84,5 +95,13 @@ public class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
         } catch let error {
             completion(.failure(error))
         }
+    }
+
+    public func startLiveSession(_ liveSessionToken: String) {
+        self.liveSessionToken = liveSessionToken
+    }
+
+    public func finishLiveSession() {
+        liveSessionToken = nil
     }
 }

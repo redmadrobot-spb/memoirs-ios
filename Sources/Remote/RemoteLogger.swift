@@ -48,6 +48,13 @@ public protocol RemoteLoggerTransport {
     ///   - records: Sending records
     ///   - completion: Completion called when transport finish sending.
     func send(_ records: [LogRecord], completion: @escaping (Result<Void, Error>) -> Void)
+
+    /// Switch transport behaviour to live mode
+    /// - Parameter liveSessionToken: Token received from live session page.
+    func startLiveSession(_ liveSessionToken: String)
+
+    /// Switch logger back to default mode.
+    func finishLiveSession()
 }
 
 /// Logger that sends log messages to remote storage.
@@ -99,5 +106,16 @@ public class RemoteLogger: Logger {
         } else {
             buffering.append(record: record)
         }
+    }
+
+    /// Switch logger to live mode.
+    /// - Parameter liveSessionToken: Token received from live session page.
+    public func startLiveSession(_ liveSessionToken: String) {
+        transport.startLiveSession(liveSessionToken)
+    }
+
+    /// Switch logger back to default mode.
+    public func finishLiveSession() {
+        transport.finishLiveSession()
     }
 }
