@@ -24,6 +24,7 @@ public class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
         }
     }
 
+    private let apiPath = "api/v1"
     private let endpoint: URL
     private let secret: String
     private let delegateObject: URLSessionDelegateObject
@@ -37,10 +38,11 @@ public class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
     /// - Parameter secret: Secret key received from Robologs admin panel.
     public init(endpoint: URL, secret: String) {
         let configuration = URLSessionConfiguration.default
-        self.endpoint = endpoint
+        self.endpoint = endpoint.appendingPathComponent(apiPath)
         self.secret = secret
         delegateObject = URLSessionDelegateObject()
         session = URLSession(configuration: configuration, delegate: delegateObject, delegateQueue: nil)
+        getAuthToken { _ in }
     }
 
     public let isAvailable = true
@@ -54,7 +56,7 @@ public class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
         }
 
         do {
-            var request = URLRequest(url: endpoint.appendingPathComponent("api/v1/source"))
+            var request = URLRequest(url: endpoint.appendingPathComponent("source"))
             let sourceRequest = SenderTokenRequest.with { request in
                 request.secret = secret
                 request.sender = SenderTokenRequest.Sender.with { sender in
@@ -97,7 +99,7 @@ public class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
         }
 
         do {
-            var request = URLRequest(url: endpoint.appendingPathComponent("api/v1/send"))
+            var request = URLRequest(url: endpoint.appendingPathComponent("send"))
             request.setValue("application/x-protobuf", forHTTPHeaderField: "Content-Type")
             request.setValue(liveSessionToken, forHTTPHeaderField: "X-C6-Marker")
 
