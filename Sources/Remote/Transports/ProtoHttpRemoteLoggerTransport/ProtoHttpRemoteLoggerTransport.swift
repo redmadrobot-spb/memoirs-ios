@@ -61,7 +61,7 @@ public class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
     private let shouldRemoveSensitive = true
 
 
-    /// Authorize transport with provided secret
+    /// Authorize transport with provided secret.
     /// - Parameter completion: Completion called when authorization is finished.
     public func authorize(_ completion: @escaping (Result<Void, Swift.Error>) -> Void) {
         let completion = { result in
