@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import UIKit
 
 /// Remote logger transport that uses HTTP2 + Protubuf.
 public class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
@@ -62,6 +63,7 @@ public class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
                 request.secret = secret
                 request.sender = SenderTokenRequest.Sender.with { sender in
                     let enviromentInfo = EnviromentInfo.current
+                    sender.id = UIDevice.current.identifierForVendor?.uuidString ?? ""
                     sender.appID = enviromentInfo.appId ?? ""
                     sender.appName = enviromentInfo.appName ?? ""
                     sender.appVersion = enviromentInfo.appVersion ?? ""
