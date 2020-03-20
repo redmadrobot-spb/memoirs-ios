@@ -24,6 +24,8 @@ public class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
         }
     }
 
+    private let debugLogger = LabeledLoggerAdapter(label: "ProtoHttpRemoteLoggerTransport", adaptee: PrintLogger())
+
     private let apiPath = "api/v1"
     private let endpoint: URL
     private let secret: String
@@ -74,11 +76,21 @@ public class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
             request.httpMethod = "POST"
             request.httpBody = try sourceRequest.serializedData()
 
-            let task = session.dataTask(with: request) { _, _, error in
+            debugLogger.info(message: "Start auth token request")
+            debugLogger.info(message: "\(public: request)")
+            let task = session.dataTask(with: request) { data, response, error in
+
                 if let error = error {
                     completion(.failure(error))
+                    self.debugLogger.error(message: "Failed auth token receiving \(public: error)")
                 } else {
                     completion(.success(()))
+                    self.debugLogger.info(message: "Finished auth token receiving \(public: response as Any)")
+
+                    if let data = data {
+                        let response = try? SenderTokenResponse(serializedData: data)
+                        self.debugLogger.info(message: "Token received: \(public: response?.senderToken ?? "nil")")
+                    }
                 }
             }
             task.resume()
@@ -101,7 +113,7 @@ public class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
         do {
             var request = URLRequest(url: endpoint.appendingPathComponent("send"))
             request.setValue("application/x-protobuf", forHTTPHeaderField: "Content-Type")
-            request.setValue(liveSessionToken, forHTTPHeaderField: "X-C6-Marker")
+            request.setValue(liveSessionToken ?? "0", forHTTPHeaderField: "X-C6-Marker")
 
             let message = LogMessage.with { message in
                 message.priority = {
@@ -126,6 +138,8 @@ public class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
             request.httpMethod = "POST"
             request.httpBody = try message.serializedData()
 
+            debugLogger.info(message: "Send message")
+            debugLogger.info(message: "\(public: request)")
             let task = session.dataTask(with: request) { _, _, error in
                 if let error = error {
                     completion(.failure(error))
