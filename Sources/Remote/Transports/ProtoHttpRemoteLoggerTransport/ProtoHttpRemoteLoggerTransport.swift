@@ -99,14 +99,14 @@ public class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
                             let authToken = response.senderToken
                             self.authToken = authToken
                             completion(.success(()))
-                        } catch let error {
+                        } catch {
                             completion(.failure(Error.serialization(error)))
                         }
                     }
                 }
             }
             task.resume()
-        } catch let error {
+        } catch {
             completion(.failure(Error.serialization(error)))
         }
     }
@@ -162,7 +162,7 @@ public class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
                 }
             }
             task.resume()
-        } catch let error {
+        } catch {
             completion(.failure(Error.serialization(error)))
         }
     }
