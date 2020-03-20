@@ -52,7 +52,7 @@ logger.debug(label: "Network", message: "User data request",
              meta: [ "RequestId": UUID().uuidString ])
 ```
 Several implementations are available out of the box (the list will be updated):
-- [SensetiveLogger](https://git.redmadrobot.com/RedMadRobot/SPb/robologs-ios/tree/master/Documentation/SensetiveLogger.md), which incapsulate some logger, and the logic of erasing sensitive fields.
+- [SensetiveLogger](https://git.redmadrobot.com/RedMadRobot/SPb/robologs-ios/tree/dev/Documentation/SensetiveLogger.md), which incapsulate some logger, and the logic of erasing sensitive fields.
 - `FilteringLogger`, which incapsulate some logger and filters incoming log-events by labels with levels or minimal default level.
 - `MultiplexingLogger`, which stores several loggers and redirects all log events to them.
 - `LabeledLoggerAdapter`, which adapts any implementation of  `Logger` to `LabeledLogger` - protocol that allows you to bind logger to only one label.
@@ -70,6 +70,9 @@ Several implementations are available out of the box (the list will be updated):
 The library is externally dependent on  [swift-protobuf](https://github.com/apple/swift-protobuf).
 
 These are currently supported installation options:
+
+### Manual
+To install Robologs manually open `Robologs.xcodeproj`, and hit run. This method will build everything. After that, you can move the compiled framework from the build folder to where you need it.
   
 ### [Carthage](https://github.com/Carthage/Carthage)
 
