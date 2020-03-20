@@ -11,6 +11,16 @@ import UIKit
 
 /// Remote logger transport that uses HTTP2 + Protubuf.
 public class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
+    /// Errors that can be happend in ProtoHttpRemoteLoggerTransport.
+    public enum Error: Swift.Error {
+        /// Transport was failed to make handshake with secret or doesn't have code6.
+        case notAuthorized
+        /// Network error occured.
+        case network(Swift.Error)
+        /// Serialization error occured.
+        case serialization(Swift.Error)
+    }
+
     private class URLSessionDelegateObject: NSObject, URLSessionDelegate {
         func urlSession(
             _ session: URLSession,
@@ -50,7 +60,10 @@ public class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
     public let isAvailable = true
     private let shouldRemoveSensitive = true
 
-    public func getAuthToken(_ completion: @escaping (Result<Void, Error>) -> Void) {
+
+    /// Authorize transport with provided secret
+    /// - Parameter completion: Completion called when authorization is finished.
+    public func authorize(_ completion: @escaping (Result<Void, Swift.Error>) -> Void) {
         let completion = { result in
             DispatchQueue.main.async {
                 completion(result)
@@ -83,7 +96,7 @@ public class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
             let task = session.dataTask(with: request) { data, response, error in
 
                 if let error = error {
-                    completion(.failure(error))
+                    completion(.failure(Error.network(error)))
                     self.debugLogger.error(message: "Failed auth token receiving \(public: error)")
                 } else {
                     completion(.success(()))
@@ -99,11 +112,14 @@ public class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
             }
             task.resume()
         } catch let error {
-            completion(.failure(error))
+            completion(.failure(Error.serialization(error)))
         }
     }
 
-    public func send(_ records: [LogRecord], completion: @escaping (Result<Void, Error>) -> Void) {
+    public func send(_ records: [LogRecord], completion: @escaping (Result<Void, Swift.Error>) -> Void) {
+        guard let authToken = authToken, let liveSessionToken = liveSessionToken else {
+            return completion(.failure(Error.notAuthorized))
+        }
         guard let record = records.first else {
             return
         }
@@ -119,7 +135,7 @@ public class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
             request.httpMethod = "POST"
             request.setValue("application/x-protobuf", forHTTPHeaderField: "Content-Type")
             request.setValue(authToken, forHTTPHeaderField: "Authorization")
-            request.setValue(liveSessionToken ?? "0", forHTTPHeaderField: "X-C6-Marker")
+            request.setValue(liveSessionToken, forHTTPHeaderField: "X-C6-Marker")
 
             let message = LogMessage.with { message in
                 message.priority = {
@@ -154,7 +170,7 @@ public class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
             }
             task.resume()
         } catch let error {
-            completion(.failure(error))
+            completion(.failure(Error.serialization(error)))
         }
     }
 
