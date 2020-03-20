@@ -14,8 +14,11 @@ public struct LogRecord {
     let timestamp: TimeInterval
     let label: String
     let level: Level
-    let message: String
-    let meta: [String: String]?
+    let message: LogString
+    let meta: [String: LogString]?
+    let file: String
+    let function: String
+    let line: UInt
 }
 
 /// Responsible for buffering log records while transport is not available.
@@ -45,6 +48,13 @@ public protocol RemoteLoggerTransport {
     ///   - records: Sending records
     ///   - completion: Completion called when transport finish sending.
     func send(_ records: [LogRecord], completion: @escaping (Result<Void, Error>) -> Void)
+
+    /// Switch transport behaviour to live mode
+    /// - Parameter liveSessionToken: Token received from live session page.
+    func startLiveSession(_ liveSessionToken: String)
+
+    /// Switch logger back to default mode.
+    func finishLiveSession()
 }
 
 /// Logger that sends log messages to remote storage.
@@ -64,8 +74,8 @@ public class RemoteLogger: Logger {
     public func log(
         level: Level,
         label: String,
-        message: @autoclosure () -> String,
-        meta: @autoclosure () -> [String: String]? = nil,
+        message: @autoclosure () -> LogString,
+        meta: @autoclosure () -> [String: LogString]?,
         file: String = #file,
         function: String = #function,
         line: UInt = #line
@@ -75,7 +85,10 @@ public class RemoteLogger: Logger {
             label: label,
             level: level,
             message: message(),
-            meta: meta()
+            meta: meta(),
+            file: file,
+            function: function,
+            line: line
         )
 
         if transport.isAvailable {
@@ -93,5 +106,16 @@ public class RemoteLogger: Logger {
         } else {
             buffering.append(record: record)
         }
+    }
+
+    /// Switch logger to live mode.
+    /// - Parameter liveSessionToken: Token received from live session page.
+    public func startLiveSession(_ liveSessionToken: String) {
+        transport.startLiveSession(liveSessionToken)
+    }
+
+    /// Switch logger back to default mode.
+    public func finishLiveSession() {
+        transport.finishLiveSession()
     }
 }

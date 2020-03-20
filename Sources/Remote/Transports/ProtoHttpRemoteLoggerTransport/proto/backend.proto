@@ -1,15 +1,15 @@
-syntax = "proto3";
+syntax = "proto2";
 
 option java_package = "com.redmadrobot.robologs.protobuf.messages";
 option java_multiple_files = true;
 
-message TestLogMessage {
-    int64 timestamp_ms = 1;
-    Priority priority = 2;
-    string flow = 3;
-    string source = 4;
-    string label = 5;
-    string message = 6;
+message LogMessage {
+    required int64 timestamp_ms = 1;
+    required Priority priority = 2;
+    optional string flow = 3;
+    optional string source = 4;
+    optional string label = 5;
+    optional string message = 6;
     map<string,string> meta = 7;
 
     enum Priority {
@@ -18,4 +18,24 @@ message TestLogMessage {
         WARN = 2;
         ERROR = 3;
     }
+}
+
+message SenderTokenRequest {
+    required string secret = 1;
+    required Sender sender = 2;
+
+    message Sender {
+        required string id = 1;
+        optional string app_id = 2;
+        optional string app_name = 3;
+        optional string app_version = 4;
+        optional string app_build_version = 5;
+        optional string operation_system = 6;
+        optional string operation_system_version = 7;
+        optional string device_model = 8;
+    }
+}
+
+message SenderTokenResponse {
+    required string sender_token = 1;
 }

@@ -21,10 +21,17 @@ public class LocalRemoteLoggerTransport: RemoteLoggerTransport {
             localLogger.log(
                 level: record.level,
                 label: record.label,
-                message: record.message,
-                meta: record.meta
+                message: { record.message },
+                meta: { record.meta },
+                file: record.file,
+                function: record.function,
+                line: record.line
             )
         }
         completion(.success(()))
     }
+
+    public func startLiveSession(_ liveSessionToken: String) {}
+
+    public func finishLiveSession() {}
 }
