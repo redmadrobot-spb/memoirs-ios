@@ -59,6 +59,9 @@ public class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
 
         do {
             var request = URLRequest(url: endpoint.appendingPathComponent("source"))
+            request.httpMethod = "POST"
+            request.setValue("application/x-protobuf", forHTTPHeaderField: "Content-Type")
+
             let sourceRequest = SenderTokenRequest.with { request in
                 request.secret = secret
                 request.sender = SenderTokenRequest.Sender.with { sender in
@@ -73,8 +76,6 @@ public class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
                     sender.deviceModel = enviromentInfo.deviceModel ?? ""
                 }
             }
-
-            request.httpMethod = "POST"
             request.httpBody = try sourceRequest.serializedData()
 
             debugLogger.info(message: "Start auth token request")
@@ -113,6 +114,7 @@ public class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
 
         do {
             var request = URLRequest(url: endpoint.appendingPathComponent("send"))
+            request.httpMethod = "POST"
             request.setValue("application/x-protobuf", forHTTPHeaderField: "Content-Type")
             request.setValue(liveSessionToken ?? "0", forHTTPHeaderField: "X-C6-Marker")
 
@@ -136,7 +138,6 @@ public class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
                 message.meta = record.meta?.mapValues { $0.string(withoutSensitive: shouldRemoveSensitive) } ?? [:]
             }
 
-            request.httpMethod = "POST"
             request.httpBody = try message.serializedData()
 
             debugLogger.info(message: "Send message")
