@@ -132,8 +132,8 @@ public class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
             request.setValue(authToken, forHTTPHeaderField: "Authorization")
             request.setValue(liveSessionToken, forHTTPHeaderField: "X-C6-Marker")
 
-            let message = LogMessage.with { message in
-                message.priority = {
+            let logMessage = LogMessage.with { logMessage in
+                logMessage.priority = {
                     switch record.level {
                         case .critical, .error:
                             return .error
@@ -145,14 +145,14 @@ public class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
                             return .debug
                     }
                 }()
-                message.label = record.label
-                message.message = record.message.string(withoutSensitive: shouldRemoveSensitive)
-                message.source = "\(record.file):\(record.line)"
-                message.timestampMs = Int64(record.timestamp * 1000)
-                message.meta = record.meta?.mapValues { $0.string(withoutSensitive: shouldRemoveSensitive) } ?? [:]
+                logMessage.label = record.label
+                logMessage.message = record.message.string(withoutSensitive: shouldRemoveSensitive)
+                logMessage.source = "\(record.file):\(record.line)"
+                logMessage.timestampMs = Int64(record.timestamp * 1000)
+                logMessage.meta = record.meta?.mapValues { $0.string(withoutSensitive: shouldRemoveSensitive) } ?? [:]
             }
 
-            request.httpBody = try message.serializedData()
+            request.httpBody = try logMessage.serializedData()
 
             let task = session.dataTask(with: request) { _, _, error in
                 if let error = error {
