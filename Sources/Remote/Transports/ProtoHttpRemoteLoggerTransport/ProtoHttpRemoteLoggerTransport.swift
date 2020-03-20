@@ -94,10 +94,14 @@ public class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
                     completion(.failure(Error.network(error)))
                 } else {
                     if let data = data {
-                        let response = try? SenderTokenResponse(serializedData: data)
-                        let authToken = response?.senderToken
-                        self.authToken = authToken
-                        completion(.success(()))
+                        do {
+                            let response = try SenderTokenResponse(serializedData: data)
+                            let authToken = response.senderToken
+                            self.authToken = authToken
+                            completion(.success(()))
+                        } catch let error {
+                            completion(.failure(Error.serialization(error)))
+                        }
                     }
                 }
             }

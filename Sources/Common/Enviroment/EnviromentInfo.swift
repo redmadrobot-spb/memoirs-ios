@@ -41,6 +41,8 @@ struct EnviromentInfo {
         )
     }
 
+    // TODO: This probably should be resolving on backend since new
+    // models releasing every year.
     // swiftlint:disable:next cyclomatic_complexity function_body_length
     private static func displayDeviceName(for identifier: String) -> String {
         switch identifier {
