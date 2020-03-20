@@ -13,7 +13,7 @@ import UIKit
 public class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
     /// Errors that can be happend in ProtoHttpRemoteLoggerTransport.
     public enum Error: Swift.Error {
-        /// Transport was failed to make handshake with secret or doesn't have code6.
+        /// Transport was failed to make handshake with secret or doesn't have code6 for live session.
         case notAuthorized
         /// Network error occured.
         case network(Swift.Error)
@@ -21,6 +21,7 @@ public class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
         case serialization(Swift.Error)
     }
 
+    // TODO: Remove when server will switch to proper certificate
     private class URLSessionDelegateObject: NSObject, URLSessionDelegate {
         func urlSession(
             _ session: URLSession,
@@ -57,7 +58,6 @@ public class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
 
     public let isAvailable = true
     private let shouldRemoveSensitive = true
-
 
     /// Authorize transport with provided secret.
     /// - Parameter completion: Completion called when authorization is finished.
