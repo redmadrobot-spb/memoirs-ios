@@ -35,8 +35,6 @@ public class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
         }
     }
 
-    private let debugLogger = LabeledLoggerAdapter(label: "ProtoHttpRemoteLoggerTransport", adaptee: PrintLogger())
-
     private let apiPath = "api/v1"
     private let endpoint: URL
     private let secret: String
@@ -90,23 +88,16 @@ public class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
                 }
             }
             request.httpBody = try sourceRequest.serializedData()
-
-            debugLogger.info(message: "Start auth token request")
-            debugLogger.info(message: "\(public: request)")
             let task = session.dataTask(with: request) { data, response, error in
 
                 if let error = error {
                     completion(.failure(Error.network(error)))
-                    self.debugLogger.error(message: "Failed auth token receiving \(public: error)")
                 } else {
-                    completion(.success(()))
-                    self.debugLogger.info(message: "Finished auth token receiving \(public: response as Any)")
-
                     if let data = data {
                         let response = try? SenderTokenResponse(serializedData: data)
                         let authToken = response?.senderToken
                         self.authToken = authToken
-                        self.debugLogger.info(message: "Token received: \(public: authToken ?? "nil")")
+                        completion(.success(()))
                     }
                 }
             }
@@ -159,8 +150,6 @@ public class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
 
             request.httpBody = try message.serializedData()
 
-            debugLogger.info(message: "Send message")
-            debugLogger.info(message: "\(public: request)")
             let task = session.dataTask(with: request) { _, _, error in
                 if let error = error {
                     completion(.failure(error))
