@@ -44,13 +44,12 @@ public class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
         self.secret = secret
         delegateObject = URLSessionDelegateObject()
         session = URLSession(configuration: configuration, delegate: delegateObject, delegateQueue: nil)
-        getAuthToken { _ in }
     }
 
     public let isAvailable = true
     private let shouldRemoveSensitive = true
 
-    private func getAuthToken(_ completion: @escaping (Result<Void, Error>) -> Void) {
+    public func getAuthToken(_ completion: @escaping (Result<Void, Error>) -> Void) {
         let completion = { result in
             DispatchQueue.main.async {
                 completion(result)
