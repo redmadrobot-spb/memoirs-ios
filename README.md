@@ -52,7 +52,7 @@ logger.debug(label: "Network", message: "User data request",
              meta: [ "RequestId": UUID().uuidString ])
 ```
 Several implementations are available out of the box (the list will be updated):
-- [SensetiveLogger](https://git.redmadrobot.com/RedMadRobot/SPb/robologs-ios/tree/dev/Documentation/SensetiveLogger.md), which incapsulate some logger, and the logic of erasing sensitive fields.
+- [SensetiveLogger](Documentation/SensetiveLogger.md), which incapsulate some logger, and the logic of erasing sensitive fields.
 - `FilteringLogger`, which incapsulate some logger and filters incoming log-events by labels with levels or minimal default level.
 - `MultiplexingLogger`, which stores several loggers and redirects all log events to them.
 - `LabeledLoggerAdapter`, which adapts any implementation of  `Logger` to `LabeledLogger` - protocol that allows you to bind logger to only one label.
