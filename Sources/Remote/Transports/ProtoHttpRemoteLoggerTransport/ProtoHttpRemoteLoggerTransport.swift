@@ -91,7 +91,9 @@ public class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
 
                     if let data = data {
                         let response = try? SenderTokenResponse(serializedData: data)
-                        self.debugLogger.info(message: "Token received: \(public: response?.senderToken ?? "nil")")
+                        let authToken = response?.senderToken
+                        self.authToken = authToken
+                        self.debugLogger.info(message: "Token received: \(public: authToken ?? "nil")")
                     }
                 }
             }
