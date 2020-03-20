@@ -116,6 +116,7 @@ public class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
             var request = URLRequest(url: endpoint.appendingPathComponent("send"))
             request.httpMethod = "POST"
             request.setValue("application/x-protobuf", forHTTPHeaderField: "Content-Type")
+            request.setValue(authToken, forHTTPHeaderField: "Authorization")
             request.setValue(liveSessionToken ?? "0", forHTTPHeaderField: "X-C6-Marker")
 
             let message = LogMessage.with { message in
