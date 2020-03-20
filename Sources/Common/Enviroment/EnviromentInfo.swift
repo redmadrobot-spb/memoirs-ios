@@ -142,7 +142,7 @@ struct EnviromentInfo {
                 let simulatorDevice = ProcessInfo()
                     .environment["SIMULATOR_MODEL_IDENTIFIER"]
                     .map(displayDeviceName(for:))
-                return "Simulator \(simulatorDevice ?? "iOS"))"
+                return "Simulator (\(simulatorDevice ?? "iOS"))"
             default:
                 return identifier
          }
