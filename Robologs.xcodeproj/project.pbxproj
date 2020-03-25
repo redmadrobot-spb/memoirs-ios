@@ -3,10 +3,12 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		304E87AF242B8AAD007694D2 /* SwiftProtobuf in Frameworks */ = {isa = PBXBuildFile; productRef = 304E87AE242B8AAD007694D2 /* SwiftProtobuf */; };
+		304E87B1242B8AAD007694D2 /* SwiftProtobufPluginLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = 304E87B0242B8AAD007694D2 /* SwiftProtobufPluginLibrary */; };
 		4611FCED2398FEF100E23B25 /* MultiplexingLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4611FCEC2398FEF100E23B25 /* MultiplexingLogger.swift */; };
 		4611FCEF239904CC00E23B25 /* FilteringLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4611FCEE239904CC00E23B25 /* FilteringLogger.swift */; };
 		4611FCF723995F3300E23B25 /* NSLogLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4611FCF623995F3300E23B25 /* NSLogLogger.swift */; };
@@ -20,7 +22,6 @@
 		4655B6E7239A5BD900CB552B /* LabeledLoggerAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4655B6E6239A5BD900CB552B /* LabeledLoggerAdapter.swift */; };
 		46C33CFF23FFC56300775771 /* SensitiveLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46C33CFE23FFC56300775771 /* SensitiveLogger.swift */; };
 		46E239082397A748006539C5 /* SynchronizedDictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46E239072397A748006539C5 /* SynchronizedDictionary.swift */; };
-		6362A770241F8ED00009DF04 /* SwiftProtobuf.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6362A76F241F8ED00009DF04 /* SwiftProtobuf.framework */; };
 		63B2D2C52423B288002817B6 /* EnviromentInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B2D2C42423B288002817B6 /* EnviromentInfo.swift */; };
 		63D39417241F86D2002052DA /* LocalRemoteLoggerTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D3940E241F86D2002052DA /* LocalRemoteLoggerTransport.swift */; };
 		63D39418241F86D2002052DA /* backend.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D39411241F86D2002052DA /* backend.pb.swift */; };
@@ -46,7 +47,6 @@
 		46AE559E238D683C00774F9E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		46C33CFE23FFC56300775771 /* SensitiveLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensitiveLogger.swift; sourceTree = "<group>"; };
 		46E239072397A748006539C5 /* SynchronizedDictionary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SynchronizedDictionary.swift; sourceTree = "<group>"; };
-		6362A76F241F8ED00009DF04 /* SwiftProtobuf.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = SwiftProtobuf.framework; sourceTree = "<group>"; };
 		63B2D2C42423B288002817B6 /* EnviromentInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnviromentInfo.swift; sourceTree = "<group>"; };
 		63D3940E241F86D2002052DA /* LocalRemoteLoggerTransport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocalRemoteLoggerTransport.swift; sourceTree = "<group>"; };
 		63D39411241F86D2002052DA /* backend.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = backend.pb.swift; sourceTree = "<group>"; };
@@ -61,7 +61,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6362A770241F8ED00009DF04 /* SwiftProtobuf.framework in Frameworks */,
+				304E87B1242B8AAD007694D2 /* SwiftProtobufPluginLibrary in Frameworks */,
+				304E87AF242B8AAD007694D2 /* SwiftProtobuf in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -125,7 +126,6 @@
 			children = (
 				4626E60C2395707500BD14B8 /* Sources */,
 				4626E60D239656F200BD14B8 /* Supporting files */,
-				6362A76E241F8ED00009DF04 /* Frameworks */,
 				46AE559B238D683C00774F9E /* Products */,
 			);
 			sourceTree = "<group>";
@@ -154,14 +154,6 @@
 				46E239072397A748006539C5 /* SynchronizedDictionary.swift */,
 			);
 			path = "Data structures";
-			sourceTree = "<group>";
-		};
-		6362A76E241F8ED00009DF04 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				6362A76F241F8ED00009DF04 /* SwiftProtobuf.framework */,
-			);
-			path = Frameworks;
 			sourceTree = "<group>";
 		};
 		63B2D2C32423B26C002817B6 /* Enviroment */ = {
@@ -246,6 +238,10 @@
 			dependencies = (
 			);
 			name = Robologs;
+			packageProductDependencies = (
+				304E87AE242B8AAD007694D2 /* SwiftProtobuf */,
+				304E87B0242B8AAD007694D2 /* SwiftProtobufPluginLibrary */,
+			);
 			productName = RobologsiOSNative;
 			productReference = 46AE559A238D683C00774F9E /* Robologs.framework */;
 			productType = "com.apple.product-type.framework";
@@ -275,6 +271,9 @@
 				Base,
 			);
 			mainGroup = 46AE5590238D683B00774F9E;
+			packageReferences = (
+				304E87AD242B8AAD007694D2 /* XCRemoteSwiftPackageReference "swift-protobuf" */,
+			);
 			productRefGroup = 46AE559B238D683C00774F9E /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -481,7 +480,6 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
-					"$(PROJECT_DIR)/Frameworks",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/Supporting files/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -520,7 +518,6 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)",
-					"$(PROJECT_DIR)/Frameworks",
 				);
 				INFOPLIST_FILE = "$(SRCROOT)/Supporting files/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
@@ -565,6 +562,30 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		304E87AD242B8AAD007694D2 /* XCRemoteSwiftPackageReference "swift-protobuf" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-protobuf.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.8.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		304E87AE242B8AAD007694D2 /* SwiftProtobuf */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 304E87AD242B8AAD007694D2 /* XCRemoteSwiftPackageReference "swift-protobuf" */;
+			productName = SwiftProtobuf;
+		};
+		304E87B0242B8AAD007694D2 /* SwiftProtobufPluginLibrary */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 304E87AD242B8AAD007694D2 /* XCRemoteSwiftPackageReference "swift-protobuf" */;
+			productName = SwiftProtobufPluginLibrary;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 46AE5591238D683B00774F9E /* Project object */;
 }
