@@ -1,5 +1,5 @@
 //
-//  LocalRemoteLoggerTransport.swift
+//  MockRemoteLoggerTransport.swift
 //  RobologsTest
 //
 //  Created by Vladislav Maltsev on 04.03.2020.
@@ -7,16 +7,20 @@
 //
 
 /// Mock remote logger transport. Simply redirects log records to specified logger (for example PrintLogger).
-public class LocalRemoteLoggerTransport: RemoteLoggerTransport {
+class MockRemoteLoggerTransport: RemoteLoggerTransport {
     private let localLogger: Logger
 
-    public init(localLogger: Logger) {
+    init(localLogger: Logger) {
         self.localLogger = localLogger
     }
 
-    public let isAvailable = true
+    let isReadyToSend = true
 
-    public func send(_ records: [LogRecord], completion: (Result<Void, Error>) -> Void) {
+    func authorize(_ completion: @escaping (Result<Void, RemoteLoggerTransportError>) -> Void) {
+        completion(.success(()))
+    }
+
+    func send(_ records: [LogRecord], completion: @escaping (Result<Void, RemoteLoggerTransportError>) -> Void) {
         records.forEach { record in
             localLogger.log(
                 level: record.level,
@@ -30,8 +34,4 @@ public class LocalRemoteLoggerTransport: RemoteLoggerTransport {
         }
         completion(.success(()))
     }
-
-    public func startLiveSession(_ liveSessionToken: String) {}
-
-    public func finishLiveSession() {}
 }

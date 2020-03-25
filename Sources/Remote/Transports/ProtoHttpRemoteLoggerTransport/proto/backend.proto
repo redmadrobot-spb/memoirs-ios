@@ -3,24 +3,21 @@ syntax = "proto2";
 option java_package = "com.redmadrobot.robologs.protobuf.messages";
 option java_multiple_files = true;
 
-message LogMessage {
-    required int64 timestamp_ms = 1;
-    required Priority priority = 2;
-    optional string flow = 3;
-    optional string source = 4;
-    optional string label = 5;
-    optional string message = 6;
-    map<string,string> meta = 7;
+// Метод получения JOURNAL_TOKEN.
+//   - TOKEN_REQUEST: JournalTokenRequest - Информация об окружении и секрет для авторизации.
+//   - TOKEN_RESPONSE: JournalTokenResponse - Содержит токен необходимый для дальнейшей отправки логов.
+//
+// Request: POST /api/v1/source
+// Headers:
+//   Content-Type: application/x-protobuf
+// Body:
+//   <TOKEN_REQUEST>
+// Response:
+//   - Успешно:
+//       Code: 200
+//       Body: <TOKEN_RESPONSE>
 
-    enum Priority {
-        DEBUG = 0;
-        INFO = 1;
-        WARN = 2;
-        ERROR = 3;
-    }
-}
-
-message SenderTokenRequest {
+message JournalTokenRequest {
     required string secret = 1;
     required Sender sender = 2;
 
@@ -36,6 +33,43 @@ message SenderTokenRequest {
     }
 }
 
-message SenderTokenResponse {
-    required string sender_token = 1;
+message JournalTokenResponse {
+    required string journal_token = 1;
+}
+
+// Метод отправки накопленных логов на сервер.
+//   - JOURNAL_TOKEN: String - Токен полученный в `POST /api/v1/source`.
+//   - LOGS: LogMessageBatch - Накопленные логи.
+//
+// Request: POST /api/v1/send
+// Headers:
+//   Content-Type: application/x-protobuf
+//   Authorization: <JOURNAL_TOKEN>
+// Body:
+//   <LOGS>
+// Response:
+//   - Успешно:
+//       Code: 200
+//   - Неправильный journal_token:
+//       Code: 401
+
+message LogMessageBatch {
+    repeated LogMessage messages = 1;
+}
+
+message LogMessage {
+    required int64 timestamp_ms = 1;
+    required Priority priority = 2;
+    optional string flow = 3;
+    optional string source = 4;
+    optional string label = 5;
+    optional string message = 6;
+    map<string,string> meta = 7;
+
+    enum Priority {
+        DEBUG = 0;
+        INFO = 1;
+        WARN = 2;
+        ERROR = 3;
+    }
 }

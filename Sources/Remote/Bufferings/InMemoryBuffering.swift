@@ -7,24 +7,23 @@
 //
 
 /// Simplest buffering - just keeps log records in memory.
-public class InMemoryBuffering: RemoteLoggerBuffering {
-    /// Creates new instance of `InMemoryBuffering`
-    public init() {}
-
+class InMemoryBuffering: RemoteLoggerBuffering {
     private var records: [LogRecord] = []
 
-    public var haveBufferedData: Bool {
+    var haveBufferedData: Bool {
         !records.isEmpty
     }
 
-    public func append(record: LogRecord) {
+    func append(record: LogRecord) {
         records.append(record)
     }
 
-    public func retrieve(_ actions: @escaping ([LogRecord], @escaping (Bool) -> Void) -> Void) {
+    func retrieve(_ actions: @escaping ([LogRecord], @escaping (Bool) -> Void) -> Void) {
+        records = []
+        let pendedRecords = records
         actions(records) { isFinished in
-            if isFinished {
-                self.records = []
+            if !isFinished {
+                self.records = pendedRecords + self.records
             }
         }
     }
