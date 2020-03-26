@@ -11,8 +11,6 @@ import UIKit
 
 /// Remote logger transport that uses HTTP + Protubuf.
 class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
-    /// Errors that can be happend in ProtoHttpRemoteLoggerTransport.
-
     // TODO: Remove when server will switch to proper certificate
     private class URLSessionDelegateObject: NSObject, URLSessionDelegate {
         func urlSession(
