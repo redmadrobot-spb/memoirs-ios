@@ -33,8 +33,11 @@ class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
     private let session: URLSession
     private var authToken: String?
     private var isLoading: Bool = false
-    private(set) var isReadyToSend = false
     private let shouldRemoveSensitive = true
+
+    var isAuthorized: Bool {
+        authToken != nil
+    }
 
     /// Creates new instance of `ProtoHttpRemoteLoggerTransport`.
     /// - Parameter endpoint: URL to server endpoint supporting this kind of transport.

@@ -66,6 +66,7 @@ protocol RemoteLoggerTransport {
 
 /// Logger that sends log messages to remote storage.
 class RemoteLogger: Logger {
+    private let workingQueue = DispatchQueue(label: "Robologs.RemoteLogger")
     private let buffering: RemoteLoggerBuffering
     private let transport: RemoteLoggerTransport
 
@@ -87,38 +88,49 @@ class RemoteLogger: Logger {
         function: String = #function,
         line: UInt = #line
     ) {
-        let record = LogRecord(
-            timestamp: Date().timeIntervalSince1970,
-            label: label,
-            level: level,
-            message: message(),
-            meta: meta(),
-            file: file,
-            function: function,
-            line: line
-        )
+        let message = message()
+        let meta = meta()
+        workingQueue.async {
+            let record = LogRecord(
+                timestamp: Date().timeIntervalSince1970,
+                label: label,
+                level: level,
+                message: message,
+                meta: meta,
+                file: file,
+                function: function,
+                line: line
+            )
 
-        if transport.isAuthorized {
-            buffering.retrieve { records, finish in
-                self.send(records: records + [ record ]) { finished in
-                    if !finished {
-                        self.buffering.append(record: record)
-                    }
-                    finish(finished)
-                }
+            self.buffering.append(record: record)
+            if self.canSend {
+                self.sendIfNeeded()
             }
-        } else {
-            buffering.append(record: record)
         }
     }
+
+    private func sendIfNeeded() {
+        guard buffering.haveBufferedData else { return }
+
+        canSend = false
+        buffering.retrieve { records, finish in
+            self.send(records: records) { finished in
+                self.canSend = true
+                finish(finished)
+            }
+        }
+    }
+
+    private var canSend: Bool = false
 
     private func send(records: [LogRecord], finish: @escaping (Bool) -> Void) {
         self.transport.send(records) { result in
             switch result {
                 case .success:
                     finish(true)
+                    self.sendIfNeeded()
                 case .failure(.notAuthorized):
-                    self.ensureAuthorization {
+                    self.authorize {
                         self.send(records: records, finish: finish)
                     }
                 case .failure:
@@ -129,14 +141,14 @@ class RemoteLogger: Logger {
 
     private let authorizationInterval: TimeInterval = 10
 
-    private func ensureAuthorization(completion: @escaping () -> Void) {
+    private func authorize(completion: @escaping () -> Void) {
         transport.authorize { result in
             switch result {
                 case .success:
                     completion()
                 case .failure:
-                    DispatchQueue.main.asyncAfter(deadline: .now() + self.authorizationInterval) {
-                        self.ensureAuthorization(completion: completion)
+                    self.workingQueue.asyncAfter(deadline: .now() + self.authorizationInterval) {
+                        self.authorize(completion: completion)
                     }
             }
         }
