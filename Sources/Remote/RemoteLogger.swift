@@ -65,7 +65,7 @@ protocol RemoteLoggerTransport {
 }
 
 /// Logger that sends log messages to remote storage.
-class RemoteLogger: Logger {
+public class RemoteLogger: Logger {
     private let workingQueue = DispatchQueue(label: "Robologs.RemoteLogger")
     private let buffering: RemoteLoggerBuffering
     private let transport: RemoteLoggerTransport
