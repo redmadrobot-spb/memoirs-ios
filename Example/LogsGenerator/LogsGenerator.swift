@@ -35,7 +35,7 @@ class LogsGenerator {
                     meta: { generatedRecord.meta?.mapValues { "\(public: $0)" as LogString } ?? [:] },
                     file: #file,
                     function: #function,
-                    line: 88
+                    line: #line
                 )
             }
         }
