@@ -49,8 +49,8 @@ public enum RemoteLoggerTransportError: Swift.Error {
 
 /// Responsible for sending log records to remote logs storage.
 protocol RemoteLoggerTransport {
-    /// Should return `false` if transport is not available.
-    var isReadyToSend: Bool { get }
+    /// Should return `false` if transport is not authirized.
+    var isAuthorized: Bool { get }
 
     /// Authorize transport.
     /// - Parameter completion: Completion called when transport authorized.
@@ -98,7 +98,7 @@ class RemoteLogger: Logger {
             line: line
         )
 
-        if transport.isReadyToSend {
+        if transport.isAuthorized {
             buffering.retrieve { records, finish in
                 self.send(records: records + [ record ]) { finished in
                     if !finished {
@@ -127,7 +127,18 @@ class RemoteLogger: Logger {
         }
     }
 
-    private func ensureAuthorization(completion: @escaping () -> Void) {
+    private let authorizationInterval: TimeInterval = 10
 
+    private func ensureAuthorization(completion: @escaping () -> Void) {
+        transport.authorize { result in
+            switch result {
+                case .success:
+                    completion()
+                case .failure:
+                    DispatchQueue.main.asyncAfter(deadline: .now() + self.authorizationInterval) {
+                        self.ensureAuthorization(completion: completion)
+                    }
+            }
+        }
     }
 }
