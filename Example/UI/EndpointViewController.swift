@@ -82,7 +82,7 @@ class EndpointViewController: UIViewController, UITextFieldDelegate {
         let loadingView = UIView(frame: CGRect(x: 0, y: 0, width: 150, height: 150))
         loadingView.backgroundColor = UIColor(red: 0.2, green: 0.2, blue: 0.2, alpha: 0.2)
         loadingView.layer.cornerRadius = 20
-        let activityIndicator = UIActivityIndicatorView(style: .large)
+        let activityIndicator = UIActivityIndicatorView(style: .white)
         activityIndicator.startAnimating()
         activityIndicator.center = loadingView.center
         loadingView.center = view.center
