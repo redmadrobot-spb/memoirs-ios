@@ -7,8 +7,30 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		300CC6F1242EBFD7007117E2 /* RemoteLoggerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 300CC6F0242EBFD7007117E2 /* RemoteLoggerService.swift */; };
+		300CC6F4242ECB06007117E2 /* SingleLogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 300CC6F3242ECB06007117E2 /* SingleLogViewController.swift */; };
+		300CC6F6242ECD59007117E2 /* DiagnosticLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 300CC6F5242ECD59007117E2 /* DiagnosticLogger.swift */; };
+		300CC6FA242FEE9D007117E2 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 300CC6F9242FEE9D007117E2 /* SceneDelegate.swift */; };
+		300CC6FC2430117F007117E2 /* ConstantLoadLogsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 300CC6FB2430117F007117E2 /* ConstantLoadLogsViewController.swift */; };
+		300CC6FE24301B71007117E2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3053CC30242DF72E000125FB /* Main.storyboard */; };
+		300CC6FF24301B79007117E2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3053CC35242DF733000125FB /* LaunchScreen.storyboard */; };
 		304E87AF242B8AAD007694D2 /* SwiftProtobuf in Frameworks */ = {isa = PBXBuildFile; productRef = 304E87AE242B8AAD007694D2 /* SwiftProtobuf */; };
 		304E87B1242B8AAD007694D2 /* SwiftProtobufPluginLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = 304E87B0242B8AAD007694D2 /* SwiftProtobufPluginLibrary */; };
+		3053CC2B242DF72E000125FB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3053CC2A242DF72E000125FB /* AppDelegate.swift */; };
+		3053CC34242DF733000125FB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3053CC33242DF733000125FB /* Assets.xcassets */; };
+		3053CC3D242DFB1C000125FB /* UniformRecordGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3053CC3C242DFB1C000125FB /* UniformRecordGenerator.swift */; };
+		3053CC3F242DFB25000125FB /* LogsGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3053CC3E242DFB25000125FB /* LogsGenerator.swift */; };
+		3053CC41242DFB50000125FB /* Robologs.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 46AE559A238D683C00774F9E /* Robologs.framework */; };
+		3053CC42242DFB50000125FB /* Robologs.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 46AE559A238D683C00774F9E /* Robologs.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		3053CC47242E378B000125FB /* MainTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3053CC46242E378B000125FB /* MainTableViewController.swift */; };
+		3053CC49242E6D8B000125FB /* ActionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3053CC48242E6D8B000125FB /* ActionButton.swift */; };
+		3053CC4D242EBE6E000125FB /* EndpointViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3053CC4C242EBE6E000125FB /* EndpointViewController.swift */; };
+		307D795A24322058000C8B2B /* TimeRange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 307D795924322058000C8B2B /* TimeRange.swift */; };
+		307D795C24322076000C8B2B /* LogsGeneratorTiming.swift in Sources */ = {isa = PBXBuildFile; fileRef = 307D795B24322076000C8B2B /* LogsGeneratorTiming.swift */; };
+		307D795E24322093000C8B2B /* GeneratedLogRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 307D795D24322093000C8B2B /* GeneratedLogRecord.swift */; };
+		307D796024322105000C8B2B /* LogGeneratorRecordGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 307D795F24322105000C8B2B /* LogGeneratorRecordGenerator.swift */; };
+		307D79622432224E000C8B2B /* RealApplicationLogGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 307D79612432224E000C8B2B /* RealApplicationLogGenerator.swift */; };
+		30D48C91243024190071124C /* PeriodicBurstsLogsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30D48C90243024190071124C /* PeriodicBurstsLogsViewController.swift */; };
 		4611FCED2398FEF100E23B25 /* MultiplexingLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4611FCEC2398FEF100E23B25 /* MultiplexingLogger.swift */; };
 		4611FCEF239904CC00E23B25 /* FilteringLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4611FCEE239904CC00E23B25 /* FilteringLogger.swift */; };
 		4611FCF723995F3300E23B25 /* NSLogLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4611FCF623995F3300E23B25 /* NSLogLogger.swift */; };
@@ -31,7 +53,53 @@
 		63D3941C241F86D2002052DA /* RemoteLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D39416241F86D2002052DA /* RemoteLogger.swift */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		3053CC43242DFB50000125FB /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 46AE5591238D683B00774F9E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 46AE5599238D683B00774F9E;
+			remoteInfo = Robologs;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		3053CC45242DFB50000125FB /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				3053CC42242DFB50000125FB /* Robologs.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
 /* Begin PBXFileReference section */
+		300CC6F0242EBFD7007117E2 /* RemoteLoggerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteLoggerService.swift; sourceTree = "<group>"; };
+		300CC6F3242ECB06007117E2 /* SingleLogViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleLogViewController.swift; sourceTree = "<group>"; };
+		300CC6F5242ECD59007117E2 /* DiagnosticLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiagnosticLogger.swift; sourceTree = "<group>"; };
+		300CC6F9242FEE9D007117E2 /* SceneDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
+		300CC6FB2430117F007117E2 /* ConstantLoadLogsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConstantLoadLogsViewController.swift; sourceTree = "<group>"; };
+		3053CC28242DF72E000125FB /* Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		3053CC2A242DF72E000125FB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		3053CC31242DF72E000125FB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		3053CC33242DF733000125FB /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		3053CC36242DF733000125FB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		3053CC38242DF733000125FB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		3053CC3C242DFB1C000125FB /* UniformRecordGenerator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UniformRecordGenerator.swift; sourceTree = "<group>"; };
+		3053CC3E242DFB25000125FB /* LogsGenerator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogsGenerator.swift; sourceTree = "<group>"; };
+		3053CC46242E378B000125FB /* MainTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTableViewController.swift; sourceTree = "<group>"; };
+		3053CC48242E6D8B000125FB /* ActionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionButton.swift; sourceTree = "<group>"; };
+		3053CC4C242EBE6E000125FB /* EndpointViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndpointViewController.swift; sourceTree = "<group>"; };
+		307D795924322058000C8B2B /* TimeRange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeRange.swift; sourceTree = "<group>"; };
+		307D795B24322076000C8B2B /* LogsGeneratorTiming.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogsGeneratorTiming.swift; sourceTree = "<group>"; };
+		307D795D24322093000C8B2B /* GeneratedLogRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneratedLogRecord.swift; sourceTree = "<group>"; };
+		307D795F24322105000C8B2B /* LogGeneratorRecordGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogGeneratorRecordGenerator.swift; sourceTree = "<group>"; };
+		307D79612432224E000C8B2B /* RealApplicationLogGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealApplicationLogGenerator.swift; sourceTree = "<group>"; };
+		30D48C90243024190071124C /* PeriodicBurstsLogsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeriodicBurstsLogsViewController.swift; sourceTree = "<group>"; };
 		4611FCEC2398FEF100E23B25 /* MultiplexingLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiplexingLogger.swift; sourceTree = "<group>"; };
 		4611FCEE239904CC00E23B25 /* FilteringLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilteringLogger.swift; sourceTree = "<group>"; };
 		4611FCF623995F3300E23B25 /* NSLogLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSLogLogger.swift; sourceTree = "<group>"; };
@@ -57,6 +125,14 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		3053CC25242DF72E000125FB /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				3053CC41242DFB50000125FB /* Robologs.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		46AE5597238D683B00774F9E /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -69,6 +145,73 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		300CC6F7242FEE34007117E2 /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				3053CC30242DF72E000125FB /* Main.storyboard */,
+				3053CC4C242EBE6E000125FB /* EndpointViewController.swift */,
+				3053CC46242E378B000125FB /* MainTableViewController.swift */,
+				300CC6F3242ECB06007117E2 /* SingleLogViewController.swift */,
+				300CC6FB2430117F007117E2 /* ConstantLoadLogsViewController.swift */,
+				30D48C90243024190071124C /* PeriodicBurstsLogsViewController.swift */,
+				300CC6F8242FEE3D007117E2 /* Components */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
+		300CC6F8242FEE3D007117E2 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				3053CC48242E6D8B000125FB /* ActionButton.swift */,
+			);
+			path = Components;
+			sourceTree = "<group>";
+		};
+		300CC6FD24301B1D007117E2 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				300CC6F9242FEE9D007117E2 /* SceneDelegate.swift */,
+				3053CC2A242DF72E000125FB /* AppDelegate.swift */,
+				3053CC33242DF733000125FB /* Assets.xcassets */,
+				3053CC35242DF733000125FB /* LaunchScreen.storyboard */,
+				3053CC38242DF733000125FB /* Info.plist */,
+			);
+			path = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		3053CC29242DF72E000125FB /* Example */ = {
+			isa = PBXGroup;
+			children = (
+				307D795824322044000C8B2B /* LogsGenerator */,
+				300CC6F7242FEE34007117E2 /* UI */,
+				300CC6F5242ECD59007117E2 /* DiagnosticLogger.swift */,
+				300CC6F0242EBFD7007117E2 /* RemoteLoggerService.swift */,
+				300CC6FD24301B1D007117E2 /* Supporting Files */,
+			);
+			path = Example;
+			sourceTree = "<group>";
+		};
+		3053CC40242DFB50000125FB /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		307D795824322044000C8B2B /* LogsGenerator */ = {
+			isa = PBXGroup;
+			children = (
+				307D79612432224E000C8B2B /* RealApplicationLogGenerator.swift */,
+				3053CC3E242DFB25000125FB /* LogsGenerator.swift */,
+				3053CC3C242DFB1C000125FB /* UniformRecordGenerator.swift */,
+				307D795924322058000C8B2B /* TimeRange.swift */,
+				307D795B24322076000C8B2B /* LogsGeneratorTiming.swift */,
+				307D795D24322093000C8B2B /* GeneratedLogRecord.swift */,
+				307D795F24322105000C8B2B /* LogGeneratorRecordGenerator.swift */,
+			);
+			path = LogsGenerator;
+			sourceTree = "<group>";
+		};
 		46131F7023911AB100612712 /* Loggers */ = {
 			isa = PBXGroup;
 			children = (
@@ -126,7 +269,9 @@
 			children = (
 				4626E60C2395707500BD14B8 /* Sources */,
 				4626E60D239656F200BD14B8 /* Supporting files */,
+				3053CC29242DF72E000125FB /* Example */,
 				46AE559B238D683C00774F9E /* Products */,
+				3053CC40242DFB50000125FB /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -134,6 +279,7 @@
 			isa = PBXGroup;
 			children = (
 				46AE559A238D683C00774F9E /* Robologs.framework */,
+				3053CC28242DF72E000125FB /* Example.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -223,6 +369,25 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		3053CC27242DF72E000125FB /* Example */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 3053CC3B242DF733000125FB /* Build configuration list for PBXNativeTarget "Example" */;
+			buildPhases = (
+				3053CC24242DF72E000125FB /* Sources */,
+				3053CC25242DF72E000125FB /* Frameworks */,
+				3053CC26242DF72E000125FB /* Resources */,
+				3053CC45242DFB50000125FB /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				3053CC44242DFB50000125FB /* PBXTargetDependency */,
+			);
+			name = Example;
+			productName = Example;
+			productReference = 3053CC28242DF72E000125FB /* Example.app */;
+			productType = "com.apple.product-type.application";
+		};
 		46AE5599238D683B00774F9E /* Robologs */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 46AE55A2238D683C00774F9E /* Build configuration list for PBXNativeTarget "Robologs" */;
@@ -252,10 +417,13 @@
 		46AE5591238D683B00774F9E /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1120;
+				LastSwiftUpdateCheck = 1140;
 				LastUpgradeCheck = 1130;
 				ORGANIZATIONNAME = Redmadrobot;
 				TargetAttributes = {
+					3053CC27242DF72E000125FB = {
+						CreatedOnToolsVersion = 11.4;
+					};
 					46AE5599238D683B00774F9E = {
 						CreatedOnToolsVersion = 11.2.1;
 						LastSwiftMigration = 1120;
@@ -279,11 +447,22 @@
 			projectRoot = "";
 			targets = (
 				46AE5599238D683B00774F9E /* Robologs */,
+				3053CC27242DF72E000125FB /* Example */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		3053CC26242DF72E000125FB /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				300CC6FF24301B79007117E2 /* LaunchScreen.storyboard in Resources */,
+				300CC6FE24301B71007117E2 /* Main.storyboard in Resources */,
+				3053CC34242DF733000125FB /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		46AE5598238D683B00774F9E /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -315,6 +494,30 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		3053CC24242DF72E000125FB /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				307D79622432224E000C8B2B /* RealApplicationLogGenerator.swift in Sources */,
+				3053CC3F242DFB25000125FB /* LogsGenerator.swift in Sources */,
+				307D796024322105000C8B2B /* LogGeneratorRecordGenerator.swift in Sources */,
+				300CC6F1242EBFD7007117E2 /* RemoteLoggerService.swift in Sources */,
+				307D795E24322093000C8B2B /* GeneratedLogRecord.swift in Sources */,
+				3053CC3D242DFB1C000125FB /* UniformRecordGenerator.swift in Sources */,
+				3053CC2B242DF72E000125FB /* AppDelegate.swift in Sources */,
+				300CC6FC2430117F007117E2 /* ConstantLoadLogsViewController.swift in Sources */,
+				3053CC47242E378B000125FB /* MainTableViewController.swift in Sources */,
+				30D48C91243024190071124C /* PeriodicBurstsLogsViewController.swift in Sources */,
+				307D795A24322058000C8B2B /* TimeRange.swift in Sources */,
+				307D795C24322076000C8B2B /* LogsGeneratorTiming.swift in Sources */,
+				300CC6FA242FEE9D007117E2 /* SceneDelegate.swift in Sources */,
+				300CC6F4242ECB06007117E2 /* SingleLogViewController.swift in Sources */,
+				3053CC49242E6D8B000125FB /* ActionButton.swift in Sources */,
+				300CC6F6242ECD59007117E2 /* DiagnosticLogger.swift in Sources */,
+				3053CC4D242EBE6E000125FB /* EndpointViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		46AE5596238D683B00774F9E /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -344,7 +547,72 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		3053CC44242DFB50000125FB /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 46AE5599238D683B00774F9E /* Robologs */;
+			targetProxy = 3053CC43242DFB50000125FB /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		3053CC30242DF72E000125FB /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3053CC31242DF72E000125FB /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+		3053CC35242DF733000125FB /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				3053CC36242DF733000125FB /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
 /* Begin XCBuildConfiguration section */
+		3053CC39242DF733000125FB /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 2AB5X5S74A;
+				INFOPLIST_FILE = "Example/Supporting Files/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = romanmazeev.Example;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		3053CC3A242DF733000125FB /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 2AB5X5S74A;
+				INFOPLIST_FILE = "Example/Supporting Files/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = romanmazeev.Example;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
 		46AE55A0238D683C00774F9E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -543,6 +811,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		3053CC3B242DF733000125FB /* Build configuration list for PBXNativeTarget "Example" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				3053CC39242DF733000125FB /* Debug */,
+				3053CC3A242DF733000125FB /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		46AE5594238D683B00774F9E /* Build configuration list for PBXProject "Robologs" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
