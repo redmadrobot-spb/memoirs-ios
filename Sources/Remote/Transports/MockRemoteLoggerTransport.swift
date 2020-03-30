@@ -9,11 +9,11 @@
 import Foundation
 
 /// Mock remote logger transport. Simply redirects log records to specified logger (for example PrintLogger).
-class MockRemoteLoggerTransport: RemoteLoggerTransport {
+public class MockRemoteLoggerTransport: RemoteLoggerTransport {
     private let localLogger: LabeledLoggerAdapter
     private var sendsBeforeLogOut: Int = 0
 
-    init(localLogger: Logger) {
+    public init(localLogger: Logger) {
         self.localLogger = LabeledLoggerAdapter(label: "MockRemoteLogger", adaptee: localLogger)
     }
 

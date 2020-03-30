@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 /// Remote logger transport that uses HTTP + Protubuf.
-class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
+public class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
     // TODO: Remove when server will switch to proper certificate
     private class URLSessionDelegateObject: NSObject, URLSessionDelegate {
         func urlSession(
@@ -42,7 +42,7 @@ class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
     /// Creates new instance of `ProtoHttpRemoteLoggerTransport`.
     /// - Parameter endpoint: URL to server endpoint supporting this kind of transport.
     /// - Parameter secret: Secret key received from Robologs admin panel.
-    init(endpoint: URL, secret: String) {
+    public init(endpoint: URL, secret: String) {
         let configuration = URLSessionConfiguration.default
         self.endpoint = endpoint.appendingPathComponent(apiPath)
         self.secret = secret
