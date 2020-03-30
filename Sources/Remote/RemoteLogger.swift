@@ -74,7 +74,7 @@ public class RemoteLogger: Logger {
     /// - Parameters:
     ///   - buffering: Buffering policy used to keep log records while transport is not available.
     ///   - transport: Transport describing how and where to log message will be sent.
-    init(endpoint: URL, secret: String) {
+    public init(endpoint: URL, secret: String) {
         self.buffering = InMemoryBuffering()
         self.transport = ProtoHttpRemoteLoggerTransport(endpoint: endpoint, secret: secret)
     }

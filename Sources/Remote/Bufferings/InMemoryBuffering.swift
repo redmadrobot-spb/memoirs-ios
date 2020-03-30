@@ -10,6 +10,8 @@
 public class InMemoryBuffering: RemoteLoggerBuffering {
     private var records: [LogRecord] = []
 
+    public init() {}
+
     var haveBufferedData: Bool {
         !records.isEmpty
     }
