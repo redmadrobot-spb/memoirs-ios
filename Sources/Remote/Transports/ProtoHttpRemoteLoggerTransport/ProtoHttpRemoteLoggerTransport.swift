@@ -60,7 +60,7 @@ public class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
         }
 
         do {
-            var request = URLRequest(url: endpoint.appendingPathComponent("source"))
+            var request = URLRequest(url: endpoint.appendingPathComponent("auth"))
             request.httpMethod = "POST"
             request.setValue("application/x-protobuf", forHTTPHeaderField: "Content-Type")
 
