@@ -35,7 +35,7 @@ public class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
     private var isLoading: Bool = false
     private let shouldRemoveSensitive = true
 
-    var isAuthorized: Bool {
+    public var isAuthorized: Bool {
         authToken != nil
     }
 

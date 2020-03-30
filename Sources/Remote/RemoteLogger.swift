@@ -22,7 +22,7 @@ public struct LogRecord {
 }
 
 /// Responsible for buffering log records while transport is not available.
-protocol RemoteLoggerBuffering {
+public protocol RemoteLoggerBuffering {
     /// Should return `true` if contains any not sended records.
     var haveBufferedData: Bool { get }
 
@@ -48,7 +48,7 @@ public enum RemoteLoggerTransportError: Swift.Error {
 }
 
 /// Responsible for sending log records to remote logs storage.
-protocol RemoteLoggerTransport {
+public protocol RemoteLoggerTransport {
     /// Should return `false` if transport is not authirized.
     var isAuthorized: Bool { get }
 
@@ -74,9 +74,9 @@ public class RemoteLogger: Logger {
     /// - Parameters:
     ///   - buffering: Buffering policy used to keep log records while transport is not available.
     ///   - transport: Transport describing how and where to log message will be sent.
-    public init(endpoint: URL, secret: String) {
-        self.buffering = InMemoryBuffering()
-        self.transport = ProtoHttpRemoteLoggerTransport(endpoint: endpoint, secret: secret)
+    public init(buffering: RemoteLoggerBuffering, transport: RemoteLoggerTransport) {
+        self.buffering = buffering
+        self.transport = transport
     }
 
     public func log(

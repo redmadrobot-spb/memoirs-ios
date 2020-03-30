@@ -12,15 +12,15 @@ public class InMemoryBuffering: RemoteLoggerBuffering {
 
     public init() {}
 
-    var haveBufferedData: Bool {
+    public var haveBufferedData: Bool {
         !records.isEmpty
     }
 
-    func append(record: LogRecord) {
+    public func append(record: LogRecord) {
         records.append(record)
     }
 
-    func retrieve(_ actions: @escaping ([LogRecord], @escaping (Bool) -> Void) -> Void) {
+    public func retrieve(_ actions: @escaping ([LogRecord], @escaping (Bool) -> Void) -> Void) {
         records = []
         let pendedRecords = records
         actions(records) { isFinished in

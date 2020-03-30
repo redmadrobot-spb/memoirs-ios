@@ -17,9 +17,9 @@ public class MockRemoteLoggerTransport: RemoteLoggerTransport {
         self.localLogger = LabeledLoggerAdapter(label: "MockRemoteLogger", adaptee: localLogger)
     }
 
-    private(set) var isAuthorized = true
+    private(set) public var isAuthorized = true
 
-    func authorize(_ completion: @escaping (Result<Void, RemoteLoggerTransportError>) -> Void) {
+    public func authorize(_ completion: @escaping (Result<Void, RemoteLoggerTransportError>) -> Void) {
         localLogger.info(message: "Authorize")
         self.isAuthorized = false
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
@@ -30,7 +30,7 @@ public class MockRemoteLoggerTransport: RemoteLoggerTransport {
         }
     }
 
-    func send(_ records: [LogRecord], completion: @escaping (Result<Void, RemoteLoggerTransportError>) -> Void) {
+    public func send(_ records: [LogRecord], completion: @escaping (Result<Void, RemoteLoggerTransportError>) -> Void) {
         guard isAuthorized else { return completion(.failure(.notAuthorized)) }
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
