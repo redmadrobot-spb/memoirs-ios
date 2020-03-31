@@ -21,7 +21,6 @@
 		3053CC3F242DFB25000125FB /* LogsGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3053CC3E242DFB25000125FB /* LogsGenerator.swift */; };
 		3053CC41242DFB50000125FB /* Robologs.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 46AE559A238D683C00774F9E /* Robologs.framework */; };
 		3053CC42242DFB50000125FB /* Robologs.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 46AE559A238D683C00774F9E /* Robologs.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		3053CC47242E378B000125FB /* MainTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3053CC46242E378B000125FB /* MainTableViewController.swift */; };
 		3053CC49242E6D8B000125FB /* ActionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3053CC48242E6D8B000125FB /* ActionButton.swift */; };
 		3053CC4D242EBE6E000125FB /* EndpointViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3053CC4C242EBE6E000125FB /* EndpointViewController.swift */; };
 		307D795A24322058000C8B2B /* TimeRange.swift in Sources */ = {isa = PBXBuildFile; fileRef = 307D795924322058000C8B2B /* TimeRange.swift */; };
@@ -90,7 +89,6 @@
 		3053CC38242DF733000125FB /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		3053CC3C242DFB1C000125FB /* UniformRecordGenerator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UniformRecordGenerator.swift; sourceTree = "<group>"; };
 		3053CC3E242DFB25000125FB /* LogsGenerator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogsGenerator.swift; sourceTree = "<group>"; };
-		3053CC46242E378B000125FB /* MainTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainTableViewController.swift; sourceTree = "<group>"; };
 		3053CC48242E6D8B000125FB /* ActionButton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActionButton.swift; sourceTree = "<group>"; };
 		3053CC4C242EBE6E000125FB /* EndpointViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EndpointViewController.swift; sourceTree = "<group>"; };
 		307D795924322058000C8B2B /* TimeRange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TimeRange.swift; sourceTree = "<group>"; };
@@ -150,7 +148,6 @@
 			children = (
 				3053CC30242DF72E000125FB /* Main.storyboard */,
 				3053CC4C242EBE6E000125FB /* EndpointViewController.swift */,
-				3053CC46242E378B000125FB /* MainTableViewController.swift */,
 				300CC6F3242ECB06007117E2 /* SingleLogViewController.swift */,
 				300CC6FB2430117F007117E2 /* ConstantLogsViewController.swift */,
 				30D48C90243024190071124C /* RandomizedLogsViewController.swift */,
@@ -506,7 +503,6 @@
 				3053CC3D242DFB1C000125FB /* UniformRecordGenerator.swift in Sources */,
 				3053CC2B242DF72E000125FB /* AppDelegate.swift in Sources */,
 				300CC6FC2430117F007117E2 /* ConstantLogsViewController.swift in Sources */,
-				3053CC47242E378B000125FB /* MainTableViewController.swift in Sources */,
 				30D48C91243024190071124C /* RandomizedLogsViewController.swift in Sources */,
 				307D795A24322058000C8B2B /* TimeRange.swift in Sources */,
 				307D795C24322076000C8B2B /* LogsGeneratorTiming.swift in Sources */,
