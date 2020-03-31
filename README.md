@@ -17,7 +17,7 @@ func log(
     line: UInt
 )
 ```
-#### Log levels (Level)
+### Log levels (Level)
 
 The following log levels are supported:
 
@@ -31,7 +31,7 @@ The following log levels are supported:
 Log levels implement the `Comparable` protocol and their priority is in ascending order from `verbose` to `critical`.
 If your custom logger needs to handle a certain log level, just compare it with `level` parameter in  `log` - function.
 
-#### Convenience interface
+### Convenience interface
 
 As default implementation `Logger` has list of functions each of which corresponds to specific log level. For convenience, it is recommended to use them when logging.
 ```swift
@@ -52,7 +52,7 @@ logger.debug(label: "Network", message: "User data request",
              meta: [ "RequestId": UUID().uuidString ])
 ```
 Several implementations are available out of the box (the list will be updated):
-- [SensetiveLogger](https://git.redmadrobot.com/RedMadRobot/SPb/robologs-ios/tree/master/Documentation/SensetiveLogger.md), which incapsulate some logger, and the logic of erasing sensitive fields.
+- [SensetiveLogger](Documentation/SensetiveLogger.md), which incapsulate some logger, and the logic of erasing sensitive fields.
 - `FilteringLogger`, which incapsulate some logger and filters incoming log-events by labels with levels or minimal default level.
 - `MultiplexingLogger`, which stores several loggers and redirects all log events to them.
 - `LabeledLoggerAdapter`, which adapts any implementation of  `Logger` to `LabeledLogger` - protocol that allows you to bind logger to only one label.
@@ -67,10 +67,14 @@ Several implementations are available out of the box (the list will be updated):
 - Xcode 10.2+
   
 ## Installation
+The library is externally dependent on  [swift-protobuf](https://github.com/apple/swift-protobuf).
 
-Robologs is available through [Carthage](https://github.com/Carthage/Carthage) or [SwiftPM](https://swift.org/package-manager/)
+These are currently supported installation options:
+
+### Manual
+To install Robologs manually open `Robologs.xcodeproj`, and hit run. This method will build everything. After that, you can move the compiled framework from the build folder to where you need it.
   
-#### Carthage
+### [Carthage](https://github.com/Carthage/Carthage)
 
 To install Robologs with Carthage, add the following line to your `Cartfile`.
 ```swift
@@ -78,7 +82,7 @@ git "https://git.redmadrobot.com/RedMadRobot/SPb/robologs-ios.git"
 ```
 Then run `carthage update --no-use-binaries` command or just `carthage update`.
   
-#### SwiftPM
+### [SwiftPM](https://swift.org/package-manager/)
 
 To install Robologs with SwiftPM using XCode 11+, add package in project settings "Swift Packages" tab using url:
 ```swift
@@ -88,3 +92,5 @@ or add the following package to your Package.swift file:
 ```swift
 .package(url: "https://git.redmadrobot.com/RedMadRobot/SPb/robologs-ios.git")
 ```
+
+**Warning**: _If the dependency is in the final project or if another dependency depends on [swift-protobuf](https://github.com/apple/swift-protobuf), problems may occur if the versions do not match. To solve this problem, install Robologs manually._
