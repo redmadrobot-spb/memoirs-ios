@@ -10,20 +10,22 @@ import Foundation
 
 /// Mock remote logger transport. Simply redirects log records to specified logger (for example PrintLogger).
 public class MockRemoteLoggerTransport: RemoteLoggerTransport {
-    private let localLogger: LabeledLoggerAdapter
+    private let logger: LabeledLoggerAdapter
     private var sendsBeforeLogOut: Int = 0
 
-    public init(localLogger: Logger) {
-        self.localLogger = LabeledLoggerAdapter(label: "MockRemoteLogger", adaptee: localLogger)
+    /// Create instance of MockRemoteLoggerTransport.
+    /// - Parameter logger: Logger used to log events in mock logger.
+    public init(logger: Logger) {
+        self.logger = LabeledLoggerAdapter(label: "Robologs.MockRemoteLogger", adaptee: logger)
     }
 
     private(set) public var isAuthorized = true
 
     public func authorize(_ completion: @escaping (Result<Void, RemoteLoggerTransportError>) -> Void) {
-        localLogger.info(message: "Authorize")
-        self.isAuthorized = false
+        logger.info(message: "Authorize")
+        isAuthorized = false
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-            self.localLogger.info(message: "Authorized")
+            self.logger.info(message: "Authorized")
             self.isAuthorized = true
             self.sendsBeforeLogOut = 8
             completion(.success(()))
@@ -35,6 +37,7 @@ public class MockRemoteLoggerTransport: RemoteLoggerTransport {
 
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
             if self.sendsBeforeLogOut > 0 {
+                self.sendsBeforeLogOut -= 1
                 self.logRecords(records)
                 completion(.success(()))
             } else {
@@ -45,6 +48,6 @@ public class MockRemoteLoggerTransport: RemoteLoggerTransport {
     }
 
     private func logRecords(_ records: [LogRecord]) {
-        localLogger.info(message: "Log \(public: records.count) records")
+        logger.info(message: "Log \(public: records.count) records")
     }
 }
