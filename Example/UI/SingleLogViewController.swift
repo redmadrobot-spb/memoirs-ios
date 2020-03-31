@@ -9,12 +9,14 @@
 import UIKit
 import Robologs
 
-class SingleLogViewController: UIViewController {
+class SingleLogViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet private var logsTextView: UITextView!
     @IBOutlet private var selectedLogLevelSegmentedControl: UISegmentedControl!
     @IBOutlet private var labelTextField: UITextField!
     @IBOutlet private var messageTextField: UITextField!
     @IBOutlet private var sensitiveSwitcher: UISwitch!
+    @IBOutlet private var formBottomConstraint: NSLayoutConstraint!
+    @IBOutlet private var formStackView: UIStackView!
     private var logger: Logger!
     private var currentLogNumber = 0
 
@@ -22,6 +24,7 @@ class SingleLogViewController: UIViewController {
         super.viewDidLoad()
 
         setupLogger()
+        setupKeyboardShowing()
         sensitiveSwitcher.isOn = false
     }
 
@@ -47,6 +50,47 @@ class SingleLogViewController: UIViewController {
         }
     }
 
+    private func setupKeyboardShowing() {
+        view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.dismissKeyboard)))
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(self.keyboardWillShow),
+            name: UIResponder.keyboardWillShowNotification,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(self.keyboardWillHide),
+            name: UIResponder.keyboardWillHideNotification,
+            object: nil)
+    }
+
+    @objc private func dismissKeyboard() {
+           view.endEditing(true)
+       }
+
+    @objc private func keyboardWillShow(notification: Notification) {
+        guard let keyboardSize = (notification.userInfo?  [UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else {
+            return
+        }
+
+        if formBottomConstraint.constant <= keyboardSize.height {
+            formBottomConstraint.constant = keyboardSize.height
+
+            UIView.animate(withDuration: 0.5) {
+                self.view.layoutIfNeeded()
+            }
+        }
+    }
+
+    @objc private func keyboardWillHide(notification: Notification) {
+        formBottomConstraint.constant = 0
+
+         UIView.animate(withDuration: 0.5) {
+            self.view.layoutIfNeeded()
+         }
+    }
+
     @IBAction func sendLogButton() {
         logger.log(
             level: Level.allCases[selectedLogLevelSegmentedControl.selectedSegmentIndex],
@@ -57,5 +101,19 @@ class SingleLogViewController: UIViewController {
             function: #function,
             line: #line
         )
+    }
+
+    // MARK: - UITextFieldDelegate
+
+    func textFieldShouldReturn(_ textField: UITextField) -> Bool {
+        if textField == labelTextField {
+            messageTextField.becomeFirstResponder()
+            return true
+        } else if textField == messageTextField {
+            messageTextField.resignFirstResponder()
+            return true
+        } else {
+            return true
+        }
     }
 }

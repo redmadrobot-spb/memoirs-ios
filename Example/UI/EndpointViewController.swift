@@ -29,19 +29,7 @@ class EndpointViewController: UIViewController, UITextFieldDelegate {
         super.viewDidLoad()
 
         setupLoadingView()
-        view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.dismissKeyboard)))
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(self.keyboardWillShow),
-            name: UIResponder.keyboardWillShowNotification,
-            object: nil
-        )
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(self.keyboardWillHide),
-            name: UIResponder.keyboardWillHideNotification,
-            object: nil)
-        formBottomConstraint.constant = (view.frame.height / 2) - (formStackView.frame.height / 2)
+        setupKeyboardShowing()
         addDoneButtonOnConnectionCodeKeyboard()
     }
 
@@ -112,6 +100,22 @@ class EndpointViewController: UIViewController, UITextFieldDelegate {
         doneToolbar.sizeToFit()
 
         connectionCodeTextField.inputAccessoryView = doneToolbar
+    }
+
+    private func setupKeyboardShowing() {
+        view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.dismissKeyboard)))
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(self.keyboardWillShow),
+            name: UIResponder.keyboardWillShowNotification,
+            object: nil
+        )
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(self.keyboardWillHide),
+            name: UIResponder.keyboardWillHideNotification,
+            object: nil)
+        formBottomConstraint.constant = (view.frame.height / 2) - (formStackView.frame.height / 2)
     }
 
     @objc private func connectionCodeNextAction() {
