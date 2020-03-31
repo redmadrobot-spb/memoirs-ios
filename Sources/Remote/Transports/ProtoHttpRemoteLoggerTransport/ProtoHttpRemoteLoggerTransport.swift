@@ -32,7 +32,7 @@ public class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
     private let delegateObject: URLSessionDelegateObject
     private let session: URLSession
     private var authToken: String?
-    private var isLoading: Bool = false
+    private var isLoading = false
     private let shouldRemoveSensitive = true
 
     public var isAuthorized: Bool {
