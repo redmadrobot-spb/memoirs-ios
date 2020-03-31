@@ -8,7 +8,7 @@
 
 import Foundation
 
-/// Intermidiate structure used in transport and buffering to store
+/// Intermediate structure used in transport and buffering to store
 /// log message parameters.
 public struct LogRecord {
     let timestamp: TimeInterval
@@ -38,27 +38,36 @@ public protocol RemoteLoggerBuffering {
     func retrieve(_ completion: @escaping (_ records: [LogRecord], _ finished: @escaping (Bool) -> Void) -> Void)
 }
 
+/// Errors that can happen in RemoteLoggerTransport
+public enum RemoteLoggerTransportError: Error {
+    /// Transport was failed to make handshake with secret or doesn't have code6 for live session.
+    case notAuthorized
+    /// Network error occured.
+    case network(Error)
+    /// Serialization error occured.
+    case serialization(Error)
+}
+
 /// Responsible for sending log records to remote logs storage.
 public protocol RemoteLoggerTransport {
-    /// Should return `false` if transport is not available.
-    var isAvailable: Bool { get }
+    /// Should return `false` if transport is not authorized.
+    var isAuthorized: Bool { get }
+
+    /// Authorize transport.
+    /// - Parameter completion: Completion called when transport authorized.
+    func authorize(_ completion: @escaping (Result<Void, RemoteLoggerTransportError>) -> Void)
 
     /// Remote logger call this method to send log records to remote storage.
     /// - Parameters:
     ///   - records: Sending records
     ///   - completion: Completion called when transport finish sending.
-    func send(_ records: [LogRecord], completion: @escaping (Result<Void, Error>) -> Void)
-
-    /// Switch transport behaviour to live mode
-    /// - Parameter liveSessionToken: Token received from live session page.
-    func startLiveSession(_ liveSessionToken: String)
-
-    /// Switch logger back to default mode.
-    func finishLiveSession()
+    ///   If returned RemoteLoggerTransportError.notAuthorized logger should reauthorize transport.
+    func send(_ records: [LogRecord], completion: @escaping (Result<Void, RemoteLoggerTransportError>) -> Void)
 }
 
 /// Logger that sends log messages to remote storage.
 public class RemoteLogger: Logger {
+    private let workingQueue = DispatchQueue(label: "Robologs.RemoteLogger")
     private let buffering: RemoteLoggerBuffering
     private let transport: RemoteLoggerTransport
 
@@ -80,42 +89,76 @@ public class RemoteLogger: Logger {
         function: String = #function,
         line: UInt = #line
     ) {
-        let record = LogRecord(
-            timestamp: Date().timeIntervalSince1970,
-            label: label,
-            level: level,
-            message: message(),
-            meta: meta(),
-            file: file,
-            function: function,
-            line: line
-        )
+        let timestamp = Date().timeIntervalSince1970
+        let message = message()
+        let meta = meta()
+        workingQueue.async {
+            let record = LogRecord(
+                timestamp: timestamp,
+                label: label,
+                level: level,
+                message: message,
+                meta: meta,
+                file: file,
+                function: function,
+                line: line
+            )
 
-        if transport.isAvailable {
-            buffering.retrieve { records, finish in
-                self.transport.send(records + [ record ]) { result in
-                    switch result {
-                        case .success:
-                            finish(true)
-                        case .failure:
-                            self.buffering.append(record: record)
-                            finish(false)
-                    }
-                }
+            self.buffering.append(record: record)
+            if self.canSend {
+                self.sendIfNeeded()
             }
-        } else {
-            buffering.append(record: record)
         }
     }
 
-    /// Switch logger to live mode.
-    /// - Parameter liveSessionToken: Token received from live session page.
-    public func startLiveSession(_ liveSessionToken: String) {
-        transport.startLiveSession(liveSessionToken)
+    private func sendIfNeeded() {
+        guard buffering.haveBufferedData else { return }
+
+        canSend = false
+        buffering.retrieve { records, finish in
+            guard !records.isEmpty else {
+                self.canSend = true
+                return finish(true)
+            }
+
+            self.send(records: records) { finished in
+                self.canSend = true
+                finish(finished)
+            }
+        }
     }
 
-    /// Switch logger back to default mode.
-    public func finishLiveSession() {
-        transport.finishLiveSession()
+    private var canSend: Bool = true
+
+    private func send(records: [LogRecord], finish: @escaping (Bool) -> Void) {
+        transport.send(records) { result in
+            switch result {
+                case .success:
+                    finish(true)
+                    self.sendIfNeeded()
+                case .failure(.notAuthorized):
+                    self.authorize {
+                        self.send(records: records, finish: finish)
+                    }
+                case .failure:
+                    finish(false)
+                    self.sendIfNeeded()
+            }
+        }
+    }
+
+    private let reauthorizationInterval: TimeInterval = 10
+
+    private func authorize(completion: @escaping () -> Void) {
+        transport.authorize { result in
+            switch result {
+                case .success:
+                    completion()
+                case .failure:
+                    self.workingQueue.asyncAfter(deadline: .now() + self.reauthorizationInterval) {
+                        self.authorize(completion: completion)
+                    }
+            }
+        }
     }
 }

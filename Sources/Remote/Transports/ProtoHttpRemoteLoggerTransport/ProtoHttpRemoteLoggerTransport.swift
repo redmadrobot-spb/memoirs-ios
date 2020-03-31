@@ -9,18 +9,8 @@
 import Foundation
 import UIKit
 
-/// Remote logger transport that uses HTTP2 + Protubuf.
+/// Remote logger transport that uses HTTP + Protubuf.
 public class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
-    /// Errors that can be happend in ProtoHttpRemoteLoggerTransport.
-    public enum Error: Swift.Error {
-        /// Transport was failed to make handshake with secret or doesn't have code6 for live session.
-        case notAuthorized
-        /// Network error occured.
-        case network(Swift.Error)
-        /// Serialization error occured.
-        case serialization(Swift.Error)
-    }
-
     // TODO: Remove when server will switch to proper certificate
     private class URLSessionDelegateObject: NSObject, URLSessionDelegate {
         func urlSession(
@@ -41,9 +31,13 @@ public class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
     private let secret: String
     private let delegateObject: URLSessionDelegateObject
     private let session: URLSession
-    private var liveSessionToken: String?
-    private var sourceToken: String?
     private var authToken: String?
+    private var isLoading = false
+    private let shouldRemoveSensitive = true
+
+    public var isAuthorized: Bool {
+        authToken != nil
+    }
 
     /// Creates new instance of `ProtoHttpRemoteLoggerTransport`.
     /// - Parameter endpoint: URL to server endpoint supporting this kind of transport.
@@ -56,12 +50,9 @@ public class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
         session = URLSession(configuration: configuration, delegate: delegateObject, delegateQueue: nil)
     }
 
-    public let isAvailable = true
-    private let shouldRemoveSensitive = true
-
     /// Authorize transport with provided secret.
     /// - Parameter completion: Completion called when authorization is finished.
-    public func authorize(_ completion: @escaping (Result<Void, Swift.Error>) -> Void) {
+    public func authorize(_ completion: @escaping (Result<Void, RemoteLoggerTransportError>) -> Void) {
         let completion = { result in
             DispatchQueue.main.async {
                 completion(result)
@@ -69,13 +60,13 @@ public class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
         }
 
         do {
-            var request = URLRequest(url: endpoint.appendingPathComponent("source"))
+            var request = URLRequest(url: endpoint.appendingPathComponent("auth"))
             request.httpMethod = "POST"
             request.setValue("application/x-protobuf", forHTTPHeaderField: "Content-Type")
 
-            let sourceRequest = SenderTokenRequest.with { request in
+            let sourceRequest = JournalTokenRequest.with { request in
                 request.secret = secret
-                request.sender = SenderTokenRequest.Sender.with { sender in
+                request.sender = JournalTokenRequest.Sender.with { sender in
                     let enviromentInfo = EnviromentInfo.current
                     sender.id = UIDevice.current.identifierForVendor?.uuidString ?? ""
                     sender.appID = enviromentInfo.appId ?? ""
@@ -89,34 +80,30 @@ public class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
             }
             request.httpBody = try sourceRequest.serializedData()
             let task = session.dataTask(with: request) { data, response, error in
-
                 if let error = error {
-                    completion(.failure(Error.network(error)))
+                    completion(.failure(.network(error)))
                 } else {
                     if let data = data {
                         do {
-                            let response = try SenderTokenResponse(serializedData: data)
-                            let authToken = response.senderToken
+                            let response = try JournalTokenResponse(serializedData: data)
+                            let authToken = response.journalToken
                             self.authToken = authToken
                             completion(.success(()))
                         } catch {
-                            completion(.failure(Error.serialization(error)))
+                            completion(.failure(.serialization(error)))
                         }
                     }
                 }
             }
             task.resume()
         } catch {
-            completion(.failure(Error.serialization(error)))
+            completion(.failure(.serialization(error)))
         }
     }
 
-    public func send(_ records: [LogRecord], completion: @escaping (Result<Void, Swift.Error>) -> Void) {
-        guard let authToken = authToken, let liveSessionToken = liveSessionToken else {
-            return completion(.failure(Error.notAuthorized))
-        }
-        guard let record = records.first else {
-            return
+    public func send(_ records: [LogRecord], completion: @escaping (Result<Void, RemoteLoggerTransportError>) -> Void) {
+        guard let authToken = authToken else {
+            return completion(.failure(.notAuthorized))
         }
 
         let completion = { result in
@@ -130,48 +117,47 @@ public class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
             request.httpMethod = "POST"
             request.setValue("application/x-protobuf", forHTTPHeaderField: "Content-Type")
             request.setValue(authToken, forHTTPHeaderField: "Authorization")
-            request.setValue(liveSessionToken, forHTTPHeaderField: "X-C6-Marker")
 
-            let logMessage = LogMessage.with { logMessage in
-                logMessage.priority = {
-                    switch record.level {
-                        case .critical, .error:
-                            return .error
-                        case .warning:
-                            return .warn
-                        case .info:
-                            return .info
-                        case .debug, .verbose:
-                            return .debug
+            let logMessages = LogMessageBatch.with { logMessages in
+                logMessages.messages = records.map { record in
+                    LogMessage.with { logMessage in
+                        logMessage.priority = {
+                            switch record.level {
+                                case .critical, .error:
+                                    return .error
+                                case .warning:
+                                    return .warn
+                                case .info:
+                                    return .info
+                                case .debug, .verbose:
+                                    return .debug
+                            }
+                        }()
+                        logMessage.label = record.label
+                        logMessage.message = record.message.string(withoutSensitive: shouldRemoveSensitive)
+                        logMessage.source = "\(record.file):\(record.line)"
+                        logMessage.timestampMs = Int64(record.timestamp * 1000)
+                        logMessage.meta = record.meta?.mapValues {
+                            $0.string(withoutSensitive: shouldRemoveSensitive)
+                        } ?? [:]
                     }
-                }()
-                logMessage.label = record.label
-                logMessage.message = record.message.string(withoutSensitive: shouldRemoveSensitive)
-                logMessage.source = "\(record.file):\(record.line)"
-                logMessage.timestampMs = Int64(record.timestamp * 1000)
-                logMessage.meta = record.meta?.mapValues { $0.string(withoutSensitive: shouldRemoveSensitive) } ?? [:]
+                }
             }
 
-            request.httpBody = try logMessage.serializedData()
+            request.httpBody = try logMessages.serializedData()
 
-            let task = session.dataTask(with: request) { _, _, error in
+            let task = session.dataTask(with: request) { _, response, error in
                 if let error = error {
-                    completion(.failure(error))
+                    completion(.failure(.network(error)))
+                } else if let httpResponse = response as? HTTPURLResponse, httpResponse.statusCode == 401 {
+                    completion(.failure(.notAuthorized))
                 } else {
                     completion(.success(()))
                 }
             }
             task.resume()
         } catch {
-            completion(.failure(Error.serialization(error)))
+            completion(.failure(.serialization(error)))
         }
-    }
-
-    public func startLiveSession(_ liveSessionToken: String) {
-        self.liveSessionToken = liveSessionToken
-    }
-
-    public func finishLiveSession() {
-        liveSessionToken = nil
     }
 }
