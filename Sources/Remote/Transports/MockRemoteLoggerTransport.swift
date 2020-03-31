@@ -11,7 +11,7 @@ import Foundation
 /// Mock remote logger transport. Emulate behaviour of transport for offline testing.
 public class MockRemoteLoggerTransport: RemoteLoggerTransport {
     private let logger: LabeledLoggerAdapter
-    private var sendsBeforeLogOut: Int = 0
+    private var sendsBeforeLogOut = 0
 
     /// Create instance of MockRemoteLoggerTransport.
     /// - Parameter logger: Logger used to log events in mock logger.
