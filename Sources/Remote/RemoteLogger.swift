@@ -39,13 +39,13 @@ public protocol RemoteLoggerBuffering {
 }
 
 /// Errors that can happen in RemoteLoggerTransport
-public enum RemoteLoggerTransportError: Swift.Error {
+public enum RemoteLoggerTransportError: Error {
     /// Transport was failed to make handshake with secret or doesn't have code6 for live session.
     case notAuthorized
     /// Network error occured.
-    case network(Swift.Error)
+    case network(Error)
     /// Serialization error occured.
-    case serialization(Swift.Error)
+    case serialization(Error)
 }
 
 /// Responsible for sending log records to remote logs storage.
@@ -89,11 +89,12 @@ public class RemoteLogger: Logger {
         function: String = #function,
         line: UInt = #line
     ) {
+        let timestamp = Date().timeIntervalSince1970
         let message = message()
         let meta = meta()
         workingQueue.async {
             let record = LogRecord(
-                timestamp: Date().timeIntervalSince1970,
+                timestamp: timestamp,
                 label: label,
                 level: level,
                 message: message,
@@ -146,7 +147,7 @@ public class RemoteLogger: Logger {
         }
     }
 
-    private let authorizationInterval: TimeInterval = 10
+    private let reauthorizationInterval: TimeInterval = 10
 
     private func authorize(completion: @escaping () -> Void) {
         transport.authorize { result in
@@ -154,7 +155,7 @@ public class RemoteLogger: Logger {
                 case .success:
                     completion()
                 case .failure:
-                    self.workingQueue.asyncAfter(deadline: .now() + self.authorizationInterval) {
+                    self.workingQueue.asyncAfter(deadline: .now() + self.reauthorizationInterval) {
                         self.authorize(completion: completion)
                     }
             }

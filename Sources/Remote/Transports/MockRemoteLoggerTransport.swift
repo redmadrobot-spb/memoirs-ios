@@ -8,7 +8,7 @@
 
 import Foundation
 
-/// Mock remote logger transport. Simply redirects log records to specified logger (for example PrintLogger).
+/// Mock remote logger transport. Emulate behaviour of transport for offline testing.
 public class MockRemoteLoggerTransport: RemoteLoggerTransport {
     private let logger: LabeledLoggerAdapter
     private var sendsBeforeLogOut: Int = 0
@@ -22,10 +22,10 @@ public class MockRemoteLoggerTransport: RemoteLoggerTransport {
     private(set) public var isAuthorized = true
 
     public func authorize(_ completion: @escaping (Result<Void, RemoteLoggerTransportError>) -> Void) {
-        logger.info(message: "Authorize")
+        logger.info(message: "Authorize.")
         isAuthorized = false
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-            self.logger.info(message: "Authorized")
+            self.logger.info(message: "Authorized.")
             self.isAuthorized = true
             self.sendsBeforeLogOut = 8
             completion(.success(()))
@@ -35,19 +35,18 @@ public class MockRemoteLoggerTransport: RemoteLoggerTransport {
     public func send(_ records: [LogRecord], completion: @escaping (Result<Void, RemoteLoggerTransportError>) -> Void) {
         guard isAuthorized else { return completion(.failure(.notAuthorized)) }
 
+        logger.info(message: "Send \(public: records.count) records.")
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
             if self.sendsBeforeLogOut > 0 {
                 self.sendsBeforeLogOut -= 1
-                self.logRecords(records)
+                self.logger.info(message: "Sent \(public: records.count) records.")
+                self.logger.verbose(message: "\(records)")
                 completion(.success(()))
             } else {
+                self.logger.info(message: "Logging out.")
                 self.isAuthorized = false
                 completion(.failure(.notAuthorized))
             }
         }
-    }
-
-    private func logRecords(_ records: [LogRecord]) {
-        logger.info(message: "Log \(public: records.count) records")
     }
 }
