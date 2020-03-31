@@ -109,13 +109,13 @@ class EndpointViewController: UIViewController, UITextFieldDelegate {
 
             let transport = ProtoHttpRemoteLoggerTransport(endpoint: url, secret: secretTextField.text ?? "")
             transport.authorize { result in
-
                 if case .failure = result {
                     self.showErrorAlert()
                 } else {
                     RemoteLoggerService.logger = RemoteLogger(buffering: InMemoryBuffering(), transport: transport)
                     self.isLoading = false
                     self.isConnected = true
+                    // TODO: Code getting and showing
                 }
             }
         }
