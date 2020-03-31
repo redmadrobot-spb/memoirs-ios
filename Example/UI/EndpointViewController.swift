@@ -19,18 +19,29 @@ class EndpointViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet private var codeStackView: UIStackView!
     @IBOutlet private var activityIndicator: UIActivityIndicatorView!
 
-    private var isLoading = false {
-        didSet {
-            activityIndicator.isHidden = !isLoading
-            connectButton.isEnabled = !isLoading
-        }
+    enum State {
+        case disconnected
+        case loading
+        case connected
     }
 
-    private var isConnected = false {
+    private var state: State = .disconnected {
         didSet {
-            codeStackView.isHidden = !isConnected
-            connectButton.setTitle(isConnected ? "Disconnect" : "Connect", for: .normal)
-            connectButton.backgroundColor = isConnected ? .systemRed : .systemBlue
+            activityIndicator.isHidden = state != .loading
+            connectButton.isEnabled = state != .loading
+            codeStackView.isHidden = state != .connected
+
+            switch state {
+                case .connected:
+                    connectButton.backgroundColor = .systemRed
+                    connectButton.setTitle("Disconnect", for: .normal)
+                case .disconnected:
+                    connectButton.backgroundColor = .systemBlue
+                    connectButton.setTitle("Connect", for: .normal)
+                case .loading:
+                    connectButton.backgroundColor = .systemGray
+                    connectButton.setTitle("Loading", for: .normal)
+            }
         }
     }
 
@@ -46,8 +57,7 @@ class EndpointViewController: UIViewController, UITextFieldDelegate {
     }
 
     private func showErrorAlert() {
-        self.isLoading = false
-        self.isConnected = false
+        state = .disconnected
         let alert = UIAlertController(title: "Can not connect", message: nil, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .cancel))
         present(alert, animated: true)
@@ -97,11 +107,12 @@ class EndpointViewController: UIViewController, UITextFieldDelegate {
     }
 
     @IBAction func connectButtonTapped() {
-        isLoading = true
-
-        if isConnected {
+        if state == .connected {
+            state = .loading
             // TODO: Disconnect
-        } else {
+            state = .disconnected
+        } else if state == .disconnected {
+            state = .loading
             guard let urlString = connectionUrlTextField.text, let url = URL(string: urlString) else {
                 showErrorAlert()
                 return
@@ -113,8 +124,7 @@ class EndpointViewController: UIViewController, UITextFieldDelegate {
                     self.showErrorAlert()
                 } else {
                     RemoteLoggerService.logger = RemoteLogger(buffering: InMemoryBuffering(), transport: transport)
-                    self.isLoading = false
-                    self.isConnected = true
+                    self.state = .connected
                     // TODO: Code getting and showing
                 }
             }
