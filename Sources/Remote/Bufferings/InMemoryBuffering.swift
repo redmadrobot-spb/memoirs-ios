@@ -21,9 +21,9 @@ public class InMemoryBuffering: RemoteLoggerBuffering {
     }
 
     public func retrieve(_ actions: @escaping ([LogRecord], @escaping (Bool) -> Void) -> Void) {
-        records = []
         let pendedRecords = records
-        actions(records) { isFinished in
+        records = []
+        actions(pendedRecords) { isFinished in
             if !isFinished {
                 self.records = pendedRecords + self.records
             }

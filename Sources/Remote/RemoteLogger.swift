@@ -66,6 +66,7 @@ public protocol RemoteLoggerTransport {
 
 /// Logger that sends log messages to remote storage.
 public class RemoteLogger: Logger {
+    private let debugLogger = LabeledLoggerAdapter(label: "🐠 RemoteLogger", adaptee: PrintLogger())
     private let workingQueue = DispatchQueue(label: "Robologs.RemoteLogger")
     private let buffering: RemoteLoggerBuffering
     private let transport: RemoteLoggerTransport
@@ -102,6 +103,7 @@ public class RemoteLogger: Logger {
                 line: line
             )
 
+            self.debugLogger.verbose(message: "log")
             self.buffering.append(record: record)
             if self.canSend {
                 self.sendIfNeeded()
@@ -110,10 +112,16 @@ public class RemoteLogger: Logger {
     }
 
     private func sendIfNeeded() {
+        debugLogger.verbose(message: "sendIfNeeded")
         guard buffering.haveBufferedData else { return }
 
         canSend = false
         buffering.retrieve { records, finish in
+            guard !records.isEmpty else {
+                self.canSend = true
+                return finish(true)
+            }
+
             self.send(records: records) { finished in
                 self.canSend = true
                 finish(finished)
@@ -121,20 +129,25 @@ public class RemoteLogger: Logger {
         }
     }
 
-    private var canSend: Bool = false
+    private var canSend: Bool = true
 
     private func send(records: [LogRecord], finish: @escaping (Bool) -> Void) {
+        debugLogger.verbose(message: "send(records: [\(public: records.count)])")
         self.transport.send(records) { result in
             switch result {
                 case .success:
+                    self.debugLogger.verbose(message: "send succeeed")
                     finish(true)
                     self.sendIfNeeded()
                 case .failure(.notAuthorized):
+                    self.debugLogger.verbose(message: "send not authorized")
                     self.authorize {
                         self.send(records: records, finish: finish)
                     }
                 case .failure:
+                    self.debugLogger.verbose(message: "send failed")
                     finish(false)
+                    self.sendIfNeeded()
             }
         }
     }
@@ -142,12 +155,16 @@ public class RemoteLogger: Logger {
     private let authorizationInterval: TimeInterval = 10
 
     private func authorize(completion: @escaping () -> Void) {
+        self.debugLogger.verbose(message: "authorize")
         transport.authorize { result in
             switch result {
                 case .success:
+                    self.debugLogger.verbose(message: "authorize succeed")
                     completion()
                 case .failure:
+                    self.debugLogger.verbose(message: "authorize retrying")
                     self.workingQueue.asyncAfter(deadline: .now() + self.authorizationInterval) {
+                        self.debugLogger.verbose(message: "authorize retried")
                         self.authorize(completion: completion)
                     }
             }

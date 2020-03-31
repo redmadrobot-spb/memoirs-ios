@@ -80,7 +80,6 @@ public class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
             }
             request.httpBody = try sourceRequest.serializedData()
             let task = session.dataTask(with: request) { data, response, error in
-
                 if let error = error {
                     completion(.failure(.network(error)))
                 } else {
