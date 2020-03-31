@@ -9,7 +9,7 @@
 import UIKit
 import Robologs
 
-class ConstantLoadLogsViewController: UIViewController {
+class ConstantLogsViewController: UIViewController {
     @IBOutlet private var logsTextView: UITextView!
     @IBOutlet private var actionButton: ActionButton!
     @IBOutlet private var loadIntensitySlider: UISlider!
@@ -22,7 +22,6 @@ class ConstantLoadLogsViewController: UIViewController {
 
         setupLogger()
         configureLogsGenerator()
-        logsTextView.isEditable = false
     }
 
     private func setupLogger() {

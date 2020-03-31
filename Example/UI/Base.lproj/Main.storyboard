@@ -21,13 +21,13 @@
                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                             <subviews>
                                 <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" translatesAutoresizingMaskIntoConstraints="NO" id="UgT-go-WMi">
-                                    <rect key="frame" x="341" y="6.5" width="51" height="31"/>
+                                    <rect key="frame" x="349" y="6.5" width="51" height="31"/>
                                     <connections>
                                         <action selector="remoteLoggingSwitchTapped" destination="ld9-ay-Gca" eventType="valueChanged" id="GjF-Ar-O3h"/>
                                     </connections>
                                 </switch>
                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Remote logging" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="G2v-Jz-23V">
-                                    <rect key="frame" x="24" y="8" width="309" height="28"/>
+                                    <rect key="frame" x="16" y="8" width="325" height="28"/>
                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                     <nil key="textColor"/>
                                     <nil key="highlightedColor"/>
@@ -35,9 +35,9 @@
                             </subviews>
                             <color key="backgroundColor" cocoaTouchSystemColor="groupTableViewBackgroundColor"/>
                             <constraints>
-                                <constraint firstItem="G2v-Jz-23V" firstAttribute="leading" secondItem="RZz-FP-O24" secondAttribute="leadingMargin" constant="16" id="02j-Mj-ZSp"/>
+                                <constraint firstItem="G2v-Jz-23V" firstAttribute="leading" secondItem="RZz-FP-O24" secondAttribute="leadingMargin" constant="8" id="02j-Mj-ZSp"/>
                                 <constraint firstItem="G2v-Jz-23V" firstAttribute="top" secondItem="RZz-FP-O24" secondAttribute="top" constant="8" id="2od-2J-a9W"/>
-                                <constraint firstAttribute="trailingMargin" secondItem="UgT-go-WMi" secondAttribute="trailing" constant="16" id="7uC-p9-EJM"/>
+                                <constraint firstAttribute="trailingMargin" secondItem="UgT-go-WMi" secondAttribute="trailing" constant="8" id="7uC-p9-EJM"/>
                                 <constraint firstItem="UgT-go-WMi" firstAttribute="leading" secondItem="G2v-Jz-23V" secondAttribute="trailing" constant="8" id="DIO-Tz-CrO"/>
                                 <constraint firstAttribute="bottom" secondItem="G2v-Jz-23V" secondAttribute="bottom" constant="8" id="GaV-Se-MTU"/>
                                 <constraint firstItem="UgT-go-WMi" firstAttribute="centerY" secondItem="G2v-Jz-23V" secondAttribute="centerY" id="mRQ-ad-9ak"/>
@@ -58,7 +58,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="383" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Single log" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="fL6-am-c90">
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Single" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="fL6-am-c90">
                                                     <rect key="frame" x="20" y="0.0" width="355" height="43.5"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -78,7 +78,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="383" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Constant load logs" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Q51-Ex-K4l">
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Constant load" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="Q51-Ex-K4l">
                                                     <rect key="frame" x="20" y="0.0" width="355" height="43.5"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -98,7 +98,7 @@
                                             <rect key="frame" x="0.0" y="0.0" width="383" height="43.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Periodic bursts logs" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="rJK-wS-nNg">
+                                                <label opaque="NO" multipleTouchEnabled="YES" contentMode="left" insetsLayoutMarginsFromSafeArea="NO" text="Randomized load" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" id="rJK-wS-nNg">
                                                     <rect key="frame" x="20" y="0.0" width="355" height="43.5"/>
                                                     <autoresizingMask key="autoresizingMask"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -120,7 +120,7 @@
                         </connections>
                     </tableView>
                     <navigationItem key="navigationItem" title="Robologs" id="OHY-oD-2rR">
-                        <barButtonItem key="rightBarButtonItem" title="Endpoint" id="uaM-sR-HCA">
+                        <barButtonItem key="rightBarButtonItem" title="Edit endpoint" id="uaM-sR-HCA">
                             <connections>
                                 <segue destination="Fn3-VQ-b3l" kind="presentation" identifier="EndpointViewController" modalPresentationStyle="fullScreen" id="gN8-Qj-jQb"/>
                             </connections>
@@ -133,38 +133,39 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7O9-Dp-zGn" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-384" y="-439"/>
+            <point key="canvasLocation" x="-384" y="-325"/>
         </scene>
-        <!--Constant load logs-->
+        <!--Constant load-->
         <scene sceneID="jER-2B-scR">
             <objects>
-                <viewController id="GG8-ui-55H" customClass="ConstantLoadLogsViewController" customModule="Example" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="GG8-ui-55H" customClass="ConstantLogsViewController" customModule="Example" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="4Gc-hl-HEd">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="78Y-MP-Roa">
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="78Y-MP-Roa">
                                 <rect key="frame" x="16" y="742" width="382" height="120"/>
                                 <subviews>
-                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="XhL-tW-NnQ">
-                                        <rect key="frame" x="0.0" y="0.0" width="382" height="62"/>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" translatesAutoresizingMaskIntoConstraints="NO" id="Swf-WU-HX1">
+                                        <rect key="frame" x="0.0" y="0.0" width="382" height="54"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Load intensity" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JG8-7o-G2U">
-                                                <rect key="frame" x="130.5" y="0.0" width="121.5" height="24"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="382" height="24"/>
                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleTitle3"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
                                             <slider opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="ybs-Wn-e5j">
-                                                <rect key="frame" x="-2" y="32" width="386" height="31"/>
+                                                <rect key="frame" x="-2" y="24" width="386" height="31"/>
                                                 <connections>
                                                     <action selector="loadIntensityChanged" destination="GG8-ui-55H" eventType="valueChanged" id="kwB-QY-lyT"/>
                                                 </connections>
                                             </slider>
                                         </subviews>
                                         <constraints>
-                                            <constraint firstItem="ybs-Wn-e5j" firstAttribute="leading" secondItem="XhL-tW-NnQ" secondAttribute="leading" id="XT0-hf-Q3V"/>
-                                            <constraint firstAttribute="trailing" secondItem="ybs-Wn-e5j" secondAttribute="trailing" id="YGU-Zs-IFb"/>
+                                            <constraint firstItem="JG8-7o-G2U" firstAttribute="leading" secondItem="Swf-WU-HX1" secondAttribute="leading" id="2IC-QU-WNE"/>
+                                            <constraint firstAttribute="trailing" secondItem="ybs-Wn-e5j" secondAttribute="trailing" id="c7j-Bg-Ovl"/>
+                                            <constraint firstItem="ybs-Wn-e5j" firstAttribute="leading" secondItem="Swf-WU-HX1" secondAttribute="leading" id="yHF-WO-6fx"/>
                                         </constraints>
                                     </stackView>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IhD-Oi-4x0" customClass="ActionButton" customModule="Example" customModuleProvider="target">
@@ -180,12 +181,12 @@
                                 </subviews>
                                 <constraints>
                                     <constraint firstItem="IhD-Oi-4x0" firstAttribute="leading" secondItem="78Y-MP-Roa" secondAttribute="leading" id="8Hc-iJ-Kvq"/>
-                                    <constraint firstAttribute="trailing" secondItem="XhL-tW-NnQ" secondAttribute="trailing" id="DMd-zh-J1r"/>
-                                    <constraint firstItem="XhL-tW-NnQ" firstAttribute="leading" secondItem="78Y-MP-Roa" secondAttribute="leading" id="gaz-HX-BqW"/>
+                                    <constraint firstAttribute="trailing" secondItem="Swf-WU-HX1" secondAttribute="trailing" id="RzS-kd-N38"/>
+                                    <constraint firstItem="Swf-WU-HX1" firstAttribute="leading" secondItem="78Y-MP-Roa" secondAttribute="leading" id="yWS-hR-yHC"/>
                                     <constraint firstAttribute="trailing" secondItem="IhD-Oi-4x0" secondAttribute="trailing" id="ygG-ff-n5t"/>
                                 </constraints>
                             </stackView>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="2JT-yd-cso">
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="2JT-yd-cso" customClass="LogsTextView" customModule="Example" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="88" width="414" height="646"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                 <color key="textColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -205,7 +206,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="dwS-AN-VOn"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Constant load logs" id="S2K-00-aKh"/>
+                    <navigationItem key="navigationItem" title="Constant load" id="S2K-00-aKh"/>
                     <connections>
                         <outlet property="actionButton" destination="IhD-Oi-4x0" id="qyp-DA-49D"/>
                         <outlet property="loadIntensitySlider" destination="ybs-Wn-e5j" id="ZYh-mj-aRl"/>
@@ -214,31 +215,31 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5td-ZG-u37" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="386" y="-439"/>
+            <point key="canvasLocation" x="525" y="536"/>
         </scene>
-        <!--Periodic bursts logs-->
+        <!--Randomized load-->
         <scene sceneID="Gxt-wk-AK8">
             <objects>
-                <viewController id="hL5-we-gvh" customClass="PeriodicBurstsLogsViewController" customModule="Example" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="hL5-we-gvh" customClass="RandomizedLogsViewController" customModule="Example" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="nV6-TS-a6p">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="dBw-Id-sch">
-                                <rect key="frame" x="0.0" y="88" width="414" height="674"/>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="dBw-Id-sch" customClass="LogsTextView" customModule="Example" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="88" width="414" height="666"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                 <color key="textColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="oBX-8a-ggD">
-                                <rect key="frame" x="16" y="770" width="382" height="92"/>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="oBX-8a-ggD">
+                                <rect key="frame" x="16" y="762" width="382" height="100"/>
                                 <subviews>
-                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="laA-BV-ZVe">
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="y1V-9R-Qtj">
                                         <rect key="frame" x="0.0" y="0.0" width="382" height="34"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Load intensity" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="em4-tZ-6TR">
-                                                <rect key="frame" x="130.5" y="0.0" width="121.5" height="24"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="382" height="24"/>
                                                 <fontDescription key="fontDescription" style="UICTFontTextStyleTitle3"/>
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
@@ -248,12 +249,12 @@
                                             </progressView>
                                         </subviews>
                                         <constraints>
-                                            <constraint firstItem="yJg-2j-vuQ" firstAttribute="leading" secondItem="laA-BV-ZVe" secondAttribute="leading" id="1Cw-Zi-qxv"/>
-                                            <constraint firstAttribute="trailing" secondItem="yJg-2j-vuQ" secondAttribute="trailing" id="bK5-qc-EKH"/>
+                                            <constraint firstItem="yJg-2j-vuQ" firstAttribute="leading" secondItem="y1V-9R-Qtj" secondAttribute="leading" id="DS4-gi-5Ac"/>
+                                            <constraint firstAttribute="trailing" secondItem="yJg-2j-vuQ" secondAttribute="trailing" id="ZAp-4g-E9c"/>
                                         </constraints>
                                     </stackView>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QtB-P4-ypm" customClass="ActionButton" customModule="Example" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="42" width="382" height="50"/>
+                                        <rect key="frame" x="0.0" y="50" width="382" height="50"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="50" id="1mY-Tj-m3F"/>
                                         </constraints>
@@ -265,8 +266,9 @@
                                 </subviews>
                                 <constraints>
                                     <constraint firstAttribute="trailing" secondItem="QtB-P4-ypm" secondAttribute="trailing" id="1bd-6n-Njt"/>
-                                    <constraint firstAttribute="trailing" secondItem="laA-BV-ZVe" secondAttribute="trailing" id="Itw-Bs-Yjz"/>
-                                    <constraint firstItem="laA-BV-ZVe" firstAttribute="leading" secondItem="oBX-8a-ggD" secondAttribute="leading" id="Sse-IH-sXd"/>
+                                    <constraint firstItem="y1V-9R-Qtj" firstAttribute="leading" secondItem="oBX-8a-ggD" secondAttribute="leading" id="1hU-jw-NMH"/>
+                                    <constraint firstItem="y1V-9R-Qtj" firstAttribute="leading" secondItem="oBX-8a-ggD" secondAttribute="leading" id="BKn-5m-J8Q"/>
+                                    <constraint firstAttribute="trailing" secondItem="y1V-9R-Qtj" secondAttribute="trailing" id="qPh-mS-FGx"/>
                                     <constraint firstItem="QtB-P4-ypm" firstAttribute="leading" secondItem="oBX-8a-ggD" secondAttribute="leading" id="uq7-z6-Txb"/>
                                 </constraints>
                             </stackView>
@@ -283,7 +285,7 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="UNa-hl-DAr"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Periodic bursts logs" id="gIi-bY-5Dm"/>
+                    <navigationItem key="navigationItem" title="Randomized load" id="gIi-bY-5Dm"/>
                     <connections>
                         <outlet property="actionButton" destination="QtB-P4-ypm" id="KXw-V1-bZ5"/>
                         <outlet property="loadIntensityProgressView" destination="yJg-2j-vuQ" id="fzo-UA-y0w"/>
@@ -292,7 +294,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bdV-F9-zRw" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="385.50724637681162" y="240.40178571428569"/>
+            <point key="canvasLocation" x="-384" y="536"/>
         </scene>
         <!--Endpoint View Controller-->
         <scene sceneID="IBn-ZT-1bY">
@@ -400,7 +402,7 @@
             </objects>
             <point key="canvasLocation" x="526.08695652173913" y="-1100.2232142857142"/>
         </scene>
-        <!--Single log-->
+        <!--Single-->
         <scene sceneID="JNh-Bf-xP4">
             <objects>
                 <viewController id="K0S-tX-xNx" customClass="SingleLogViewController" customModule="Example" customModuleProvider="target" sceneMemberID="viewController">
@@ -409,32 +411,58 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="ZLd-ij-Owi">
-                                <rect key="frame" x="16" y="733" width="382" height="129"/>
+                                <rect key="frame" x="16" y="642" width="382" height="220"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="GhP-Em-2D6">
-                                        <rect key="frame" x="0.0" y="0.0" width="382" height="63"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="382" height="154"/>
                                         <subviews>
-                                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Level" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="7s7-sw-zSP">
-                                                <rect key="frame" x="168" y="0.0" width="46" height="24"/>
-                                                <fontDescription key="fontDescription" style="UICTFontTextStyleTitle3"/>
-                                                <nil key="textColor"/>
-                                                <nil key="highlightedColor"/>
-                                            </label>
                                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="x4n-zD-tv0">
-                                                <rect key="frame" x="0.0" y="32" width="382" height="32"/>
+                                                <rect key="frame" x="2.5" y="0.0" width="377" height="32"/>
                                                 <segments>
-                                                    <segment title="Verbose"/>
+                                                    <segment title="Verb"/>
                                                     <segment title="Debug"/>
                                                     <segment title="Info"/>
-                                                    <segment title="Warning"/>
+                                                    <segment title="Warn"/>
                                                     <segment title="Error"/>
                                                     <segment title="Critical"/>
                                                 </segments>
                                             </segmentedControl>
+                                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Label" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="uCh-6n-L3w">
+                                                <rect key="frame" x="0.0" y="39" width="382" height="34"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                <textInputTraits key="textInputTraits"/>
+                                            </textField>
+                                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Message" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="YLe-nf-8qP">
+                                                <rect key="frame" x="0.0" y="81" width="382" height="34"/>
+                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                <textInputTraits key="textInputTraits"/>
+                                            </textField>
+                                            <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Tg8-x5-Kbz">
+                                                <rect key="frame" x="0.0" y="123" width="382" height="31"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sensitive" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lbq-kL-3N6">
+                                                        <rect key="frame" x="0.0" y="0.0" width="333" height="31"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                        <nil key="textColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2Ah-rt-Oa5">
+                                                        <rect key="frame" x="333" y="0.0" width="51" height="31"/>
+                                                    </switch>
+                                                </subviews>
+                                            </stackView>
                                         </subviews>
+                                        <constraints>
+                                            <constraint firstAttribute="trailing" secondItem="Tg8-x5-Kbz" secondAttribute="trailing" id="4p6-fP-G5e"/>
+                                            <constraint firstItem="YLe-nf-8qP" firstAttribute="leading" secondItem="GhP-Em-2D6" secondAttribute="leading" id="LCh-aY-rH6"/>
+                                            <constraint firstAttribute="trailing" secondItem="YLe-nf-8qP" secondAttribute="trailing" id="WWy-gJ-sKy"/>
+                                            <constraint firstItem="uCh-6n-L3w" firstAttribute="leading" secondItem="GhP-Em-2D6" secondAttribute="leading" id="mtf-Vt-FR0"/>
+                                            <constraint firstAttribute="trailing" secondItem="uCh-6n-L3w" secondAttribute="trailing" id="t62-pH-axg"/>
+                                            <constraint firstItem="Tg8-x5-Kbz" firstAttribute="leading" secondItem="GhP-Em-2D6" secondAttribute="leading" id="t73-3g-0qH"/>
+                                        </constraints>
                                     </stackView>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OFa-O4-odm" customClass="ActionButton" customModule="Example" customModuleProvider="target">
-                                        <rect key="frame" x="0.0" y="79" width="382" height="50"/>
+                                        <rect key="frame" x="0.0" y="170" width="382" height="50"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="50" id="AEy-Vj-0z5"/>
                                         </constraints>
@@ -452,8 +480,8 @@
                                     <constraint firstAttribute="trailing" secondItem="GhP-Em-2D6" secondAttribute="trailing" id="lo1-5H-1lm"/>
                                 </constraints>
                             </stackView>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="b8L-kz-JJ4">
-                                <rect key="frame" x="0.0" y="88" width="414" height="637"/>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="b8L-kz-JJ4" customClass="LogsTextView" customModule="Example" customModuleProvider="target">
+                                <rect key="frame" x="0.0" y="88" width="414" height="546"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                 <color key="textColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -472,15 +500,18 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="bCG-EH-GFs"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Single log" id="gXs-pz-P3S"/>
+                    <navigationItem key="navigationItem" title="Single" id="gXs-pz-P3S"/>
                     <connections>
+                        <outlet property="labelTextField" destination="uCh-6n-L3w" id="hVY-d6-OYp"/>
                         <outlet property="logsTextView" destination="b8L-kz-JJ4" id="DL6-Aa-gyN"/>
+                        <outlet property="messageTextField" destination="YLe-nf-8qP" id="wLl-Fv-55M"/>
                         <outlet property="selectedLogLevelSegmentedControl" destination="x4n-zD-tv0" id="Cd0-3o-Mfc"/>
+                        <outlet property="sensitiveSwitcher" destination="2Ah-rt-Oa5" id="GOI-92-246"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="aDh-fl-P4z" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1295.6521739130435" y="-1100.2232142857142"/>
+            <point key="canvasLocation" x="-1246" y="536"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="sko-5U-Zyu">
@@ -496,7 +527,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="F4F-Se-6mT" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1246" y="-439"/>
+            <point key="canvasLocation" x="-1246" y="-325"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="E7r-rz-Xyu">

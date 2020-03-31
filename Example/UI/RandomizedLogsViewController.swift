@@ -9,25 +9,20 @@
 import UIKit
 import Robologs
 
-class PeriodicBurstsLogsViewController: UIViewController {
+class RandomizedLogsViewController: UIViewController {
     @IBOutlet private var logsTextView: UITextView!
     @IBOutlet private var actionButton: ActionButton!
     @IBOutlet private var loadIntensityProgressView: UIProgressView!
     private var logger: Logger!
-    private var logsGenerator: RealApplicationLogGenerator!
+    private var logsGenerator: RandomizedRecordGenerator!
     private var currentLogNumber = 0
 
     override func viewDidLoad() {
         super.viewDidLoad()
 
         setupLogger()
-        setupLogsGenerator()
-        logsTextView.isEditable = false
+        logsGenerator = RandomizedRecordGenerator(logger: logger)
         loadIntensityProgressView.progress = 0
-    }
-
-    private func setupLogsGenerator() {
-        logsGenerator = RealApplicationLogGenerator(logger: logger)
     }
 
     private func setupLogger() {

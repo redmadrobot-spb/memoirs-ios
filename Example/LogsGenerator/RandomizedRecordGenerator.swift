@@ -1,5 +1,5 @@
 //
-//  RealApplicationLogGenerator.swift
+//  RandomizedRecordGenerator.swift
 //  Example
 //
 //  Created by Roman Mazeev on 30.03.2020.
@@ -9,7 +9,7 @@
 import Foundation
 import Robologs
 
-class RealApplicationLogGenerator {
+class RandomizedRecordGenerator {
     private let logger: Logger
     private(set) var isPlaying: Bool = false
     private var timing: LogsGeneratorTiming
@@ -33,7 +33,7 @@ class RealApplicationLogGenerator {
         recordGenerator = UniformRecordGenerator(record: {
             GeneratedLogRecord(
                 level: Level.allCases[Int.random(in: 0..<6)],
-                label: "",
+                label: "Test label",
                 message: "Test message")
         }, recordsPerSecond: recordsPerSecond)
         self.recordsPerSecond = recordsPerSecond

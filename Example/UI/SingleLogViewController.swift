@@ -12,6 +12,9 @@ import Robologs
 class SingleLogViewController: UIViewController {
     @IBOutlet private var logsTextView: UITextView!
     @IBOutlet private var selectedLogLevelSegmentedControl: UISegmentedControl!
+    @IBOutlet private var labelTextField: UITextField!
+    @IBOutlet private var messageTextField: UITextField!
+    @IBOutlet private var sensitiveSwitcher: UISwitch!
     private var logger: Logger!
     private var currentLogNumber = 0
 
@@ -19,7 +22,7 @@ class SingleLogViewController: UIViewController {
         super.viewDidLoad()
 
         setupLogger()
-        logsTextView.isEditable = false
+        sensitiveSwitcher.isOn = false
     }
 
     private func setupLogger() {
@@ -31,20 +34,24 @@ class SingleLogViewController: UIViewController {
         }
 
         if let remoteLogger = RemoteLoggerService.logger {
-            self.logger = MultiplexingLogger(loggers: [
-                remoteLogger,
-                diagnosticLogger
-            ])
+            self.logger = SensitiveLogger(
+                logger: MultiplexingLogger(
+                    loggers: [
+                        remoteLogger,
+                        diagnosticLogger,
+                    ]
+                )
+            )
         } else {
-            self.logger = diagnosticLogger
+            self.logger = SensitiveLogger(logger: diagnosticLogger)
         }
     }
 
     @IBAction func sendLogButton() {
         logger.log(
             level: Level.allCases[selectedLogLevelSegmentedControl.selectedSegmentIndex],
-            label: "Log number: \(currentLogNumber)",
-            message: { "Test message" },
+            label: labelTextField.text ?? "",
+            message: { sensitiveSwitcher.isOn ? "\(messageTextField.text ?? "")" : "\(public: messageTextField.text ?? "")" },
             meta: { nil },
             file: #file,
             function: #function,

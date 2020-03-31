@@ -10,7 +10,7 @@
 		300CC6F1242EBFD7007117E2 /* RemoteLoggerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 300CC6F0242EBFD7007117E2 /* RemoteLoggerService.swift */; };
 		300CC6F4242ECB06007117E2 /* SingleLogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 300CC6F3242ECB06007117E2 /* SingleLogViewController.swift */; };
 		300CC6F6242ECD59007117E2 /* DiagnosticLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 300CC6F5242ECD59007117E2 /* DiagnosticLogger.swift */; };
-		300CC6FC2430117F007117E2 /* ConstantLoadLogsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 300CC6FB2430117F007117E2 /* ConstantLoadLogsViewController.swift */; };
+		300CC6FC2430117F007117E2 /* ConstantLogsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 300CC6FB2430117F007117E2 /* ConstantLogsViewController.swift */; };
 		300CC6FE24301B71007117E2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3053CC30242DF72E000125FB /* Main.storyboard */; };
 		300CC6FF24301B79007117E2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3053CC35242DF733000125FB /* LaunchScreen.storyboard */; };
 		304E87AF242B8AAD007694D2 /* SwiftProtobuf in Frameworks */ = {isa = PBXBuildFile; productRef = 304E87AE242B8AAD007694D2 /* SwiftProtobuf */; };
@@ -28,8 +28,9 @@
 		307D795C24322076000C8B2B /* LogsGeneratorTiming.swift in Sources */ = {isa = PBXBuildFile; fileRef = 307D795B24322076000C8B2B /* LogsGeneratorTiming.swift */; };
 		307D795E24322093000C8B2B /* GeneratedLogRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 307D795D24322093000C8B2B /* GeneratedLogRecord.swift */; };
 		307D796024322105000C8B2B /* LogGeneratorRecordGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 307D795F24322105000C8B2B /* LogGeneratorRecordGenerator.swift */; };
-		307D79622432224E000C8B2B /* RealApplicationLogGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 307D79612432224E000C8B2B /* RealApplicationLogGenerator.swift */; };
-		30D48C91243024190071124C /* PeriodicBurstsLogsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30D48C90243024190071124C /* PeriodicBurstsLogsViewController.swift */; };
+		307D79622432224E000C8B2B /* RandomizedRecordGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 307D79612432224E000C8B2B /* RandomizedRecordGenerator.swift */; };
+		307D7964243263E2000C8B2B /* LogsTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 307D7963243263E2000C8B2B /* LogsTextView.swift */; };
+		30D48C91243024190071124C /* RandomizedLogsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 30D48C90243024190071124C /* RandomizedLogsViewController.swift */; };
 		4611FCED2398FEF100E23B25 /* MultiplexingLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4611FCEC2398FEF100E23B25 /* MultiplexingLogger.swift */; };
 		4611FCEF239904CC00E23B25 /* FilteringLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4611FCEE239904CC00E23B25 /* FilteringLogger.swift */; };
 		4611FCF723995F3300E23B25 /* NSLogLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4611FCF623995F3300E23B25 /* NSLogLogger.swift */; };
@@ -80,7 +81,7 @@
 		300CC6F0242EBFD7007117E2 /* RemoteLoggerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteLoggerService.swift; sourceTree = "<group>"; };
 		300CC6F3242ECB06007117E2 /* SingleLogViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleLogViewController.swift; sourceTree = "<group>"; };
 		300CC6F5242ECD59007117E2 /* DiagnosticLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiagnosticLogger.swift; sourceTree = "<group>"; };
-		300CC6FB2430117F007117E2 /* ConstantLoadLogsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConstantLoadLogsViewController.swift; sourceTree = "<group>"; };
+		300CC6FB2430117F007117E2 /* ConstantLogsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConstantLogsViewController.swift; sourceTree = "<group>"; };
 		3053CC28242DF72E000125FB /* Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3053CC2A242DF72E000125FB /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		3053CC31242DF72E000125FB /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -96,8 +97,9 @@
 		307D795B24322076000C8B2B /* LogsGeneratorTiming.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogsGeneratorTiming.swift; sourceTree = "<group>"; };
 		307D795D24322093000C8B2B /* GeneratedLogRecord.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GeneratedLogRecord.swift; sourceTree = "<group>"; };
 		307D795F24322105000C8B2B /* LogGeneratorRecordGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogGeneratorRecordGenerator.swift; sourceTree = "<group>"; };
-		307D79612432224E000C8B2B /* RealApplicationLogGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RealApplicationLogGenerator.swift; sourceTree = "<group>"; };
-		30D48C90243024190071124C /* PeriodicBurstsLogsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PeriodicBurstsLogsViewController.swift; sourceTree = "<group>"; };
+		307D79612432224E000C8B2B /* RandomizedRecordGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RandomizedRecordGenerator.swift; sourceTree = "<group>"; };
+		307D7963243263E2000C8B2B /* LogsTextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogsTextView.swift; sourceTree = "<group>"; };
+		30D48C90243024190071124C /* RandomizedLogsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RandomizedLogsViewController.swift; sourceTree = "<group>"; };
 		4611FCEC2398FEF100E23B25 /* MultiplexingLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiplexingLogger.swift; sourceTree = "<group>"; };
 		4611FCEE239904CC00E23B25 /* FilteringLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilteringLogger.swift; sourceTree = "<group>"; };
 		4611FCF623995F3300E23B25 /* NSLogLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSLogLogger.swift; sourceTree = "<group>"; };
@@ -150,8 +152,8 @@
 				3053CC4C242EBE6E000125FB /* EndpointViewController.swift */,
 				3053CC46242E378B000125FB /* MainTableViewController.swift */,
 				300CC6F3242ECB06007117E2 /* SingleLogViewController.swift */,
-				300CC6FB2430117F007117E2 /* ConstantLoadLogsViewController.swift */,
-				30D48C90243024190071124C /* PeriodicBurstsLogsViewController.swift */,
+				300CC6FB2430117F007117E2 /* ConstantLogsViewController.swift */,
+				30D48C90243024190071124C /* RandomizedLogsViewController.swift */,
 				300CC6F8242FEE3D007117E2 /* Components */,
 			);
 			path = UI;
@@ -161,6 +163,7 @@
 			isa = PBXGroup;
 			children = (
 				3053CC48242E6D8B000125FB /* ActionButton.swift */,
+				307D7963243263E2000C8B2B /* LogsTextView.swift */,
 			);
 			path = Components;
 			sourceTree = "<group>";
@@ -198,7 +201,7 @@
 		307D795824322044000C8B2B /* LogsGenerator */ = {
 			isa = PBXGroup;
 			children = (
-				307D79612432224E000C8B2B /* RealApplicationLogGenerator.swift */,
+				307D79612432224E000C8B2B /* RandomizedRecordGenerator.swift */,
 				3053CC3E242DFB25000125FB /* LogsGenerator.swift */,
 				3053CC3C242DFB1C000125FB /* UniformRecordGenerator.swift */,
 				307D795924322058000C8B2B /* TimeRange.swift */,
@@ -495,21 +498,22 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				307D79622432224E000C8B2B /* RealApplicationLogGenerator.swift in Sources */,
+				307D79622432224E000C8B2B /* RandomizedRecordGenerator.swift in Sources */,
 				3053CC3F242DFB25000125FB /* LogsGenerator.swift in Sources */,
 				307D796024322105000C8B2B /* LogGeneratorRecordGenerator.swift in Sources */,
 				300CC6F1242EBFD7007117E2 /* RemoteLoggerService.swift in Sources */,
 				307D795E24322093000C8B2B /* GeneratedLogRecord.swift in Sources */,
 				3053CC3D242DFB1C000125FB /* UniformRecordGenerator.swift in Sources */,
 				3053CC2B242DF72E000125FB /* AppDelegate.swift in Sources */,
-				300CC6FC2430117F007117E2 /* ConstantLoadLogsViewController.swift in Sources */,
+				300CC6FC2430117F007117E2 /* ConstantLogsViewController.swift in Sources */,
 				3053CC47242E378B000125FB /* MainTableViewController.swift in Sources */,
-				30D48C91243024190071124C /* PeriodicBurstsLogsViewController.swift in Sources */,
+				30D48C91243024190071124C /* RandomizedLogsViewController.swift in Sources */,
 				307D795A24322058000C8B2B /* TimeRange.swift in Sources */,
 				307D795C24322076000C8B2B /* LogsGeneratorTiming.swift in Sources */,
 				300CC6F4242ECB06007117E2 /* SingleLogViewController.swift in Sources */,
 				3053CC49242E6D8B000125FB /* ActionButton.swift in Sources */,
 				300CC6F6242ECD59007117E2 /* DiagnosticLogger.swift in Sources */,
+				307D7964243263E2000C8B2B /* LogsTextView.swift in Sources */,
 				3053CC4D242EBE6E000125FB /* EndpointViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
