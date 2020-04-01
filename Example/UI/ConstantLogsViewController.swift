@@ -46,11 +46,11 @@ class ConstantLogsViewController: UIViewController {
         let recordsGenerator = UniformRecordGenerator(
             record: {
                 GeneratedLogRecord(
-                    level: Level.allCases.randomElement(),
+                    level: Level.allCases.randomElement() ?? .info,
                     label: "Log number: \(self.currentLogNumber)",
                     message: "Test message")
 
-        },
+            },
             recordsPerSecond: Double(loadIntensitySlider.value * 100)
         )
 

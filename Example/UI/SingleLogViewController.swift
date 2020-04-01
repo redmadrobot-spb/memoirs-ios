@@ -82,7 +82,7 @@ class SingleLogViewController: UIViewController, UITextFieldDelegate {
             }
         }
     }
-    
+
     @objc private func keyboardWillHide(notification: Notification) {
         formBottomConstraint.constant = 0
 

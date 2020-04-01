@@ -32,7 +32,7 @@ class RandomizedRecordGenerator {
         let recordsPerSecond = Double.random(in: 1...100)
         recordGenerator = UniformRecordGenerator(record: {
             GeneratedLogRecord(
-                level: Level.allCases.randomElement(),
+                level: Level.allCases.randomElement() ?? .info,
                 label: "Test label",
                 message: "Test message")
         }, recordsPerSecond: recordsPerSecond)
@@ -72,7 +72,7 @@ class RandomizedRecordGenerator {
         let recordsPerSecond = Double.random(in: 1...100)
         recordGenerator = UniformRecordGenerator(record: {
             GeneratedLogRecord(
-                level: Level.allCases.randomElement(),
+                level: Level.allCases.randomElement() ?? .info,
                 label: "",
                 message: "Test message")
         }, recordsPerSecond: recordsPerSecond)
