@@ -87,7 +87,7 @@ class SingleLogViewController: UIViewController, UITextFieldDelegate {
         }
     }
 
-    @IBAction func sendLogButton() {
+    @IBAction func sendLogButtonTapped() {
         logger.log(
             level: Level.allCases[selectedLogLevelSegmentedControl.selectedSegmentIndex],
             label: labelTextField.text ?? "",
