@@ -50,15 +50,31 @@ public class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
         session = URLSession(configuration: configuration, delegate: delegateObject, delegateQueue: nil)
     }
 
+    private let liveConnectionCodeSubscribers = Subscribers<String?>()
+    private var currentLiveConnectionCode: String? = nil {
+        didSet {
+            liveConnectionCodeSubscribers.fire(currentLiveConnectionCode)
+        }
+    }
+
+    /// Subscribe to live connection code.
+    /// Display this code anywhere in your app, for example in About page.
+    /// User can enter this code in Robologs web page to instantly see logs from current device.
+    /// This code can change anytime so update it in UI at every `onChange` call.
+    /// - Parameter onChange: Callback calling right after subscription and every time code change.
+    ///     Could be called from background queue.
+    /// - Returns: Subscription token.
+    ///     Store this token in object with same live time as objects
+    ///     interested in code updates (for example some AboutViewController).
+    ///     If this token is disposed `onChange` will not be called anymore.
+    public func subscribeLiveConnectionCode(_ onChange: @escaping (String?) -> Void) -> Subscription {
+        onChange(currentLiveConnectionCode)
+        return liveConnectionCodeSubscribers.subscribe(action: onChange)
+    }
+
     /// Authorize transport with provided secret.
     /// - Parameter completion: Completion called when authorization is finished.
     public func authorize(_ completion: @escaping (Result<Void, RemoteLoggerTransportError>) -> Void) {
-        let completion = { result in
-            DispatchQueue.main.async {
-                completion(result)
-            }
-        }
-
         do {
             var request = URLRequest(url: endpoint.appendingPathComponent("auth"))
             request.httpMethod = "POST"
@@ -86,8 +102,8 @@ public class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
                     if let data = data {
                         do {
                             let response = try JournalTokenResponse(serializedData: data)
-                            let authToken = response.journalToken
-                            self.authToken = authToken
+                            self.authToken = response.journalToken
+                            self.currentLiveConnectionCode = response.liveConnectionCode
                             completion(.success(()))
                         } catch {
                             completion(.failure(.serialization(error)))
@@ -103,13 +119,8 @@ public class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
 
     public func send(_ records: [LogRecord], completion: @escaping (Result<Void, RemoteLoggerTransportError>) -> Void) {
         guard let authToken = authToken else {
-            return completion(.failure(.notAuthorized))
-        }
-
-        let completion = { result in
-            DispatchQueue.main.async {
-                completion(result)
-            }
+            completion(.failure(.notAuthorized))
+            return
         }
 
         do {
