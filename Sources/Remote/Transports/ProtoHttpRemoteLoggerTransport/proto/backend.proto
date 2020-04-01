@@ -10,12 +10,17 @@ option java_multiple_files = true;
 // Request: POST /api/v1/source
 // Headers:
 //   Content-Type: application/x-protobuf
-// Body:
-//   <TOKEN_REQUEST>
+// Body: 
+//   <JournalTokenRequest>
 // Response:
 //   - Успешно:
 //       Code: 200
-//       Body: <TOKEN_RESPONSE>
+//       Body: <JournalTokenResponse>
+
+message JournalTokenResponse {
+    required string journal_token = 1;
+    required string live_connection_code = 2;
+}
 
 message JournalTokenRequest {
     required string secret = 1;
@@ -33,9 +38,6 @@ message JournalTokenRequest {
     }
 }
 
-message JournalTokenResponse {
-    required string journal_token = 1;
-}
 
 // Метод отправки накопленных логов на сервер.
 //   - JOURNAL_TOKEN: String - Токен полученный в `POST /api/v1/source`.
@@ -45,8 +47,8 @@ message JournalTokenResponse {
 // Headers:
 //   Content-Type: application/x-protobuf
 //   Authorization: <JOURNAL_TOKEN>
-// Body:
-//   <LOGS>
+// Body: 
+//   <LogMessageBatch>
 // Response:
 //   - Успешно:
 //       Code: 200
