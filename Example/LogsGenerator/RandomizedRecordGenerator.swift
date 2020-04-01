@@ -12,11 +12,11 @@ import Robologs
 class RandomizedRecordGenerator {
     private let logger: Logger
     private(set) var isPlaying: Bool = false
-    private var timing: LogsGeneratorTiming
-    private var recordGenerator: LogGeneratorRecordGenerator
+    private var timing: LogsGeneratorTiming!
+    private var recordGenerator: LogGeneratorRecordGenerator!
 
-    private var recordsPerSecond: Double
-    private var period: Double
+    private var recordsPerSecond: Double = 0
+    private var period: Double = 0
 
     var logIntensity: Float {
         Float((recordsPerSecond * period) / 100)
@@ -24,19 +24,7 @@ class RandomizedRecordGenerator {
 
     init(logger: Logger) {
         self.logger = logger
-
-        let period = TimeInterval.random(in: 0.1...1)
-        timing = LogsGeneratorTiming(period: period)
-        self.period = period
-
-        let recordsPerSecond = Double.random(in: 1...100)
-        recordGenerator = UniformRecordGenerator(record: {
-            GeneratedLogRecord(
-                level: Level.allCases.randomElement() ?? .info,
-                label: "Test label",
-                message: "Test message")
-        }, recordsPerSecond: recordsPerSecond)
-        self.recordsPerSecond = recordsPerSecond
+        updateIntensity()
     }
 
     func start() {
@@ -61,7 +49,7 @@ class RandomizedRecordGenerator {
         updateIntensity()
     }
 
-    func updateIntensity() {
+    private func updateIntensity() {
         let period = TimeInterval.random(in: 0.1...1)
         timing = LogsGeneratorTiming(period: period)
         self.period = period
