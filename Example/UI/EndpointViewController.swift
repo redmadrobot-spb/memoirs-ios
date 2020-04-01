@@ -20,24 +20,24 @@ class EndpointViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet private var activityIndicator: UIActivityIndicatorView!
 
     enum State {
-        case disconnected
+        case remote
         case loading
-        case connected
+        case mock
     }
 
-    private var state: State = .disconnected {
+    private var state: State = .mock {
         didSet {
             activityIndicator.isHidden = state != .loading
             connectButton.isEnabled = state != .loading
-            codeStackView.isHidden = state != .connected
+            codeStackView.isHidden = state != .remote
 
             switch state {
-                case .connected:
+                case .remote:
                     connectButton.backgroundColor = .systemRed
-                    connectButton.setTitle("Disconnect", for: .normal)
-                case .disconnected:
+                    connectButton.setTitle("Switch to mock", for: .normal)
+                case .mock:
                     connectButton.backgroundColor = .systemBlue
-                    connectButton.setTitle("Connect", for: .normal)
+                    connectButton.setTitle("Connect to remote", for: .normal)
                 case .loading:
                     connectButton.backgroundColor = .systemGray
                     connectButton.setTitle("Loading", for: .normal)
@@ -49,8 +49,13 @@ class EndpointViewController: UIViewController, UITextFieldDelegate {
         super.viewDidLoad()
 
         setupKeyboardShowing()
-        codeStackView.isHidden = true
-        state = RemoteLoggerService.logger == nil ? .disconnected : .connected
+
+        switch RemoteLoggerService.shared.type {
+            case .mock:
+                state = .mock
+            case .remote:
+                state = .remote
+        }
     }
 
     @IBAction func cancelButtonTapped() {
@@ -58,7 +63,7 @@ class EndpointViewController: UIViewController, UITextFieldDelegate {
     }
 
     private func showErrorAlert() {
-        state = .disconnected
+        state = .mock
         let alert = UIAlertController(title: "Can not connect", message: nil, preferredStyle: .alert)
         alert.addAction(UIAlertAction(title: "OK", style: .cancel))
         present(alert, animated: true)
@@ -108,12 +113,12 @@ class EndpointViewController: UIViewController, UITextFieldDelegate {
     }
 
     @IBAction func connectButtonTapped() {
-        if state == .connected {
+        if state == .remote {
             state = .loading
-            // TODO: Disconnect
-            RemoteLoggerService.logger = nil
-            state = .disconnected
-        } else if state == .disconnected {
+            let transport = MockRemoteLoggerTransport(logger: PrintLogger())
+            RemoteLoggerService.shared.configureRemoteLogger(transport: transport)
+            state = .mock
+        } else if state == .mock {
             state = .loading
             guard let urlString = connectionUrlTextField.text, let url = URL(string: urlString) else {
                 showErrorAlert()
@@ -121,13 +126,12 @@ class EndpointViewController: UIViewController, UITextFieldDelegate {
             }
 
             let transport = ProtoHttpRemoteLoggerTransport(endpoint: url, secret: secretTextField.text ?? "")
+            RemoteLoggerService.shared.configureRemoteLogger(transport: transport)
             transport.authorize { result in
                 if case .failure = result {
                     self.showErrorAlert()
                 } else {
-                    RemoteLoggerService.logger = RemoteLogger(buffering: InMemoryBuffering(), transport: transport)
-                    self.state = .connected
-                    // TODO: Code getting and showing
+                    self.state = .remote
                 }
             }
         }

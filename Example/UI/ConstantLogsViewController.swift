@@ -32,14 +32,10 @@ class ConstantLogsViewController: UIViewController {
             self.currentLogNumber = diagnosticLogger.lastLogs.count
         }
 
-        if let remoteLogger = RemoteLoggerService.logger {
-            logger = MultiplexingLogger(loggers: [
-                remoteLogger,
-                diagnosticLogger
-            ])
-        } else {
-            logger = diagnosticLogger
-        }
+        logger = MultiplexingLogger(loggers: [
+            RemoteLoggerService.shared.logger,
+            diagnosticLogger
+        ])
     }
 
     private func configureLogsGenerator() {

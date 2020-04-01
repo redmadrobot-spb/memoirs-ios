@@ -36,18 +36,14 @@ class SingleLogViewController: UIViewController, UITextFieldDelegate {
             self.currentLogNumber = diagnosticLogger.lastLogs.count
         }
 
-        if let remoteLogger = RemoteLoggerService.logger {
-            logger = SensitiveLogger(
-                logger: MultiplexingLogger(
-                    loggers: [
-                        remoteLogger,
-                        diagnosticLogger,
-                    ]
-                )
+        logger = SensitiveLogger(
+            logger: MultiplexingLogger(
+                loggers: [
+                    RemoteLoggerService.shared.logger,
+                    diagnosticLogger,
+                ]
             )
-        } else {
-            logger = SensitiveLogger(logger: diagnosticLogger)
-        }
+        )
     }
 
     private func setupKeyboardShowing() {
