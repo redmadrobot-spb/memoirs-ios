@@ -9,19 +9,19 @@
 import Foundation
 
 /// Mock remote logger transport. Emulate behaviour of transport for offline testing.
-public class MockRemoteLoggerTransport: RemoteLoggerTransport {
+class MockRemoteLoggerTransport: RemoteLoggerTransport {
     private let logger: LabeledLoggerAdapter
     private var sendsBeforeLogOut = 0
 
     /// Create instance of MockRemoteLoggerTransport.
     /// - Parameter logger: Logger used to log events in mock logger.
-    public init(logger: Logger) {
+    init(logger: Logger) {
         self.logger = LabeledLoggerAdapter(label: "Robologs.MockRemoteLogger", adaptee: logger)
     }
 
     private(set) public var isAuthorized = true
 
-    public func authorize(_ completion: @escaping (Result<Void, RemoteLoggerTransportError>) -> Void) {
+    func authorize(_ completion: @escaping (Result<Void, RemoteLoggerTransportError>) -> Void) {
         logger.info(message: "Authorize.")
         isAuthorized = false
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
@@ -32,7 +32,7 @@ public class MockRemoteLoggerTransport: RemoteLoggerTransport {
         }
     }
 
-    public func send(_ records: [LogRecord], completion: @escaping (Result<Void, RemoteLoggerTransportError>) -> Void) {
+    func send(_ records: [LogRecord], completion: @escaping (Result<Void, RemoteLoggerTransportError>) -> Void) {
         guard isAuthorized else { return completion(.failure(.notAuthorized)) }
 
         logger.info(message: "Send \(public: records.count) records.")
