@@ -331,16 +331,16 @@
                                 <rect key="frame" x="197" y="438" width="20" height="20"/>
                             </activityIndicatorView>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="Rfd-3l-HQg">
-                                <rect key="frame" x="161" y="417" width="92.5" height="62"/>
+                                <rect key="frame" x="182" y="409" width="50" height="78.5"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Code" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xux-jr-HpM">
-                                        <rect key="frame" x="0.0" y="0.0" width="92.5" height="20.5"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="50" height="20.5"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
                                     </label>
-                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="123412" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iDl-K5-c5Q">
-                                        <rect key="frame" x="0.0" y="28.5" width="92.5" height="33.5"/>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="iDl-K5-c5Q">
+                                        <rect key="frame" x="0.0" y="28.5" width="50" height="50"/>
                                         <fontDescription key="fontDescription" style="UICTFontTextStyleTitle1"/>
                                         <nil key="textColor"/>
                                         <nil key="highlightedColor"/>
@@ -373,6 +373,7 @@
                         <outlet property="activityIndicator" destination="eNM-5f-co3" id="6ye-lz-Kk7"/>
                         <outlet property="codeStackView" destination="Rfd-3l-HQg" id="r6X-Fc-qN9"/>
                         <outlet property="codeStackViewCenterConstraint" destination="8Tw-a3-GlE" id="RdB-JH-XTe"/>
+                        <outlet property="connectionCodeLabel" destination="iDl-K5-c5Q" id="Q7z-jn-EcY"/>
                         <outlet property="connectionUrlTextField" destination="3Uu-bK-ayq" id="SDB-9a-15C"/>
                         <outlet property="formBottomConstraint" destination="9d9-H4-xUX" id="Qn0-2C-MYg"/>
                         <outlet property="formStackView" destination="HKO-Td-iCe" id="MG4-Rv-D6e"/>

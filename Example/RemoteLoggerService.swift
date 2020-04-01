@@ -12,7 +12,7 @@ import Foundation
 class RemoteLoggerService {
     enum RemoteLoggerType {
         case mock
-        case remote
+        case remote(url: URL, secret: String)
     }
 
     private static var sharedRemoteLoggerService: RemoteLoggerService = {
@@ -21,6 +21,9 @@ class RemoteLoggerService {
 
     private(set) var logger: Logger
     private(set) var type: RemoteLoggerType
+    private(set) var connectionCodeSubscription: Subscription?
+    var onConnectionCodeChanged: ((String?) -> Void)?
+    var onError: ((Error?) -> Void)?
 
     private init() {
         logger = RemoteLogger(
@@ -33,17 +36,31 @@ class RemoteLoggerService {
 
     class var shared: RemoteLoggerService { sharedRemoteLoggerService }
 
-    func configureRemoteLogger(transport: RemoteLoggerTransport) {
-        if transport is MockRemoteLoggerTransport {
-            self.type = .mock
-            let buffering = InMemoryBuffering()
-            let remoteLogger = RemoteLogger(buffering: buffering, transport: transport)
-            self.logger = remoteLogger
-        } else if transport is ProtoHttpRemoteLoggerTransport {
-            self.type = .remote
-            let buffering = InMemoryBuffering()
-            let remoteLogger = RemoteLogger(buffering: buffering, transport: transport)
-            self.logger = remoteLogger
+    func configureRemoteLogger(with type: RemoteLoggerType) {
+        self.type = type
+        switch type {
+            case .mock:
+                logger = RemoteLogger(
+                    buffering: InMemoryBuffering(),
+                    transport: MockRemoteLoggerTransport(logger: PrintLogger())
+            )
+            case .remote(let url, let secret):
+                let transport = ProtoHttpRemoteLoggerTransport(endpoint: url, secret: secret)
+
+                transport.authorize { result in
+                    switch result {
+                        case .failure(let error):
+                            self.onError?(error)
+                            self.configureRemoteLogger(with: .mock)
+                        case .success:
+                            self.connectionCodeSubscription = transport.subscribeLiveConnectionCode { connectionCode in
+                                DispatchQueue.main.async {
+                                    self.onConnectionCodeChanged?(connectionCode)
+                                }
+                            }
+                    }
+                }
+                logger = RemoteLogger(buffering: InMemoryBuffering(), transport: transport)
         }
     }
 }

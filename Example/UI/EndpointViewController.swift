@@ -18,6 +18,7 @@ class EndpointViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet private var codeStackViewCenterConstraint: NSLayoutConstraint!
     @IBOutlet private var codeStackView: UIStackView!
     @IBOutlet private var activityIndicator: UIActivityIndicatorView!
+    @IBOutlet private var connectionCodeLabel: UILabel!
 
     enum State {
         case remote
@@ -55,6 +56,18 @@ class EndpointViewController: UIViewController, UITextFieldDelegate {
                 state = .mock
             case .remote:
                 state = .remote
+        }
+
+        RemoteLoggerService.shared.onConnectionCodeChanged = { [weak self] connectionCode in
+            DispatchQueue.main.async {
+                self?.connectionCodeLabel.text = connectionCode
+            }
+        }
+
+        RemoteLoggerService.shared.onError = { [weak self] _ in
+            DispatchQueue.main.async {
+                self?.showErrorAlert()
+            }
         }
     }
 
@@ -115,8 +128,7 @@ class EndpointViewController: UIViewController, UITextFieldDelegate {
     @IBAction func switchRemoteTypeButtonTapped() {
         if state == .remote {
             state = .loading
-            let transport = MockRemoteLoggerTransport(logger: PrintLogger())
-            RemoteLoggerService.shared.configureRemoteLogger(transport: transport)
+            RemoteLoggerService.shared.configureRemoteLogger(with: .mock)
             state = .mock
         } else if state == .mock {
             state = .loading
@@ -124,16 +136,8 @@ class EndpointViewController: UIViewController, UITextFieldDelegate {
                 showErrorAlert()
                 return
             }
-
-            let transport = ProtoHttpRemoteLoggerTransport(endpoint: url, secret: secretTextField.text ?? "")
-            RemoteLoggerService.shared.configureRemoteLogger(transport: transport)
-            transport.authorize { result in
-                if case .failure = result {
-                    self.showErrorAlert()
-                } else {
-                    self.state = .remote
-                }
-            }
+            RemoteLoggerService.shared.configureRemoteLogger(with: .remote(url: url, secret: secretTextField.text ?? ""))
+            state = .remote
         }
     }
 
