@@ -33,32 +33,32 @@ class ConstantLogsViewController: UIViewController {
         }
 
         if let remoteLogger = RemoteLoggerService.logger {
-            self.logger = MultiplexingLogger(loggers: [
+            logger = MultiplexingLogger(loggers: [
                 remoteLogger,
                 diagnosticLogger
             ])
         } else {
-            self.logger = diagnosticLogger
+            logger = diagnosticLogger
         }
     }
 
     private func configureLogsGenerator() {
         let recordsGenerator = UniformRecordGenerator(
-                   record: {
-                       GeneratedLogRecord(
-                           level: Level.allCases[Int.random(in: 0..<6)],
-                           label: "Log number: \(self.currentLogNumber)",
-                           message: "Test message")
+            record: {
+                GeneratedLogRecord(
+                    level: Level.allCases.randomElement(),
+                    label: "Log number: \(self.currentLogNumber)",
+                    message: "Test message")
 
-                   },
-                   recordsPerSecond: Double(loadIntensitySlider.value * 100)
-               )
+        },
+            recordsPerSecond: Double(loadIntensitySlider.value * 100)
+        )
 
-               logsGenerator = LogsGenerator(
-                   timing: LogsGeneratorTiming(period: 0.2),
-                   recordGenerator: recordsGenerator,
-                   logger: logger
-               )
+        logsGenerator = LogsGenerator(
+            timing: LogsGeneratorTiming(period: 0.2),
+            recordGenerator: recordsGenerator,
+            logger: logger
+        )
     }
 
     @IBAction func actionButtonTapped() {
@@ -68,7 +68,7 @@ class ConstantLogsViewController: UIViewController {
             actionButton.backgroundColor = .systemBlue
             loadIntensitySlider.isEnabled = true
         } else {
-            self.logsGenerator.start()
+            logsGenerator.start()
             actionButton.setTitle("Stop", for: .normal)
             actionButton.backgroundColor = .systemRed
             loadIntensitySlider.isEnabled = false

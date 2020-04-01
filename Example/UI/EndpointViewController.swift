@@ -50,10 +50,11 @@ class EndpointViewController: UIViewController, UITextFieldDelegate {
 
         setupKeyboardShowing()
         codeStackView.isHidden = true
+        state = RemoteLoggerService.logger == nil ? .disconnected : .connected
     }
 
     @IBAction func cancelButtonTapped() {
-        self.dismiss(animated: true)
+        dismiss(animated: true)
     }
 
     private func showErrorAlert() {
@@ -64,16 +65,16 @@ class EndpointViewController: UIViewController, UITextFieldDelegate {
     }
 
     private func setupKeyboardShowing() {
-        view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.dismissKeyboard)))
+        view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard)))
         NotificationCenter.default.addObserver(
             self,
-            selector: #selector(self.keyboardWillShow),
+            selector: #selector(keyboardWillShow),
             name: UIResponder.keyboardWillShowNotification,
             object: nil
         )
         NotificationCenter.default.addObserver(
             self,
-            selector: #selector(self.keyboardWillHide),
+            selector: #selector(keyboardWillHide),
             name: UIResponder.keyboardWillHideNotification,
             object: nil)
     }
@@ -101,15 +102,16 @@ class EndpointViewController: UIViewController, UITextFieldDelegate {
         formBottomConstraint.constant = 0
         codeStackViewCenterConstraint.isActive = true
 
-         UIView.animate(withDuration: 0.5) {
+        UIView.animate(withDuration: 0.5) {
             self.view.layoutIfNeeded()
-         }
+        }
     }
 
     @IBAction func connectButtonTapped() {
         if state == .connected {
             state = .loading
             // TODO: Disconnect
+            RemoteLoggerService.logger = nil
             state = .disconnected
         } else if state == .disconnected {
             state = .loading

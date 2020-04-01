@@ -12,7 +12,7 @@ import Foundation
 class DiagnosticLogger: Logger {
     init(onChange: @escaping (DiagnosticLogger) -> Void) {
         self.onChange = onChange
-        self.timer = Timer.scheduledTimer(
+        timer = Timer.scheduledTimer(
             timeInterval: updateInterval,
             target: self,
             selector: #selector(notify),

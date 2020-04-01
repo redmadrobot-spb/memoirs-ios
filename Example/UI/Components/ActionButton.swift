@@ -12,8 +12,8 @@ class ActionButton: UIButton {
     override func awakeFromNib() {
         super.awakeFromNib()
 
-        self.layer.cornerRadius = 8
-        self.backgroundColor = .systemBlue
-        self.setTitleColor(.white, for: .normal)
+        layer.cornerRadius = 8
+        backgroundColor = .systemBlue
+        setTitleColor(.white, for: .normal)
     }
 }

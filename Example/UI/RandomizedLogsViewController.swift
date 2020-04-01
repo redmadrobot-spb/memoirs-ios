@@ -34,12 +34,12 @@ class RandomizedLogsViewController: UIViewController {
         }
 
         if let remoteLogger = RemoteLoggerService.logger {
-            self.logger = MultiplexingLogger(loggers: [
+            logger = MultiplexingLogger(loggers: [
                 remoteLogger,
                 diagnosticLogger
             ])
         } else {
-            self.logger = diagnosticLogger
+            logger = diagnosticLogger
         }
     }
 
@@ -50,7 +50,7 @@ class RandomizedLogsViewController: UIViewController {
             actionButton.backgroundColor = .systemBlue
             loadIntensityProgressView.progress = 0
         } else {
-            self.logsGenerator.start()
+            logsGenerator.start()
             actionButton.setTitle("Stop", for: .normal)
             actionButton.backgroundColor = .systemRed
             loadIntensityProgressView.progress = logsGenerator.logIntensity

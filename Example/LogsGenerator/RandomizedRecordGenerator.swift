@@ -32,7 +32,7 @@ class RandomizedRecordGenerator {
         let recordsPerSecond = Double.random(in: 1...100)
         recordGenerator = UniformRecordGenerator(record: {
             GeneratedLogRecord(
-                level: Level.allCases[Int.random(in: 0..<6)],
+                level: Level.allCases.randomElement(),
                 label: "Test label",
                 message: "Test message")
         }, recordsPerSecond: recordsPerSecond)
@@ -42,7 +42,7 @@ class RandomizedRecordGenerator {
     func start() {
         isPlaying = true
 
-        self.timing.start { range in
+        timing.start { range in
             self.recordGenerator.records(for: range).forEach { generatedRecord in
                 self.logger.log(
                     level: generatedRecord.level,
@@ -72,7 +72,7 @@ class RandomizedRecordGenerator {
         let recordsPerSecond = Double.random(in: 1...100)
         recordGenerator = UniformRecordGenerator(record: {
             GeneratedLogRecord(
-                level: Level.allCases[Int.random(in: 0..<6)],
+                level: Level.allCases.randomElement(),
                 label: "",
                 message: "Test message")
         }, recordsPerSecond: recordsPerSecond)

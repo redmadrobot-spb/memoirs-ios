@@ -37,7 +37,7 @@ class SingleLogViewController: UIViewController, UITextFieldDelegate {
         }
 
         if let remoteLogger = RemoteLoggerService.logger {
-            self.logger = SensitiveLogger(
+            logger = SensitiveLogger(
                 logger: MultiplexingLogger(
                     loggers: [
                         remoteLogger,
@@ -46,28 +46,28 @@ class SingleLogViewController: UIViewController, UITextFieldDelegate {
                 )
             )
         } else {
-            self.logger = SensitiveLogger(logger: diagnosticLogger)
+            logger = SensitiveLogger(logger: diagnosticLogger)
         }
     }
 
     private func setupKeyboardShowing() {
-        view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(self.dismissKeyboard)))
+        view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(dismissKeyboard)))
         NotificationCenter.default.addObserver(
             self,
-            selector: #selector(self.keyboardWillShow),
+            selector: #selector(keyboardWillShow),
             name: UIResponder.keyboardWillShowNotification,
             object: nil
         )
         NotificationCenter.default.addObserver(
             self,
-            selector: #selector(self.keyboardWillHide),
+            selector: #selector(keyboardWillHide),
             name: UIResponder.keyboardWillHideNotification,
             object: nil)
     }
 
     @objc private func dismissKeyboard() {
-           view.endEditing(true)
-       }
+        view.endEditing(true)
+    }
 
     @objc private func keyboardWillShow(notification: Notification) {
         guard let keyboardSize = (notification.userInfo?  [UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else {
@@ -82,13 +82,13 @@ class SingleLogViewController: UIViewController, UITextFieldDelegate {
             }
         }
     }
-
+    
     @objc private func keyboardWillHide(notification: Notification) {
         formBottomConstraint.constant = 0
 
-         UIView.animate(withDuration: 0.5) {
+        UIView.animate(withDuration: 0.5) {
             self.view.layoutIfNeeded()
-         }
+        }
     }
 
     @IBAction func sendLogButton() {
