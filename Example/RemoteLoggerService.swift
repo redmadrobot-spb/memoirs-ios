@@ -44,7 +44,7 @@ class RemoteLoggerService {
                 logger = RemoteLogger(
                     buffering: InMemoryBuffering(),
                     transport: MockRemoteLoggerTransport(logger: PrintLogger())
-            )
+                )
             case .remote(let url, let secret):
                 let transport = ProtoHttpRemoteLoggerTransport(endpoint: url, secret: secret)
 

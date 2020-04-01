@@ -55,12 +55,15 @@ class RandomizedRecordGenerator {
         self.period = period
 
         let recordsPerSecond = Double.random(in: 1...100)
-        recordGenerator = UniformRecordGenerator(record: {
-            GeneratedLogRecord(
-                level: Level.allCases.randomElement() ?? .info,
-                label: "",
-                message: "Test message")
-        }, recordsPerSecond: recordsPerSecond)
+        recordGenerator = UniformRecordGenerator(
+            record: {
+                GeneratedLogRecord(
+                    level: Level.allCases.randomElement() ?? .info,
+                    label: "",
+                    message: "Test message")
+            },
+            recordsPerSecond: recordsPerSecond
+        )
         self.recordsPerSecond = recordsPerSecond
     }
 }
