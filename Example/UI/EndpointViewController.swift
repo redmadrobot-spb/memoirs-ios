@@ -14,7 +14,7 @@ class EndpointViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet private var secretTextField: UITextField!
     @IBOutlet private var formStackView: UIStackView!
     @IBOutlet private var formBottomConstraint: NSLayoutConstraint!
-    @IBOutlet private var connectButton: ActionButton!
+    @IBOutlet private var switchRemoteTypeButton: ActionButton!
     @IBOutlet private var codeStackViewCenterConstraint: NSLayoutConstraint!
     @IBOutlet private var codeStackView: UIStackView!
     @IBOutlet private var activityIndicator: UIActivityIndicatorView!
@@ -28,19 +28,19 @@ class EndpointViewController: UIViewController, UITextFieldDelegate {
     private var state: State = .mock {
         didSet {
             activityIndicator.isHidden = state != .loading
-            connectButton.isEnabled = state != .loading
+            switchRemoteTypeButton.isEnabled = state != .loading
             codeStackView.isHidden = state != .remote
 
             switch state {
                 case .remote:
-                    connectButton.backgroundColor = .systemRed
-                    connectButton.setTitle("Switch to mock", for: .normal)
+                    switchRemoteTypeButton.backgroundColor = .systemRed
+                    switchRemoteTypeButton.setTitle("Switch to mock", for: .normal)
                 case .mock:
-                    connectButton.backgroundColor = .systemBlue
-                    connectButton.setTitle("Connect to remote", for: .normal)
+                    switchRemoteTypeButton.backgroundColor = .systemBlue
+                    switchRemoteTypeButton.setTitle("Switch to remote", for: .normal)
                 case .loading:
-                    connectButton.backgroundColor = .systemGray
-                    connectButton.setTitle("Loading", for: .normal)
+                    switchRemoteTypeButton.backgroundColor = .systemGray
+                    switchRemoteTypeButton.setTitle("Loading", for: .normal)
             }
         }
     }
@@ -112,7 +112,7 @@ class EndpointViewController: UIViewController, UITextFieldDelegate {
         }
     }
 
-    @IBAction func connectButtonTapped() {
+    @IBAction func switchRemoteTypeButtonTapped() {
         if state == .remote {
             state = .loading
             let transport = MockRemoteLoggerTransport(logger: PrintLogger())

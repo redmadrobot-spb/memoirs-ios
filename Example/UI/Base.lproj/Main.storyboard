@@ -320,9 +320,9 @@
                                         <constraints>
                                             <constraint firstAttribute="height" constant="50" id="uhI-8d-OqC"/>
                                         </constraints>
-                                        <state key="normal" title="Connect"/>
+                                        <state key="normal" title="Switch to remote"/>
                                         <connections>
-                                            <action selector="connectButtonTapped" destination="x3x-Z1-RFi" eventType="touchUpInside" id="uFk-sa-w9E"/>
+                                            <action selector="switchRemoteTypeButtonTapped" destination="x3x-Z1-RFi" eventType="touchUpInside" id="uFk-sa-w9E"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -373,11 +373,11 @@
                         <outlet property="activityIndicator" destination="eNM-5f-co3" id="6ye-lz-Kk7"/>
                         <outlet property="codeStackView" destination="Rfd-3l-HQg" id="r6X-Fc-qN9"/>
                         <outlet property="codeStackViewCenterConstraint" destination="8Tw-a3-GlE" id="RdB-JH-XTe"/>
-                        <outlet property="connectButton" destination="AVx-7s-qBU" id="6aB-ev-PNl"/>
                         <outlet property="connectionUrlTextField" destination="3Uu-bK-ayq" id="SDB-9a-15C"/>
                         <outlet property="formBottomConstraint" destination="9d9-H4-xUX" id="Qn0-2C-MYg"/>
                         <outlet property="formStackView" destination="HKO-Td-iCe" id="MG4-Rv-D6e"/>
                         <outlet property="secretTextField" destination="hoS-t7-bBK" id="cn5-wk-LKE"/>
+                        <outlet property="switchRemoteTypeButton" destination="AVx-7s-qBU" id="6aB-ev-PNl"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ZHH-eO-hET" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
