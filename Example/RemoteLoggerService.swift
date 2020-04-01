@@ -24,6 +24,7 @@ class RemoteLoggerService {
     private(set) var connectionCodeSubscription: Subscription?
     var onConnectionCodeChanged: ((String?) -> Void)?
     var onError: ((Error?) -> Void)?
+    var lastConnectionCode: String?
 
     private init() {
         logger = RemoteLogger(
@@ -56,6 +57,7 @@ class RemoteLoggerService {
                             self.connectionCodeSubscription = transport.subscribeLiveConnectionCode { connectionCode in
                                 DispatchQueue.main.async {
                                     self.onConnectionCodeChanged?(connectionCode)
+                                    self.lastConnectionCode = connectionCode
                                 }
                             }
                     }

@@ -51,6 +51,8 @@ class EndpointViewController: UIViewController, UITextFieldDelegate {
 
         setupKeyboardShowing()
 
+        connectionCodeLabel.text = RemoteLoggerService.shared.lastConnectionCode
+
         switch RemoteLoggerService.shared.type {
             case .mock:
                 state = .mock
