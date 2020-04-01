@@ -15,8 +15,8 @@ class RandomizedRecordGenerator {
     private var timing: LogsGeneratorTiming!
     private var recordGenerator: LogGeneratorRecordGenerator!
 
-    private var recordsPerSecond: Double = 0
-    private var period: Double = 0
+    private var recordsPerSecond = 0.0
+    private var period = 0.0
 
     var logIntensity: Float {
         Float((recordsPerSecond * period) / 100)
