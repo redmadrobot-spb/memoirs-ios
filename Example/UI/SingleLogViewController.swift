@@ -95,11 +95,7 @@ class SingleLogViewController: UIViewController, UITextFieldDelegate {
         logger.log(
             level: Level.allCases[selectedLogLevelSegmentedControl.selectedSegmentIndex],
             label: labelTextField.text ?? "",
-            message: { sensitiveSwitcher.isOn ? "\(messageTextField.text ?? "")" : "\(public: messageTextField.text ?? "")" },
-            meta: { nil },
-            file: #file,
-            function: #function,
-            line: #line
+            message: sensitiveSwitcher.isOn ? "\(messageTextField.text ?? "")" : "\(public: messageTextField.text ?? "")"
         )
     }
 

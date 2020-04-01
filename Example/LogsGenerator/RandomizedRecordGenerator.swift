@@ -47,11 +47,8 @@ class RandomizedRecordGenerator {
                 self.logger.log(
                     level: generatedRecord.level,
                     label: generatedRecord.label,
-                    message: { "\(public: generatedRecord.message)" },
-                    meta: { generatedRecord.meta?.mapValues { "\(public: $0)" as LogString } ?? [:] },
-                    file: #file,
-                    function: #function,
-                    line: #line
+                    message: "\(public: generatedRecord.message)",
+                    meta: generatedRecord.meta?.mapValues { "\(public: $0)" as LogString } ?? [:]
                 )
             }
         }
