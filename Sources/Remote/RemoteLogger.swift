@@ -76,7 +76,7 @@ protocol RemoteLoggerTransport {
 
 /// Logger that sends log messages to remote storage.
 /// It uses `RemoteLoggerBuffering` for storing log records before sending and `RemoteLoggerTransport` to send them.
-/// At the receiving of first log record `RemoteLogger` will try to authorize transport
+/// After initialization `RemoteLogger` will try to authorize transport
 /// and at success it will send records collected during previous request with `RemoteLoggerTransport.send` method.
 /// If transport returns errors from `authorize` request `RemoteLogger` will be trying to reauthorize every `reauthorizationInterval`.
 /// `RemoteLogger` is sending only one `send` request per time, next batch will be send only after current batch is finished.
@@ -116,6 +116,8 @@ public class RemoteLogger: Logger {
     init(transport: RemoteLoggerTransport, buffering: RemoteLoggerBuffering) {
         self.buffering = buffering
         self.transport = transport
+
+        transport.authorize { _ in }
     }
 
     public func log(
