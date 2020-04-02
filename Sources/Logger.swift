@@ -149,4 +149,17 @@ extension Logger {
     ) {
         log(level: .critical, label: label, message: message, meta: meta, file: file, function: function, line: line)
     }
+
+    @inlinable
+    public func log(
+        level: Level,
+        label: String,
+        message: @autoclosure () -> LogString,
+        meta: @autoclosure () -> [String: LogString]? = nil,
+        file: String = #file,
+        function: String = #function,
+        line: UInt = #line
+    ) {
+        log(level: level, label: label, message: message, meta: meta, file: file, function: function, line: line)
+    }
 }
