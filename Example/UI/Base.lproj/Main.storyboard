@@ -333,9 +333,6 @@
                                     </button>
                                 </subviews>
                             </stackView>
-                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="eNM-5f-co3">
-                                <rect key="frame" x="197" y="133.5" width="20" height="20"/>
-                            </activityIndicatorView>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="Rfd-3l-HQg">
                                 <rect key="frame" x="20" y="104" width="374" height="79"/>
                                 <subviews>
@@ -353,18 +350,21 @@
                                     </label>
                                 </subviews>
                             </stackView>
+                            <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="eNM-5f-co3">
+                                <rect key="frame" x="197" y="438" width="20" height="20"/>
+                            </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
-                            <constraint firstItem="eNM-5f-co3" firstAttribute="centerX" secondItem="Rfd-3l-HQg" secondAttribute="centerX" id="0LN-hy-NnL"/>
+                            <constraint firstItem="eNM-5f-co3" firstAttribute="centerY" secondItem="8xv-sf-yxW" secondAttribute="centerY" id="1jS-oD-nFe"/>
                             <constraint firstItem="HKO-Td-iCe" firstAttribute="top" relation="greaterThanOrEqual" secondItem="Rfd-3l-HQg" secondAttribute="bottom" constant="16" id="4tb-Gv-dQa"/>
                             <constraint firstItem="0fx-nZ-G7F" firstAttribute="bottom" secondItem="HKO-Td-iCe" secondAttribute="bottom" id="9d9-H4-xUX"/>
                             <constraint firstItem="HKO-Td-iCe" firstAttribute="leading" secondItem="0fx-nZ-G7F" secondAttribute="leading" constant="20" id="Eou-Xp-3Mn"/>
+                            <constraint firstItem="eNM-5f-co3" firstAttribute="centerX" secondItem="8xv-sf-yxW" secondAttribute="centerX" id="TLW-vF-wxE"/>
                             <constraint firstItem="Rfd-3l-HQg" firstAttribute="top" secondItem="0fx-nZ-G7F" secondAttribute="top" constant="16" id="cgd-vi-D2N"/>
                             <constraint firstItem="Rfd-3l-HQg" firstAttribute="leading" secondItem="0fx-nZ-G7F" secondAttribute="leading" constant="20" id="fii-BQ-bDn"/>
                             <constraint firstItem="0fx-nZ-G7F" firstAttribute="trailing" secondItem="HKO-Td-iCe" secondAttribute="trailing" constant="20" id="ohy-5g-oDP"/>
                             <constraint firstItem="0fx-nZ-G7F" firstAttribute="trailing" secondItem="Rfd-3l-HQg" secondAttribute="trailing" constant="20" id="qQo-Bw-mqG"/>
-                            <constraint firstItem="eNM-5f-co3" firstAttribute="centerY" secondItem="Rfd-3l-HQg" secondAttribute="centerY" id="rel-mK-1tJ"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="0fx-nZ-G7F"/>
                     </view>
