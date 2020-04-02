@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 /// Remote logger transport that uses HTTP + Protubuf.
-public class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
+class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
     // TODO: Remove when server will switch to proper certificate
     private class URLSessionDelegateObject: NSObject, URLSessionDelegate {
         func urlSession(
@@ -35,14 +35,14 @@ public class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
     private var isLoading = false
     private let shouldRemoveSensitive = true
 
-    public var isAuthorized: Bool {
+    var isAuthorized: Bool {
         authToken != nil
     }
 
     /// Creates new instance of `ProtoHttpRemoteLoggerTransport`.
     /// - Parameter endpoint: URL to server endpoint supporting this kind of transport.
     /// - Parameter secret: Secret key received from Robologs admin panel.
-    public init(endpoint: URL, secret: String) {
+    init(endpoint: URL, secret: String) {
         let configuration = URLSessionConfiguration.default
         self.endpoint = endpoint.appendingPathComponent(apiPath)
         self.secret = secret
@@ -57,24 +57,12 @@ public class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
         }
     }
 
-    /// Subscribe to live connection code.
-    /// Display this code anywhere in your app, for example in About page.
-    /// User can enter this code in Robologs web page to instantly see logs from current device.
-    /// This code can change anytime so update it in UI at every `onChange` call.
-    /// - Parameter onChange: Callback calling right after subscription and every time code change.
-    ///     Could be called from background queue.
-    /// - Returns: Subscription token.
-    ///     Store this token in object with same live time as objects
-    ///     interested in code updates (for example some AboutViewController).
-    ///     If this token is disposed `onChange` will not be called anymore.
-    public func subscribeLiveConnectionCode(_ onChange: @escaping (String?) -> Void) -> Subscription {
+    func subscribeLiveConnectionCode(_ onChange: @escaping (String?) -> Void) -> Subscription {
         onChange(currentLiveConnectionCode)
         return liveConnectionCodeSubscribers.subscribe(action: onChange)
     }
 
-    /// Authorize transport with provided secret.
-    /// - Parameter completion: Completion called when authorization is finished.
-    public func authorize(_ completion: @escaping (Result<Void, RemoteLoggerTransportError>) -> Void) {
+    func authorize(_ completion: @escaping (Result<Void, RemoteLoggerTransportError>) -> Void) {
         do {
             var request = URLRequest(url: endpoint.appendingPathComponent("auth"))
             request.httpMethod = "POST"
@@ -117,7 +105,7 @@ public class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
         }
     }
 
-    public func send(_ records: [LogRecord], completion: @escaping (Result<Void, RemoteLoggerTransportError>) -> Void) {
+    func send(_ records: [LogRecord], completion: @escaping (Result<Void, RemoteLoggerTransportError>) -> Void) {
         guard let authToken = authToken else {
             completion(.failure(.notAuthorized))
             return
