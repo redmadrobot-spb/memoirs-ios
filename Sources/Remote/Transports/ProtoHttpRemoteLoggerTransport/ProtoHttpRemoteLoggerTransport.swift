@@ -44,6 +44,8 @@ class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
     /// Creates new instance of `ProtoHttpRemoteLoggerTransport`.
     /// - Parameter endpoint: URL to server endpoint supporting this kind of transport.
     /// - Parameter secret: Secret key received from Robologs admin panel.
+    /// - Parameter challengePolicy: Policy determining how URLAuthentificationChallange will be mannaged.
+    ///       If you using self-signing certificate use `AllowSelfSignedChallengePolicy`
     init(endpoint: URL, secret: String, challengePolicy: AuthenticationChallengePolicy = DefaultChallengePolicy()) {
         let configuration = URLSessionConfiguration.default
         self.endpoint = endpoint.appendingPathComponent(apiPath)
