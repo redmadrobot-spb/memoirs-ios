@@ -13,16 +13,18 @@ import UIKit
 class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
     // TODO: Remove when server will switch to proper certificate
     private class URLSessionDelegateObject: NSObject, URLSessionDelegate {
+        let challengePolicy: AuthenticationChallengePolicy
+
+        init(challengePolicy: AuthenticationChallengePolicy) {
+            self.challengePolicy = challengePolicy
+        }
+
         func urlSession(
             _ session: URLSession,
             didReceive challenge: URLAuthenticationChallenge,
             completionHandler: @escaping (URLSession.AuthChallengeDisposition, URLCredential?
         ) -> Void) {
-            if let trust = challenge.protectionSpace.serverTrust {
-                completionHandler(.useCredential, URLCredential(trust: trust))
-            } else {
-                completionHandler(.performDefaultHandling, nil)
-            }
+            challengePolicy.urlSession(session, didReceive: challenge, completionHandler: completionHandler)
         }
     }
 
@@ -42,11 +44,11 @@ class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
     /// Creates new instance of `ProtoHttpRemoteLoggerTransport`.
     /// - Parameter endpoint: URL to server endpoint supporting this kind of transport.
     /// - Parameter secret: Secret key received from Robologs admin panel.
-    init(endpoint: URL, secret: String) {
+    init(endpoint: URL, secret: String, challengePolicy: AuthenticationChallengePolicy = DefaultChallengePolicy()) {
         let configuration = URLSessionConfiguration.default
         self.endpoint = endpoint.appendingPathComponent(apiPath)
         self.secret = secret
-        delegateObject = URLSessionDelegateObject()
+        delegateObject = URLSessionDelegateObject(challengePolicy: challengePolicy)
         session = URLSession(configuration: configuration, delegate: delegateObject, delegateQueue: nil)
     }
 

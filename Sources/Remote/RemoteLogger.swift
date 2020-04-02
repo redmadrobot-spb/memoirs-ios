@@ -88,9 +88,13 @@ public class RemoteLogger: Logger {
 
     /// Create new instance of remote logger.
     /// - Parameter endpoint: Address of remote Robologs enpoint.
-    public convenience init(endpoint: URL, secret: String) {
+    public convenience init(
+        endpoint: URL,
+        secret: String,
+        challengePolicy: AuthenticationChallengePolicy = DefaultChallengePolicy()
+    ) {
         self.init(
-            transport: ProtoHttpRemoteLoggerTransport(endpoint: endpoint, secret: secret),
+            transport: ProtoHttpRemoteLoggerTransport(endpoint: endpoint, secret: secret, challengePolicy: challengePolicy),
             buffering: InMemoryBuffering()
         )
     }

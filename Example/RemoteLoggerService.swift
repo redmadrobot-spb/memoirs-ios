@@ -39,8 +39,12 @@ class RemoteLoggerService {
             case .mock:
                 logger = RemoteLogger(mockingToLogger: PrintLogger())
             case .remote(let url, let secret):
-                let remoteLogger = RemoteLogger(endpoint: url, secret: secret)
-                self.connectionCodeSubscription = remoteLogger.subscribeLiveConnectionCode { connectionCode in
+                let remoteLogger = RemoteLogger(
+                    endpoint: url,
+                    secret: secret,
+                    challengePolicy: AllowSelfSignedChallengePolicy()
+                )
+                connectionCodeSubscription = remoteLogger.subscribeLiveConnectionCode { connectionCode in
                     DispatchQueue.main.async {
                         self.onConnectionCodeChanged?(connectionCode)
                         self.lastConnectionCode = connectionCode
