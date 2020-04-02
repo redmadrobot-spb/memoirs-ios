@@ -15,10 +15,11 @@ class EndpointViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet private var formStackView: UIStackView!
     @IBOutlet private var formBottomConstraint: NSLayoutConstraint!
     @IBOutlet private var switchRemoteTypeButton: ActionButton!
-    @IBOutlet private var codeStackViewCenterConstraint: NSLayoutConstraint!
     @IBOutlet private var codeStackView: UIStackView!
     @IBOutlet private var activityIndicator: UIActivityIndicatorView!
     @IBOutlet private var connectionCodeLabel: UILabel!
+
+    private var connectionCodeSubscription: Subscription?
 
     enum State {
         case remote
@@ -30,7 +31,7 @@ class EndpointViewController: UIViewController, UITextFieldDelegate {
         didSet {
             activityIndicator.isHidden = state != .loading
             switchRemoteTypeButton.isEnabled = state != .loading
-            codeStackView.isHidden = state != .remote
+            codeStackView.isHidden = state == .loading
 
             switch state {
                 case .remote:
@@ -51,8 +52,6 @@ class EndpointViewController: UIViewController, UITextFieldDelegate {
 
         setupKeyboardShowing()
 
-        connectionCodeLabel.text = RemoteLoggerService.shared.lastConnectionCode
-
         switch RemoteLoggerService.shared.type {
             case .mock:
                 state = .mock
@@ -60,11 +59,7 @@ class EndpointViewController: UIViewController, UITextFieldDelegate {
                 state = .remote
         }
 
-        RemoteLoggerService.shared.onConnectionCodeChanged = { [weak self] connectionCode in
-            DispatchQueue.main.async {
-                self?.connectionCodeLabel.text = connectionCode
-            }
-        }
+        updateConnectionCodeSubscription()
     }
 
     @IBAction func cancelButtonTapped() {
@@ -96,7 +91,6 @@ class EndpointViewController: UIViewController, UITextFieldDelegate {
         }
 
         if formBottomConstraint.constant <= keyboardSize.height {
-            codeStackViewCenterConstraint.isActive = false
             formBottomConstraint.constant = keyboardSize.height
 
             UIView.animate(withDuration: 0.5) {
@@ -107,7 +101,6 @@ class EndpointViewController: UIViewController, UITextFieldDelegate {
 
     @objc private func keyboardWillHide(notification: Notification) {
         formBottomConstraint.constant = 0
-        codeStackViewCenterConstraint.isActive = true
 
         UIView.animate(withDuration: 0.5) {
             self.view.layoutIfNeeded()
@@ -115,17 +108,32 @@ class EndpointViewController: UIViewController, UITextFieldDelegate {
     }
 
     @IBAction func switchRemoteTypeButtonTapped() {
+        connectionCodeLabel.text = ""
         if state == .remote {
-            state = .loading
             RemoteLoggerService.shared.configureRemoteLogger(with: .mock)
-            state = .mock
         } else if state == .mock {
-            state = .loading
             guard let urlString = connectionUrlTextField.text, let url = URL(string: urlString) else {
                 return
             }
             RemoteLoggerService.shared.configureRemoteLogger(with: .remote(url: url, secret: secretTextField.text ?? ""))
-            state = .remote
+        }
+        state = .loading
+        updateConnectionCodeSubscription()
+    }
+
+    private func updateConnectionCodeSubscription() {
+        connectionCodeSubscription = RemoteLoggerService.shared.logger.subscribeLiveConnectionCode { [weak self] connectionCode in
+            DispatchQueue.main.async {
+                self?.connectionCodeLabel.text = connectionCode
+
+                switch RemoteLoggerService.shared.type {
+                    case .mock:
+                        self?.state = .mock
+                    case .remote:
+                        self?.state = .remote
+                }
+
+            }
         }
     }
 

@@ -19,11 +19,8 @@ class RemoteLoggerService {
         RemoteLoggerService()
     }()
 
-    private(set) var logger: Logger
+    private(set) var logger: RemoteLogger
     private(set) var type: RemoteLoggerType
-    private(set) var connectionCodeSubscription: Subscription?
-    var onConnectionCodeChanged: ((String?) -> Void)?
-    var lastConnectionCode: String?
 
     private init() {
         logger = RemoteLogger(mockingToLogger: PrintLogger())
@@ -38,18 +35,11 @@ class RemoteLoggerService {
             case .mock:
                 logger = RemoteLogger(mockingToLogger: PrintLogger())
             case .remote(let url, let secret):
-                let remoteLogger = RemoteLogger(
+                logger = RemoteLogger(
                     endpoint: url,
                     secret: secret,
                     challengePolicy: AllowSelfSignedChallengePolicy()
                 )
-                connectionCodeSubscription = remoteLogger.subscribeLiveConnectionCode { connectionCode in
-                    DispatchQueue.main.async {
-                        self.onConnectionCodeChanged?(connectionCode)
-                        self.lastConnectionCode = connectionCode
-                    }
-                }
-                logger = remoteLogger
         }
     }
 }
