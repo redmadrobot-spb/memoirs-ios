@@ -43,6 +43,7 @@
 		4655B6E7239A5BD900CB552B /* LabeledLoggerAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4655B6E6239A5BD900CB552B /* LabeledLoggerAdapter.swift */; };
 		46C33CFF23FFC56300775771 /* SensitiveLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46C33CFE23FFC56300775771 /* SensitiveLogger.swift */; };
 		46E239082397A748006539C5 /* SynchronizedDictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46E239072397A748006539C5 /* SynchronizedDictionary.swift */; };
+		630F99FC2435FAE5009DAD18 /* AuthenticationChallengeResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630F99FB2435FAE5009DAD18 /* AuthenticationChallengeResolver.swift */; };
 		6324E32B242A43060084312D /* MockRemoteLoggerTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6324E32A242A43060084312D /* MockRemoteLoggerTransport.swift */; };
 		6399CBED24349BBF00B6C3A1 /* Subscriptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6399CBEC24349BBF00B6C3A1 /* Subscriptions.swift */; };
 		63B2D2C52423B288002817B6 /* EnviromentInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B2D2C42423B288002817B6 /* EnviromentInfo.swift */; };
@@ -114,6 +115,7 @@
 		46AE559E238D683C00774F9E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		46C33CFE23FFC56300775771 /* SensitiveLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensitiveLogger.swift; sourceTree = "<group>"; };
 		46E239072397A748006539C5 /* SynchronizedDictionary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SynchronizedDictionary.swift; sourceTree = "<group>"; };
+		630F99FB2435FAE5009DAD18 /* AuthenticationChallengeResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationChallengeResolver.swift; sourceTree = "<group>"; };
 		6324E32A242A43060084312D /* MockRemoteLoggerTransport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockRemoteLoggerTransport.swift; sourceTree = "<group>"; };
 		6399CBEC24349BBF00B6C3A1 /* Subscriptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Subscriptions.swift; sourceTree = "<group>"; };
 		63B2D2C42423B288002817B6 /* EnviromentInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnviromentInfo.swift; sourceTree = "<group>"; };
@@ -327,6 +329,7 @@
 			children = (
 				63D39410241F86D2002052DA /* proto */,
 				63D39413241F86D2002052DA /* ProtoHttpRemoteLoggerTransport.swift */,
+				630F99FB2435FAE5009DAD18 /* AuthenticationChallengeResolver.swift */,
 			);
 			path = ProtoHttpRemoteLoggerTransport;
 			sourceTree = "<group>";
@@ -514,6 +517,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6399CBED24349BBF00B6C3A1 /* Subscriptions.swift in Sources */,
+				630F99FC2435FAE5009DAD18 /* AuthenticationChallengeResolver.swift in Sources */,
 				46C33CFF23FFC56300775771 /* SensitiveLogger.swift in Sources */,
 				4611FCED2398FEF100E23B25 /* MultiplexingLogger.swift in Sources */,
 				4626E6112396709A00BD14B8 /* OSLogLogger.swift in Sources */,

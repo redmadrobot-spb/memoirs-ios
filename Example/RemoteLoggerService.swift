@@ -23,15 +23,10 @@ class RemoteLoggerService {
     private(set) var type: RemoteLoggerType
     private(set) var connectionCodeSubscription: Subscription?
     var onConnectionCodeChanged: ((String?) -> Void)?
-    var onError: ((Error?) -> Void)?
     var lastConnectionCode: String?
 
     private init() {
-        logger = RemoteLogger(
-            buffering: InMemoryBuffering(),
-            transport: MockRemoteLoggerTransport(logger: PrintLogger())
-        )
-
+        logger = RemoteLogger(mockingToLogger: PrintLogger())
         type = .mock
     }
 
@@ -41,28 +36,20 @@ class RemoteLoggerService {
         self.type = type
         switch type {
             case .mock:
-                logger = RemoteLogger(
-                    buffering: InMemoryBuffering(),
-                    transport: MockRemoteLoggerTransport(logger: PrintLogger())
-                )
+                logger = RemoteLogger(mockingToLogger: PrintLogger())
             case .remote(let url, let secret):
-                let transport = ProtoHttpRemoteLoggerTransport(endpoint: url, secret: secret)
-
-                transport.authorize { result in
-                    switch result {
-                        case .failure(let error):
-                            self.onError?(error)
-                            self.configureRemoteLogger(with: .mock)
-                        case .success:
-                            self.connectionCodeSubscription = transport.subscribeLiveConnectionCode { connectionCode in
-                                DispatchQueue.main.async {
-                                    self.onConnectionCodeChanged?(connectionCode)
-                                    self.lastConnectionCode = connectionCode
-                                }
-                            }
+                let remoteLogger = RemoteLogger(
+                    endpoint: url,
+                    secret: secret,
+                    challengePolicy: AllowSelfSignedChallengePolicy()
+                )
+                connectionCodeSubscription = remoteLogger.subscribeLiveConnectionCode { connectionCode in
+                    DispatchQueue.main.async {
+                        self.onConnectionCodeChanged?(connectionCode)
+                        self.lastConnectionCode = connectionCode
                     }
                 }
-                logger = RemoteLogger(buffering: InMemoryBuffering(), transport: transport)
+                logger = remoteLogger
         }
     }
 }

@@ -10,7 +10,7 @@ import Foundation
 
 /// Intermediate structure used in transport and buffering to store
 /// log message parameters.
-public struct LogRecord {
+struct LogRecord {
     let timestamp: TimeInterval
     let label: String
     let level: Level
@@ -22,7 +22,7 @@ public struct LogRecord {
 }
 
 /// Responsible for buffering log records while transport is not available.
-public protocol RemoteLoggerBuffering {
+protocol RemoteLoggerBuffering {
     /// Should return `true` if contains any not sended records.
     var haveBufferedData: Bool { get }
 
@@ -39,8 +39,8 @@ public protocol RemoteLoggerBuffering {
 }
 
 /// Errors that can happen in RemoteLoggerTransport
-public enum RemoteLoggerTransportError: Error {
-    /// Transport was failed to make handshake with secret or doesn't have code6 for live session.
+enum RemoteLoggerTransportError: Error {
+    /// Transport was failed to authenficate or authentification is expired.
     case notAuthorized
     /// Network error occured.
     case network(Error)
@@ -49,7 +49,7 @@ public enum RemoteLoggerTransportError: Error {
 }
 
 /// Responsible for sending log records to remote logs storage.
-public protocol RemoteLoggerTransport {
+protocol RemoteLoggerTransport {
     /// Should return `false` if transport is not authorized.
     var isAuthorized: Bool { get }
 
@@ -63,21 +63,61 @@ public protocol RemoteLoggerTransport {
     ///   - completion: Completion called when transport finish sending.
     ///   If returned RemoteLoggerTransportError.notAuthorized logger should reauthorize transport.
     func send(_ records: [LogRecord], completion: @escaping (Result<Void, RemoteLoggerTransportError>) -> Void)
+
+    /// Subscribe to live connection code for this transport.
+    /// - Parameter onChange: Callback calling right after subscription and every time code change.
+    ///     Could be called from background queue.
+    /// - Returns: Subscription token.
+    ///     Store this token in object with same live time as objects
+    ///     interested in code updates (for example some AboutViewController).
+    ///     If this token is disposed `onChange` will not be called anymore.
+    func subscribeLiveConnectionCode(_ onChange: @escaping (String?) -> Void) -> Subscription
 }
 
 /// Logger that sends log messages to remote storage.
+/// It uses `RemoteLoggerBuffering` for storing log records before sending and `RemoteLoggerTransport` to send them.
+/// After initialization `RemoteLogger` will try to authorize transport
+/// and at success it will send records collected during previous request with `RemoteLoggerTransport.send` method.
+/// If transport returns errors from `authorize` request `RemoteLogger` will be trying to reauthorize every `reauthorizationInterval`.
+/// `RemoteLogger` is sending only one `send` request per time, next batch will be send only after current batch is finished.
+/// If during sending batch of record `RemoteLogger` received `notAuthorized` error `RemoteLogger` will try to reauthorize transport.
 public class RemoteLogger: Logger {
     private let workingQueue = DispatchQueue(label: "Robologs.RemoteLogger")
     private let buffering: RemoteLoggerBuffering
     private let transport: RemoteLoggerTransport
 
-    /// Creates new instance of remote logger.
+    /// Create new instance of remote logger.
+    /// - Parameter endpoint: Address of remote Robologs enpoint.
+    public convenience init(
+        endpoint: URL,
+        secret: String,
+        challengePolicy: AuthenticationChallengePolicy = DefaultChallengePolicy()
+    ) {
+        self.init(
+            transport: ProtoHttpRemoteLoggerTransport(endpoint: endpoint, secret: secret, challengePolicy: challengePolicy),
+            buffering: InMemoryBuffering()
+        )
+    }
+
+    /// Creates mocked RemoteLogger that uses offline mock transport.
+    /// This is usable mostly for mocking or this SDK development.
+    /// - Parameter mockLogger: Logger using for mock transport output.
+    public convenience init(mockingToLogger mockLogger: Logger) {
+        self.init(
+            transport: MockRemoteLoggerTransport(logger: mockLogger),
+            buffering: InMemoryBuffering()
+        )
+    }
+
+    /// Creates new instance of remote logger with custom transport and buffering.
     /// - Parameters:
     ///   - buffering: Buffering policy used to keep log records while transport is not available.
     ///   - transport: Transport describing how and where to log message will be sent.
-    public init(buffering: RemoteLoggerBuffering, transport: RemoteLoggerTransport) {
+    init(transport: RemoteLoggerTransport, buffering: RemoteLoggerBuffering) {
         self.buffering = buffering
         self.transport = transport
+
+        transport.authorize { _ in }
     }
 
     public func log(
@@ -109,6 +149,20 @@ public class RemoteLogger: Logger {
                 self.sendIfNeeded()
             }
         }
+    }
+
+    /// Subscribe to live connection code.
+    /// Display this code anywhere in your app, for example in About page.
+    /// User can enter this code in Robologs web page to instantly see logs from current device.
+    /// This code can change anytime so update it in UI at every `onChange` call.
+    /// - Parameter onChange: Callback calling right after subscription and every time code change.
+    ///     Could be called from background queue.
+    /// - Returns: Subscription token.
+    ///     Store this token in object with same live time as objects
+    ///     interested in code updates (for example some AboutViewController).
+    ///     If this token is disposed `onChange` will not be called anymore.
+    public func subscribeLiveConnectionCode(_ onChange: @escaping (String?) -> Void) -> Subscription {
+        transport.subscribeLiveConnectionCode(onChange)
     }
 
     private func sendIfNeeded() {

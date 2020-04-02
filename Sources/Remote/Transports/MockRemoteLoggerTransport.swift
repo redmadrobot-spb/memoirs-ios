@@ -21,7 +21,7 @@ public class MockRemoteLoggerTransport: RemoteLoggerTransport {
 
     private(set) public var isAuthorized = true
 
-    public func authorize(_ completion: @escaping (Result<Void, RemoteLoggerTransportError>) -> Void) {
+    func authorize(_ completion: @escaping (Result<Void, RemoteLoggerTransportError>) -> Void) {
         logger.info(message: "Authorize.")
         isAuthorized = false
         DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
@@ -32,7 +32,7 @@ public class MockRemoteLoggerTransport: RemoteLoggerTransport {
         }
     }
 
-    public func send(_ records: [LogRecord], completion: @escaping (Result<Void, RemoteLoggerTransportError>) -> Void) {
+    func send(_ records: [LogRecord], completion: @escaping (Result<Void, RemoteLoggerTransportError>) -> Void) {
         guard isAuthorized else { return completion(.failure(.notAuthorized)) }
 
         logger.info(message: "Send \(public: records.count) records.")
@@ -48,5 +48,10 @@ public class MockRemoteLoggerTransport: RemoteLoggerTransport {
                 completion(.failure(.notAuthorized))
             }
         }
+    }
+
+    func subscribeLiveConnectionCode(_ onChange: @escaping (String?) -> Void) -> Subscription {
+        onChange("M0CKC0D3")
+        return Subscription {}
     }
 }
