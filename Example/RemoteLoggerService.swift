@@ -23,7 +23,6 @@ class RemoteLoggerService {
     private(set) var type: RemoteLoggerType
     private(set) var connectionCodeSubscription: Subscription?
     var onConnectionCodeChanged: ((String?) -> Void)?
-    var onError: ((Error?) -> Void)?
     var lastConnectionCode: String?
 
     private init() {

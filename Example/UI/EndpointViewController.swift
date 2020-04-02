@@ -65,23 +65,10 @@ class EndpointViewController: UIViewController, UITextFieldDelegate {
                 self?.connectionCodeLabel.text = connectionCode
             }
         }
-
-        RemoteLoggerService.shared.onError = { [weak self] _ in
-            DispatchQueue.main.async {
-                self?.showErrorAlert()
-            }
-        }
     }
 
     @IBAction func cancelButtonTapped() {
         dismiss(animated: true)
-    }
-
-    private func showErrorAlert() {
-        state = .mock
-        let alert = UIAlertController(title: "Can not connect", message: nil, preferredStyle: .alert)
-        alert.addAction(UIAlertAction(title: "OK", style: .cancel))
-        present(alert, animated: true)
     }
 
     private func setupKeyboardShowing() {
@@ -135,7 +122,6 @@ class EndpointViewController: UIViewController, UITextFieldDelegate {
         } else if state == .mock {
             state = .loading
             guard let urlString = connectionUrlTextField.text, let url = URL(string: urlString) else {
-                showErrorAlert()
                 return
             }
             RemoteLoggerService.shared.configureRemoteLogger(with: .remote(url: url, secret: secretTextField.text ?? ""))
