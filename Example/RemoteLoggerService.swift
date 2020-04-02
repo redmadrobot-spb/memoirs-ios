@@ -27,11 +27,7 @@ class RemoteLoggerService {
     var lastConnectionCode: String?
 
     private init() {
-        logger = RemoteLogger(
-            buffering: InMemoryBuffering(),
-            transport: MockRemoteLoggerTransport(logger: PrintLogger())
-        )
-
+        logger = RemoteLogger(transport: MockRemoteLoggerTransport(logger: PrintLogger()))
         type = .mock
     }
 
@@ -41,10 +37,7 @@ class RemoteLoggerService {
         self.type = type
         switch type {
             case .mock:
-                logger = RemoteLogger(
-                    buffering: InMemoryBuffering(),
-                    transport: MockRemoteLoggerTransport(logger: PrintLogger())
-                )
+                logger = RemoteLogger(transport: MockRemoteLoggerTransport(logger: PrintLogger()))
             case .remote(let url, let secret):
                 let transport = ProtoHttpRemoteLoggerTransport(endpoint: url, secret: secret)
 
@@ -62,7 +55,7 @@ class RemoteLoggerService {
                             }
                     }
                 }
-                logger = RemoteLogger(buffering: InMemoryBuffering(), transport: transport)
+                logger = RemoteLogger(transport: transport)
         }
     }
 }

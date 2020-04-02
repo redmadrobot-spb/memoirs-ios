@@ -10,7 +10,7 @@ import Foundation
 import UIKit
 
 /// Remote logger transport that uses HTTP + Protubuf.
-class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
+public class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
     // TODO: Remove when server will switch to proper certificate
     private class URLSessionDelegateObject: NSObject, URLSessionDelegate {
         func urlSession(
@@ -35,14 +35,14 @@ class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
     private var isLoading = false
     private let shouldRemoveSensitive = true
 
-    var isAuthorized: Bool {
+    public var isAuthorized: Bool {
         authToken != nil
     }
 
     /// Creates new instance of `ProtoHttpRemoteLoggerTransport`.
     /// - Parameter endpoint: URL to server endpoint supporting this kind of transport.
     /// - Parameter secret: Secret key received from Robologs admin panel.
-    init(endpoint: URL, secret: String) {
+    public init(endpoint: URL, secret: String) {
         let configuration = URLSessionConfiguration.default
         self.endpoint = endpoint.appendingPathComponent(apiPath)
         self.secret = secret
@@ -74,7 +74,7 @@ class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
 
     /// Authorize transport with provided secret.
     /// - Parameter completion: Completion called when authorization is finished.
-    func authorize(_ completion: @escaping (Result<Void, RemoteLoggerTransportError>) -> Void) {
+    public func authorize(_ completion: @escaping (Result<Void, RemoteLoggerTransportError>) -> Void) {
         do {
             var request = URLRequest(url: endpoint.appendingPathComponent("auth"))
             request.httpMethod = "POST"
@@ -117,7 +117,7 @@ class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
         }
     }
 
-    func send(_ records: [LogRecord], completion: @escaping (Result<Void, RemoteLoggerTransportError>) -> Void) {
+    public func send(_ records: [LogRecord], completion: @escaping (Result<Void, RemoteLoggerTransportError>) -> Void) {
         guard let authToken = authToken else {
             completion(.failure(.notAuthorized))
             return

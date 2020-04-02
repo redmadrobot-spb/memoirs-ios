@@ -10,7 +10,7 @@ import Foundation
 
 /// Intermediate structure used in transport and buffering to store
 /// log message parameters.
-struct LogRecord {
+public struct LogRecord {
     let timestamp: TimeInterval
     let label: String
     let level: Level
@@ -22,7 +22,7 @@ struct LogRecord {
 }
 
 /// Responsible for buffering log records while transport is not available.
-protocol RemoteLoggerBuffering {
+public protocol RemoteLoggerBuffering {
     /// Should return `true` if contains any not sended records.
     var haveBufferedData: Bool { get }
 
@@ -39,7 +39,7 @@ protocol RemoteLoggerBuffering {
 }
 
 /// Errors that can happen in RemoteLoggerTransport
-enum RemoteLoggerTransportError: Error {
+public enum RemoteLoggerTransportError: Error {
     /// Transport was failed to make handshake with secret or doesn't have code6 for live session.
     case notAuthorized
     /// Network error occured.
@@ -49,7 +49,7 @@ enum RemoteLoggerTransportError: Error {
 }
 
 /// Responsible for sending log records to remote logs storage.
-protocol RemoteLoggerTransport {
+public protocol RemoteLoggerTransport {
     /// Should return `false` if transport is not authorized.
     var isAuthorized: Bool { get }
 
@@ -71,9 +71,10 @@ public class RemoteLogger: Logger {
     private let buffering: RemoteLoggerBuffering
     private let transport: RemoteLoggerTransport
 
+    /// Create new instance of remote logger with default transport and buffering.
+    /// - Parameter endpoint: Address of remote Robologs enpoint.
     public convenience init(endpoint: URL) {
         self.init(
-            buffering: InMemoryBuffering(),
             transport: ProtoHttpRemoteLoggerTransport(endpoint: endpoint, secret: "not-implemented")
         )
     }
@@ -82,7 +83,7 @@ public class RemoteLogger: Logger {
     /// - Parameters:
     ///   - buffering: Buffering policy used to keep log records while transport is not available.
     ///   - transport: Transport describing how and where to log message will be sent.
-    init(buffering: RemoteLoggerBuffering, transport: RemoteLoggerTransport) {
+    public init(transport: RemoteLoggerTransport, buffering: RemoteLoggerBuffering = InMemoryBuffering()) {
         self.buffering = buffering
         self.transport = transport
     }
