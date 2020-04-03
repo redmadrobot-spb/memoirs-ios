@@ -47,7 +47,14 @@ func critical(label:message:meta:file:function:line:)
 
 Create your custom `Logger` implementation or take out of the box and use it like this:
 ```swift
-let logger: Logger = MyLogger()
+let logger = MultiplexingLogger(loggers: [
+    PrintLogger(),
+    RemoteLogger(
+        endpoint: URL(string: "https://robologs-instance")!,
+        secret: "XXXX-XXXX-XXXX-XXXX"
+    )
+])
+
 logger.debug(label: "Network", message: "User data request",
              meta: [ "RequestId": UUID().uuidString ])
 ```
@@ -59,6 +66,20 @@ Several implementations are available out of the box (the list will be updated):
 - `PrintLogger`, which just prints log message in LLDB-console.
 - `OSLogLogger`, which incapsulates `os.log` logging system.
 - `NSLogLogger`, which incapsulates `NSLog` logging system.
+- `RemoteLogger`, which is sends logs to remote Robologs server. 
+
+## Self-signed certificate.
+If you are using `RemoteLogger` and server where you sending logs is using self signed certificate, use AllowSelfSignedChallengePolicy().
+Also you can implement `AuthenticationChallengePolicy` protocol for more specific requirements for URLAuthentificationChallenge 
+
+```swift
+let remoteLogger = RemoteLogger(
+                    endpoint: url,
+                    secret: secret,
+                    challengePolicy: AllowSelfSignedChallengePolicy()
+)
+```
+
 
 ## Requirements
 
@@ -94,3 +115,7 @@ or add the following package to your Package.swift file:
 ```
 
 **Warning**: _If the dependency is in the final project or if another dependency depends on [swift-protobuf](https://github.com/apple/swift-protobuf), problems may occur if the versions do not match. To solve this problem, install Robologs manually._
+
+## Fastlane
+For more convenient release procees there is configured fastlane.
+Documentation for all configured lanes you can see in generated [Fastfile readme](Fastlane/README.md) 
