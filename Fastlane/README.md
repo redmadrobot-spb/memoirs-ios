@@ -20,20 +20,34 @@ or alternatively using `brew cask install fastlane`
 ```
 fastlane ios publish_test_app
 ```
-Publish Robologs Test App to App Center
+Bump build and publish Robologs Test App to App Center.
+
+To publish app you need to specify APP_CENTER_API_TOKEN in your enviroment.
+
+API token is generated in https://appcenter.ms/settings/apitokens with full access.
+
+Usage: `fastlane publish_test_app [bump_version:true]`
+
+  Parameters:
+
+  - bump_version: true/false. If true fastlane will also bump version, default: false.
 ### ios bump_version
 ```
 fastlane ios bump_version
 ```
-Publish Robologs Test App to App Center
+Bump minor part of version (example 0.1.4 -> 0.1.5).
 
-Requires option target:<TARGET>
+Example: `fastlane bump_version target:Robologs`
 
-Available targets is:
+Parameters:
 
-- Example - Robologs Test App
+  target - xcodeproj target to bump.
 
-- Robologs - Robologs SDK
+    Available targets:
+
+    - Example - Robologs Test App
+
+    - Robologs - Robologs SDK
 
 ----
 
