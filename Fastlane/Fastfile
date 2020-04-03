@@ -14,7 +14,7 @@ platform :ios do
     # Publish test app to App Center
     lane :publish_test_app do |options|
         ensure_git_status_clean
-        # ensure_git_branch(branch: 'dev')
+        ensure_git_branch(branch: 'dev')
 
         release_notes = prompt(
             text: "Release notes: ",
