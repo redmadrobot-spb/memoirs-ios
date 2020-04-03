@@ -26,9 +26,9 @@ To publish app you need to specify APP_CENTER_API_TOKEN in your enviroment.
 
 API token is generated in https://appcenter.ms/settings/apitokens with full access.
 
-Usage: `fastlane publish_test_app [bump_version:true]`
+*Usage:* `fastlane publish_test_app [bump_version:true]`
 
-  Parameters:
+*Parameters:*
 
   - bump_version: true/false. If true fastlane will also bump version, default: false.
 ### ios bump_version
@@ -37,17 +37,15 @@ fastlane ios bump_version
 ```
 Bump minor part of version (example 0.1.4 -> 0.1.5).
 
-Example: `fastlane bump_version target:Robologs`
+*Usage:* `fastlane bump_version target:<TARGET>`
 
-Parameters:
+*Parameters:*
 
-  target - xcodeproj target to bump.
+  - target - xcodeproj target to bump. Available targets:
 
-   Available targets:
+  -- Example - Robologs Test App
 
-   - Example - Robologs Test App
-
-   - Robologs - Robologs SDK
+  -- Robologs - Robologs SDK
 
 ----
 
