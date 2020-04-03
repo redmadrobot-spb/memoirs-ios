@@ -51,7 +51,6 @@ platform :ios do
             message: "Build #{example_version}",
             xcodeproj: "Robologs.xcodeproj"
         )
-        add_git_tag(tag: "v#{example_version}")
         push_to_git_remote(tags: true)
     end
 
