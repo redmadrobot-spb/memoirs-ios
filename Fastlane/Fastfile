@@ -59,9 +59,9 @@ platform :ios do
     desc "Example: `fastlane bump_version target:Robologs`"
     desc "Parameters:"
     desc "  target - xcodeproj target to bump."
-    desc "    Available targets:"
-    desc "    - Example - Robologs Test App"
-    desc "    - Robologs - Robologs SDK"
+    desc "   Available targets:"
+    desc "   - Example - Robologs Test App"
+    desc "   - Robologs - Robologs SDK"
     lane :bump_version do |options|
         version = get_version_number(target: options[:target])
         list = version.split(".")

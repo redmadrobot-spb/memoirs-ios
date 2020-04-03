@@ -43,11 +43,11 @@ Parameters:
 
   target - xcodeproj target to bump.
 
-    Available targets:
+   Available targets:
 
-    - Example - Robologs Test App
+   - Example - Robologs Test App
 
-    - Robologs - Robologs SDK
+   - Robologs - Robologs SDK
 
 ----
 
