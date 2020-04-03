@@ -11,7 +11,12 @@ platform :ios do
         end
     end
 
-    # Publish test app to App Center
+    desc "Bump build and publish Robologs Test App to App Center."
+    desc "To publish app you need to specify APP_CENTER_API_TOKEN in your enviroment."
+    desc "API token is generated in https://appcenter.ms/settings/apitokens with full access."
+    desc "Usage: `fastlane publish_test_app [bump_version:true]`"
+    desc "  Parameters:"
+    desc "  - bump_version: true/false. If true fastlane will also bump version, default: false."
     lane :publish_test_app do |options|
         ensure_git_status_clean
         ensure_git_branch(branch: 'dev')
@@ -22,7 +27,7 @@ platform :ios do
         )
 
         if options[:bump_version]
-            bump_version
+            bump_version(target: "Example")
         end
         increment_build_number
 
@@ -36,21 +41,29 @@ platform :ios do
             }
         )
 
+        example_version = current_version(target: "Example")
+
         upload_to_app_center(
             app_name: "Robologs-Demonstration", 
             release_notes: release_notes
         )
         commit_version_bump(
-            message: "Build #{current_version}",
+            message: "Build #{example_version}",
             xcodeproj: "Robologs.xcodeproj"
         )
-        add_git_tag(tag: "v#{current_version}")
+        add_git_tag(tag: "v#{example_version}")
         push_to_git_remote(tags: true)
     end
 
-    # Increment version and commit
-    lane :bump_version do
-        version = get_version_number(target: "Example")
+    desc "Bump minor part of version (example 0.1.4 -> 0.1.5)."
+    desc "Example: `fastlane bump_version target:Robologs`"
+    desc "Parameters:"
+    desc "  target - xcodeproj target to bump."
+    desc "    Available targets:"
+    desc "    - Example - Robologs Test App"
+    desc "    - Robologs - Robologs SDK"
+    lane :bump_version do |options|
+        version = get_version_number(target: options[:target])
         list = version.split(".")
         incremented = String(Integer(list.last) + 1)
         new_version = "#{list.first}.#{incremented}"
@@ -58,8 +71,8 @@ platform :ios do
         increment_build_number(build_number: "0")
     end
 
-    private_lane :current_version do
-        version_number = get_version_number(target: "Example")
+    private_lane :current_version do |options|
+        version_number = get_version_number(target: options[:target])
         build_number = build_number = get_build_number
         "#{version_number}(#{build_number})"
     end

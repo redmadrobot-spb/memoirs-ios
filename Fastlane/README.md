@@ -20,12 +20,20 @@ or alternatively using `brew cask install fastlane`
 ```
 fastlane ios publish_test_app
 ```
-
+Publish Robologs Test App to App Center
 ### ios bump_version
 ```
 fastlane ios bump_version
 ```
+Publish Robologs Test App to App Center
 
+Requires option target:<TARGET>
+
+Available targets is:
+
+- Example - Robologs Test App
+
+- Robologs - Robologs SDK
 
 ----
 
