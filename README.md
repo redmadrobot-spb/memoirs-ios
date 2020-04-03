@@ -114,8 +114,8 @@ or add the following package to your Package.swift file:
 .package(url: "https://git.redmadrobot.com/RedMadRobot/SPb/robologs-ios.git")
 ```
 
+**Warning**: _If the dependency is in the final project or if another dependency depends on [swift-protobuf](https://github.com/apple/swift-protobuf), problems may occur if the versions do not match. To solve this problem, install Robologs manually._
+
 ## Fastlane
 For more convenient release procees there is configured fastlane.
 Documentation for all configured lanes you can see in generated [Fastfile readme](Fastlane/README.md) 
-
-**Warning**: _If the dependency is in the final project or if another dependency depends on [swift-protobuf](https://github.com/apple/swift-protobuf), problems may occur if the versions do not match. To solve this problem, install Robologs manually._
