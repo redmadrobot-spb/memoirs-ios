@@ -77,7 +77,7 @@ let remoteLogger = RemoteLogger(
                     endpoint: url,
                     secret: secret,
                     challengePolicy: AllowSelfSignedChallengePolicy()
-                )
+)
 ```
 
 
