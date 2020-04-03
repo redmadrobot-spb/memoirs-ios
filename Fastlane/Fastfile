@@ -36,7 +36,10 @@ platform :ios do
             }
         )
 
-        upload_to_crashlytics(release_notes: release_notes)
+        upload_to_app_center(
+            app_name: "Robologs-Demonstration", 
+            release_notes: release_notes
+        )
         commit_version_bump(
             message: "Build #{current_version}",
             xcodeproj: "Robologs.xcodeproj"
@@ -97,7 +100,8 @@ platform :ios do
             app_name: options[:app_name],
             destinations: "Internal",
             destination_type: "group",
-            notify_testers: true
+            notify_testers: true,
+            release_notes: options[:release_notes]
         )
     end
 end
