@@ -30,7 +30,7 @@ API token is generated in https://appcenter.ms/settings/apitokens with full acce
 
 *Parameters:*
 
-  - bump_version: true/false. If true fastlane will also bump version, default: false.
+- bump_version: true/false. If true fastlane will also bump version, default: false.
 ### ios bump_version
 ```
 fastlane ios bump_version
@@ -41,11 +41,11 @@ Bump minor part of version (example 0.1.4 -> 0.1.5).
 
 *Parameters:*
 
-  - target - xcodeproj target to bump. Available targets:
+- target - xcodeproj target to bump. Available targets:
 
-  -- Example - Robologs Test App
+  - Example - Robologs Test App
 
-  -- Robologs - Robologs SDK
+  - Robologs - Robologs SDK
 
 ----
 

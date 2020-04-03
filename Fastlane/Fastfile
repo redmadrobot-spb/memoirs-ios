@@ -16,7 +16,7 @@ platform :ios do
     desc "API token is generated in https://appcenter.ms/settings/apitokens with full access."
     desc "*Usage:* `fastlane publish_test_app [bump_version:true]`"
     desc "*Parameters:*"
-    desc "  - bump_version: true/false. If true fastlane will also bump version, default: false."
+    desc "- bump_version: true/false. If true fastlane will also bump version, default: false."
     lane :publish_test_app do |options|
         ensure_git_status_clean
         ensure_git_branch(branch: 'dev')
@@ -58,9 +58,9 @@ platform :ios do
     desc "Bump minor part of version (example 0.1.4 -> 0.1.5)."
     desc "*Usage:* `fastlane bump_version target:<TARGET>`"
     desc "*Parameters:*"
-    desc "  - target - xcodeproj target to bump. Available targets:"
-    desc "  -- Example - Robologs Test App"
-    desc "  -- Robologs - Robologs SDK"
+    desc "- target - xcodeproj target to bump. Available targets:"
+    desc "  - Example - Robologs Test App"
+    desc "  - Robologs - Robologs SDK"
     lane :bump_version do |options|
         version = get_version_number(target: options[:target])
         list = version.split(".")
