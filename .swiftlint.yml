@@ -43,6 +43,7 @@ excluded:
   - Example-iOS
   - Sources/Remote/Transports/ProtoHttpRemoteLoggerTransport/proto/backend.pb.swift
   - .build
+  - build
 
 force_cast: error
 force_try: error
