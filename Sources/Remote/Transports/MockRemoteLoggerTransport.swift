@@ -32,7 +32,7 @@ public class MockRemoteLoggerTransport: RemoteLoggerTransport {
         }
     }
 
-    func send(_ records: [LogRecord], completion: @escaping (Result<Void, RemoteLoggerTransportError>) -> Void) {
+    func liveSend(_ records: [LogRecord], completion: @escaping (Result<Void, RemoteLoggerTransportError>) -> Void) {
         guard isAuthorized else { return completion(.failure(.notAuthorized)) }
 
         logger.info(message: "Send \(public: records.count) records.")

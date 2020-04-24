@@ -62,7 +62,7 @@ protocol RemoteLoggerTransport {
     ///   - records: Sending records
     ///   - completion: Completion called when transport finish sending.
     ///   If returned RemoteLoggerTransportError.notAuthorized logger should reauthorize transport.
-    func send(_ records: [LogRecord], completion: @escaping (Result<Void, RemoteLoggerTransportError>) -> Void)
+    func liveSend(_ records: [LogRecord], completion: @escaping (Result<Void, RemoteLoggerTransportError>) -> Void)
 
     /// Subscribe to live connection code for this transport.
     /// - Parameter onChange: Callback calling right after subscription and every time code change.
@@ -185,7 +185,7 @@ public class RemoteLogger: Logger {
     private var canSend: Bool = true
 
     private func send(records: [LogRecord], finish: @escaping (Bool) -> Void) {
-        transport.send(records) { result in
+        transport.liveSend(records) { result in
             switch result {
                 case .success:
                     finish(true)

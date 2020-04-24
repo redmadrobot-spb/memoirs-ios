@@ -7,7 +7,7 @@ option java_multiple_files = true;
 //   - TOKEN_REQUEST: JournalTokenRequest - Информация об окружении и секрет для авторизации.
 //   - TOKEN_RESPONSE: JournalTokenResponse - Содержит токен необходимый для дальнейшей отправки логов.
 //
-// Request: POST /api/v1/source
+// Request: POST /api/v1/auth
 // Headers:
 //   Content-Type: application/x-protobuf
 // Body: 
@@ -18,8 +18,7 @@ option java_multiple_files = true;
 //       Body: <JournalTokenResponse>
 
 message JournalTokenResponse {
-    required string journal_token = 1;
-    required string live_connection_code = 2;
+    required string token = 1;
 }
 
 message JournalTokenRequest {
@@ -38,9 +37,8 @@ message JournalTokenRequest {
     }
 }
 
-
 // Метод отправки накопленных логов на сервер.
-//   - JOURNAL_TOKEN: String - Токен полученный в `POST /api/v1/source`.
+//   - JOURNAL_TOKEN: String - Токен полученный в `POST /api/v1/auth`.
 //   - LOGS: LogMessageBatch - Накопленные логи.
 //
 // Request: POST /api/v1/send
@@ -74,4 +72,21 @@ message LogMessage {
         WARN = 2;
         ERROR = 3;
     }
+}
+
+// Метод получения Сonnection_Code.
+//   - CONNECTION_CODE_RESPONSE: ConnectionCodeResponse - Содержит код необходимый для подключения к live сессии.
+//
+// Request: POST /api/v1/code
+// Headers:
+//   Content-Type: application/x-protobuf
+// Response:
+//   - Успешно:
+//       Code: 200
+//       Body: <ConnectionCodeResponse>
+//   - Неудачно:
+//       Code: 401
+//       Body: "Wrong authorization token"
+message ConnectionCodeResponse {
+    required string code = 1;
 }
