@@ -134,11 +134,39 @@ class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
                     do {
                         let response = try ConnectionCodeResponse(serializedData: data)
                         self.currentLiveConnectionCode = response.code
-                        completion(.success(()))
+                        self.liveStart { result in
+                            switch result {
+                                case .success:
+                                    completion(.success(()))
+                                case .failure(let error):
+                                    completion(.failure(error))
+                            }
+                        }
                     } catch {
                         completion(.failure(.serialization(error)))
                     }
                 }
+            }
+        }
+        task.resume()
+    }
+
+    func liveStart(_ completion: @escaping (Result<Void, RemoteLoggerTransportError>) -> Void) {
+        guard let authToken = authToken else {
+            completion(.failure(.notAuthorized))
+            return
+        }
+
+        var request = URLRequest(url: endpoint.appendingPathComponent("live/start"))
+        request.httpMethod = "POST"
+        request.setValue("application/x-protobuf", forHTTPHeaderField: "Content-Type")
+        request.setValue(authToken, forHTTPHeaderField: "Authorization")
+
+        let task = session.dataTask(with: request) { _, _, error in
+            if let error = error {
+                completion(.failure(.network(error)))
+            } else {
+                completion(.success(()))
             }
         }
         task.resume()
