@@ -8,28 +8,28 @@
 
 import Foundation
 
-/// Default `(Logger)` - implementation which just `print()` log event in LLDB-console in pretty format.
+/// Default `(Logger)` implementation which uses `print()` to output logs.
 public struct PrintLogger: Logger {
     private let formatter: DateFormatter
-    private var timestamp: String { formatter.string(from: Date()) }
 
     /// Creates a new instance of `PrintLogger`.
-    public init() {
+    public init(onlyTime: Bool = false) {
         formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSSZ"
+        formatter.dateFormat = onlyTime ? "HH:mm:ss.SSSZ" : "yyyy-MM-dd HH:mm:ss.SSSZ"
         formatter.locale = Locale(identifier: "en_US_POSIX")
     }
 
     public func log(
         level: Level,
-        label: String,
         message: () -> LogString,
+        label: String,
         meta: () -> [String: LogString]?,
-        file: String = #file,
-        function: String = #function,
-        line: UInt = #line
+        file: String,
+        function: String,
+        line: UInt
     ) {
-        let context = [ file, function, (line == 0 ? "" : "\(line)") ].filter { !$0.isEmpty }.joined(separator: ":")
+        let context = collectContext(file: file, function: function, line: line)
+        let timestamp = formatter.string(from: Date())
         let description = [ "\(timestamp)", "\(level)", context, "\(label)", "\(message())", meta().map { $0.isEmpty ? "" : "\($0)" } ]
             .compactMap { $0 }
             .filter { !$0.isEmpty }

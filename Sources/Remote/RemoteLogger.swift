@@ -12,9 +12,9 @@ import Foundation
 /// log message parameters.
 struct LogRecord {
     let timestamp: TimeInterval
-    let label: String
     let level: Level
     let message: LogString
+    let label: String
     let meta: [String: LogString]?
     let file: String
     let function: String
@@ -22,8 +22,8 @@ struct LogRecord {
 }
 
 /// Responsible for buffering log records while transport is not available.
-protocol RemoteLoggerBuffering {
-    /// Should return `true` if contains any not sended records.
+protocol RemoteLoggerBuffer {
+    /// Should return `true` if contains any not sent records.
     var haveBufferedData: Bool { get }
 
     /// Add record to the buffer. Remote logger should use this method
@@ -40,11 +40,11 @@ protocol RemoteLoggerBuffering {
 
 /// Errors that can happen in RemoteLoggerTransport
 enum RemoteLoggerTransportError: Error {
-    /// Transport was failed to authenficate or authentification is expired.
+    /// Transport was failed to authenticate or authentication is expired.
     case notAuthorized
-    /// Network error occured.
+    /// Network error occurred.
     case network(Error)
-    /// Serialization error occured.
+    /// Serialization error occurred.
     case serialization(Error)
 }
 
@@ -78,16 +78,16 @@ protocol RemoteLoggerTransport {
 /// It uses `RemoteLoggerBuffering` for storing log records before sending and `RemoteLoggerTransport` to send them.
 /// After initialization `RemoteLogger` will try to authorize transport
 /// and at success it will send records collected during previous request with `RemoteLoggerTransport.send` method.
-/// If transport returns errors from `authorize` request `RemoteLogger` will be trying to reauthorize every `reauthorizationInterval`.
+/// If transport returns errors from `authorize` request `RemoteLogger` will be trying to reauthorize every `reAuthorizationInterval`.
 /// `RemoteLogger` is sending only one `send` request per time, next batch will be send only after current batch is finished.
 /// If during sending batch of record `RemoteLogger` received `notAuthorized` error `RemoteLogger` will try to reauthorize transport.
 public class RemoteLogger: Logger {
     private let workingQueue = DispatchQueue(label: "Robologs.RemoteLogger")
-    private let buffering: RemoteLoggerBuffering
+    private let buffering: RemoteLoggerBuffer
     private let transport: RemoteLoggerTransport
 
     /// Create new instance of remote logger.
-    /// - Parameter endpoint: Address of remote Robologs enpoint.
+    /// - Parameter endpoint: Address of remote Robologs endpoint.
     public convenience init(
         endpoint: URL,
         secret: String,
@@ -113,7 +113,7 @@ public class RemoteLogger: Logger {
     /// - Parameters:
     ///   - buffering: Buffering policy used to keep log records while transport is not available.
     ///   - transport: Transport describing how and where to log message will be sent.
-    init(transport: RemoteLoggerTransport, buffering: RemoteLoggerBuffering) {
+    init(transport: RemoteLoggerTransport, buffering: RemoteLoggerBuffer) {
         self.buffering = buffering
         self.transport = transport
 
@@ -122,12 +122,12 @@ public class RemoteLogger: Logger {
 
     public func log(
         level: Level,
-        label: String,
         message: @autoclosure () -> LogString,
+        label: String,
         meta: @autoclosure () -> [String: LogString]?,
-        file: String = #file,
-        function: String = #function,
-        line: UInt = #line
+        file: String,
+        function: String,
+        line: UInt
     ) {
         let timestamp = Date().timeIntervalSince1970
         let message = message()
@@ -135,9 +135,9 @@ public class RemoteLogger: Logger {
         workingQueue.async {
             let record = LogRecord(
                 timestamp: timestamp,
-                label: label,
                 level: level,
                 message: message,
+                label: label,
                 meta: meta,
                 file: file,
                 function: function,
@@ -201,7 +201,7 @@ public class RemoteLogger: Logger {
         }
     }
 
-    private let reauthorizationInterval: TimeInterval = 10
+    private let reAuthorizationInterval: TimeInterval = 10
 
     private func authorize(completion: @escaping () -> Void) {
         transport.authorize { result in
@@ -209,7 +209,7 @@ public class RemoteLogger: Logger {
                 case .success:
                     completion()
                 case .failure:
-                    self.workingQueue.asyncAfter(deadline: .now() + self.reauthorizationInterval) {
+                    self.workingQueue.asyncAfter(deadline: .now() + self.reAuthorizationInterval) {
                         self.authorize(completion: completion)
                     }
             }

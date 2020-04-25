@@ -7,7 +7,7 @@
 //
 
 /// Simplest buffering - just keeps log records in memory.
-class InMemoryBuffering: RemoteLoggerBuffering {
+class InMemoryBuffering: RemoteLoggerBuffer {
     private var records: [LogRecord] = []
 
     var haveBufferedData: Bool {

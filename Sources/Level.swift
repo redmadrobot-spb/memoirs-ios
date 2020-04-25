@@ -6,68 +6,44 @@
 //  Copyright © 2019 Redmadrobot. All rights reserved.
 //
 
-/// Logging level
-public enum Level: CaseIterable, Comparable, CustomStringConvertible {
-    /// Describes the same events as in the debug-level but in more detail.
+/// Logging level.
+public enum Level: CaseIterable, Comparable, CustomDebugStringConvertible {
+    /// Extremely detailed log events. This is the only level that can spam output in a second.
     case verbose
-    /// Describes messages that contain information typically used only when debugging a program.
+    /// Events that can be useful for understanding steps that program makes, that make it easy to debug.
     case debug
-    /// Describes informational messages.
+    /// General log events. Like "something happened in a program". Can be useful even in non-debug mode.
     case info
-    /// Describes conditions that are not erroneous, but may require special processing.
+    /// Warnings are "recoverable flow errors". Like double-calling something or like that.
     case warning
-    /// Describes a non-critical application error.
+    /// Errors are "non-recoverable flow errors" or "recoverable application errors".
     case error
-    /// Describes a critical error, after which the application will be terminated.
+    /// Fatal errors that result in application termination.
     case critical
 
     private var naturalIntegralValue: Int {
         switch self {
-            case .verbose:
-                return 0
-            case .debug:
-                return 1
-            case .info:
-                return 2
-            case .warning:
-                return 3
-            case .error:
-                return 4
-            case .critical:
-                return 5
+            case .verbose: return 0
+            case .debug: return 1
+            case .info: return 2
+            case .warning: return 3
+            case .error: return 4
+            case .critical: return 5
         }
     }
 
-    public var description: String {
+    public var debugDescription: String {
         switch self {
-            case .verbose:
-                return "🟣 VERBOSE"
-            case .debug:
-                return "🔵 DEBUG"
-            case .info:
-                return "🟢 INFO"
-            case .warning:
-                return "🟡 WARNING"
-            case .error:
-                return "🟠 ERROR"
-            case .critical:
-                return "🔴 CRITICAL"
+            case .verbose: return "🟣 VERBOSE"
+            case .debug: return "🔵 DEBUG"
+            case .info: return "🟢 INFO"
+            case .warning: return "🟡 WARNING"
+            case .error: return "🟠 ERROR"
+            case .critical: return "🔴 CRITICAL"
         }
     }
 
     public static func < (lhs: Level, rhs: Level) -> Bool {
         lhs.naturalIntegralValue < rhs.naturalIntegralValue
-    }
-
-    public static func <= (lhs: Level, rhs: Level) -> Bool {
-        lhs.naturalIntegralValue <= rhs.naturalIntegralValue
-    }
-
-    public static func >= (lhs: Level, rhs: Level) -> Bool {
-        lhs.naturalIntegralValue >= rhs.naturalIntegralValue
-    }
-
-    public static func > (lhs: Level, rhs: Level) -> Bool {
-        lhs.naturalIntegralValue > rhs.naturalIntegralValue
     }
 }

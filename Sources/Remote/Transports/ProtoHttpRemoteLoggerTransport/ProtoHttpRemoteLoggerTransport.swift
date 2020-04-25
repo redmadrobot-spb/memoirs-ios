@@ -75,15 +75,15 @@ class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
             let sourceRequest = JournalTokenRequest.with { request in
                 request.secret = secret
                 request.sender = JournalTokenRequest.Sender.with { sender in
-                    let enviromentInfo = EnviromentInfo.current
+                    let info = IosApplicationEnvironmentInfo.current
                     sender.id = UIDevice.current.identifierForVendor?.uuidString ?? ""
-                    sender.appID = enviromentInfo.appId ?? ""
-                    sender.appName = enviromentInfo.appName ?? ""
-                    sender.appVersion = enviromentInfo.appVersion ?? ""
-                    sender.appBuildVersion = enviromentInfo.appBuild ?? ""
-                    sender.operationSystem = enviromentInfo.operationSystem ?? ""
-                    sender.operationSystemVersion = enviromentInfo.operationSystemVersion ?? ""
-                    sender.deviceModel = enviromentInfo.deviceModel ?? ""
+                    sender.appID = info.appId
+                    sender.appName = info.appName ?? ""
+                    sender.appVersion = info.appVersion ?? ""
+                    sender.appBuildVersion = info.appBuild ?? ""
+                    sender.operationSystem = info.operationSystem ?? ""
+                    sender.operationSystemVersion = info.operationSystemVersion ?? ""
+                    sender.deviceModel = info.deviceModel ?? ""
                 }
             }
             request.httpBody = try sourceRequest.serializedData()
@@ -200,11 +200,11 @@ class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
                             }
                         }()
                         logMessage.label = record.label
-                        logMessage.message = record.message.string(withoutSensitive: shouldRemoveSensitive)
+                        logMessage.message = record.message.string(isSensitive: shouldRemoveSensitive)
                         logMessage.source = "\(record.file):\(record.line)"
                         logMessage.timestampMs = Int64(record.timestamp * 1000)
                         logMessage.meta = record.meta?.mapValues {
-                            $0.string(withoutSensitive: shouldRemoveSensitive)
+                            $0.string(isSensitive: shouldRemoveSensitive)
                         } ?? [:]
                     }
                 }

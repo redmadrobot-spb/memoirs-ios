@@ -15,14 +15,14 @@ public struct NSLogLogger: Logger {
 
     public func log(
         level: Level,
-        label: String,
         message: () -> LogString,
+        label: String,
         meta: () -> [String: LogString]?,
         file: String,
         function: String,
         line: UInt
     ) {
-        let context = [ file, function, (line == 0 ? "" : "\(line)") ].filter { !$0.isEmpty }.joined(separator: ":")
+        let context = collectContext(file: file, function: function, line: line)
         let description = [ "\(level)", context, label, "\(message())", meta().map { $0.isEmpty ? "" : "\($0)" } ]
             .compactMap { $0 }
             .filter { !$0.isEmpty }

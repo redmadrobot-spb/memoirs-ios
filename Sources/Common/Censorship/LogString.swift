@@ -20,7 +20,7 @@ public struct LogString: CustomStringConvertible, ExpressibleByStringLiteral, Ex
     private let interpolations: [LogStringInterpolation.Kind]
 
     public var description: String {
-        string(withoutSensitive: false)
+        string(isSensitive: true)
     }
 
     public init(stringLiteral value: String) {
@@ -31,7 +31,7 @@ public struct LogString: CustomStringConvertible, ExpressibleByStringLiteral, Ex
         interpolations = stringInterpolation.interpolations
     }
 
-    func string(withoutSensitive isSensitiveExcluded: Bool) -> String {
+    func string(isSensitive: Bool) -> String {
         interpolations.map { interpolation in
             switch interpolation {
                 case .literal(let string):
@@ -39,9 +39,9 @@ public struct LogString: CustomStringConvertible, ExpressibleByStringLiteral, Ex
                 case .public(let value):
                     return "\(value)"
                 case .private(let value):
-                    return isSensitiveExcluded ? "<private>" : "\(value)"
+                    return isSensitive ? "<private>" : "\(value)"
                 case .dump(let value):
-                    return "\(value.logDescription(withoutSensitive: isSensitiveExcluded))"
+                    return "\(value.logDescription(isSensitive: isSensitive))"
             }
         }
         .joined()

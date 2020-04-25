@@ -10,13 +10,13 @@ import Foundation
 
 /// Mock remote logger transport. Emulate behaviour of transport for offline testing.
 public class MockRemoteLoggerTransport: RemoteLoggerTransport {
-    private let logger: LabeledLoggerAdapter
+    private let logger: LabeledLogger
     private var sendsBeforeLogOut = 0
 
     /// Create instance of MockRemoteLoggerTransport.
     /// - Parameter logger: Logger used to log events in mock logger.
     public init(logger: Logger) {
-        self.logger = LabeledLoggerAdapter(label: "Robologs.MockRemoteLogger", adaptee: logger)
+        self.logger = LabeledLogger(label: "Robologs.MockRemoteLogger", logger: logger)
     }
 
     private(set) public var isAuthorized = true

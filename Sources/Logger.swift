@@ -6,22 +6,22 @@
 //  Copyright © 2019 Redmadrobot. All rights reserved.
 //
 
-/// Protocol describing requirements for work with `Robolog` logging system.
+/// Logger is an interface to log events sending. Usually you don't use the base method (with "level" parameter), but specific ones.
 public protocol Logger {
     /// Required method that reports the log event.
     /// - Parameters:
     ///   - level: Logging level.
-    ///   - label: Label describing log category.
-    ///   - message: Message describing log event. Can be privacy managed.
-    ///   - meta: Additional log information in key-value format. Values can be privacy managed.
-    ///   - file: The path to the file from which the method was called.
-    ///   - function: The function name from which the method was called.
-    ///   - line: The line of code from which the method was called.
+    ///   - label: Specifies in what part log event was recorded.
+    ///   - message: Message describing log event.
+    ///   - meta: Additional log information in key-value format.
+    ///   - file: The path to the file from which the method was called. Usually you should use the #file literal for this.
+    ///   - function: The function name from which the method was called. Usually you should use the #function literal for this.
+    ///   - line: The line of code from which the method was called. Usually you should use the #line literal for this.
     @inlinable
     func log(
         level: Level,
-        label: String,
         message: () -> LogString,
+        label: String,
         meta: () -> [String: LogString]?,
         file: String,
         function: String,
@@ -31,135 +31,93 @@ public protocol Logger {
 
 extension Logger {
     /// Method that reports the log event with `verbose` logging level.
-    /// - Parameters:
-    ///   - label: Label describing log category.
-    ///   - message: Message describing log event. Can be privacy managed.
-    ///   - meta: Additional log information in key-value format. Values can be privacy managed.
-    ///   - file: The path to the file from which the method was called.
-    ///   - function: The function name from which the method was called.
-    ///   - line: The line of code from which the method was called.
     @inlinable
     public func verbose(
-        label: String,
         message: @autoclosure () -> LogString,
+        label: String,
         meta: @autoclosure () -> [String: LogString]? = nil,
         file: String = #file,
         function: String = #function,
         line: UInt = #line
     ) {
-        log(level: .verbose, label: label, message: message, meta: meta, file: file, function: function, line: line)
+        log(level: .verbose, message: message, label: label, meta: meta, file: file, function: function, line: line)
     }
 
     /// Method that reports the log event with `debug` logging level.
-    /// - Parameters:
-    ///   - label: Label describing log category.
-    ///   - message: Message describing log event. Can be privacy managed.
-    ///   - meta: Additional log information in key-value format. Values can be privacy managed.
-    ///   - file: The path to the file from which the method was called.
-    ///   - function: The function name from which the method was called.
-    ///   - line: The line of code from which the method was called.
     @inlinable
     public func debug(
-        label: String,
         message: @autoclosure () -> LogString,
+        label: String,
         meta: @autoclosure () -> [String: LogString]? = nil,
         file: String = #file,
         function: String = #function,
         line: UInt = #line
     ) {
-        log(level: .debug, label: label, message: message, meta: meta, file: file, function: function, line: line)
+        log(level: .debug, message: message, label: label, meta: meta, file: file, function: function, line: line)
     }
 
     /// Method that reports the log event with `info` logging level.
-    /// - Parameters:
-    ///   - label: Label describing log category.
-    ///   - message: Message describing log event. Can be privacy managed.
-    ///   - meta: Additional log information in key-value format. Values can be privacy managed.
-    ///   - file: The path to the file from which the method was called.
-    ///   - function: The function name from which the method was called.
-    ///   - line: The line of code from which the method was called.
     @inlinable
     public func info(
-        label: String,
         message: @autoclosure () -> LogString,
+        label: String,
         meta: @autoclosure () -> [String: LogString]? = nil,
         file: String = #file,
         function: String = #function,
         line: UInt = #line
     ) {
-        log(level: .info, label: label, message: message, meta: meta, file: file, function: function, line: line)
+        log(level: .info, message: message, label: label, meta: meta, file: file, function: function, line: line)
     }
 
     /// Method that reports the log event with `warning` logging level.
-    /// - Parameters:
-    ///   - label: Label describing log category.
-    ///   - message: Message describing log event. Can be privacy managed.
-    ///   - meta: Additional log information in key-value format. Values can be privacy managed.
-    ///   - file: The path to the file from which the method was called.
-    ///   - function: The function name from which the method was called.
-    ///   - line: The line of code from which the method was called.
     @inlinable
     public func warning(
-        label: String,
         message: @autoclosure () -> LogString,
+        label: String,
         meta: @autoclosure () -> [String: LogString]? = nil,
         file: String = #file,
         function: String = #function,
         line: UInt = #line
     ) {
-        log(level: .warning, label: label, message: message, meta: meta, file: file, function: function, line: line)
+        log(level: .warning, message: message, label: label, meta: meta, file: file, function: function, line: line)
     }
 
     /// Method that reports the log event with `error` logging level.
-    /// - Parameters:
-    ///   - label: Label describing log category.
-    ///   - message: Message describing log event. Can be privacy managed.
-    ///   - meta: Additional log information in key-value format. Values can be privacy managed.
-    ///   - file: The path to the file from which the method was called.
-    ///   - function: The function name from which the method was called.
-    ///   - line: The line of code from which the method was called.
     @inlinable
     public func error(
-        label: String,
         message: @autoclosure () -> LogString,
+        label: String,
         meta: @autoclosure () -> [String: LogString]? = nil,
         file: String = #file,
         function: String = #function,
         line: UInt = #line
     ) {
-        log(level: .error, label: label, message: message, meta: meta, file: file, function: function, line: line)
+        log(level: .error, message: message, label: label, meta: meta, file: file, function: function, line: line)
     }
 
     /// Method that reports the log event with `assert` logging level.
-    /// - Parameters:
-    ///   - label: Label describing log category.
-    ///   - message: Message describing log event. Can be privacy managed.
-    ///   - meta: Additional log information in key-value format. Values can be privacy managed.
-    ///   - file: The path to the file from which the method was called.
-    ///   - function: The function name from which the method was called.
-    ///   - line: The line of code from which the method was called.
     @inlinable
     public func critical(
-        label: String,
         message: @autoclosure () -> LogString,
+        label: String,
         meta: @autoclosure () -> [String: LogString]? = nil,
         file: String = #file,
         function: String = #function,
         line: UInt = #line
     ) {
-        log(level: .critical, label: label, message: message, meta: meta, file: file, function: function, line: line)
+        log(level: .critical, message: message, label: label, meta: meta, file: file, function: function, line: line)
     }
 
     @inlinable
     public func log(
         level: Level,
-        label: String,
         message: @autoclosure () -> LogString,
+        label: String,
         meta: @autoclosure () -> [String: LogString]? = nil,
         file: String = #file,
         function: String = #function,
         line: UInt = #line
     ) {
-        log(level: level, label: label, message: message, meta: meta, file: file, function: function, line: line)
+        log(level: level, message: message, label: label, meta: meta, file: file, function: function, line: line)
     }
 }

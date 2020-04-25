@@ -20,15 +20,15 @@ public struct MultiplexingLogger: Logger {
     @inlinable
     public func log(
         level: Level,
-        label: String,
         message: () -> LogString,
+        label: String,
         meta: () -> [String: LogString]?,
         file: String,
         function: String,
         line: UInt
     ) {
         loggers.forEach {
-            $0.log(level: level, label: label, message: message, meta: meta, file: file, function: function, line: line)
+            $0.log(level: level, message: message, label: label, meta: meta, file: file, function: function, line: line)
         }
     }
 }

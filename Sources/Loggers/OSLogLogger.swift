@@ -26,14 +26,14 @@ public struct OSLogLogger: Logger {
 
     public func log(
         level: Level,
-        label: String,
         message: () -> LogString,
+        label: String,
         meta: () -> [String: LogString]?,
-        file: String = #file,
-        function: String = #function,
-        line: UInt = #line
+        file: String,
+        function: String,
+        line: UInt
     ) {
-        let context = [ file, function, (line == 0 ? "" : "\(line)") ].filter { !$0.isEmpty }.joined(separator: ":")
+        let context = collectContext(file: file, function: function, line: line)
         let description = [ context, "\(message())", meta().map { $0.isEmpty ? "" : "\($0)" } ]
             .compactMap { $0 }
             .filter { !$0.isEmpty }
@@ -43,18 +43,12 @@ public struct OSLogLogger: Logger {
 
     private func logType(from level: Level) -> OSLogType {
         switch level {
-            case .verbose:
-                return .debug
-            case .debug:
-                return .debug
-            case .info:
-                return .info
-            case .warning:
-                return .default
-            case .error:
-                return .error
-            case .critical:
-                return .fault
+            case .verbose: return .debug
+            case .debug: return .debug
+            case .info: return .info
+            case .warning: return .default
+            case .error: return .error
+            case .critical: return .fault
         }
     }
 

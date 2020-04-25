@@ -7,14 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2DBA127834F59CA61B204AB0 /* HelperFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA156C2B58CF72B873423F /* HelperFunctions.swift */; };
+		2DBA142977D7D4CD90ECDEAF /* LabeledLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1BC5D26B69FA1E649B56 /* LabeledLogger.swift */; };
+		2DBA1BC8525F9A84933D47B7 /* Loggable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA129A224F3D8C844B7AAF /* Loggable.swift */; };
 		300CC6F1242EBFD7007117E2 /* RemoteLoggerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 300CC6F0242EBFD7007117E2 /* RemoteLoggerService.swift */; };
 		300CC6F4242ECB06007117E2 /* SingleLogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 300CC6F3242ECB06007117E2 /* SingleLogViewController.swift */; };
 		300CC6F6242ECD59007117E2 /* DiagnosticLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 300CC6F5242ECD59007117E2 /* DiagnosticLogger.swift */; };
 		300CC6FC2430117F007117E2 /* ConstantLogsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 300CC6FB2430117F007117E2 /* ConstantLogsViewController.swift */; };
 		300CC6FE24301B71007117E2 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3053CC30242DF72E000125FB /* Main.storyboard */; };
 		300CC6FF24301B79007117E2 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 3053CC35242DF733000125FB /* LaunchScreen.storyboard */; };
-		304E87AF242B8AAD007694D2 /* SwiftProtobuf in Frameworks */ = {isa = PBXBuildFile; productRef = 304E87AE242B8AAD007694D2 /* SwiftProtobuf */; };
-		304E87B1242B8AAD007694D2 /* SwiftProtobufPluginLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = 304E87B0242B8AAD007694D2 /* SwiftProtobufPluginLibrary */; };
 		3053CC2B242DF72E000125FB /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3053CC2A242DF72E000125FB /* AppDelegate.swift */; };
 		3053CC34242DF733000125FB /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 3053CC33242DF733000125FB /* Assets.xcassets */; };
 		3053CC3D242DFB1C000125FB /* UniformRecordGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3053CC3C242DFB1C000125FB /* UniformRecordGenerator.swift */; };
@@ -33,20 +34,18 @@
 		4611FCED2398FEF100E23B25 /* MultiplexingLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4611FCEC2398FEF100E23B25 /* MultiplexingLogger.swift */; };
 		4611FCEF239904CC00E23B25 /* FilteringLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4611FCEE239904CC00E23B25 /* FilteringLogger.swift */; };
 		4611FCF723995F3300E23B25 /* NSLogLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4611FCF623995F3300E23B25 /* NSLogLogger.swift */; };
-		4611FCFC239A4D4E00E23B25 /* LabeledLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4611FCFB239A4D4E00E23B25 /* LabeledLogger.swift */; };
 		46131F5D238EADD800612712 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46131F5C238EADD800612712 /* Logger.swift */; };
 		46131F5F238EADF900612712 /* Level.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46131F5E238EADF900612712 /* Level.swift */; };
 		461A55E223DA07BF00A28F38 /* LogStringInterpolation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 461A55E123DA07BF00A28F38 /* LogStringInterpolation.swift */; };
 		461A55E623DA07FC00A28F38 /* LogString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 461A55E523DA07FC00A28F38 /* LogString.swift */; };
 		4626E60B23956D5800BD14B8 /* PrintLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46131F60238EAE8200612712 /* PrintLogger.swift */; };
 		4626E6112396709A00BD14B8 /* OSLogLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4626E6102396709700BD14B8 /* OSLogLogger.swift */; };
-		4655B6E7239A5BD900CB552B /* LabeledLoggerAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4655B6E6239A5BD900CB552B /* LabeledLoggerAdapter.swift */; };
 		46C33CFF23FFC56300775771 /* SensitiveLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46C33CFE23FFC56300775771 /* SensitiveLogger.swift */; };
 		46E239082397A748006539C5 /* SynchronizedDictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46E239072397A748006539C5 /* SynchronizedDictionary.swift */; };
 		630F99FC2435FAE5009DAD18 /* AuthenticationChallengeResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630F99FB2435FAE5009DAD18 /* AuthenticationChallengeResolver.swift */; };
 		6324E32B242A43060084312D /* MockRemoteLoggerTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6324E32A242A43060084312D /* MockRemoteLoggerTransport.swift */; };
 		6399CBED24349BBF00B6C3A1 /* Subscriptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6399CBEC24349BBF00B6C3A1 /* Subscriptions.swift */; };
-		63B2D2C52423B288002817B6 /* EnviromentInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B2D2C42423B288002817B6 /* EnviromentInfo.swift */; };
+		63B2D2C52423B288002817B6 /* IosApplicationEnvironmentInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63B2D2C42423B288002817B6 /* IosApplicationEnvironmentInfo.swift */; };
 		63D39418241F86D2002052DA /* backend.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D39411241F86D2002052DA /* backend.pb.swift */; };
 		63D39419241F86D2002052DA /* backend.proto in Sources */ = {isa = PBXBuildFile; fileRef = 63D39412241F86D2002052DA /* backend.proto */; };
 		63D3941A241F86D2002052DA /* ProtoHttpRemoteLoggerTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D39413241F86D2002052DA /* ProtoHttpRemoteLoggerTransport.swift */; };
@@ -79,6 +78,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		2DBA129A224F3D8C844B7AAF /* Loggable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Loggable.swift; sourceTree = "<group>"; };
+		2DBA156C2B58CF72B873423F /* HelperFunctions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HelperFunctions.swift; sourceTree = "<group>"; };
+		2DBA1BC5D26B69FA1E649B56 /* LabeledLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LabeledLogger.swift; sourceTree = "<group>"; };
 		300CC6F0242EBFD7007117E2 /* RemoteLoggerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteLoggerService.swift; sourceTree = "<group>"; };
 		300CC6F3242ECB06007117E2 /* SingleLogViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleLogViewController.swift; sourceTree = "<group>"; };
 		300CC6F5242ECD59007117E2 /* DiagnosticLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DiagnosticLogger.swift; sourceTree = "<group>"; };
@@ -103,14 +105,12 @@
 		4611FCEC2398FEF100E23B25 /* MultiplexingLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiplexingLogger.swift; sourceTree = "<group>"; };
 		4611FCEE239904CC00E23B25 /* FilteringLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilteringLogger.swift; sourceTree = "<group>"; };
 		4611FCF623995F3300E23B25 /* NSLogLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NSLogLogger.swift; sourceTree = "<group>"; };
-		4611FCFB239A4D4E00E23B25 /* LabeledLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabeledLogger.swift; sourceTree = "<group>"; };
 		46131F5C238EADD800612712 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		46131F5E238EADF900612712 /* Level.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Level.swift; sourceTree = "<group>"; };
 		46131F60238EAE8200612712 /* PrintLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrintLogger.swift; sourceTree = "<group>"; };
 		461A55E123DA07BF00A28F38 /* LogStringInterpolation.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogStringInterpolation.swift; sourceTree = "<group>"; };
 		461A55E523DA07FC00A28F38 /* LogString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogString.swift; sourceTree = "<group>"; };
 		4626E6102396709700BD14B8 /* OSLogLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OSLogLogger.swift; sourceTree = "<group>"; };
-		4655B6E6239A5BD900CB552B /* LabeledLoggerAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LabeledLoggerAdapter.swift; sourceTree = "<group>"; };
 		46AE559A238D683C00774F9E /* Robologs.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Robologs.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		46AE559E238D683C00774F9E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		46C33CFE23FFC56300775771 /* SensitiveLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SensitiveLogger.swift; sourceTree = "<group>"; };
@@ -118,7 +118,7 @@
 		630F99FB2435FAE5009DAD18 /* AuthenticationChallengeResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationChallengeResolver.swift; sourceTree = "<group>"; };
 		6324E32A242A43060084312D /* MockRemoteLoggerTransport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockRemoteLoggerTransport.swift; sourceTree = "<group>"; };
 		6399CBEC24349BBF00B6C3A1 /* Subscriptions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Subscriptions.swift; sourceTree = "<group>"; };
-		63B2D2C42423B288002817B6 /* EnviromentInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EnviromentInfo.swift; sourceTree = "<group>"; };
+		63B2D2C42423B288002817B6 /* IosApplicationEnvironmentInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IosApplicationEnvironmentInfo.swift; sourceTree = "<group>"; };
 		63D39411241F86D2002052DA /* backend.pb.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = backend.pb.swift; sourceTree = "<group>"; };
 		63D39412241F86D2002052DA /* backend.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.protobuf; path = backend.proto; sourceTree = "<group>"; };
 		63D39413241F86D2002052DA /* ProtoHttpRemoteLoggerTransport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProtoHttpRemoteLoggerTransport.swift; sourceTree = "<group>"; };
@@ -139,14 +139,20 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				304E87B1242B8AAD007694D2 /* SwiftProtobufPluginLibrary in Frameworks */,
-				304E87AF242B8AAD007694D2 /* SwiftProtobuf in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2DBA10531CBDA5D09548AE7E /* Utility */ = {
+			isa = PBXGroup;
+			children = (
+				2DBA156C2B58CF72B873423F /* HelperFunctions.swift */,
+			);
+			path = Utility;
+			sourceTree = "<group>";
+		};
 		300CC6F7242FEE34007117E2 /* UI */ = {
 			isa = PBXGroup;
 			children = (
@@ -223,18 +229,20 @@
 				46C33CFE23FFC56300775771 /* SensitiveLogger.swift */,
 				4611FCEE239904CC00E23B25 /* FilteringLogger.swift */,
 				4611FCEC2398FEF100E23B25 /* MultiplexingLogger.swift */,
-				4655B6E5239A5B8200CB552B /* LabeledLogger */,
+				2DBA10531CBDA5D09548AE7E /* Utility */,
+				2DBA1BC5D26B69FA1E649B56 /* LabeledLogger.swift */,
 			);
 			path = Loggers;
 			sourceTree = "<group>";
 		};
-		461A55E023DA07BF00A28F38 /* LogString */ = {
+		461A55E023DA07BF00A28F38 /* Censorship */ = {
 			isa = PBXGroup;
 			children = (
 				461A55E523DA07FC00A28F38 /* LogString.swift */,
 				461A55E123DA07BF00A28F38 /* LogStringInterpolation.swift */,
+				2DBA129A224F3D8C844B7AAF /* Loggable.swift */,
 			);
-			path = LogString;
+			path = Censorship;
 			sourceTree = "<group>";
 		};
 		4626E60C2395707500BD14B8 /* Sources */ = {
@@ -254,15 +262,6 @@
 				46AE559E238D683C00774F9E /* Info.plist */,
 			);
 			path = "Supporting files";
-			sourceTree = "<group>";
-		};
-		4655B6E5239A5B8200CB552B /* LabeledLogger */ = {
-			isa = PBXGroup;
-			children = (
-				4611FCFB239A4D4E00E23B25 /* LabeledLogger.swift */,
-				4655B6E6239A5BD900CB552B /* LabeledLoggerAdapter.swift */,
-			);
-			path = LabeledLogger;
 			sourceTree = "<group>";
 		};
 		46AE5590238D683B00774F9E = {
@@ -291,7 +290,7 @@
 				6399CBEC24349BBF00B6C3A1 /* Subscriptions.swift */,
 				46E239072397A748006539C5 /* SynchronizedDictionary.swift */,
 				63B2D2C32423B26C002817B6 /* Enviroment */,
-				461A55E023DA07BF00A28F38 /* LogString */,
+				461A55E023DA07BF00A28F38 /* Censorship */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -299,7 +298,7 @@
 		63B2D2C32423B26C002817B6 /* Enviroment */ = {
 			isa = PBXGroup;
 			children = (
-				63B2D2C42423B288002817B6 /* EnviromentInfo.swift */,
+				63B2D2C42423B288002817B6 /* IosApplicationEnvironmentInfo.swift */,
 			);
 			path = Enviroment;
 			sourceTree = "<group>";
@@ -399,8 +398,8 @@
 			);
 			name = Robologs;
 			packageProductDependencies = (
-				304E87AE242B8AAD007694D2 /* SwiftProtobuf */,
-				304E87B0242B8AAD007694D2 /* SwiftProtobufPluginLibrary */,
+				304E87AE242B8AAD007694D2 /* XCSwiftPackageProductDependency */,
+				304E87B0242B8AAD007694D2 /* XCSwiftPackageProductDependency */,
 			);
 			productName = RobologsiOSNative;
 			productReference = 46AE559A238D683C00774F9E /* Robologs.framework */;
@@ -435,7 +434,7 @@
 			);
 			mainGroup = 46AE5590238D683B00774F9E;
 			packageReferences = (
-				304E87AD242B8AAD007694D2 /* XCRemoteSwiftPackageReference "swift-protobuf" */,
+				304E87AD242B8AAD007694D2 /* XCRemoteSwiftPackageReference */,
 			);
 			productRefGroup = 46AE559B238D683C00774F9E /* Products */;
 			projectDirPath = "";
@@ -524,7 +523,6 @@
 				63D39418241F86D2002052DA /* backend.pb.swift in Sources */,
 				4611FCEF239904CC00E23B25 /* FilteringLogger.swift in Sources */,
 				461A55E623DA07FC00A28F38 /* LogString.swift in Sources */,
-				4611FCFC239A4D4E00E23B25 /* LabeledLogger.swift in Sources */,
 				4626E60B23956D5800BD14B8 /* PrintLogger.swift in Sources */,
 				46131F5F238EADF900612712 /* Level.swift in Sources */,
 				63D3941B241F86D2002052DA /* InMemoryBuffering.swift in Sources */,
@@ -534,10 +532,12 @@
 				4611FCF723995F3300E23B25 /* NSLogLogger.swift in Sources */,
 				461A55E223DA07BF00A28F38 /* LogStringInterpolation.swift in Sources */,
 				46131F5D238EADD800612712 /* Logger.swift in Sources */,
-				4655B6E7239A5BD900CB552B /* LabeledLoggerAdapter.swift in Sources */,
 				6324E32B242A43060084312D /* MockRemoteLoggerTransport.swift in Sources */,
-				63B2D2C52423B288002817B6 /* EnviromentInfo.swift in Sources */,
+				63B2D2C52423B288002817B6 /* IosApplicationEnvironmentInfo.swift in Sources */,
 				46E239082397A748006539C5 /* SynchronizedDictionary.swift in Sources */,
+				2DBA127834F59CA61B204AB0 /* HelperFunctions.swift in Sources */,
+				2DBA142977D7D4CD90ECDEAF /* LabeledLogger.swift in Sources */,
+				2DBA1BC8525F9A84933D47B7 /* Loggable.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -847,7 +847,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		304E87AD242B8AAD007694D2 /* XCRemoteSwiftPackageReference "swift-protobuf" */ = {
+		304E87AD242B8AAD007694D2 /* XCRemoteSwiftPackageReference */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/apple/swift-protobuf.git";
 			requirement = {
@@ -858,14 +858,14 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		304E87AE242B8AAD007694D2 /* SwiftProtobuf */ = {
+		304E87AE242B8AAD007694D2 /* XCSwiftPackageProductDependency */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 304E87AD242B8AAD007694D2 /* XCRemoteSwiftPackageReference "swift-protobuf" */;
+			package = 304E87AD242B8AAD007694D2 /* XCRemoteSwiftPackageReference */;
 			productName = SwiftProtobuf;
 		};
-		304E87B0242B8AAD007694D2 /* SwiftProtobufPluginLibrary */ = {
+		304E87B0242B8AAD007694D2 /* XCSwiftPackageProductDependency */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 304E87AD242B8AAD007694D2 /* XCRemoteSwiftPackageReference "swift-protobuf" */;
+			package = 304E87AD242B8AAD007694D2 /* XCRemoteSwiftPackageReference */;
 			productName = SwiftProtobufPluginLibrary;
 		};
 /* End XCSwiftPackageProductDependency section */

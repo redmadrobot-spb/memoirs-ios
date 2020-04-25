@@ -30,8 +30,8 @@ public struct FilteringLogger: Logger {
     @inlinable
     public func log(
         level: Level,
-        label: String,
         message: () -> LogString,
+        label: String,
         meta: () -> [String: LogString]?,
         file: String,
         function: String,
@@ -39,6 +39,6 @@ public struct FilteringLogger: Logger {
     ) {
         guard level <= loggingLevelForLabels[label] ?? defaultLevel else { return }
 
-        logger.log(level: level, label: label, message: message, meta: meta, file: file, function: function, line: line)
+        logger.log(level: level, message: message, label: label, meta: meta, file: file, function: function, line: line)
     }
 }

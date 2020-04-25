@@ -6,40 +6,37 @@
 //  Copyright © 2019 Redmadrobot. All rights reserved.
 //
 
-public protocol LabeledLogger: Logger {
-    /// Label which describing log category, like `Network` or `Repository`.
-    var label: String { get }
+public struct LabeledLogger: Logger {
+    public let label: String
+    private let logger: Logger
 
-    /// Required method that reports the log event.
-    /// - Parameters:
-    ///   - level: Logging level.
-    ///   - message: Message describing log event.
-    ///   - meta: Additional log information in key-value format.
-    ///   - file: The path to the file from which the method was called.
-    ///   - function: The function name from which the method was called.
-    ///   - line: The line of code from which the method was called.
-    @inlinable
-    func log(
-        level: Level,
-        message: () -> LogString,
-        meta: () -> [String: LogString]?,
-        file: String,
-        function: String,
-        line: UInt
-    )
-}
+    public init(label: String, logger: Logger) {
+        self.label = label
+        self.logger = logger
+    }
 
-extension LabeledLogger {
-    @inlinable
     public func log(
         level: Level,
-        message: () -> LogString,
-        meta: () -> [String: LogString]?,
+        label: String,
+        message: @autoclosure () -> LogString,
+        meta: @autoclosure () -> [String: LogString]?,
         file: String,
         function: String,
         line: UInt
     ) {
-        log(level: level, label: label, message: message, meta: meta, file: file, function: function, line: line)
+        logger.log(level: level, message: message, label: label, meta: meta, file: file, function: function, line: line)
+    }
+
+    @inlinable
+    public func log(
+        level: Level,
+        message: @autoclosure () -> LogString,
+        meta: @autoclosure () -> [String: LogString]?,
+        file: String,
+        function: String,
+        line: UInt
+    ) {
+        log(level: level, message: message(), label: label, meta: meta(), file: file, function: function, line: line)
     }
 
     /// Method that reports the log event with `verbose` logging level.
@@ -57,7 +54,7 @@ extension LabeledLogger {
         function: String = #function,
         line: UInt = #line
     ) {
-        log(level: .verbose, message: message, meta: meta, file: file, function: function, line: line)
+        log(level: .verbose, message: message(), meta: meta(), file: file, function: function, line: line)
     }
 
     /// Method that reports the log event with `debug` logging level.
@@ -75,7 +72,7 @@ extension LabeledLogger {
         function: String = #function,
         line: UInt = #line
     ) {
-        log(level: .debug, message: message, meta: meta, file: file, function: function, line: line)
+        log(level: .debug, message: message(), meta: meta(), file: file, function: function, line: line)
     }
 
     /// Method that reports the log event with `info` logging level.
@@ -93,7 +90,7 @@ extension LabeledLogger {
         function: String = #function,
         line: UInt = #line
     ) {
-        log(level: .info, message: message, meta: meta, file: file, function: function, line: line)
+        log(level: .info, message: message(), meta: meta(), file: file, function: function, line: line)
     }
 
     /// Method that reports the log event with `warning` logging level.
@@ -111,7 +108,7 @@ extension LabeledLogger {
         function: String = #function,
         line: UInt = #line
     ) {
-        log(level: .warning, message: message, meta: meta, file: file, function: function, line: line)
+        log(level: .warning, message: message(), meta: meta(), file: file, function: function, line: line)
     }
 
     /// Method that reports the log event with `error` logging level.
@@ -129,7 +126,7 @@ extension LabeledLogger {
         function: String = #function,
         line: UInt = #line
     ) {
-        log(level: .error, message: message, meta: meta, file: file, function: function, line: line)
+        log(level: .error, message: message(), meta: meta(), file: file, function: function, line: line)
     }
 
     /// Method that reports the log event with `assert` logging level.
@@ -147,6 +144,6 @@ extension LabeledLogger {
         function: String = #function,
         line: UInt = #line
     ) {
-        log(level: .critical, message: message, meta: meta, file: file, function: function, line: line)
+        log(level: .critical, message: message(), meta: meta(), file: file, function: function, line: line)
     }
 }
