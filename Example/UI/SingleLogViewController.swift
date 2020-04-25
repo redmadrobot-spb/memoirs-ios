@@ -36,13 +36,11 @@ class SingleLogViewController: UIViewController, UITextFieldDelegate {
             self.currentLogNumber = diagnosticLogger.lastLogs.count
         }
 
-        logger = SensitiveLogger(
-            logger: MultiplexingLogger(
-                loggers: [
-                    RemoteLoggerService.shared.logger,
-                    diagnosticLogger,
-                ]
-            )
+        logger = MultiplexingLogger(
+            loggers: [
+                RemoteLoggerService.shared.logger,
+                diagnosticLogger,
+            ]
         )
     }
 

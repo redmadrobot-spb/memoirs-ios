@@ -19,8 +19,10 @@
 public struct LogString: CustomStringConvertible, ExpressibleByStringLiteral, ExpressibleByStringInterpolation {
     private let interpolations: [LogStringInterpolation.Kind]
 
+    public static var isSensitive: Bool = true
+
     public var description: String {
-        string(isSensitive: true)
+        string(isSensitive: Self.isSensitive)
     }
 
     public init(_ value: String) {
