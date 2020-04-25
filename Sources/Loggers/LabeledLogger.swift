@@ -15,6 +15,10 @@ public struct LabeledLogger: Logger {
         self.logger = logger
     }
 
+    public init(object: Any, logger: Logger) {
+        self.init(label: String(describing: type(of: object)), logger: logger)
+    }
+
     public func log(
         level: Level,
         label: String,
