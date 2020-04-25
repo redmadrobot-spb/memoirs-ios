@@ -30,15 +30,24 @@ public protocol Logger {
 }
 
 extension Logger {
+    @inlinable
+    public func log(
+        level: Level,
+        message: @autoclosure () -> LogString,
+        label: String,
+        meta: @autoclosure () -> [String: LogString]? = nil,
+        file: String = #file, function: String = #function, line: UInt = #line
+    ) {
+        log(level: level, message: message, label: label, meta: meta, file: file, function: function, line: line)
+    }
+
     /// Method that reports the log event with `verbose` logging level.
     @inlinable
     public func verbose(
         _ message: @autoclosure () -> LogString,
         label: String,
         meta: @autoclosure () -> [String: LogString]? = nil,
-        file: String = #file,
-        function: String = #function,
-        line: UInt = #line
+        file: String = #file, function: String = #function, line: UInt = #line
     ) {
         log(level: .verbose, message: message, label: label, meta: meta, file: file, function: function, line: line)
     }
@@ -49,9 +58,7 @@ extension Logger {
         _ message: @autoclosure () -> LogString,
         label: String,
         meta: @autoclosure () -> [String: LogString]? = nil,
-        file: String = #file,
-        function: String = #function,
-        line: UInt = #line
+        file: String = #file, function: String = #function, line: UInt = #line
     ) {
         log(level: .debug, message: message, label: label, meta: meta, file: file, function: function, line: line)
     }
@@ -62,9 +69,7 @@ extension Logger {
         _ message: @autoclosure () -> LogString,
         label: String,
         meta: @autoclosure () -> [String: LogString]? = nil,
-        file: String = #file,
-        function: String = #function,
-        line: UInt = #line
+        file: String = #file, function: String = #function, line: UInt = #line
     ) {
         log(level: .info, message: message, label: label, meta: meta, file: file, function: function, line: line)
     }
@@ -75,9 +80,7 @@ extension Logger {
         _ message: @autoclosure () -> LogString,
         label: String,
         meta: @autoclosure () -> [String: LogString]? = nil,
-        file: String = #file,
-        function: String = #function,
-        line: UInt = #line
+        file: String = #file, function: String = #function, line: UInt = #line
     ) {
         log(level: .warning, message: message, label: label, meta: meta, file: file, function: function, line: line)
     }
@@ -88,11 +91,25 @@ extension Logger {
         _ message: @autoclosure () -> LogString,
         label: String,
         meta: @autoclosure () -> [String: LogString]? = nil,
-        file: String = #file,
-        function: String = #function,
-        line: UInt = #line
+        file: String = #file, function: String = #function, line: UInt = #line
     ) {
         log(level: .error, message: message, label: label, meta: meta, file: file, function: function, line: line)
+    }
+
+    @inlinable
+    public func error(
+        _ message: String? = nil,
+        _ error: Error,
+        label: String,
+        meta: @autoclosure () -> [String: LogString]? = nil,
+        file: String = #file, function: String = #function, line: UInt = #line
+    ) {
+        log(
+            level: .error,
+            message: message.map { "\($0): \(error)" } ?? "\(error)",
+            label: label,
+            meta: meta(), file: file, function: function, line: line
+        )
     }
 
     /// Method that reports the log event with `assert` logging level.
@@ -101,23 +118,8 @@ extension Logger {
         _ message: @autoclosure () -> LogString,
         label: String,
         meta: @autoclosure () -> [String: LogString]? = nil,
-        file: String = #file,
-        function: String = #function,
-        line: UInt = #line
+        file: String = #file, function: String = #function, line: UInt = #line
     ) {
         log(level: .critical, message: message, label: label, meta: meta, file: file, function: function, line: line)
-    }
-
-    @inlinable
-    public func log(
-        level: Level,
-        message: @autoclosure () -> LogString,
-        label: String,
-        meta: @autoclosure () -> [String: LogString]? = nil,
-        file: String = #file,
-        function: String = #function,
-        line: UInt = #line
-    ) {
-        log(level: level, message: message, label: label, meta: meta, file: file, function: function, line: line)
     }
 }
