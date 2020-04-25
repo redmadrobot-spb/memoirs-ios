@@ -8,25 +8,21 @@
 
 import Foundation
 
-/// Logger which incapsulate NSLog logging system.
+/// Logger which encapsulate NSLog logging system.
 public struct NSLogLogger: Logger {
     /// Creates a new instance of `NSLogLogger`.
     public init() {}
 
+    @inlinable
     public func log(
         level: Level,
         message: () -> LogString,
         label: String,
         meta: () -> [String: LogString]?,
-        file: String,
-        function: String,
-        line: UInt
+        file: String, function: String, line: UInt
     ) {
         let context = collectContext(file: file, function: function, line: line)
-        let description = [ "\(level)", context, label, "\(message())", meta().map { $0.isEmpty ? "" : "\($0)" } ]
-            .compactMap { $0 }
-            .filter { !$0.isEmpty }
-            .joined(separator: " ")
+        let description = concatenateData(time: "", level: level, message: message, label: label, meta: meta, context: context)
         NSLog("%@", description)
     }
 }

@@ -23,9 +23,7 @@ public struct MultiplexingLogger: Logger {
         message: () -> LogString,
         label: String,
         meta: () -> [String: LogString]?,
-        file: String,
-        function: String,
-        line: UInt
+        file: String, function: String, line: UInt
     ) {
         loggers.forEach {
             $0.log(level: level, message: message, label: label, meta: meta, file: file, function: function, line: line)

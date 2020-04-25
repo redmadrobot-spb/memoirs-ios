@@ -24,9 +24,7 @@ public class SensitiveLogger: Logger {
         label: String,
         message: () -> LogString,
         meta: () -> [String: LogString]?,
-        file: String,
-        function: String,
-        line: UInt
+        file: String, function: String, line: UInt
     ) {
         queue.sync {
             logger.log(

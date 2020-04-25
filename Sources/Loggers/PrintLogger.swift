@@ -10,30 +10,26 @@ import Foundation
 
 /// Default `(Logger)` implementation which uses `print()` to output logs.
 public struct PrintLogger: Logger {
-    private let formatter: DateFormatter
+    public let formatter: DateFormatter
 
     /// Creates a new instance of `PrintLogger`.
     public init(onlyTime: Bool = false) {
         formatter = DateFormatter()
-        formatter.dateFormat = onlyTime ? "HH:mm:ss.SSSZ" : "yyyy-MM-dd HH:mm:ss.SSSZ"
+        formatter.dateFormat = onlyTime ? "HH:mm:ss.SSS" : "yyyy-MM-dd HH:mm:ss.SSSZ"
         formatter.locale = Locale(identifier: "en_US_POSIX")
     }
 
+    @inlinable
     public func log(
         level: Level,
         message: () -> LogString,
         label: String,
         meta: () -> [String: LogString]?,
-        file: String,
-        function: String,
-        line: UInt
+        file: String = #file, function: String = #function, line: UInt = #line
     ) {
         let context = collectContext(file: file, function: function, line: line)
-        let timestamp = formatter.string(from: Date())
-        let description = [ "\(timestamp)", "\(level)", context, "\(label)", "\(message())", meta().map { $0.isEmpty ? "" : "\($0)" } ]
-            .compactMap { $0 }
-            .filter { !$0.isEmpty }
-            .joined(separator: " ")
+        let time = formatter.string(from: Date())
+        let description = concatenateData(time: time, level: level, message: message, label: label, meta: meta, context: context)
         print(description)
     }
 }

@@ -29,15 +29,10 @@ public struct OSLogLogger: Logger {
         message: () -> LogString,
         label: String,
         meta: () -> [String: LogString]?,
-        file: String,
-        function: String,
-        line: UInt
+        file: String, function: String, line: UInt
     ) {
         let context = collectContext(file: file, function: function, line: line)
-        let description = [ context, "\(message())", meta().map { $0.isEmpty ? "" : "\($0)" } ]
-            .compactMap { $0 }
-            .filter { !$0.isEmpty }
-            .joined(separator: " ")
+        let description = concatenateData(time: "", level: nil, message: message, label: "", meta: meta, context: context)
         os_log(logType(from: level), log: logger(with: label), "%{public}@", description)
     }
 

@@ -8,7 +8,7 @@
 
 public struct LabeledLogger: Logger {
     public let label: String
-    private let logger: Logger
+    public let logger: Logger
 
     public init(label: String, logger: Logger) {
         self.label = label
@@ -19,6 +19,7 @@ public struct LabeledLogger: Logger {
         self.init(label: String(describing: type(of: object)), logger: logger)
     }
 
+    @inlinable
     public func log(
         level: Level,
         message: () -> LogString,

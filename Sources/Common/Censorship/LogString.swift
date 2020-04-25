@@ -23,6 +23,10 @@ public struct LogString: CustomStringConvertible, ExpressibleByStringLiteral, Ex
         string(isSensitive: true)
     }
 
+    public init(_ value: String) {
+        interpolations = [ .literal(value) ]
+    }
+
     public init(stringLiteral value: String) {
         interpolations = [ .literal(value) ]
     }
