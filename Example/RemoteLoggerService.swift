@@ -6,8 +6,8 @@
 //  Copyright © 2020 Redmadrobot. All rights reserved.
 //
 
-import Robologs
 import Foundation
+import Robologs
 
 class RemoteLoggerService {
     enum RemoteLoggerType {
@@ -38,7 +38,8 @@ class RemoteLoggerService {
                 logger = RemoteLogger(
                     endpoint: url,
                     secret: secret,
-                    challengePolicy: AllowSelfSignedChallengePolicy()
+                    challengePolicy: AllowSelfSignedChallengePolicy(),
+                    applicationInfo: UIKitApplicationInfo.current
                 )
         }
     }

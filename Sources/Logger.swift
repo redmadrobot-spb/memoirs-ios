@@ -33,7 +33,7 @@ extension Logger {
     /// Method that reports the log event with `verbose` logging level.
     @inlinable
     public func verbose(
-        message: @autoclosure () -> LogString,
+        _ message: @autoclosure () -> LogString,
         label: String,
         meta: @autoclosure () -> [String: LogString]? = nil,
         file: String = #file,
@@ -46,7 +46,7 @@ extension Logger {
     /// Method that reports the log event with `debug` logging level.
     @inlinable
     public func debug(
-        message: @autoclosure () -> LogString,
+        _ message: @autoclosure () -> LogString,
         label: String,
         meta: @autoclosure () -> [String: LogString]? = nil,
         file: String = #file,
@@ -59,7 +59,7 @@ extension Logger {
     /// Method that reports the log event with `info` logging level.
     @inlinable
     public func info(
-        message: @autoclosure () -> LogString,
+        _ message: @autoclosure () -> LogString,
         label: String,
         meta: @autoclosure () -> [String: LogString]? = nil,
         file: String = #file,
@@ -72,7 +72,7 @@ extension Logger {
     /// Method that reports the log event with `warning` logging level.
     @inlinable
     public func warning(
-        message: @autoclosure () -> LogString,
+        _ message: @autoclosure () -> LogString,
         label: String,
         meta: @autoclosure () -> [String: LogString]? = nil,
         file: String = #file,
@@ -85,7 +85,7 @@ extension Logger {
     /// Method that reports the log event with `error` logging level.
     @inlinable
     public func error(
-        message: @autoclosure () -> LogString,
+        _ message: @autoclosure () -> LogString,
         label: String,
         meta: @autoclosure () -> [String: LogString]? = nil,
         file: String = #file,
@@ -98,7 +98,7 @@ extension Logger {
     /// Method that reports the log event with `assert` logging level.
     @inlinable
     public func critical(
-        message: @autoclosure () -> LogString,
+        _ message: @autoclosure () -> LogString,
         label: String,
         meta: @autoclosure () -> [String: LogString]? = nil,
         file: String = #file,

@@ -90,8 +90,8 @@ class SingleLogViewController: UIViewController, UITextFieldDelegate {
     @IBAction func sendLogButtonTapped() {
         logger.log(
             level: Level.allCases[selectedLogLevelSegmentedControl.selectedSegmentIndex],
-            label: labelTextField.text ?? "",
-            message: sensitiveSwitcher.isOn ? "\(messageTextField.text ?? "")" : "\(public: messageTextField.text ?? "")"
+            message: sensitiveSwitcher.isOn ? "\(messageTextField.text ?? "")" : "\(public: messageTextField.text ?? "")",
+            label: labelTextField.text ?? ""
         )
     }
 

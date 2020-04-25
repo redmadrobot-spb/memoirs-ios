@@ -30,8 +30,8 @@ class LogsGenerator {
             self.recordGenerator.records(for: range).forEach { generatedRecord in
                 self.logger.log(
                     level: generatedRecord.level,
-                    label: generatedRecord.label,
                     message: "\(public: generatedRecord.message)",
+                    label: generatedRecord.label,
                     meta: generatedRecord.meta?.mapValues { "\(public: $0)" as LogString } ?? [:]
                 )
             }
