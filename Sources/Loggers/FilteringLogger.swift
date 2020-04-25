@@ -30,8 +30,8 @@ public enum ConfigurationLevel {
 }
 
 extension Level {
-    public static func <= (lhs: Level, rhs: ConfigurationLevel) -> Bool {
-        lhs.integralValue <= rhs.integralValue
+    public static func >= (lhs: Level, rhs: ConfigurationLevel) -> Bool {
+        lhs.integralValue >= rhs.integralValue
     }
 }
 
@@ -67,7 +67,7 @@ public struct FilteringLogger: Logger {
         line: UInt
     ) {
         let labelLevel = loggingLevelForLabels[label] ?? defaultLevel
-        guard level <= labelLevel else { return }
+        guard level >= labelLevel else { return }
 
         logger.log(level: level, message: message, label: label, meta: meta, file: file, function: function, line: line)
     }
