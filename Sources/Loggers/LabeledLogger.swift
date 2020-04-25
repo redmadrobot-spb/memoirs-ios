@@ -44,12 +44,6 @@ public struct LabeledLogger: Logger {
     }
 
     /// Method that reports the log event with `verbose` logging level.
-    /// - Parameters:
-    ///   - message: Message describing log event.
-    ///   - meta: Additional log information in key-value format.
-    ///   - file: The path to the file from which the method was called.
-    ///   - function: The function name from which the method was called.
-    ///   - line: The line of code from which the method was called.
     @inlinable
     public func verbose(
         message: @autoclosure () -> LogString,
@@ -62,12 +56,6 @@ public struct LabeledLogger: Logger {
     }
 
     /// Method that reports the log event with `debug` logging level.
-    /// - Parameters:
-    ///   - message: Message describing log event.
-    ///   - meta: Additional log information in key-value format.
-    ///   - file: The path to the file from which the method was called.
-    ///   - function: The function name from which the method was called.
-    ///   - line: The line of code from which the method was called.
     @inlinable
     public func debug(
         message: @autoclosure () -> LogString,
@@ -80,12 +68,6 @@ public struct LabeledLogger: Logger {
     }
 
     /// Method that reports the log event with `info` logging level.
-    /// - Parameters:
-    ///   - message: Message describing log event.
-    ///   - meta: Additional log information in key-value format.
-    ///   - file: The path to the file from which the method was called.
-    ///   - function: The function name from which the method was called.
-    ///   - line: The line of code from which the method was called.
     @inlinable
     public func info(
         message: @autoclosure () -> LogString,
@@ -98,12 +80,6 @@ public struct LabeledLogger: Logger {
     }
 
     /// Method that reports the log event with `warning` logging level.
-    /// - Parameters:
-    ///   - message: Message describing log event.
-    ///   - meta: Additional log information in key-value format.
-    ///   - file: The path to the file from which the method was called.
-    ///   - function: The function name from which the method was called.
-    ///   - line: The line of code from which the method was called.
     @inlinable
     public func warning(
         message: @autoclosure () -> LogString,
@@ -116,12 +92,6 @@ public struct LabeledLogger: Logger {
     }
 
     /// Method that reports the log event with `error` logging level.
-    /// - Parameters:
-    ///   - message: Message describing log event.
-    ///   - meta: Additional log information in key-value format.
-    ///   - file: The path to the file from which the method was called.
-    ///   - function: The function name from which the method was called.
-    ///   - line: The line of code from which the method was called.
     @inlinable
     public func error(
         message: @autoclosure () -> LogString,
@@ -134,12 +104,6 @@ public struct LabeledLogger: Logger {
     }
 
     /// Method that reports the log event with `assert` logging level.
-    /// - Parameters:
-    ///   - message: Message describing log event.
-    ///   - meta: Additional log information in key-value format.
-    ///   - file: The path to the file from which the method was called.
-    ///   - function: The function name from which the method was called.
-    ///   - line: The line of code from which the method was called.
     @inlinable
     public func critical(
         message: @autoclosure () -> LogString,
