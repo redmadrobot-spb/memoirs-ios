@@ -7,7 +7,7 @@
 //
 
 /// Logging level.
-public enum Level: CaseIterable, Comparable, CustomDebugStringConvertible {
+public enum Level: Comparable, CustomDebugStringConvertible {
     /// Extremely detailed log events. This is the only level that can spam output in a second.
     case verbose
     /// Events that can be useful for understanding steps that program makes, that make it easy to debug.
@@ -20,17 +20,6 @@ public enum Level: CaseIterable, Comparable, CustomDebugStringConvertible {
     case error
     /// Fatal errors that result in application termination.
     case critical
-
-    private var naturalIntegralValue: Int {
-        switch self {
-            case .verbose: return 0
-            case .debug: return 1
-            case .info: return 2
-            case .warning: return 3
-            case .error: return 4
-            case .critical: return 5
-        }
-    }
 
     public static var stringVerbose: String = "🟣 VERBOSE"
     public static var stringDebug: String = "🔵 DEBUG"
@@ -50,7 +39,18 @@ public enum Level: CaseIterable, Comparable, CustomDebugStringConvertible {
         }
     }
 
+    var integralValue: Int {
+        switch self {
+            case .verbose: return 0
+            case .debug: return 1
+            case .info: return 2
+            case .warning: return 3
+            case .error: return 4
+            case .critical: return 5
+        }
+    }
+
     public static func < (lhs: Level, rhs: Level) -> Bool {
-        lhs.naturalIntegralValue < rhs.naturalIntegralValue
+        lhs.integralValue < rhs.integralValue
     }
 }

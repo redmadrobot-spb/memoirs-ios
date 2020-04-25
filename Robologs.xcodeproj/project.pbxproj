@@ -12,6 +12,7 @@
 		2DBA1439BAEBD8D5961A05A0 /* InfoGatheringLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA10989530859F00D5AB8C /* InfoGatheringLogger.swift */; };
 		2DBA15064819C6E6D4178B88 /* ApplicationInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1BDD8C05C5AC12BAAF0D /* ApplicationInfo.swift */; };
 		2DBA194A31B60069AE4E7EE1 /* ApplicationInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1BDD8C05C5AC12BAAF0D /* ApplicationInfo.swift */; };
+		2DBA1B1AD758D46C4213CBA7 /* Logger.CaseIterable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA109F0598B47053202C54 /* Logger.CaseIterable.swift */; };
 		2DBA1B2CA7478109C4020779 /* InfoGatheringLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA10989530859F00D5AB8C /* InfoGatheringLogger.swift */; };
 		2DBA1BC8525F9A84933D47B7 /* Loggable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA129A224F3D8C844B7AAF /* Loggable.swift */; platformFilter = ios; };
 		2DBA1DD68FE69BFDBF5223E3 /* AppKitApplicationInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1AF5A16C39D5CE050964 /* AppKitApplicationInfo.swift */; };
@@ -105,6 +106,7 @@
 
 /* Begin PBXFileReference section */
 		2DBA10989530859F00D5AB8C /* InfoGatheringLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InfoGatheringLogger.swift; sourceTree = "<group>"; };
+		2DBA109F0598B47053202C54 /* Logger.CaseIterable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Logger.CaseIterable.swift; sourceTree = "<group>"; };
 		2DBA129A224F3D8C844B7AAF /* Loggable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Loggable.swift; sourceTree = "<group>"; };
 		2DBA156C2B58CF72B873423F /* HelperFunctions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HelperFunctions.swift; sourceTree = "<group>"; };
 		2DBA1AF5A16C39D5CE050964 /* AppKitApplicationInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppKitApplicationInfo.swift; sourceTree = "<group>"; };
@@ -233,6 +235,7 @@
 				300CC6F5242ECD59007117E2 /* DiagnosticLogger.swift */,
 				300CC6F0242EBFD7007117E2 /* RemoteLoggerService.swift */,
 				300CC6FD24301B1D007117E2 /* Supporting Files */,
+				2DBA109F0598B47053202C54 /* Logger.CaseIterable.swift */,
 			);
 			path = Example;
 			sourceTree = "<group>";
@@ -621,6 +624,7 @@
 				300CC6F6242ECD59007117E2 /* DiagnosticLogger.swift in Sources */,
 				307D7964243263E2000C8B2B /* LogsTextView.swift in Sources */,
 				3053CC4D242EBE6E000125FB /* EndpointViewController.swift in Sources */,
+				2DBA1B1AD758D46C4213CBA7 /* Logger.CaseIterable.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
