@@ -99,7 +99,7 @@ extension Logger {
     @inlinable
     public func error(
         _ error: Error,
-        _ message: LogString? = nil,
+        message: LogString? = nil,
         label: String,
         meta: @autoclosure () -> [String: LogString]? = nil,
         file: String = #file, function: String = #function, line: UInt = #line

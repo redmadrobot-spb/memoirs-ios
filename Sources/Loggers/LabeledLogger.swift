@@ -92,11 +92,11 @@ public struct LabeledLogger: Logger {
     @inlinable
     public func error(
         _ error: Error,
-        _ message: LogString? = nil,
+        message: LogString? = nil,
         meta: @autoclosure () -> [String: LogString]? = nil,
         file: String = #file, function: String = #function, line: UInt = #line
     ) {
-        self.error(error, message, label: label, meta: meta(), file: file, function: function, line: line)
+        self.error(error, message: message, label: label, meta: meta(), file: file, function: function, line: line)
     }
 
     /// Method that reports the log event with `assert` logging level.

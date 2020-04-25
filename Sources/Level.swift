@@ -32,14 +32,21 @@ public enum Level: CaseIterable, Comparable, CustomDebugStringConvertible {
         }
     }
 
+    public static var stringVerbose: String = "🟣 VERBOSE"
+    public static var stringDebug: String = "🔵 DEBUG"
+    public static var stringInfo: String = "🟢 INFO"
+    public static var stringWarning: String = "🟡 WARNING"
+    public static var stringError: String = "🟠 ERROR"
+    public static var stringCritical: String = "🔴 CRITICAL"
+
     public var debugDescription: String {
         switch self {
-            case .verbose: return "🟣 VERBOSE"
-            case .debug: return "🔵 DEBUG"
-            case .info: return "🟢 INFO"
-            case .warning: return "🟡 WARNING"
-            case .error: return "🟠 ERROR"
-            case .critical: return "🔴 CRITICAL"
+            case .verbose: return Self.stringVerbose
+            case .debug: return Self.stringDebug
+            case .info: return Self.stringInfo
+            case .warning: return Self.stringWarning
+            case .error: return Self.stringError
+            case .critical: return Self.stringCritical
         }
     }
 
