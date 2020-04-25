@@ -37,7 +37,7 @@ public struct LabeledLogger: Logger {
         meta: @autoclosure () -> [String: LogString]?,
         file: String = #file, function: String = #function, line: UInt = #line
     ) {
-        log(level: level, message: message(), label: label, meta: meta(), file: file, function: function, line: line)
+        logger.log(level: level, message: message(), label: label, meta: meta(), file: file, function: function, line: line)
     }
 
     /// Method that reports the log event with `verbose` logging level.
@@ -47,7 +47,7 @@ public struct LabeledLogger: Logger {
         meta: @autoclosure () -> [String: LogString]? = nil,
         file: String = #file, function: String = #function, line: UInt = #line
     ) {
-        verbose(message(), label: label, meta: meta(), file: file, function: function, line: line)
+        logger.verbose(message(), label: label, meta: meta(), file: file, function: function, line: line)
     }
 
     /// Method that reports the log event with `debug` logging level.
@@ -57,7 +57,7 @@ public struct LabeledLogger: Logger {
         meta: @autoclosure () -> [String: LogString]? = nil,
         file: String = #file, function: String = #function, line: UInt = #line
     ) {
-        debug(message(), label: label, meta: meta(), file: file, function: function, line: line)
+        logger.debug(message(), label: label, meta: meta(), file: file, function: function, line: line)
     }
 
     /// Method that reports the log event with `info` logging level.
@@ -67,7 +67,7 @@ public struct LabeledLogger: Logger {
         meta: @autoclosure () -> [String: LogString]? = nil,
         file: String = #file, function: String = #function, line: UInt = #line
     ) {
-        info(message(), label: label, meta: meta(), file: file, function: function, line: line)
+        logger.info(message(), label: label, meta: meta(), file: file, function: function, line: line)
     }
 
     /// Method that reports the log event with `warning` logging level.
@@ -77,7 +77,7 @@ public struct LabeledLogger: Logger {
         meta: @autoclosure () -> [String: LogString]? = nil,
         file: String = #file, function: String = #function, line: UInt = #line
     ) {
-        warning(message(), label: label, meta: meta(), file: file, function: function, line: line)
+        logger.warning(message(), label: label, meta: meta(), file: file, function: function, line: line)
     }
 
     /// Method that reports the log event with `error` logging level.
@@ -87,7 +87,7 @@ public struct LabeledLogger: Logger {
         meta: @autoclosure () -> [String: LogString]? = nil,
         file: String = #file, function: String = #function, line: UInt = #line
     ) {
-        error(message(), label: label, meta: meta(), file: file, function: function, line: line)
+        logger.error(message(), label: label, meta: meta(), file: file, function: function, line: line)
     }
 
     @inlinable
@@ -97,7 +97,7 @@ public struct LabeledLogger: Logger {
         meta: @autoclosure () -> [String: LogString]? = nil,
         file: String = #file, function: String = #function, line: UInt = #line
     ) {
-        self.error(error, message: message, label: label, meta: meta(), file: file, function: function, line: line)
+        logger.error(error, message: message, label: label, meta: meta(), file: file, function: function, line: line)
     }
 
     /// Method that reports the log event with `assert` logging level.
@@ -107,6 +107,6 @@ public struct LabeledLogger: Logger {
         meta: @autoclosure () -> [String: LogString]? = nil,
         file: String = #file, function: String = #function, line: UInt = #line
     ) {
-        critical(message(), label: label, meta: meta(), file: file, function: function, line: line)
+        logger.critical(message(), label: label, meta: meta(), file: file, function: function, line: line)
     }
 }
