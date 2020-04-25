@@ -11,7 +11,8 @@ import Foundation
 func collectContext(file: String = #file, function: String = #function, line: UInt = #line) -> String {
     // TODO: Remove this hack after Swift Evolution #0274 will be implemented
     let file = file.components(separatedBy: "/").last ?? "?"
-    let context = [ file, function, (line == 0 ? "" : "\(line)") ]
+    let context = [ file, line == 0 ? "" : "\(line)", function ]
+        .map { $0.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines) }
         .filter { !$0.isEmpty }
         .joined(separator: ":")
 
