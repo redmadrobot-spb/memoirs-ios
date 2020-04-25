@@ -154,7 +154,7 @@
 		63D39413241F86D2002052DA /* ProtoHttpRemoteLoggerTransport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProtoHttpRemoteLoggerTransport.swift; sourceTree = "<group>"; };
 		63D39415241F86D2002052DA /* InMemoryBuffering.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InMemoryBuffering.swift; sourceTree = "<group>"; };
 		63D39416241F86D2002052DA /* RemoteLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RemoteLogger.swift; sourceTree = "<group>"; };
-		FA8EB09A24545A4200D438DC /* Robologs_macOS.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Robologs_macOS.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		FA8EB09A24545A4200D438DC /* Robologs.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Robologs.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		FA8EB09C24545A4200D438DC /* Robologs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Robologs.h; sourceTree = "<group>"; };
 		FA8EB09D24545A4200D438DC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -325,7 +325,7 @@
 			children = (
 				46AE559A238D683C00774F9E /* Robologs.framework */,
 				3053CC28242DF72E000125FB /* Robologs Test App.app */,
-				FA8EB09A24545A4200D438DC /* Robologs_macOS.framework */,
+				FA8EB09A24545A4200D438DC /* Robologs.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -490,7 +490,7 @@
 				FA8EB0A424545A7600D438DC /* SwiftProtobufPluginLibrary */,
 			);
 			productName = Robologs;
-			productReference = FA8EB09A24545A4200D438DC /* Robologs_macOS.framework */;
+			productReference = FA8EB09A24545A4200D438DC /* Robologs.framework */;
 			productType = "com.apple.product-type.framework";
 		};
 /* End PBXNativeTarget section */
@@ -983,7 +983,7 @@
 				MACH_O_TYPE = staticlib;
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				PRODUCT_BUNDLE_IDENTIFIER = com.redmadrobot.spb.robologs.dev;
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PRODUCT_NAME = Robologs;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
@@ -1011,7 +1011,7 @@
 				MACH_O_TYPE = staticlib;
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				PRODUCT_BUNDLE_IDENTIFIER = com.redmadrobot.spb.robologs.dev;
-				PRODUCT_NAME = "$(TARGET_NAME:c99extidentifier)";
+				PRODUCT_NAME = Robologs;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
