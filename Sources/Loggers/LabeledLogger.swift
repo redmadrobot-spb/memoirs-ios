@@ -91,8 +91,8 @@ public struct LabeledLogger: Logger {
 
     @inlinable
     public func error(
-        _ message: String? = nil,
         _ error: Error,
+        _ message: LogString? = nil,
         meta: @autoclosure () -> [String: LogString]? = nil,
         file: String = #file, function: String = #function, line: UInt = #line
     ) {
