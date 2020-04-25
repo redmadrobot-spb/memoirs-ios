@@ -91,10 +91,16 @@ public class RemoteLogger: Logger {
     public convenience init(
         endpoint: URL,
         secret: String,
-        challengePolicy: AuthenticationChallengePolicy = DefaultChallengePolicy()
+        challengePolicy: AuthenticationChallengePolicy = DefaultChallengePolicy(),
+        applicationInfo: ApplicationInfo
     ) {
         self.init(
-            transport: ProtoHttpRemoteLoggerTransport(endpoint: endpoint, secret: secret, challengePolicy: challengePolicy),
+            transport: ProtoHttpRemoteLoggerTransport(
+                endpoint: endpoint,
+                secret: secret,
+                challengePolicy: challengePolicy,
+                applicationInfo: applicationInfo
+            ),
             buffering: InMemoryBuffering()
         )
     }

@@ -1,5 +1,5 @@
 //
-//  EnvironmentInfo.swift
+//  AppKitApplicationInfo.swift
 //  Robologs
 //
 //  Created by Vladislav Maltsev on 19.03.2020.
@@ -7,18 +7,20 @@
 //
 
 import Foundation
-import UIKit
 
-struct IosApplicationEnvironmentInfo {
-    let appId: String
-    let appName: String?
-    let appVersion: String?
-    let appBuild: String?
-    let operationSystem: String?
-    let operationSystemVersion: String?
-    let deviceModel: String?
+public struct AppKitApplicationInfo: ApplicationInfo {
+    public let appId: String
+    public let appName: String?
+    public let appVersion: String?
+    public let appBuild: String?
+    public let operationSystem: String?
+    public let operationSystemVersion: String?
+    public let deviceModel: String?
 
-    static var current: IosApplicationEnvironmentInfo {
+    // TODO: Persist this string
+    public var deviceId: String { UUID().uuidString }
+
+    public static var current: AppKitApplicationInfo {
         guard
             let infoPlist = Bundle.main.infoDictionary,
             let appId = infoPlist["CFBundleIdentifier"] as? String
@@ -34,13 +36,13 @@ struct IosApplicationEnvironmentInfo {
                 return identifier + String(UnicodeScalar(UInt8(value)))
             }
 
-        return IosApplicationEnvironmentInfo(
+        return AppKitApplicationInfo(
             appId: appId,
             appName: infoPlist["CFBundleName"] as? String,
             appVersion: infoPlist["CFBundleShortVersionString"] as? String,
             appBuild: infoPlist["CFBundleVersion"] as? String,
-            operationSystem: UIDevice.current.systemName,
-            operationSystemVersion: UIDevice.current.systemVersion,
+            operationSystem: "macOS",
+            operationSystemVersion: ProcessInfo.processInfo.operatingSystemVersionString,
             deviceModel: identifier
         )
     }

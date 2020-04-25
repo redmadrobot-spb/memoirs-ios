@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import UIKit
 
 /// Remote logger transport that uses HTTP + Protubuf.
 class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
@@ -37,6 +36,8 @@ class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
     private var isLoading = false
     private let shouldRemoveSensitive = true
 
+    private let applicationInfo: ApplicationInfo
+
     var isAuthorized: Bool {
         authToken != nil
     }
@@ -46,7 +47,14 @@ class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
     /// - Parameter secret: Secret key received from Robologs admin panel.
     /// - Parameter challengePolicy: Policy determining how URLAuthentificationChallange will be mannaged.
     ///       If you using self-signing certificate use `AllowSelfSignedChallengePolicy`
-    init(endpoint: URL, secret: String, challengePolicy: AuthenticationChallengePolicy = DefaultChallengePolicy()) {
+    init(
+        endpoint: URL,
+        secret: String,
+        challengePolicy: AuthenticationChallengePolicy = DefaultChallengePolicy(),
+        applicationInfo: ApplicationInfo
+    ) {
+        self.applicationInfo = applicationInfo
+
         let configuration = URLSessionConfiguration.default
         self.endpoint = endpoint.appendingPathComponent(apiPath)
         self.secret = secret
@@ -75,15 +83,14 @@ class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
             let sourceRequest = JournalTokenRequest.with { request in
                 request.secret = secret
                 request.sender = JournalTokenRequest.Sender.with { sender in
-                    let info = IosApplicationEnvironmentInfo.current
-                    sender.id = UIDevice.current.identifierForVendor?.uuidString ?? ""
-                    sender.appID = info.appId
-                    sender.appName = info.appName ?? ""
-                    sender.appVersion = info.appVersion ?? ""
-                    sender.appBuildVersion = info.appBuild ?? ""
-                    sender.operationSystem = info.operationSystem ?? ""
-                    sender.operationSystemVersion = info.operationSystemVersion ?? ""
-                    sender.deviceModel = info.deviceModel ?? ""
+                    sender.id = applicationInfo.deviceId
+                    sender.appID = applicationInfo.appId
+                    sender.appName = applicationInfo.appName ?? ""
+                    sender.appVersion = applicationInfo.appVersion ?? ""
+                    sender.appBuildVersion = applicationInfo.appBuild ?? ""
+                    sender.operationSystem = applicationInfo.operationSystem ?? ""
+                    sender.operationSystemVersion = applicationInfo.operationSystemVersion ?? ""
+                    sender.deviceModel = applicationInfo.deviceModel ?? ""
                 }
             }
             request.httpBody = try sourceRequest.serializedData()
