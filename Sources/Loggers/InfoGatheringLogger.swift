@@ -32,10 +32,10 @@ public struct InfoGatheringLogger: Logger {
         file: String = #file, function: String = #function, line: UInt = #line
     ) {
         var updatedMeta = self.meta
-        if let threadName = Thread.current.name {
+        if let threadName = Thread.current.name, !threadName.isEmpty {
             updatedMeta["_thread"] = LogString(threadName)
         }
-        if let queueName = currentQueueName {
+        if let queueName = currentQueueName, !queueName.isEmpty {
             updatedMeta["_queue"] = LogString(queueName)
         }
         meta()?.forEach { key, value in
