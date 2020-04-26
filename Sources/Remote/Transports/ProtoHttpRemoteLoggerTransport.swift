@@ -31,7 +31,6 @@ class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
     private let session: URLSession
     private var authToken: String?
     private var isLoading = false
-    private let shouldRemoveSensitive = true
 
     private var logger: LabeledLogger!
     private var httpLogger: HttpLogger!
@@ -113,6 +112,12 @@ class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
         }
     }
 
+    func invalidateConnectionCode(_ completion: @escaping (Result<Void, RemoteLoggerTransportError>) -> Void) {
+        request(path: "code", method: "DELETE") { (result: Result<EmptyMessage, RemoteLoggerTransportError>) in
+            completion(result.map { _ in Void() })
+        }
+    }
+
     func startLive(_ completion: @escaping (Result<Void, RemoteLoggerTransportError>) -> Void) {
         request(path: "live/start") { (result: Result<EmptyMessage, RemoteLoggerTransportError>) in
             completion(result.map { _ in Void() })
@@ -132,12 +137,10 @@ class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
                     logMessage.position = record.position
                     logMessage.priority = record.level.protoBufLevel
                     logMessage.label = record.label
-                    logMessage.message = record.message.string(isSensitive: shouldRemoveSensitive)
+                    logMessage.message = record.message
                     logMessage.source = collectContext(file: record.file, function: record.function, line: record.line)
                     logMessage.timestampMs = Int64(record.timestamp * 1000)
-                    logMessage.meta = record.meta?.mapValues {
-                        $0.string(isSensitive: shouldRemoveSensitive)
-                    } ?? [:]
+                    logMessage.meta = record.meta ?? [:]
                 }
             }
         }
@@ -149,6 +152,7 @@ class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
 
     private func request<Response: Message>(
         path: String,
+        method: String = "POST",
         needAuthorization: Bool = true,
         completion: @escaping (Result<Response, RemoteLoggerTransportError>) -> Void
     ) {
@@ -157,6 +161,7 @@ class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
 
     private func request<Request: Message, Response: Message>(
         path: String,
+        method: String = "POST",
         needAuthorization: Bool = true,
         requestObject: Request,
         completion: @escaping (Result<Response, RemoteLoggerTransportError>) -> Void
@@ -168,7 +173,7 @@ class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
         }
 
         var request = URLRequest(url: endpoint.appendingPathComponent(path))
-        request.httpMethod = "POST"
+        request.httpMethod = method
         request.setValue("application/x-protobuf", forHTTPHeaderField: "Content-Type")
         if !(requestObject is EmptyMessage) {
             do {

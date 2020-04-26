@@ -10,18 +10,20 @@ import os.log
 
 /// `(Logger)` - implementation which use `os.log` logging system.
 @available(iOS 12.0, *)
-public struct OSLogLogger: Logger {
+public class OSLogLogger: Logger {
+    public let isSensitive: Bool
+
     /// An identifier string, in reverse DNS notation, representing the subsystem that’s performing logging.
     /// For example, `com.your_company.your_subsystem_name`.
     /// The subsystem is used for categorization and filtering of related log messages, as well as for grouping related logging settings.
     public let subsystem: String
-    private var loggers: SynchronizedDictionary<String, OSLog>
+    private var loggers: SynchronizedDictionary<String, OSLog> = [:]
 
     /// Creates a new instance of `OSLogLogger`.
     /// - Parameter subsystem: An identifier string, in reverse DNS notation, representing the subsystem that’s performing logging.
-    public init(subsystem: String) {
+    public init(subsystem: String, isSensitive: Bool) {
+        self.isSensitive = isSensitive
         self.subsystem = subsystem
-        self.loggers = [:]
     }
 
     public func log(
@@ -32,7 +34,9 @@ public struct OSLogLogger: Logger {
         file: String = #file, function: String = #function, line: UInt = #line
     ) {
         let context = collectContext(file: file, function: function, line: line)
-        let description = concatenateData(time: "", level: nil, message: message, label: "", meta: meta, context: context)
+        let description = concatenateData(
+            time: "", level: nil, message: message, label: "", meta: meta, context: context, isSensitive: isSensitive
+        )
         os_log(logType(from: level), log: logger(with: label), "%{public}@", description)
     }
 

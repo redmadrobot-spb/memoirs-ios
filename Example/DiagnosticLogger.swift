@@ -38,11 +38,10 @@ class DiagnosticLogger: Logger {
     ) {
         totalCount += 1
 
-        let context = [ file, function, (line == 0 ? "" : "\(line)") ].filter { !$0.isEmpty }.joined(separator: ":")
-        let description = [ "\(Date())", "\(level)", context, "\(label)", "\(message())", meta().map { $0.isEmpty ? "" : "\($0)" } ]
-            .compactMap { $0 }
-            .filter { !$0.isEmpty }
-            .joined(separator: " ")
+        let context = collectContext(file: file, function: function, line: line)
+        let description = concatenateData(
+            time: "\(Date())", level: level, message: message, label: label, meta: meta, context: context, isSensitive: false
+        )
         if lastLogs.count >= maxLastLogsCount {
             lastLogs = lastLogs.suffix(maxLastLogsCount - 1)
         }

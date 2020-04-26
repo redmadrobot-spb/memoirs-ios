@@ -21,6 +21,8 @@ enum RemoteLoggerTransportError: Error {
 
 protocol RemoteLoggerTransport {
     func liveConnectionCode(_ completion: @escaping (Result<String, RemoteLoggerTransportError>) -> Void)
+    func invalidateConnectionCode(_ completion: @escaping (Result<Void, RemoteLoggerTransportError>) -> Void)
+
     func startLive(_ completion: @escaping (Result<Void, RemoteLoggerTransportError>) -> Void)
     func stopLive(_ completion: @escaping (Result<Void, RemoteLoggerTransportError>) -> Void)
 

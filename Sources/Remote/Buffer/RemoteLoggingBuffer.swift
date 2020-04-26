@@ -14,9 +14,9 @@ struct LogRecord {
     let position: UInt64
     let timestamp: TimeInterval
     let level: Level
-    let message: LogString
+    let message: String
     let label: String
-    let meta: [String: LogString]?
+    let meta: [String: String]?
     let file: String
     let function: String
     let line: UInt

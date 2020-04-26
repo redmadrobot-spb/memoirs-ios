@@ -6,7 +6,7 @@
 //  Copyright © 2019 Redmadrobot. All rights reserved.
 //
 
-public struct LabeledLogger: Logger {
+public class LabeledLogger: Logger {
     public let label: String
     public let logger: Logger
 
@@ -15,7 +15,7 @@ public struct LabeledLogger: Logger {
         self.logger = logger
     }
 
-    public init(object: Any, logger: Logger) {
+    convenience public init(object: Any, logger: Logger) {
         self.init(label: String(describing: type(of: object)), logger: logger)
     }
 

@@ -19,11 +19,12 @@ class RemoteLoggerService {
         RemoteLoggerService()
     }()
 
-    private(set) var logger: RemoteLogger!
+    private(set) var logger: MultiplexingLogger = MultiplexingLogger(loggers: [])
     private(set) var type: RemoteLoggerType = .mock
+    private var remoteLogger: RemoteLogger?
 
     private init() {
-        configureRemoteLogger(with: type)
+        configureRemoteLogger(with: .mock)
     }
 
     class var shared: RemoteLoggerService { sharedRemoteLoggerService }
@@ -32,18 +33,27 @@ class RemoteLoggerService {
         self.type = type
         switch type {
             case .mock:
-                logger = RemoteLogger(mockingToLogger: PrintLogger())
+                logger.loggers = []
+//                logger.loggers = [ PrintLogger() ]
+                remoteLogger?.stopLive {}
+                remoteLogger = nil
             case .remote(let url, let secret):
-                logger = RemoteLogger(
+                let remoteLogger = RemoteLogger(
                     endpoint: url,
                     secret: secret,
                     challengePolicy: AllowSelfSignedChallengePolicy(),
-                    applicationInfo: UIKitApplicationInfo.current
+                    applicationInfo: UIKitApplicationInfo.current,
+                    isSensitive: false,
+                    logger: PrintLogger(onlyTime: true)
                 )
+                logger.loggers = [
+                    remoteLogger
+                ]
+                self.remoteLogger = remoteLogger
         }
     }
 
     func liveCode(completion: @escaping (Result<String, Error>) -> Void) {
-        logger.startLive(completion: completion)
+        remoteLogger?.startLive(completion: completion)
     }
 }

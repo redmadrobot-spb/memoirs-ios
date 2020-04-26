@@ -9,54 +9,30 @@
 import Foundation
 
 /// Logger that sends log messages to remote storage.
-/// It uses `RemoteLoggerBuffering` for storing log records before sending and `RemoteLoggerTransport` to send them.
-/// After initialization `RemoteLogger` will try to authorize transport
-/// and at success it will send records collected during previous request with `RemoteLoggerTransport.send` method.
-/// If transport returns errors from `authorize` request `RemoteLogger` will be trying to reauthorize every `reAuthorizationInterval`.
-/// `RemoteLogger` is sending only one `send` request per time, next batch will be send only after current batch is finished.
-/// If during sending batch of record `RemoteLogger` received `notAuthorized` error `RemoteLogger` will try to reauthorize transport.
 public class RemoteLogger: Logger {
-    private let workingQueue = DispatchQueue(label: "Robologs.RemoteLogger")
+    public let isSensitive: Bool
+
+    private let workingQueue = DispatchQueue(label: "com.redmadrobot.robologs.RemoteLogger")
     private let buffer: RemoteLoggerBuffer
     private let transport: RemoteLoggerTransport
 
-    /// Create new instance of remote logger.
-    /// - Parameter endpoint: Address of remote Robologs endpoint.
-    public convenience init(
+    public init(
         endpoint: URL,
         secret: String,
         challengePolicy: AuthenticationChallengePolicy = DefaultChallengePolicy(),
-        applicationInfo: ApplicationInfo
+        applicationInfo: ApplicationInfo,
+        isSensitive: Bool,
+        logger: Logger
     ) {
-        self.init(
-            transport: ProtoHttpRemoteLoggerTransport(
-                endpoint: endpoint,
-                secret: secret,
-                challengePolicy: challengePolicy,
-                applicationInfo: applicationInfo,
-                logger: PrintLogger(onlyTime: true)
-            ),
-            buffer: InMemoryRemoteLoggerBuffer()
+        buffer = InMemoryRemoteLoggerBuffer()
+        transport = ProtoHttpRemoteLoggerTransport(
+            endpoint: endpoint,
+            secret: secret,
+            challengePolicy: challengePolicy,
+            applicationInfo: applicationInfo,
+            logger: logger
         )
-    }
-
-    /// Creates mocked RemoteLogger that uses offline mock transport.
-    /// This is usable mostly for mocking or this SDK development.
-    /// - Parameter mockLogger: Logger using for mock transport output.
-    public convenience init(mockingToLogger mockLogger: Logger) {
-        self.init(
-            transport: MockRemoteLoggerTransport(logger: mockLogger),
-            buffer: InMemoryRemoteLoggerBuffer()
-        )
-    }
-
-    /// Creates new instance of remote logger with custom transport and buffering.
-    /// - Parameters:
-    ///   - buffering: Buffering policy used to keep log records while transport is not available.
-    ///   - transport: Transport describing how and where to log message will be sent.
-    init(transport: RemoteLoggerTransport, buffer: RemoteLoggerBuffer) {
-        self.buffer = buffer
-        self.transport = transport
+        self.isSensitive = isSensitive
     }
 
     // TODO: Persist position
@@ -85,12 +61,12 @@ public class RemoteLogger: Logger {
                 position: self.nextPosition,
                 timestamp: timestamp,
                 level: level,
-                message: message,
+                message: message.string(isSensitive: self.isSensitive),
                 label: label,
-                meta: meta,
-                file: file,
-                function: function,
-                line: line
+                meta: meta?.mapValues { $0.string(isSensitive: self.isSensitive) },
+                file: self.isSensitive ? "" : file,
+                function: self.isSensitive ? "" : function,
+                line: self.isSensitive ? 0 : line
             )
 
             self.buffer.append(record: record)

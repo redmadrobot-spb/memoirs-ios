@@ -8,7 +8,7 @@
 
 import Foundation
 
-public struct InfoGatheringLogger: Logger {
+public class InfoGatheringLogger: Logger {
     public let logger: Logger
     public let meta: [String: LogString]
 

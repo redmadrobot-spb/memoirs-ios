@@ -22,6 +22,10 @@ public class MockRemoteLoggerTransport: RemoteLoggerTransport {
         completion(.success("M0CKC0D3"))
     }
 
+    func invalidateConnectionCode(_ completion: @escaping (Result<Void, RemoteLoggerTransportError>) -> Void) {
+        completion(.success(Void()))
+    }
+
     private var isLiveActive: Bool = false
 
     func startLive(_ completion: @escaping (Result<Void, RemoteLoggerTransportError>) -> Void) {
@@ -43,9 +47,9 @@ public class MockRemoteLoggerTransport: RemoteLoggerTransport {
     func sendLive(records: [LogRecord], completion: @escaping (Result<Void, RemoteLoggerTransportError>) -> Void) {
         guard isLiveActive else { return completion(.failure(.liveIsInactive)) }
 
-        logger.debug("Sending \(public: records.count) records...")
+        logger.debug("Sending \(safe: records.count) records...")
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-            self.logger.debug("Sent \(public: records.count) records.")
+            self.logger.debug("Sent \(safe: records.count) records.")
             self.logger.verbose("\(records)")
             completion(.success(()))
         }

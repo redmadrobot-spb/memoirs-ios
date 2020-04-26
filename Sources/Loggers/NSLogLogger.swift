@@ -9,9 +9,12 @@
 import Foundation
 
 /// Logger which encapsulate NSLog logging system.
-public struct NSLogLogger: Logger {
-    /// Creates a new instance of `NSLogLogger`.
-    public init() {}
+public class NSLogLogger: Logger {
+    public let isSensitive: Bool
+
+    public init(isSensitive: Bool) {
+        self.isSensitive = isSensitive
+    }
 
     @inlinable
     public func log(
@@ -22,7 +25,9 @@ public struct NSLogLogger: Logger {
         file: String = #file, function: String = #function, line: UInt = #line
     ) {
         let context = collectContext(file: file, function: function, line: line)
-        let description = concatenateData(time: "", level: level, message: message, label: label, meta: meta, context: context)
+        let description = concatenateData(
+            time: "", level: level, message: message, label: label, meta: meta, context: context, isSensitive: isSensitive
+        )
         NSLog("%@", description)
     }
 }

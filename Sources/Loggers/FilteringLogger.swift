@@ -36,7 +36,7 @@ extension Level {
 }
 
 /// Logger that filter log events by level and redirects them to the target logger.
-public struct FilteringLogger: Logger {
+public class FilteringLogger: Logger {
     @usableFromInline
     let logger: Logger
     /// Logging levels associated with registered label.

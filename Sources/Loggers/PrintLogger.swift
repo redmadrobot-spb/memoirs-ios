@@ -9,7 +9,7 @@
 import Foundation
 
 /// Default `(Logger)` implementation which uses `print()` to output logs.
-public struct PrintLogger: Logger {
+public class PrintLogger: Logger {
     public let formatter: DateFormatter
 
     /// Creates a new instance of `PrintLogger`.
@@ -29,7 +29,9 @@ public struct PrintLogger: Logger {
     ) {
         let context = collectContext(file: file, function: function, line: line)
         let time = formatter.string(from: Date())
-        let description = concatenateData(time: time, level: level, message: message, label: label, meta: meta, context: context)
+        let description = concatenateData(
+            time: time, level: level, message: message, label: label, meta: meta, context: context, isSensitive: false
+        )
         print(description)
     }
 }
