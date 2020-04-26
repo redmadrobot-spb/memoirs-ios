@@ -28,7 +28,7 @@ class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
         }
     }
 
-    private let apiPath = "api/v1"
+    private let apiPath = "log/api/v1"
     private let endpoint: URL
     private let secret: String
     private let delegateObject: URLSessionDelegateObject
