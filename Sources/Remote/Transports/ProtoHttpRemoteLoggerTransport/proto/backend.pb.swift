@@ -19,28 +19,7 @@ fileprivate struct _GeneratedWithProtocGenSwiftVersion: SwiftProtobuf.ProtobufAP
   typealias Version = _2
 }
 
-struct JournalTokenResponse {
-  // SwiftProtobuf.Message conformance is added in an extension below. See the
-  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
-  // methods supported on all messages.
-
-  var token: String {
-    get {return _token ?? String()}
-    set {_token = newValue}
-  }
-  /// Returns true if `token` has been explicitly set.
-  var hasToken: Bool {return self._token != nil}
-  /// Clears the value of `token`. Subsequent reads from it will return its default value.
-  mutating func clearToken() {self._token = nil}
-
-  var unknownFields = SwiftProtobuf.UnknownStorage()
-
-  init() {}
-
-  fileprivate var _token: String? = nil
-}
-
-struct JournalTokenRequest {
+struct AuthRequest {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
@@ -54,8 +33,8 @@ struct JournalTokenRequest {
   /// Clears the value of `secret`. Subsequent reads from it will return its default value.
   mutating func clearSecret() {self._secret = nil}
 
-  var sender: JournalTokenRequest.Sender {
-    get {return _sender ?? JournalTokenRequest.Sender()}
+  var sender: AuthRequest.Sender {
+    get {return _sender ?? AuthRequest.Sender()}
     set {_sender = newValue}
   }
   /// Returns true if `sender` has been explicitly set.
@@ -159,7 +138,49 @@ struct JournalTokenRequest {
   init() {}
 
   fileprivate var _secret: String? = nil
-  fileprivate var _sender: JournalTokenRequest.Sender? = nil
+  fileprivate var _sender: AuthRequest.Sender? = nil
+}
+
+struct AuthResponse {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  var token: String {
+    get {return _token ?? String()}
+    set {_token = newValue}
+  }
+  /// Returns true if `token` has been explicitly set.
+  var hasToken: Bool {return self._token != nil}
+  /// Clears the value of `token`. Subsequent reads from it will return its default value.
+  mutating func clearToken() {self._token = nil}
+
+  var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  init() {}
+
+  fileprivate var _token: String? = nil
+}
+
+struct LiveCodeResponse {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  var code: String {
+    get {return _code ?? String()}
+    set {_code = newValue}
+  }
+  /// Returns true if `code` has been explicitly set.
+  var hasCode: Bool {return self._code != nil}
+  /// Clears the value of `code`. Subsequent reads from it will return its default value.
+  mutating func clearCode() {self._code = nil}
+
+  var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  init() {}
+
+  fileprivate var _code: String? = nil
 }
 
 struct LogMessageBatch {
@@ -178,6 +199,15 @@ struct LogMessage {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
+
+  var position: UInt64 {
+    get {return _position ?? 0}
+    set {_position = newValue}
+  }
+  /// Returns true if `position` has been explicitly set.
+  var hasPosition: Bool {return self._position != nil}
+  /// Clears the value of `position`. Subsequent reads from it will return its default value.
+  mutating func clearPosition() {self._position = nil}
 
   var timestampMs: Int64 {
     get {return _timestampMs ?? 0}
@@ -271,6 +301,7 @@ struct LogMessage {
 
   init() {}
 
+  fileprivate var _position: UInt64? = nil
   fileprivate var _timestampMs: Int64? = nil
   fileprivate var _priority: LogMessage.Priority? = nil
   fileprivate var _flow: String? = nil
@@ -287,78 +318,10 @@ extension LogMessage.Priority: CaseIterable {
 
 #endif  // swift(>=4.2)
 
-/// Метод получения Сonnection_Code.
-///   - CONNECTION_CODE_RESPONSE: ConnectionCodeResponse - Содержит код необходимый для подключения к live сессии.
-///
-/// Request: POST /api/v1/code
-/// Headers:
-///   Content-Type: application/x-protobuf
-/// Response:
-///   - Успешно:
-///       Code: 200
-///       Body: <ConnectionCodeResponse>
-///   - Неудачно:
-///       Code: 401
-///       Body: "Wrong authorization token"
-struct ConnectionCodeResponse {
-  // SwiftProtobuf.Message conformance is added in an extension below. See the
-  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
-  // methods supported on all messages.
-
-  var code: String {
-    get {return _code ?? String()}
-    set {_code = newValue}
-  }
-  /// Returns true if `code` has been explicitly set.
-  var hasCode: Bool {return self._code != nil}
-  /// Clears the value of `code`. Subsequent reads from it will return its default value.
-  mutating func clearCode() {self._code = nil}
-
-  var unknownFields = SwiftProtobuf.UnknownStorage()
-
-  init() {}
-
-  fileprivate var _code: String? = nil
-}
-
 // MARK: - Code below here is support for the SwiftProtobuf runtime.
 
-extension JournalTokenResponse: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  static let protoMessageName: String = "JournalTokenResponse"
-  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .same(proto: "token"),
-  ]
-
-  public var isInitialized: Bool {
-    if self._token == nil {return false}
-    return true
-  }
-
-  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
-    while let fieldNumber = try decoder.nextFieldNumber() {
-      switch fieldNumber {
-      case 1: try decoder.decodeSingularStringField(value: &self._token)
-      default: break
-      }
-    }
-  }
-
-  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if let v = self._token {
-      try visitor.visitSingularStringField(value: v, fieldNumber: 1)
-    }
-    try unknownFields.traverse(visitor: &visitor)
-  }
-
-  static func ==(lhs: JournalTokenResponse, rhs: JournalTokenResponse) -> Bool {
-    if lhs._token != rhs._token {return false}
-    if lhs.unknownFields != rhs.unknownFields {return false}
-    return true
-  }
-}
-
-extension JournalTokenRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  static let protoMessageName: String = "JournalTokenRequest"
+extension AuthRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let protoMessageName: String = "AuthRequest"
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "secret"),
     2: .same(proto: "sender"),
@@ -391,7 +354,7 @@ extension JournalTokenRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImpl
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  static func ==(lhs: JournalTokenRequest, rhs: JournalTokenRequest) -> Bool {
+  static func ==(lhs: AuthRequest, rhs: AuthRequest) -> Bool {
     if lhs._secret != rhs._secret {return false}
     if lhs._sender != rhs._sender {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
@@ -399,8 +362,8 @@ extension JournalTokenRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImpl
   }
 }
 
-extension JournalTokenRequest.Sender: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  static let protoMessageName: String = JournalTokenRequest.protoMessageName + ".Sender"
+extension AuthRequest.Sender: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let protoMessageName: String = AuthRequest.protoMessageName + ".Sender"
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "id"),
     2: .standard(proto: "app_id"),
@@ -461,7 +424,7 @@ extension JournalTokenRequest.Sender: SwiftProtobuf.Message, SwiftProtobuf._Mess
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  static func ==(lhs: JournalTokenRequest.Sender, rhs: JournalTokenRequest.Sender) -> Bool {
+  static func ==(lhs: AuthRequest.Sender, rhs: AuthRequest.Sender) -> Bool {
     if lhs._id != rhs._id {return false}
     if lhs._appID != rhs._appID {return false}
     if lhs._appName != rhs._appName {return false}
@@ -470,6 +433,74 @@ extension JournalTokenRequest.Sender: SwiftProtobuf.Message, SwiftProtobuf._Mess
     if lhs._operationSystem != rhs._operationSystem {return false}
     if lhs._operationSystemVersion != rhs._operationSystemVersion {return false}
     if lhs._deviceModel != rhs._deviceModel {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension AuthResponse: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let protoMessageName: String = "AuthResponse"
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "token"),
+  ]
+
+  public var isInitialized: Bool {
+    if self._token == nil {return false}
+    return true
+  }
+
+  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      switch fieldNumber {
+      case 1: try decoder.decodeSingularStringField(value: &self._token)
+      default: break
+      }
+    }
+  }
+
+  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if let v = self._token {
+      try visitor.visitSingularStringField(value: v, fieldNumber: 1)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  static func ==(lhs: AuthResponse, rhs: AuthResponse) -> Bool {
+    if lhs._token != rhs._token {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension LiveCodeResponse: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  static let protoMessageName: String = "LiveCodeResponse"
+  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "code"),
+  ]
+
+  public var isInitialized: Bool {
+    if self._code == nil {return false}
+    return true
+  }
+
+  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      switch fieldNumber {
+      case 1: try decoder.decodeSingularStringField(value: &self._code)
+      default: break
+      }
+    }
+  }
+
+  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if let v = self._code {
+      try visitor.visitSingularStringField(value: v, fieldNumber: 1)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  static func ==(lhs: LiveCodeResponse, rhs: LiveCodeResponse) -> Bool {
+    if lhs._code != rhs._code {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
@@ -512,16 +543,18 @@ extension LogMessageBatch: SwiftProtobuf.Message, SwiftProtobuf._MessageImplemen
 extension LogMessage: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   static let protoMessageName: String = "LogMessage"
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .standard(proto: "timestamp_ms"),
-    2: .same(proto: "priority"),
-    3: .same(proto: "flow"),
-    4: .same(proto: "source"),
-    5: .same(proto: "label"),
-    6: .same(proto: "message"),
-    7: .same(proto: "meta"),
+    1: .same(proto: "position"),
+    2: .standard(proto: "timestamp_ms"),
+    3: .same(proto: "priority"),
+    4: .same(proto: "flow"),
+    5: .same(proto: "source"),
+    6: .same(proto: "label"),
+    7: .same(proto: "message"),
+    8: .same(proto: "meta"),
   ]
 
   public var isInitialized: Bool {
+    if self._position == nil {return false}
     if self._timestampMs == nil {return false}
     if self._priority == nil {return false}
     return true
@@ -530,44 +563,49 @@ extension LogMessage: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementatio
   mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
       switch fieldNumber {
-      case 1: try decoder.decodeSingularInt64Field(value: &self._timestampMs)
-      case 2: try decoder.decodeSingularEnumField(value: &self._priority)
-      case 3: try decoder.decodeSingularStringField(value: &self._flow)
-      case 4: try decoder.decodeSingularStringField(value: &self._source)
-      case 5: try decoder.decodeSingularStringField(value: &self._label)
-      case 6: try decoder.decodeSingularStringField(value: &self._message)
-      case 7: try decoder.decodeMapField(fieldType: SwiftProtobuf._ProtobufMap<SwiftProtobuf.ProtobufString,SwiftProtobuf.ProtobufString>.self, value: &self.meta)
+      case 1: try decoder.decodeSingularUInt64Field(value: &self._position)
+      case 2: try decoder.decodeSingularInt64Field(value: &self._timestampMs)
+      case 3: try decoder.decodeSingularEnumField(value: &self._priority)
+      case 4: try decoder.decodeSingularStringField(value: &self._flow)
+      case 5: try decoder.decodeSingularStringField(value: &self._source)
+      case 6: try decoder.decodeSingularStringField(value: &self._label)
+      case 7: try decoder.decodeSingularStringField(value: &self._message)
+      case 8: try decoder.decodeMapField(fieldType: SwiftProtobuf._ProtobufMap<SwiftProtobuf.ProtobufString,SwiftProtobuf.ProtobufString>.self, value: &self.meta)
       default: break
       }
     }
   }
 
   func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if let v = self._position {
+      try visitor.visitSingularUInt64Field(value: v, fieldNumber: 1)
+    }
     if let v = self._timestampMs {
-      try visitor.visitSingularInt64Field(value: v, fieldNumber: 1)
+      try visitor.visitSingularInt64Field(value: v, fieldNumber: 2)
     }
     if let v = self._priority {
-      try visitor.visitSingularEnumField(value: v, fieldNumber: 2)
+      try visitor.visitSingularEnumField(value: v, fieldNumber: 3)
     }
     if let v = self._flow {
-      try visitor.visitSingularStringField(value: v, fieldNumber: 3)
-    }
-    if let v = self._source {
       try visitor.visitSingularStringField(value: v, fieldNumber: 4)
     }
-    if let v = self._label {
+    if let v = self._source {
       try visitor.visitSingularStringField(value: v, fieldNumber: 5)
     }
-    if let v = self._message {
+    if let v = self._label {
       try visitor.visitSingularStringField(value: v, fieldNumber: 6)
     }
+    if let v = self._message {
+      try visitor.visitSingularStringField(value: v, fieldNumber: 7)
+    }
     if !self.meta.isEmpty {
-      try visitor.visitMapField(fieldType: SwiftProtobuf._ProtobufMap<SwiftProtobuf.ProtobufString,SwiftProtobuf.ProtobufString>.self, value: self.meta, fieldNumber: 7)
+      try visitor.visitMapField(fieldType: SwiftProtobuf._ProtobufMap<SwiftProtobuf.ProtobufString,SwiftProtobuf.ProtobufString>.self, value: self.meta, fieldNumber: 8)
     }
     try unknownFields.traverse(visitor: &visitor)
   }
 
   static func ==(lhs: LogMessage, rhs: LogMessage) -> Bool {
+    if lhs._position != rhs._position {return false}
     if lhs._timestampMs != rhs._timestampMs {return false}
     if lhs._priority != rhs._priority {return false}
     if lhs._flow != rhs._flow {return false}
@@ -587,38 +625,4 @@ extension LogMessage.Priority: SwiftProtobuf._ProtoNameProviding {
     2: .same(proto: "WARN"),
     3: .same(proto: "ERROR"),
   ]
-}
-
-extension ConnectionCodeResponse: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  static let protoMessageName: String = "ConnectionCodeResponse"
-  static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .same(proto: "code"),
-  ]
-
-  public var isInitialized: Bool {
-    if self._code == nil {return false}
-    return true
-  }
-
-  mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
-    while let fieldNumber = try decoder.nextFieldNumber() {
-      switch fieldNumber {
-      case 1: try decoder.decodeSingularStringField(value: &self._code)
-      default: break
-      }
-    }
-  }
-
-  func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if let v = self._code {
-      try visitor.visitSingularStringField(value: v, fieldNumber: 1)
-    }
-    try unknownFields.traverse(visitor: &visitor)
-  }
-
-  static func ==(lhs: ConnectionCodeResponse, rhs: ConnectionCodeResponse) -> Bool {
-    if lhs._code != rhs._code {return false}
-    if lhs.unknownFields != rhs.unknownFields {return false}
-    return true
-  }
 }
