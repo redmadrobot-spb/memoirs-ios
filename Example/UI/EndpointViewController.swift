@@ -19,8 +19,6 @@ class EndpointViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet private var activityIndicator: UIActivityIndicatorView!
     @IBOutlet private var connectionCodeLabel: UILabel!
 
-    private var connectionCodeSubscription: Subscription?
-
     enum State {
         case remote
         case loading
@@ -59,7 +57,7 @@ class EndpointViewController: UIViewController, UITextFieldDelegate {
                 state = .remote
         }
 
-        updateConnectionCodeSubscription()
+        connectionUrlTextField.text = "https://robologs.dev/log/api/v1"
     }
 
     @IBAction func cancelButtonTapped() {
@@ -111,30 +109,26 @@ class EndpointViewController: UIViewController, UITextFieldDelegate {
         connectionCodeLabel.text = ""
         if state == .remote {
             RemoteLoggerService.shared.configureRemoteLogger(with: .mock)
+            state = .mock
         } else if state == .mock {
-            guard let urlString = connectionUrlTextField.text, let url = URL(string: urlString) else {
-                return
-            }
+            guard let urlString = connectionUrlTextField.text, let url = URL(string: urlString) else { return }
+
             RemoteLoggerService.shared.configureRemoteLogger(with: .remote(url: url, secret: secretTextField.text ?? ""))
-        }
-        state = .loading
-        updateConnectionCodeSubscription()
-    }
-
-    private func updateConnectionCodeSubscription() {
-        connectionCodeSubscription = RemoteLoggerService.shared.logger.subscribeLiveConnectionCode { [weak self] connectionCode in
-            DispatchQueue.main.async {
-                self?.connectionCodeLabel.text = connectionCode
-
-                switch RemoteLoggerService.shared.type {
-                    case .mock:
-                        self?.state = .mock
-                    case .remote:
-                        self?.state = .remote
+            RemoteLoggerService.shared.liveCode { result in
+                switch result {
+                    case .success(let code):
+                        self.connectionCodeLabel.text = code
+                    case .failure:
+                        let alert = UIAlertController(title: "Error", message: "Live Mode does not work :(", preferredStyle: .alert)
+                        alert.addAction(.init(title: "Cancel", style: .cancel))
+                        self.present(alert, animated: true)
                 }
 
+                self.state = .remote
             }
         }
+
+        state = .loading
     }
 
     // MARK: - UITextFieldDelegate

@@ -22,22 +22,22 @@ public struct LabeledLogger: Logger {
     @inlinable
     public func log(
         level: Level,
-        message: () -> LogString,
+        _ message: @autoclosure () -> LogString,
         label: String,
-        meta: () -> [String: LogString]?,
+        meta: @autoclosure () -> [String: LogString]? = nil,
         file: String = #file, function: String = #function, line: UInt = #line
     ) {
-        logger.log(level: level, message: message(), label: label, meta: meta(), file: file, function: function, line: line)
+        logger.log(level: level, message(), label: label, meta: meta(), file: file, function: function, line: line)
     }
 
     @inlinable
     public func log(
         level: Level,
-        message: @autoclosure () -> LogString,
+        _ message: @autoclosure () -> LogString,
         meta: @autoclosure () -> [String: LogString]?,
         file: String = #file, function: String = #function, line: UInt = #line
     ) {
-        logger.log(level: level, message: message(), label: label, meta: meta(), file: file, function: function, line: line)
+        logger.log(level: level, message(), label: label, meta: meta(), file: file, function: function, line: line)
     }
 
     /// Method that reports the log event with `verbose` logging level.

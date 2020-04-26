@@ -17,12 +17,11 @@ public protocol Logger {
     ///   - file: The path to the file from which the method was called. Usually you should use the #file literal for this.
     ///   - function: The function name from which the method was called. Usually you should use the #function literal for this.
     ///   - line: The line of code from which the method was called. Usually you should use the #line literal for this.
-    @inlinable
     func log(
         level: Level,
-        message: () -> LogString,
+        _ message: @autoclosure () -> LogString,
         label: String,
-        meta: () -> [String: LogString]?,
+        meta: @autoclosure () -> [String: LogString]?,
         file: String,
         function: String,
         line: UInt
@@ -33,12 +32,12 @@ extension Logger {
     @inlinable
     public func log(
         level: Level,
-        message: @autoclosure () -> LogString,
+        _ message: @autoclosure () -> LogString,
         label: String,
         meta: @autoclosure () -> [String: LogString]? = nil,
         file: String = #file, function: String = #function, line: UInt = #line
     ) {
-        log(level: level, message: message, label: label, meta: meta, file: file, function: function, line: line)
+        log(level: level, message(), label: label, meta: meta(), file: file, function: function, line: line)
     }
 
     /// Method that reports the log event with `verbose` logging level.
@@ -49,7 +48,7 @@ extension Logger {
         meta: @autoclosure () -> [String: LogString]? = nil,
         file: String = #file, function: String = #function, line: UInt = #line
     ) {
-        log(level: .verbose, message: message, label: label, meta: meta, file: file, function: function, line: line)
+        log(level: .verbose, message(), label: label, meta: meta(), file: file, function: function, line: line)
     }
 
     /// Method that reports the log event with `debug` logging level.
@@ -60,7 +59,7 @@ extension Logger {
         meta: @autoclosure () -> [String: LogString]? = nil,
         file: String = #file, function: String = #function, line: UInt = #line
     ) {
-        log(level: .debug, message: message, label: label, meta: meta, file: file, function: function, line: line)
+        log(level: .debug, message(), label: label, meta: meta(), file: file, function: function, line: line)
     }
 
     /// Method that reports the log event with `info` logging level.
@@ -71,7 +70,7 @@ extension Logger {
         meta: @autoclosure () -> [String: LogString]? = nil,
         file: String = #file, function: String = #function, line: UInt = #line
     ) {
-        log(level: .info, message: message, label: label, meta: meta, file: file, function: function, line: line)
+        log(level: .info, message(), label: label, meta: meta(), file: file, function: function, line: line)
     }
 
     /// Method that reports the log event with `warning` logging level.
@@ -82,7 +81,7 @@ extension Logger {
         meta: @autoclosure () -> [String: LogString]? = nil,
         file: String = #file, function: String = #function, line: UInt = #line
     ) {
-        log(level: .warning, message: message, label: label, meta: meta, file: file, function: function, line: line)
+        log(level: .warning, message(), label: label, meta: meta(), file: file, function: function, line: line)
     }
 
     /// Method that reports the log event with `error` logging level.
@@ -93,7 +92,7 @@ extension Logger {
         meta: @autoclosure () -> [String: LogString]? = nil,
         file: String = #file, function: String = #function, line: UInt = #line
     ) {
-        log(level: .error, message: message, label: label, meta: meta, file: file, function: function, line: line)
+        log(level: .error, message(), label: label, meta: meta(), file: file, function: function, line: line)
     }
 
     @inlinable
@@ -106,7 +105,7 @@ extension Logger {
     ) {
         log(
             level: .error,
-            message: message.map { "\($0): \(error)" } ?? "\(error)",
+            message.map { "\($0): \(error)" } ?? "\(error)",
             label: label,
             meta: meta(), file: file, function: function, line: line
         )
@@ -120,6 +119,6 @@ extension Logger {
         meta: @autoclosure () -> [String: LogString]? = nil,
         file: String = #file, function: String = #function, line: UInt = #line
     ) {
-        log(level: .critical, message: message, label: label, meta: meta, file: file, function: function, line: line)
+        log(level: .critical, message(), label: label, meta: meta(), file: file, function: function, line: line)
     }
 }

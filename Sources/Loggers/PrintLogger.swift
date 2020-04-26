@@ -22,9 +22,9 @@ public struct PrintLogger: Logger {
     @inlinable
     public func log(
         level: Level,
-        message: () -> LogString,
+        _ message: @autoclosure () -> LogString,
         label: String,
-        meta: () -> [String: LogString]?,
+        meta: @autoclosure () -> [String: LogString]?,
         file: String = #file, function: String = #function, line: UInt = #line
     ) {
         let context = collectContext(file: file, function: function, line: line)

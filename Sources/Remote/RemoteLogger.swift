@@ -8,72 +8,6 @@
 
 import Foundation
 
-/// Intermediate structure used in transport and buffering to store
-/// log message parameters.
-struct LogRecord {
-    let timestamp: TimeInterval
-    let level: Level
-    let message: LogString
-    let label: String
-    let meta: [String: LogString]?
-    let file: String
-    let function: String
-    let line: UInt
-}
-
-/// Responsible for buffering log records while transport is not available.
-protocol RemoteLoggerBuffer {
-    /// Should return `true` if contains any not sent records.
-    var haveBufferedData: Bool { get }
-
-    /// Add record to the buffer. Remote logger should use this method
-    /// to store log records while transport is not available.
-    /// - Parameter record: Buffering record
-    func append(record: LogRecord)
-
-    /// Remote logger call this method to fetch buffered records when transport become available.
-    /// `finished` callback should be called with `true` if retrieved records was sent successfully and
-    /// then remove this records from buffering storage.
-    /// - Parameter completion: Completion block in which remote logger should try to send buffered messages.
-    func retrieve(_ completion: @escaping (_ records: [LogRecord], _ finished: @escaping (Bool) -> Void) -> Void)
-}
-
-/// Errors that can happen in RemoteLoggerTransport
-enum RemoteLoggerTransportError: Error {
-    /// Transport was failed to authenticate or authentication is expired.
-    case notAuthorized
-    /// Network error occurred.
-    case network(Error)
-    /// Serialization error occurred.
-    case serialization(Error)
-}
-
-/// Responsible for sending log records to remote logs storage.
-protocol RemoteLoggerTransport {
-    /// Should return `false` if transport is not authorized.
-    var isAuthorized: Bool { get }
-
-    /// Authorize transport.
-    /// - Parameter completion: Completion called when transport authorized.
-    func authorize(_ completion: @escaping (Result<Void, RemoteLoggerTransportError>) -> Void)
-
-    /// Remote logger call this method to send log records to remote storage.
-    /// - Parameters:
-    ///   - records: Sending records
-    ///   - completion: Completion called when transport finish sending.
-    ///   If returned RemoteLoggerTransportError.notAuthorized logger should reauthorize transport.
-    func liveSend(_ records: [LogRecord], completion: @escaping (Result<Void, RemoteLoggerTransportError>) -> Void)
-
-    /// Subscribe to live connection code for this transport.
-    /// - Parameter onChange: Callback calling right after subscription and every time code change.
-    ///     Could be called from background queue.
-    /// - Returns: Subscription token.
-    ///     Store this token in object with same live time as objects
-    ///     interested in code updates (for example some AboutViewController).
-    ///     If this token is disposed `onChange` will not be called anymore.
-    func subscribeLiveConnectionCode(_ onChange: @escaping (String?) -> Void) -> Subscription
-}
-
 /// Logger that sends log messages to remote storage.
 /// It uses `RemoteLoggerBuffering` for storing log records before sending and `RemoteLoggerTransport` to send them.
 /// After initialization `RemoteLogger` will try to authorize transport
@@ -83,7 +17,7 @@ protocol RemoteLoggerTransport {
 /// If during sending batch of record `RemoteLogger` received `notAuthorized` error `RemoteLogger` will try to reauthorize transport.
 public class RemoteLogger: Logger {
     private let workingQueue = DispatchQueue(label: "Robologs.RemoteLogger")
-    private let buffering: RemoteLoggerBuffer
+    private let buffer: RemoteLoggerBuffer
     private let transport: RemoteLoggerTransport
 
     /// Create new instance of remote logger.
@@ -99,9 +33,10 @@ public class RemoteLogger: Logger {
                 endpoint: endpoint,
                 secret: secret,
                 challengePolicy: challengePolicy,
-                applicationInfo: applicationInfo
+                applicationInfo: applicationInfo,
+                logger: PrintLogger(onlyTime: true)
             ),
-            buffering: InMemoryBuffering()
+            buffer: InMemoryRemoteLoggerBuffer()
         )
     }
 
@@ -111,7 +46,7 @@ public class RemoteLogger: Logger {
     public convenience init(mockingToLogger mockLogger: Logger) {
         self.init(
             transport: MockRemoteLoggerTransport(logger: mockLogger),
-            buffering: InMemoryBuffering()
+            buffer: InMemoryRemoteLoggerBuffer()
         )
     }
 
@@ -119,27 +54,35 @@ public class RemoteLogger: Logger {
     /// - Parameters:
     ///   - buffering: Buffering policy used to keep log records while transport is not available.
     ///   - transport: Transport describing how and where to log message will be sent.
-    init(transport: RemoteLoggerTransport, buffering: RemoteLoggerBuffer) {
-        self.buffering = buffering
+    init(transport: RemoteLoggerTransport, buffer: RemoteLoggerBuffer) {
+        self.buffer = buffer
         self.transport = transport
+    }
 
-        transport.authorize { _ in }
+    // TODO: Persist position
+    private var position: UInt64 = 0
+    private var nextPosition: UInt64 {
+        if position == UInt64.max {
+            position = 0
+        } else {
+            position += 1
+        }
+        return position
     }
 
     public func log(
         level: Level,
-        message: @autoclosure () -> LogString,
+        _ message: @autoclosure () -> LogString,
         label: String,
         meta: @autoclosure () -> [String: LogString]?,
-        file: String,
-        function: String,
-        line: UInt
+        file: String = #file, function: String = #function, line: UInt = #line
     ) {
         let timestamp = Date().timeIntervalSince1970
         let message = message()
         let meta = meta()
         workingQueue.async {
             let record = LogRecord(
+                position: self.nextPosition,
                 timestamp: timestamp,
                 level: level,
                 message: message,
@@ -150,74 +93,65 @@ public class RemoteLogger: Logger {
                 line: line
             )
 
-            self.buffering.append(record: record)
+            self.buffer.append(record: record)
             if self.canSend {
                 self.sendIfNeeded()
             }
         }
     }
 
-    /// Subscribe to live connection code.
-    /// Display this code anywhere in your app, for example in About page.
-    /// User can enter this code in Robologs web page to instantly see logs from current device.
-    /// This code can change anytime so update it in UI at every `onChange` call.
-    /// - Parameter onChange: Callback calling right after subscription and every time code change.
-    ///     Could be called from background queue.
-    /// - Returns: Subscription token.
-    ///     Store this token in object with same live time as objects
-    ///     interested in code updates (for example some AboutViewController).
-    ///     If this token is disposed `onChange` will not be called anymore.
-    public func subscribeLiveConnectionCode(_ onChange: @escaping (String?) -> Void) -> Subscription {
-        transport.subscribeLiveConnectionCode(onChange)
+    public func startLive(completion: @escaping (_ resultWithCode: Result<String, Error>) -> Void) {
+        transport.startLive { liveResult in
+            switch liveResult {
+                case .success:
+                    self.transport.liveConnectionCode { codeResult in
+                        switch codeResult {
+                            case .success(let code):
+                                completion(.success(code))
+                            case .failure(let error):
+                                completion(.failure(error))
+                        }
+                    }
+                case .failure(let error):
+                    completion(.failure(error))
+            }
+        }
+    }
+
+    public func stopLive(completion: @escaping () -> Void) {
+        transport.stopLive { _ in
+            completion()
+        }
     }
 
     private func sendIfNeeded() {
-        guard buffering.haveBufferedData else { return }
+        guard buffer.haveBufferedData else { return }
 
         canSend = false
-        buffering.retrieve { records, finish in
+        buffer.retrieve { records, completion in
             guard !records.isEmpty else {
                 self.canSend = true
-                return finish(true)
+                return completion(true)
             }
 
             self.send(records: records) { finished in
                 self.canSend = true
-                finish(finished)
+                completion(finished)
             }
         }
     }
 
     private var canSend: Bool = true
 
-    private func send(records: [LogRecord], finish: @escaping (Bool) -> Void) {
-        transport.liveSend(records) { result in
+    private func send(records: [LogRecord], completion: @escaping (Bool) -> Void) {
+        transport.sendLive(records: records) { result in
             switch result {
                 case .success:
-                    finish(true)
+                    completion(true)
                     self.sendIfNeeded()
-                case .failure(.notAuthorized):
-                    self.authorize {
-                        self.send(records: records, finish: finish)
-                    }
                 case .failure:
-                    finish(false)
+                    completion(false)
                     self.sendIfNeeded()
-            }
-        }
-    }
-
-    private let reAuthorizationInterval: TimeInterval = 10
-
-    private func authorize(completion: @escaping () -> Void) {
-        transport.authorize { result in
-            switch result {
-                case .success:
-                    completion()
-                case .failure:
-                    self.workingQueue.asyncAfter(deadline: .now() + self.reAuthorizationInterval) {
-                        self.authorize(completion: completion)
-                    }
             }
         }
     }

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import Robologs
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -16,6 +17,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
-        true
+        #if DEBUG
+        LogString.isSensitive = false
+        #else
+        LogString.isSensitive = true
+        #endif
+
+        return true
     }
 }

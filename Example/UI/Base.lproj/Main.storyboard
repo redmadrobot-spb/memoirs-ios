@@ -3,7 +3,7 @@
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16086"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="Stack View standard spacing" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -96,19 +96,19 @@
                     <navigationItem key="navigationItem" title="Robologs" id="OHY-oD-2rR">
                         <barButtonItem key="rightBarButtonItem" title="Remote" id="uaM-sR-HCA">
                             <connections>
-                                <segue destination="Fn3-VQ-b3l" kind="showDetail" identifier="EndpointViewController" id="gN8-Qj-jQb"/>
+                                <segue destination="Fn3-VQ-b3l" kind="presentation" identifier="EndpointViewController" id="gN8-Qj-jQb"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="7O9-Dp-zGn" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-384" y="-325"/>
+            <point key="canvasLocation" x="-1239" y="-206"/>
         </scene>
         <!--Constant load-->
         <scene sceneID="jER-2B-scR">
             <objects>
-                <viewController id="GG8-ui-55H" customClass="ConstantLogsViewController" customModule="Example" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="GG8-ui-55H" customClass="ConstantLogsViewController" customModule="Robologs_Test_App" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="4Gc-hl-HEd">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -138,7 +138,7 @@
                                             <constraint firstItem="ybs-Wn-e5j" firstAttribute="leading" secondItem="Swf-WU-HX1" secondAttribute="leading" id="yHF-WO-6fx"/>
                                         </constraints>
                                     </stackView>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IhD-Oi-4x0" customClass="ActionButton" customModule="Example" customModuleProvider="target">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="IhD-Oi-4x0" customClass="ActionButton" customModule="Robologs_Test_App" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="66.5" width="382" height="50"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="50" id="pj9-KE-Tuq"/>
@@ -156,7 +156,7 @@
                                     <constraint firstAttribute="trailing" secondItem="IhD-Oi-4x0" secondAttribute="trailing" id="ygG-ff-n5t"/>
                                 </constraints>
                             </stackView>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="2JT-yd-cso" customClass="LogsTextView" customModule="Example" customModuleProvider="target">
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="2JT-yd-cso" customClass="LogsTextView" customModule="Robologs_Test_App" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="88" width="414" height="649.5"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                 <color key="textColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -185,17 +185,17 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="5td-ZG-u37" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="525" y="536"/>
+            <point key="canvasLocation" x="236" y="-595"/>
         </scene>
         <!--Randomized load-->
         <scene sceneID="Gxt-wk-AK8">
             <objects>
-                <viewController id="hL5-we-gvh" customClass="RandomizedLogsViewController" customModule="Example" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="hL5-we-gvh" customClass="RandomizedLogsViewController" customModule="Robologs_Test_App" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="nV6-TS-a6p">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="dBw-Id-sch" customClass="LogsTextView" customModule="Example" customModuleProvider="target">
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="dBw-Id-sch" customClass="LogsTextView" customModule="Robologs_Test_App" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="88" width="414" height="669.5"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                 <color key="textColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -223,7 +223,7 @@
                                             <constraint firstAttribute="trailing" secondItem="yJg-2j-vuQ" secondAttribute="trailing" id="ZAp-4g-E9c"/>
                                         </constraints>
                                     </stackView>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QtB-P4-ypm" customClass="ActionButton" customModule="Example" customModuleProvider="target">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QtB-P4-ypm" customClass="ActionButton" customModule="Robologs_Test_App" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="46.5" width="382" height="50"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="50" id="1mY-Tj-m3F"/>
@@ -264,18 +264,18 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bdV-F9-zRw" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-384" y="536"/>
+            <point key="canvasLocation" x="919" y="-595"/>
         </scene>
         <!--Remote-->
         <scene sceneID="IBn-ZT-1bY">
             <objects>
-                <viewController id="x3x-Z1-RFi" customClass="EndpointViewController" customModule="Example" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="x3x-Z1-RFi" customClass="EndpointViewController" customModule="Robologs_Test_App" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8xv-sf-yxW">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="842"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="HKO-Td-iCe">
-                                <rect key="frame" x="20" y="655" width="374" height="207"/>
+                                <rect key="frame" x="20" y="601" width="374" height="207"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="ukO-wi-fXk">
                                         <rect key="frame" x="0.0" y="0.0" width="374" height="62.5"/>
@@ -286,7 +286,7 @@
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="https://10.110.10.50:8083/" borderStyle="roundedRect" placeholder="URL" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="3Uu-bK-ayq">
+                                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="https://10.110.10.50:8083/api/v1" borderStyle="roundedRect" placeholder="URL" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="3Uu-bK-ayq">
                                                 <rect key="frame" x="0.0" y="28.5" width="374" height="34"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="34" id="Kta-xt-L2K"/>
@@ -321,7 +321,7 @@
                                             </textField>
                                         </subviews>
                                     </stackView>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AVx-7s-qBU" customClass="ActionButton" customModule="Example" customModuleProvider="target">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AVx-7s-qBU" customClass="ActionButton" customModule="Robologs_Test_App" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="157" width="374" height="50"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="50" id="uhI-8d-OqC"/>
@@ -334,7 +334,7 @@
                                 </subviews>
                             </stackView>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="Rfd-3l-HQg">
-                                <rect key="frame" x="20" y="104" width="374" height="79"/>
+                                <rect key="frame" x="20" y="72" width="374" height="79"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Code" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xux-jr-HpM">
                                         <rect key="frame" x="0.0" y="0.0" width="374" height="20.5"/>
@@ -351,7 +351,7 @@
                                 </subviews>
                             </stackView>
                             <activityIndicatorView hidden="YES" opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" animating="YES" style="gray" translatesAutoresizingMaskIntoConstraints="NO" id="eNM-5f-co3">
-                                <rect key="frame" x="197" y="438" width="20" height="20"/>
+                                <rect key="frame" x="197" y="411" width="20" height="20"/>
                             </activityIndicatorView>
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
@@ -388,12 +388,12 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ZHH-eO-hET" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="524.63768115942037" y="-1100.2232142857142"/>
+            <point key="canvasLocation" x="-462" y="519"/>
         </scene>
         <!--Single-->
         <scene sceneID="JNh-Bf-xP4">
             <objects>
-                <viewController id="K0S-tX-xNx" customClass="SingleLogViewController" customModule="Example" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="K0S-tX-xNx" customClass="SingleLogViewController" customModule="Robologs_Test_App" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="vzC-ee-QgS">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -455,7 +455,7 @@
                                             <constraint firstItem="Tg8-x5-Kbz" firstAttribute="leading" secondItem="GhP-Em-2D6" secondAttribute="leading" id="t73-3g-0qH"/>
                                         </constraints>
                                     </stackView>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OFa-O4-odm" customClass="ActionButton" customModule="Example" customModuleProvider="target">
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OFa-O4-odm" customClass="ActionButton" customModule="Robologs_Test_App" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="170" width="382" height="50"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="50" id="AEy-Vj-0z5"/>
@@ -474,7 +474,7 @@
                                     <constraint firstAttribute="trailing" secondItem="GhP-Em-2D6" secondAttribute="trailing" id="lo1-5H-1lm"/>
                                 </constraints>
                             </stackView>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="b8L-kz-JJ4" customClass="LogsTextView" customModule="Example" customModuleProvider="target">
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="b8L-kz-JJ4" customClass="LogsTextView" customModule="Robologs_Test_App" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="88" width="414" height="546"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                 <color key="textColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
@@ -507,7 +507,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="aDh-fl-P4z" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1246" y="536"/>
+            <point key="canvasLocation" x="-462" y="-595"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="sko-5U-Zyu">
@@ -523,7 +523,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="F4F-Se-6mT" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-1246" y="-325"/>
+            <point key="canvasLocation" x="-2003" y="-206"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="E7r-rz-Xyu">
@@ -531,7 +531,7 @@
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="Fn3-VQ-b3l" sceneMemberID="viewController">
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="0UK-Dj-YIE">
-                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="56"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <nil name="viewControllers"/>
@@ -541,7 +541,7 @@
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ffv-Re-hYb" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-384.05797101449281" y="-1100.2232142857142"/>
+            <point key="canvasLocation" x="-1239" y="519"/>
         </scene>
     </scenes>
 </document>

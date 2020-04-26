@@ -19,12 +19,11 @@ class RemoteLoggerService {
         RemoteLoggerService()
     }()
 
-    private(set) var logger: RemoteLogger
-    private(set) var type: RemoteLoggerType
+    private(set) var logger: RemoteLogger!
+    private(set) var type: RemoteLoggerType = .mock
 
     private init() {
-        logger = RemoteLogger(mockingToLogger: PrintLogger())
-        type = .mock
+        configureRemoteLogger(with: type)
     }
 
     class var shared: RemoteLoggerService { sharedRemoteLoggerService }
@@ -42,5 +41,9 @@ class RemoteLoggerService {
                     applicationInfo: UIKitApplicationInfo.current
                 )
         }
+    }
+
+    func liveCode(completion: @escaping (Result<String, Error>) -> Void) {
+        logger.startLive(completion: completion)
     }
 }

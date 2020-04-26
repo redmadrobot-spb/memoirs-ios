@@ -31,12 +31,10 @@ class DiagnosticLogger: Logger {
 
     func log(
         level: Level,
+        _ message: @autoclosure () -> LogString,
         label: String,
-        message: () -> LogString,
-        meta: () -> [String: LogString]?,
-        file: String,
-        function: String,
-        line: UInt
+        meta: @autoclosure () -> [String: LogString]? = nil,
+        file: String = #file, function: String = #function, line: UInt = #line
     ) {
         totalCount += 1
 

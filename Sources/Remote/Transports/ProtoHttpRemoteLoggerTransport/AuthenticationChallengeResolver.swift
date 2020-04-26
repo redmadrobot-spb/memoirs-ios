@@ -30,7 +30,7 @@ public protocol AuthenticationChallengePolicy {
     )
 }
 
-/// Default system wide authentification challenge policy.
+/// Default system wide authentication challenge policy.
 public struct DefaultChallengePolicy: AuthenticationChallengePolicy {
     /// Create new instance of `DefaultChallengePolicy`
     public init() {}
@@ -44,7 +44,7 @@ public struct DefaultChallengePolicy: AuthenticationChallengePolicy {
     }
 }
 
-/// Authentification challenge policy that allows self signed certificates.
+/// Authentication challenge policy that allows self signed certificates.
 public struct AllowSelfSignedChallengePolicy: AuthenticationChallengePolicy {
     /// Create new instance of `AllowSelfSignedChallengePolicy`
     public init() {}

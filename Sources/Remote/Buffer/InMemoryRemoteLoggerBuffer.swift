@@ -1,5 +1,5 @@
 //
-//  InMemoryBuffering.swift
+//  InMemoryRemoteLoggerBuffer.swift
 //  RobologsTest
 //
 //  Created by Vladislav Maltsev on 04.03.2020.
@@ -7,7 +7,8 @@
 //
 
 /// Simplest buffering - just keeps log records in memory.
-class InMemoryBuffering: RemoteLoggerBuffer {
+class InMemoryRemoteLoggerBuffer: RemoteLoggerBuffer {
+    private let maxRecordsCount: Int = 1000
     private var records: [LogRecord] = []
 
     var haveBufferedData: Bool {
@@ -16,6 +17,9 @@ class InMemoryBuffering: RemoteLoggerBuffer {
 
     func append(record: LogRecord) {
         records.append(record)
+        if records.count > maxRecordsCount {
+            records = records.suffix(records.count - maxRecordsCount)
+        }
     }
 
     func retrieve(_ actions: @escaping ([LogRecord], @escaping (Bool) -> Void) -> Void) {

@@ -26,9 +26,9 @@ public struct InfoGatheringLogger: Logger {
     @inlinable
     public func log(
         level: Level,
-        message: () -> LogString,
+        _ message: @autoclosure () -> LogString,
         label: String,
-        meta: () -> [String: LogString]?,
+        meta: @autoclosure () -> [String: LogString]? = nil,
         file: String = #file, function: String = #function, line: UInt = #line
     ) {
         var updatedMeta = self.meta
@@ -42,6 +42,6 @@ public struct InfoGatheringLogger: Logger {
             updatedMeta[key] = value
         }
 
-        logger.log(level: level, message: message(), label: label, meta: updatedMeta, file: file, function: function, line: line)
+        logger.log(level: level, message(), label: label, meta: updatedMeta, file: file, function: function, line: line)
     }
 }

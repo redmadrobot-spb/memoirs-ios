@@ -26,10 +26,10 @@ public struct OSLogLogger: Logger {
 
     public func log(
         level: Level,
-        message: () -> LogString,
+        _ message: @autoclosure () -> LogString,
         label: String,
-        meta: () -> [String: LogString]?,
-        file: String, function: String, line: UInt
+        meta: @autoclosure () -> [String: LogString]? = nil,
+        file: String = #file, function: String = #function, line: UInt = #line
     ) {
         let context = collectContext(file: file, function: function, line: line)
         let description = concatenateData(time: "", level: nil, message: message, label: "", meta: meta, context: context)
