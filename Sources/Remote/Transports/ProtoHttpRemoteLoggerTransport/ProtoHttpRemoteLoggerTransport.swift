@@ -72,9 +72,9 @@ class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
             request.httpMethod = "POST"
             request.setValue("application/x-protobuf", forHTTPHeaderField: "Content-Type")
 
-            let sourceRequest = JournalTokenRequest.with { request in
+            let sourceRequest = AuthRequest.with { request in
                 request.secret = secret
-                request.sender = JournalTokenRequest.Sender.with { sender in
+                request.sender = AuthRequest.Sender.with { sender in
                     let enviromentInfo = EnviromentInfo.current
                     sender.id = UIDevice.current.identifierForVendor?.uuidString ?? ""
                     sender.appID = enviromentInfo.appId ?? ""
@@ -93,9 +93,9 @@ class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
                 } else {
                     if let data = data {
                         do {
-                            let response = try JournalTokenResponse(serializedData: data)
+                            let response = try AuthResponse(serializedData: data)
                             self.authToken = response.token
-                            self.getCode { result in
+                            self.getLiveCode { result in
                                 switch result {
                                     case .success:
                                         completion(.success(()))
@@ -115,7 +115,7 @@ class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
         }
     }
 
-    func getCode(_ completion: @escaping (Result<Void, RemoteLoggerTransportError>) -> Void) {
+    func getLiveCode(_ completion: @escaping (Result<Void, RemoteLoggerTransportError>) -> Void) {
         guard let authToken = authToken else {
             completion(.failure(.notAuthorized))
             return
@@ -132,7 +132,7 @@ class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
             } else {
                 if let data = data {
                     do {
-                        let response = try ConnectionCodeResponse(serializedData: data)
+                        let response = try LiveCodeResponse(serializedData: data)
                         self.currentLiveConnectionCode = response.code
                         self.liveStart { result in
                             switch result {
@@ -151,7 +151,49 @@ class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
         task.resume()
     }
 
+    func unbindLiveCode(_ completion: @escaping (Result<Void, RemoteLoggerTransportError>) -> Void) {
+        guard let authToken = authToken else {
+            completion(.failure(.notAuthorized))
+            return
+        }
+
+        var request = URLRequest(url: endpoint.appendingPathComponent("code"))
+        request.httpMethod = "Delete"
+        request.setValue("application/x-protobuf", forHTTPHeaderField: "Content-Type")
+        request.setValue(authToken, forHTTPHeaderField: "Authorization")
+
+        let task = session.dataTask(with: request) { _, _, error in
+            if let error = error {
+                completion(.failure(.network(error)))
+            } else {
+                completion(.success(()))
+            }
+        }
+        task.resume()
+    }
+
     func liveStart(_ completion: @escaping (Result<Void, RemoteLoggerTransportError>) -> Void) {
+        guard let authToken = authToken else {
+            completion(.failure(.notAuthorized))
+            return
+        }
+
+        var request = URLRequest(url: endpoint.appendingPathComponent("live/start"))
+        request.httpMethod = "POST"
+        request.setValue("application/x-protobuf", forHTTPHeaderField: "Content-Type")
+        request.setValue(authToken, forHTTPHeaderField: "Authorization")
+
+        let task = session.dataTask(with: request) { _, _, error in
+            if let error = error {
+                completion(.failure(.network(error)))
+            } else {
+                completion(.success(()))
+            }
+        }
+        task.resume()
+    }
+
+    func liveStop(_ completion: @escaping (Result<Void, RemoteLoggerTransportError>) -> Void) {
         guard let authToken = authToken else {
             completion(.failure(.notAuthorized))
             return
