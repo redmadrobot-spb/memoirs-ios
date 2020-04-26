@@ -229,6 +229,7 @@ class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
             let logMessages = LogMessageBatch.with { logMessages in
                 logMessages.messages = records.map { record in
                     LogMessage.with { logMessage in
+                        logMessage.position = UInt64(record.position)
                         logMessage.priority = {
                             switch record.level {
                                 case .critical, .error:

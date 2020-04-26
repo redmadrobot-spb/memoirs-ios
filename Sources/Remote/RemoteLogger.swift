@@ -11,6 +11,7 @@ import Foundation
 /// Intermediate structure used in transport and buffering to store
 /// log message parameters.
 struct LogRecord {
+    let position: UInt = 0
     let timestamp: TimeInterval
     let label: String
     let level: Level
