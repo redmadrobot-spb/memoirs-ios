@@ -3,7 +3,7 @@
 // Robologs
 //
 // Created by Alex Babaev on 25 April 2020.
-// Copyright (c) 2020 Redmadrobot. All rights reserved.
+// Copyright © 2020 Redmadrobot SPb. All rights reserved.
 //
 
 import Foundation
@@ -40,7 +40,7 @@ public struct UIKitApplicationInfo: ApplicationInfo {
     public static var current: UIKitApplicationInfo {
         guard
             let infoPlist = Bundle.main.infoDictionary,
-                let appId = infoPlist["CFBundleIdentifier"] as? String
+            let appId = infoPlist["CFBundleIdentifier"] as? String
         else { fatalError("Can't load ios application environment") }
 
         var systemInfo = utsname()
@@ -80,7 +80,7 @@ public struct AppKitApplicationInfo: ApplicationInfo {
     public static var current: AppKitApplicationInfo {
         guard
             let infoPlist = Bundle.main.infoDictionary,
-                let appId = infoPlist["CFBundleIdentifier"] as? String
+            let appId = infoPlist["CFBundleIdentifier"] as? String
         else { fatalError("Can't load ios application environment") }
 
         var systemInfo = utsname()
