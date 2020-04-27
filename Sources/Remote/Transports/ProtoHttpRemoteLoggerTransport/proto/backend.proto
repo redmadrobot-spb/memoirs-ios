@@ -33,18 +33,20 @@ message LogMessageBatch {
 
 message LogMessage {
     required uint64 position = 1;
-    required int64 timestamp_ms = 2;
+    required uint64 timestamp_millis = 2;
     required Priority priority = 3;
-    optional string flow = 4;
-    optional string source = 5;
-    optional string label = 6;
-    optional string message = 7;
-    map<string,string> meta = 8;
+    optional string source = 4;
+    optional string label = 5;
+    optional string body = 6;
+    map<string,string> meta = 7;
 
     enum Priority {
-        DEBUG = 0;
-        INFO = 1;
-        WARN = 2;
-        ERROR = 3;
+        UNDEFINED = 0;
+        VERBOSE = 1;
+        DEBUG = 2;
+        INFO = 3;
+        WARN = 4;
+        ERROR = 5;
+        CRITICAL = 6;
     }
 }

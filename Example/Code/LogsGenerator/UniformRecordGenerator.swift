@@ -14,6 +14,6 @@ struct UniformRecordGenerator: LogGeneratorRecordGenerator {
 
     func records(for range: TimeRange) -> [GeneratedLogRecord] {
         let recordsCount = Int(recordsPerSecond * range.interval)
-        return Array(repeating: record(), count: recordsCount)
+        return (0 ..< recordsCount).map { _ in record() }
     }
 }

@@ -12,14 +12,18 @@ import SwiftProtobuf
 extension Level {
     var protoBufLevel: LogMessage.Priority {
         switch self {
-            case .critical, .error:
+            case .critical:
+                return .critical
+            case .error:
                 return .error
             case .warning:
                 return .warn
             case .info:
                 return .info
-            case .debug, .verbose:
+            case .debug:
                 return .debug
+            case .verbose:
+                return .verbose
         }
     }
 }
@@ -137,9 +141,9 @@ class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
                     logMessage.position = record.position
                     logMessage.priority = record.level.protoBufLevel
                     logMessage.label = record.label
-                    logMessage.message = record.message
+                    logMessage.body = record.message
                     logMessage.source = collectContext(file: record.file, function: record.function, line: record.line)
-                    logMessage.timestampMs = Int64(record.timestamp * 1000)
+                    logMessage.timestampMillis = UInt64(record.timestamp * 1000)
                     logMessage.meta = record.meta ?? [:]
                 }
             }

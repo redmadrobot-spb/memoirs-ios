@@ -17,8 +17,6 @@ class SingleLogViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet private var sensitiveSwitcher: UISwitch!
     @IBOutlet private var formBottomConstraint: NSLayoutConstraint!
     @IBOutlet private var formStackView: UIStackView!
-    private var logger: Logger!
-    private var currentLogNumber = 0
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -28,20 +26,22 @@ class SingleLogViewController: UIViewController, UITextFieldDelegate {
         sensitiveSwitcher.isOn = false
     }
 
+    private var logText: String = ""
+
     private func setupLogger() {
-        let diagnosticLogger = DiagnosticLogger { [weak self] diagnosticLogger in
+        Loggers.instance.bufferLoggerHandler = { [weak self] logs in
             guard let self = self else { return }
 
-            self.logsTextView.text = diagnosticLogger.lastLogs.reversed().joined(separator: "\n")
-            self.currentLogNumber = diagnosticLogger.lastLogs.count
+            self.logText += logs.joined(separator: "\n") + "\n"
+            if self.logText.count > 8192 {
+                self.logText = String(self.logText.suffix(8192))
+            }
+            self.logsTextView.text = self.logText
+            self.logsTextView.scrollRectToVisible(
+                CGRect(x: 0, y: self.logsTextView.contentSize.height - 1, width: 1, height: 1),
+                animated: false
+            )
         }
-
-        logger = MultiplexingLogger(
-            loggers: [
-                RemoteLoggerService.shared.logger,
-                diagnosticLogger,
-            ]
-        )
     }
 
     private func setupKeyboardShowing() {
@@ -86,7 +86,7 @@ class SingleLogViewController: UIViewController, UITextFieldDelegate {
     }
 
     @IBAction func sendLogButtonTapped() {
-        logger.log(
+        Loggers.instance.logger.log(
             level: Level.allCases[selectedLogLevelSegmentedControl.selectedSegmentIndex],
             sensitiveSwitcher.isOn ? "\(messageTextField.text ?? "")" : "\(safe: messageTextField.text ?? "")",
             label: labelTextField.text ?? ""

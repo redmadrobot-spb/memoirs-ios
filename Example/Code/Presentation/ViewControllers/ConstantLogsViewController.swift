@@ -11,11 +11,9 @@ import Robologs
 
 class ConstantLogsViewController: UIViewController {
     @IBOutlet private var logsTextView: UITextView!
-    @IBOutlet private var actionButton: ActionButton!
+    @IBOutlet private var actionButton: UIButton!
     @IBOutlet private var loadIntensitySlider: UISlider!
-    private var logger: Logger!
     private var logsGenerator: LogsGenerator!
-    private var currentLogNumber = 0
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,18 +22,28 @@ class ConstantLogsViewController: UIViewController {
         configureLogsGenerator()
     }
 
+    private var logText: String = ""
+
     private func setupLogger() {
-        let diagnosticLogger = DiagnosticLogger { [weak self] diagnosticLogger in
+        Loggers.instance.bufferLoggerHandler = { [weak self] logs in
             guard let self = self else { return }
 
-            self.logsTextView.text = diagnosticLogger.lastLogs.reversed().joined(separator: "\n")
-            self.currentLogNumber = diagnosticLogger.lastLogs.count
+            self.logText += logs.joined(separator: "\n") + "\n"
+            if self.logText.count > 8192 {
+                self.logText = String(self.logText.suffix(8192))
+            }
+            self.logsTextView.text = self.logText
+            self.logsTextView.scrollRectToVisible(
+                CGRect(x: 0, y: self.logsTextView.contentSize.height - 1, width: 1, height: 1),
+                animated: false
+            )
         }
+    }
 
-        logger = MultiplexingLogger(loggers: [
-            RemoteLoggerService.shared.logger,
-            diagnosticLogger
-        ])
+    private var position: UInt64 = 0
+    private var nextPosition: UInt64 {
+        position += 1
+        return position
     }
 
     private func configureLogsGenerator() {
@@ -43,8 +51,8 @@ class ConstantLogsViewController: UIViewController {
             record: {
                 GeneratedLogRecord(
                     level: Level.allCases.randomElement() ?? .info,
-                    label: "Log number: \(self.currentLogNumber)",
-                    message: "Test message")
+                    label: "ConstantLog",
+                    message: "Test message \(self.nextPosition)")
 
             },
             recordsPerSecond: Double(loadIntensitySlider.value * 100)
@@ -52,8 +60,7 @@ class ConstantLogsViewController: UIViewController {
 
         logsGenerator = LogsGenerator(
             timing: LogsGeneratorTiming(period: 0.2),
-            recordGenerator: recordsGenerator,
-            logger: logger
+            recordGenerator: recordsGenerator
         )
     }
 

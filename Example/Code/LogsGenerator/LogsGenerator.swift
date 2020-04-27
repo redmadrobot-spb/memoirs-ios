@@ -11,28 +11,25 @@ import Robologs
 class LogsGenerator {
     private let timing: LogsGeneratorTiming
     private let recordGenerator: LogGeneratorRecordGenerator
-    private let logger: Logger
     private(set) var isPlaying: Bool = false
 
     init(
         timing: LogsGeneratorTiming,
-        recordGenerator: LogGeneratorRecordGenerator,
-        logger: Logger
+        recordGenerator: LogGeneratorRecordGenerator
     ) {
         self.timing = timing
         self.recordGenerator = recordGenerator
-        self.logger = logger
     }
 
     func start() {
         isPlaying = true
         timing.start { range in
             self.recordGenerator.records(for: range).forEach { generatedRecord in
-                self.logger.log(
+                Loggers.instance.logger.log(
                     level: generatedRecord.level,
-                    "\(safe: generatedRecord.message)",
+                    generatedRecord.message,
                     label: generatedRecord.label,
-                    meta: generatedRecord.meta?.mapValues { "\(safe: $0)" as LogString } ?? [:]
+                    meta: generatedRecord.meta
                 )
             }
         }

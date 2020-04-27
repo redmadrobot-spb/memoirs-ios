@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum RemoteLoggerTransportError: Error {
+public enum RemoteLoggerTransportError: Error {
     /// Transport was failed to authenticate or authentication is expired.
     case notAuthorized
     case methodIsAbsent

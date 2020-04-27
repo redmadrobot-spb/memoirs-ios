@@ -10,29 +10,54 @@ import Foundation
 
 /// Logger that sends log messages to remote storage.
 public class RemoteLogger: Logger {
+    public enum Error: Swift.Error {
+        case transportIsNotConfigured
+        case transport(RemoteLoggerTransportError?)
+    }
+
     public let isSensitive: Bool
 
+    private let logger: Logger
+    private let applicationInfo: ApplicationInfo
     private let workingQueue = DispatchQueue(label: "com.redmadrobot.robologs.RemoteLogger")
     private let buffer: RemoteLoggerBuffer
-    private let transport: RemoteLoggerTransport
+    private var transport: RemoteLoggerTransport?
 
     public init(
+        applicationInfo: ApplicationInfo,
+        isSensitive: Bool,
+        logger: Logger = NullLogger()
+    ) {
+        buffer = InMemoryRemoteLoggerBuffer()
+        self.applicationInfo = applicationInfo
+        self.logger = logger
+        self.isSensitive = isSensitive
+    }
+
+    public func configure(
         endpoint: URL,
         secret: String,
         challengePolicy: AuthenticationChallengePolicy = DefaultChallengePolicy(),
-        applicationInfo: ApplicationInfo,
-        isSensitive: Bool,
-        logger: Logger
+        completion: @escaping () -> Void
     ) {
-        buffer = InMemoryRemoteLoggerBuffer()
-        transport = ProtoHttpRemoteLoggerTransport(
-            endpoint: endpoint,
-            secret: secret,
-            challengePolicy: challengePolicy,
-            applicationInfo: applicationInfo,
-            logger: logger
-        )
-        self.isSensitive = isSensitive
+        let updateTransport = {
+            self.transport = ProtoHttpRemoteLoggerTransport(
+                endpoint: endpoint,
+                secret: secret,
+                challengePolicy: challengePolicy,
+                applicationInfo: self.applicationInfo,
+                logger: self.logger
+            )
+            completion()
+        }
+
+        if transport != nil {
+            stopLive { _ in
+                updateTransport()
+            }
+        } else {
+            updateTransport()
+        }
     }
 
     // TODO: Persist position
@@ -77,26 +102,45 @@ public class RemoteLogger: Logger {
     }
 
     public func startLive(completion: @escaping (_ resultWithCode: Result<String, Error>) -> Void) {
+        guard let transport = transport else { return completion(.failure(.transportIsNotConfigured)) }
+
         transport.startLive { liveResult in
             switch liveResult {
                 case .success:
-                    self.transport.liveConnectionCode { codeResult in
+                    transport.liveConnectionCode { codeResult in
                         switch codeResult {
                             case .success(let code):
                                 completion(.success(code))
                             case .failure(let error):
-                                completion(.failure(error))
+                                completion(.failure(.transport(error)))
                         }
                     }
                 case .failure(let error):
-                    completion(.failure(error))
+                    completion(.failure(.transport(error)))
             }
         }
     }
 
-    public func stopLive(completion: @escaping () -> Void) {
-        transport.stopLive { _ in
-            completion()
+    public func stopLive(completion: @escaping (Result<Void, Error>) -> Void) {
+        guard let transport = transport else { return completion(.failure(.transportIsNotConfigured)) }
+
+        transport.invalidateConnectionCode { _ in
+            transport.stopLive { _ in
+                completion(.success(Void()))
+            }
+        }
+    }
+
+    public func getCode(completion: @escaping (_ resultWithCode: Result<String, Error>) -> Void) {
+        guard let transport = transport else { return completion(.failure(.transportIsNotConfigured)) }
+
+        transport.liveConnectionCode { result in
+            switch result {
+                case .success(let code):
+                    completion(.success(code))
+                case .failure(let error):
+                    completion(.failure(.transport(error)))
+            }
         }
     }
 
@@ -110,23 +154,25 @@ public class RemoteLogger: Logger {
                 return completion(true)
             }
 
-            self.send(records: records) { finished in
+            self.send(records: records) { result in
                 self.canSend = true
-                completion(finished)
+                completion((try? result.get()) != nil)
             }
         }
     }
 
     private var canSend: Bool = true
 
-    private func send(records: [LogRecord], completion: @escaping (Bool) -> Void) {
+    private func send(records: [LogRecord], completion: @escaping (Result<Void, Error>) -> Void) {
+        guard let transport = transport else { return completion(.failure(.transportIsNotConfigured)) }
+
         transport.sendLive(records: records) { result in
             switch result {
                 case .success:
-                    completion(true)
+                    completion(.success(Void()))
                     self.sendIfNeeded()
-                case .failure:
-                    completion(false)
+                case .failure(let error):
+                    completion(.failure(.transport(error)))
                     self.sendIfNeeded()
             }
         }

@@ -209,32 +209,23 @@ struct LogMessage {
   /// Clears the value of `position`. Subsequent reads from it will return its default value.
   mutating func clearPosition() {self._position = nil}
 
-  var timestampMs: Int64 {
-    get {return _timestampMs ?? 0}
-    set {_timestampMs = newValue}
+  var timestampMillis: UInt64 {
+    get {return _timestampMillis ?? 0}
+    set {_timestampMillis = newValue}
   }
-  /// Returns true if `timestampMs` has been explicitly set.
-  var hasTimestampMs: Bool {return self._timestampMs != nil}
-  /// Clears the value of `timestampMs`. Subsequent reads from it will return its default value.
-  mutating func clearTimestampMs() {self._timestampMs = nil}
+  /// Returns true if `timestampMillis` has been explicitly set.
+  var hasTimestampMillis: Bool {return self._timestampMillis != nil}
+  /// Clears the value of `timestampMillis`. Subsequent reads from it will return its default value.
+  mutating func clearTimestampMillis() {self._timestampMillis = nil}
 
   var priority: LogMessage.Priority {
-    get {return _priority ?? .debug}
+    get {return _priority ?? .undefined}
     set {_priority = newValue}
   }
   /// Returns true if `priority` has been explicitly set.
   var hasPriority: Bool {return self._priority != nil}
   /// Clears the value of `priority`. Subsequent reads from it will return its default value.
   mutating func clearPriority() {self._priority = nil}
-
-  var flow: String {
-    get {return _flow ?? String()}
-    set {_flow = newValue}
-  }
-  /// Returns true if `flow` has been explicitly set.
-  var hasFlow: Bool {return self._flow != nil}
-  /// Clears the value of `flow`. Subsequent reads from it will return its default value.
-  mutating func clearFlow() {self._flow = nil}
 
   var source: String {
     get {return _source ?? String()}
@@ -254,14 +245,14 @@ struct LogMessage {
   /// Clears the value of `label`. Subsequent reads from it will return its default value.
   mutating func clearLabel() {self._label = nil}
 
-  var message: String {
-    get {return _message ?? String()}
-    set {_message = newValue}
+  var body: String {
+    get {return _body ?? String()}
+    set {_body = newValue}
   }
-  /// Returns true if `message` has been explicitly set.
-  var hasMessage: Bool {return self._message != nil}
-  /// Clears the value of `message`. Subsequent reads from it will return its default value.
-  mutating func clearMessage() {self._message = nil}
+  /// Returns true if `body` has been explicitly set.
+  var hasBody: Bool {return self._body != nil}
+  /// Clears the value of `body`. Subsequent reads from it will return its default value.
+  mutating func clearBody() {self._body = nil}
 
   var meta: Dictionary<String,String> = [:]
 
@@ -269,31 +260,40 @@ struct LogMessage {
 
   enum Priority: SwiftProtobuf.Enum {
     typealias RawValue = Int
-    case debug // = 0
-    case info // = 1
-    case warn // = 2
-    case error // = 3
+    case undefined // = 0
+    case verbose // = 1
+    case debug // = 2
+    case info // = 3
+    case warn // = 4
+    case error // = 5
+    case critical // = 6
 
     init() {
-      self = .debug
+      self = .undefined
     }
 
     init?(rawValue: Int) {
       switch rawValue {
-        case 0: self = .debug
-        case 1: self = .info
-        case 2: self = .warn
-        case 3: self = .error
-        default: return nil
+      case 0: self = .undefined
+      case 1: self = .verbose
+      case 2: self = .debug
+      case 3: self = .info
+      case 4: self = .warn
+      case 5: self = .error
+      case 6: self = .critical
+      default: return nil
       }
     }
 
     var rawValue: Int {
       switch self {
-        case .debug: return 0
-        case .info: return 1
-        case .warn: return 2
-        case .error: return 3
+      case .undefined: return 0
+      case .verbose: return 1
+      case .debug: return 2
+      case .info: return 3
+      case .warn: return 4
+      case .error: return 5
+      case .critical: return 6
       }
     }
 
@@ -302,12 +302,11 @@ struct LogMessage {
   init() {}
 
   fileprivate var _position: UInt64? = nil
-  fileprivate var _timestampMs: Int64? = nil
+  fileprivate var _timestampMillis: UInt64? = nil
   fileprivate var _priority: LogMessage.Priority? = nil
-  fileprivate var _flow: String? = nil
   fileprivate var _source: String? = nil
   fileprivate var _label: String? = nil
-  fileprivate var _message: String? = nil
+  fileprivate var _body: String? = nil
 }
 
 #if swift(>=4.2)
@@ -337,9 +336,9 @@ extension AuthRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementati
   mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
       switch fieldNumber {
-        case 1: try decoder.decodeSingularStringField(value: &self._secret)
-        case 2: try decoder.decodeSingularMessageField(value: &self._sender)
-        default: break
+      case 1: try decoder.decodeSingularStringField(value: &self._secret)
+      case 2: try decoder.decodeSingularMessageField(value: &self._sender)
+      default: break
       }
     }
   }
@@ -383,15 +382,15 @@ extension AuthRequest.Sender: SwiftProtobuf.Message, SwiftProtobuf._MessageImple
   mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
       switch fieldNumber {
-        case 1: try decoder.decodeSingularStringField(value: &self._id)
-        case 2: try decoder.decodeSingularStringField(value: &self._appID)
-        case 3: try decoder.decodeSingularStringField(value: &self._appName)
-        case 4: try decoder.decodeSingularStringField(value: &self._appVersion)
-        case 5: try decoder.decodeSingularStringField(value: &self._appBuildVersion)
-        case 6: try decoder.decodeSingularStringField(value: &self._operationSystem)
-        case 7: try decoder.decodeSingularStringField(value: &self._operationSystemVersion)
-        case 8: try decoder.decodeSingularStringField(value: &self._deviceModel)
-        default: break
+      case 1: try decoder.decodeSingularStringField(value: &self._id)
+      case 2: try decoder.decodeSingularStringField(value: &self._appID)
+      case 3: try decoder.decodeSingularStringField(value: &self._appName)
+      case 4: try decoder.decodeSingularStringField(value: &self._appVersion)
+      case 5: try decoder.decodeSingularStringField(value: &self._appBuildVersion)
+      case 6: try decoder.decodeSingularStringField(value: &self._operationSystem)
+      case 7: try decoder.decodeSingularStringField(value: &self._operationSystemVersion)
+      case 8: try decoder.decodeSingularStringField(value: &self._deviceModel)
+      default: break
       }
     }
   }
@@ -452,8 +451,8 @@ extension AuthResponse: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementat
   mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
       switch fieldNumber {
-        case 1: try decoder.decodeSingularStringField(value: &self._token)
-        default: break
+      case 1: try decoder.decodeSingularStringField(value: &self._token)
+      default: break
       }
     }
   }
@@ -486,8 +485,8 @@ extension LiveCodeResponse: SwiftProtobuf.Message, SwiftProtobuf._MessageImpleme
   mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
       switch fieldNumber {
-        case 1: try decoder.decodeSingularStringField(value: &self._code)
-        default: break
+      case 1: try decoder.decodeSingularStringField(value: &self._code)
+      default: break
       }
     }
   }
@@ -520,8 +519,8 @@ extension LogMessageBatch: SwiftProtobuf.Message, SwiftProtobuf._MessageImplemen
   mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
       switch fieldNumber {
-        case 1: try decoder.decodeRepeatedMessageField(value: &self.messages)
-        default: break
+      case 1: try decoder.decodeRepeatedMessageField(value: &self.messages)
+      default: break
       }
     }
   }
@@ -544,18 +543,17 @@ extension LogMessage: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementatio
   static let protoMessageName: String = "LogMessage"
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "position"),
-    2: .standard(proto: "timestamp_ms"),
+    2: .standard(proto: "timestamp_millis"),
     3: .same(proto: "priority"),
-    4: .same(proto: "flow"),
-    5: .same(proto: "source"),
-    6: .same(proto: "label"),
-    7: .same(proto: "message"),
-    8: .same(proto: "meta"),
+    4: .same(proto: "source"),
+    5: .same(proto: "label"),
+    6: .same(proto: "body"),
+    7: .same(proto: "meta"),
   ]
 
   public var isInitialized: Bool {
     if self._position == nil {return false}
-    if self._timestampMs == nil {return false}
+    if self._timestampMillis == nil {return false}
     if self._priority == nil {return false}
     return true
   }
@@ -563,15 +561,14 @@ extension LogMessage: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementatio
   mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
     while let fieldNumber = try decoder.nextFieldNumber() {
       switch fieldNumber {
-        case 1: try decoder.decodeSingularUInt64Field(value: &self._position)
-        case 2: try decoder.decodeSingularInt64Field(value: &self._timestampMs)
-        case 3: try decoder.decodeSingularEnumField(value: &self._priority)
-        case 4: try decoder.decodeSingularStringField(value: &self._flow)
-        case 5: try decoder.decodeSingularStringField(value: &self._source)
-        case 6: try decoder.decodeSingularStringField(value: &self._label)
-        case 7: try decoder.decodeSingularStringField(value: &self._message)
-        case 8: try decoder.decodeMapField(fieldType: SwiftProtobuf._ProtobufMap<SwiftProtobuf.ProtobufString,SwiftProtobuf.ProtobufString>.self, value: &self.meta)
-        default: break
+      case 1: try decoder.decodeSingularUInt64Field(value: &self._position)
+      case 2: try decoder.decodeSingularUInt64Field(value: &self._timestampMillis)
+      case 3: try decoder.decodeSingularEnumField(value: &self._priority)
+      case 4: try decoder.decodeSingularStringField(value: &self._source)
+      case 5: try decoder.decodeSingularStringField(value: &self._label)
+      case 6: try decoder.decodeSingularStringField(value: &self._body)
+      case 7: try decoder.decodeMapField(fieldType: SwiftProtobuf._ProtobufMap<SwiftProtobuf.ProtobufString,SwiftProtobuf.ProtobufString>.self, value: &self.meta)
+      default: break
       }
     }
   }
@@ -580,38 +577,34 @@ extension LogMessage: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementatio
     if let v = self._position {
       try visitor.visitSingularUInt64Field(value: v, fieldNumber: 1)
     }
-    if let v = self._timestampMs {
-      try visitor.visitSingularInt64Field(value: v, fieldNumber: 2)
+    if let v = self._timestampMillis {
+      try visitor.visitSingularUInt64Field(value: v, fieldNumber: 2)
     }
     if let v = self._priority {
       try visitor.visitSingularEnumField(value: v, fieldNumber: 3)
     }
-    if let v = self._flow {
+    if let v = self._source {
       try visitor.visitSingularStringField(value: v, fieldNumber: 4)
     }
-    if let v = self._source {
+    if let v = self._label {
       try visitor.visitSingularStringField(value: v, fieldNumber: 5)
     }
-    if let v = self._label {
+    if let v = self._body {
       try visitor.visitSingularStringField(value: v, fieldNumber: 6)
     }
-    if let v = self._message {
-      try visitor.visitSingularStringField(value: v, fieldNumber: 7)
-    }
     if !self.meta.isEmpty {
-      try visitor.visitMapField(fieldType: SwiftProtobuf._ProtobufMap<SwiftProtobuf.ProtobufString,SwiftProtobuf.ProtobufString>.self, value: self.meta, fieldNumber: 8)
+      try visitor.visitMapField(fieldType: SwiftProtobuf._ProtobufMap<SwiftProtobuf.ProtobufString,SwiftProtobuf.ProtobufString>.self, value: self.meta, fieldNumber: 7)
     }
     try unknownFields.traverse(visitor: &visitor)
   }
 
   static func ==(lhs: LogMessage, rhs: LogMessage) -> Bool {
     if lhs._position != rhs._position {return false}
-    if lhs._timestampMs != rhs._timestampMs {return false}
+    if lhs._timestampMillis != rhs._timestampMillis {return false}
     if lhs._priority != rhs._priority {return false}
-    if lhs._flow != rhs._flow {return false}
     if lhs._source != rhs._source {return false}
     if lhs._label != rhs._label {return false}
-    if lhs._message != rhs._message {return false}
+    if lhs._body != rhs._body {return false}
     if lhs.meta != rhs.meta {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
@@ -620,9 +613,12 @@ extension LogMessage: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementatio
 
 extension LogMessage.Priority: SwiftProtobuf._ProtoNameProviding {
   static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    0: .same(proto: "DEBUG"),
-    1: .same(proto: "INFO"),
-    2: .same(proto: "WARN"),
-    3: .same(proto: "ERROR"),
+    0: .same(proto: "UNDEFINED"),
+    1: .same(proto: "VERBOSE"),
+    2: .same(proto: "DEBUG"),
+    3: .same(proto: "INFO"),
+    4: .same(proto: "WARN"),
+    5: .same(proto: "ERROR"),
+    6: .same(proto: "CRITICAL"),
   ]
 }

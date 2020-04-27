@@ -21,12 +21,12 @@ public enum Level: Comparable, CustomDebugStringConvertible {
     /// Fatal errors that result in application termination.
     case critical
 
-    public static var stringVerbose: String = "🟣 VERBOSE"
-    public static var stringDebug: String = "🔵 DEBUG"
-    public static var stringInfo: String = "🟢 INFO"
-    public static var stringWarning: String = "🟡 WARNING"
-    public static var stringError: String = "🟠 ERROR"
-    public static var stringCritical: String = "🔴 CRITICAL"
+    public static var stringVerbose: String = "VERBOSE"
+    public static var stringDebug: String = "DEBUG"
+    public static var stringInfo: String = "INFO"
+    public static var stringWarning: String = "WARNING"
+    public static var stringError: String = "ERROR"
+    public static var stringCritical: String = "CRITICAL"
 
     public var debugDescription: String {
         switch self {

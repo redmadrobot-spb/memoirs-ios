@@ -8,19 +8,26 @@
 
 /* Begin PBXBuildFile section */
 		2DBA108007128FAD4821882B /* ProtoHttpRemoteLoggerTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1DA202B598E9F6F27C1D /* ProtoHttpRemoteLoggerTransport.swift */; platformFilter = ios; };
+		2DBA10AFC33F1F1A8A3AF4F7 /* SingleLogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1BA84DCE2ADB5089444D /* SingleLogViewController.swift */; };
 		2DBA127834F59CA61B204AB0 /* HelperFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA156C2B58CF72B873423F /* HelperFunctions.swift */; platformFilter = ios; };
 		2DBA12B468519044347BE39F /* RemoteLoggingBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1A5D9C49721C5C5B335D /* RemoteLoggingBuffer.swift */; };
 		2DBA13CC4F00104AE715754A /* RemoteLoggingBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1A5D9C49721C5C5B335D /* RemoteLoggingBuffer.swift */; };
+		2DBA1423B6C39E8D29429F6E /* ConstantLogsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1CA56E551997C6001863 /* ConstantLogsViewController.swift */; };
 		2DBA142977D7D4CD90ECDEAF /* LabeledLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1BC5D26B69FA1E649B56 /* LabeledLogger.swift */; platformFilter = ios; };
 		2DBA1439BAEBD8D5961A05A0 /* InfoGatheringLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA10989530859F00D5AB8C /* InfoGatheringLogger.swift */; };
 		2DBA15064819C6E6D4178B88 /* ApplicationInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1BDD8C05C5AC12BAAF0D /* ApplicationInfo.swift */; };
+		2DBA15FD8398DE775C125946 /* Loggers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA10435D991F46DC8D89BF /* Loggers.swift */; };
+		2DBA1631FA44583D2A7B0897 /* NullLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA179E2E7EB4E3DE64E043 /* NullLogger.swift */; };
 		2DBA1891E370AEB77B761D6B /* RemoteLoggingTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1B7C07761B3914324E95 /* RemoteLoggingTransport.swift */; };
+		2DBA18EB097273EDCAC5E810 /* NullLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA179E2E7EB4E3DE64E043 /* NullLogger.swift */; };
 		2DBA194A31B60069AE4E7EE1 /* ApplicationInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1BDD8C05C5AC12BAAF0D /* ApplicationInfo.swift */; };
 		2DBA19506894725A4885E909 /* RemoteLoggingTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1B7C07761B3914324E95 /* RemoteLoggingTransport.swift */; };
 		2DBA1B2CA7478109C4020779 /* InfoGatheringLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA10989530859F00D5AB8C /* InfoGatheringLogger.swift */; };
+		2DBA1BADF4991F18DBC0A66C /* RandomizedLogsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA110DFD8D2337633A8BD5 /* RandomizedLogsViewController.swift */; };
 		2DBA1BC8525F9A84933D47B7 /* Loggable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA129A224F3D8C844B7AAF /* Loggable.swift */; platformFilter = ios; };
 		2DBA1BF32E6671D4815A5164 /* ProtoHttpRemoteLoggerTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1DA202B598E9F6F27C1D /* ProtoHttpRemoteLoggerTransport.swift */; platformFilter = ios; };
 		2DBA1DD68FE69BFDBF5223E3 /* AppKitApplicationInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1AF5A16C39D5CE050964 /* AppKitApplicationInfo.swift */; };
+		2DBA1FFDD2C4D6453D27242A /* EndpointViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA186BD75E9B889DAFD54B /* EndpointViewController.swift */; };
 		3053CC41242DFB50000125FB /* Robologs.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 46AE559A238D683C00774F9E /* Robologs.framework */; };
 		3053CC42242DFB50000125FB /* Robologs.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 46AE559A238D683C00774F9E /* Robologs.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4611FCED2398FEF100E23B25 /* MultiplexingLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4611FCEC2398FEF100E23B25 /* MultiplexingLogger.swift */; platformFilter = ios; };
@@ -60,13 +67,8 @@
 		FA8EB0BB24545B2C00D438DC /* LogStringInterpolation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 461A55E123DA07BF00A28F38 /* LogStringInterpolation.swift */; };
 		FA8EB0BC24545B2C00D438DC /* Loggable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA129A224F3D8C844B7AAF /* Loggable.swift */; };
 		FA8EB0C12454601C00D438DC /* Robologs.h in Headers */ = {isa = PBXBuildFile; fileRef = FA8EB09C24545A4200D438DC /* Robologs.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		FAD51E962455DB2900265E18 /* SwiftProtobuf in Frameworks */ = {isa = PBXBuildFile; productRef = 304E87AE242B8AAD007694D2 /* SwiftProtobuf */; };
-		FAD51E972455DB2900265E18 /* SwiftProtobufPluginLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = 304E87B0242B8AAD007694D2 /* SwiftProtobufPluginLibrary */; };
-		FAD51E982455DB2900265E18 /* SwiftProtobuf in Frameworks */ = {isa = PBXBuildFile; productRef = FA8EB0A224545A7600D438DC /* SwiftProtobuf */; };
-		FAD51E992455DB2900265E18 /* SwiftProtobufPluginLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = FA8EB0A424545A7600D438DC /* SwiftProtobufPluginLibrary */; };
 		FAD51EB62456D5A000265E18 /* Logger.CaseIterable.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD51E9C2456D5A000265E18 /* Logger.CaseIterable.swift */; };
-		FAD51EB72456D5A000265E18 /* RemoteLoggerService.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD51E9D2456D5A000265E18 /* RemoteLoggerService.swift */; };
-		FAD51EB82456D5A000265E18 /* DiagnosticLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD51E9E2456D5A000265E18 /* DiagnosticLogger.swift */; };
+		FAD51EB82456D5A000265E18 /* BufferLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD51E9E2456D5A000265E18 /* BufferLogger.swift */; };
 		FAD51EB92456D5A000265E18 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD51E9F2456D5A000265E18 /* AppDelegate.swift */; };
 		FAD51EBA2456D5A000265E18 /* GeneratedLogRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD51EA12456D5A000265E18 /* GeneratedLogRecord.swift */; };
 		FAD51EBB2456D5A000265E18 /* LogGeneratorRecordGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD51EA22456D5A000265E18 /* LogGeneratorRecordGenerator.swift */; };
@@ -75,13 +77,7 @@
 		FAD51EBE2456D5A000265E18 /* RandomizedRecordGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD51EA52456D5A000265E18 /* RandomizedRecordGenerator.swift */; };
 		FAD51EBF2456D5A000265E18 /* LogsGeneratorTiming.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD51EA62456D5A000265E18 /* LogsGeneratorTiming.swift */; };
 		FAD51EC02456D5A000265E18 /* TimeRange.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD51EA72456D5A000265E18 /* TimeRange.swift */; };
-		FAD51EC12456D5A000265E18 /* EndpointViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD51EA92456D5A000265E18 /* EndpointViewController.swift */; };
-		FAD51EC22456D5A000265E18 /* SingleLogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD51EAA2456D5A000265E18 /* SingleLogViewController.swift */; };
 		FAD51EC32456D5A000265E18 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FAD51EAB2456D5A000265E18 /* Main.storyboard */; };
-		FAD51EC42456D5A100265E18 /* ActionButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD51EAD2456D5A000265E18 /* ActionButton.swift */; };
-		FAD51EC52456D5A100265E18 /* LogsTextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD51EAE2456D5A000265E18 /* LogsTextView.swift */; };
-		FAD51EC62456D5A100265E18 /* ConstantLogsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD51EAF2456D5A000265E18 /* ConstantLogsViewController.swift */; };
-		FAD51EC72456D5A100265E18 /* RandomizedLogsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAD51EB02456D5A000265E18 /* RandomizedLogsViewController.swift */; };
 		FAD51EC82456D5A100265E18 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FAD51EB22456D5A000265E18 /* Assets.xcassets */; };
 		FAD51EC92456D5A100265E18 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FAD51EB32456D5A000265E18 /* LaunchScreen.storyboard */; };
 /* End PBXBuildFile section */
@@ -111,14 +107,20 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		2DBA10435D991F46DC8D89BF /* Loggers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Loggers.swift; sourceTree = "<group>"; };
 		2DBA10989530859F00D5AB8C /* InfoGatheringLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InfoGatheringLogger.swift; sourceTree = "<group>"; };
+		2DBA110DFD8D2337633A8BD5 /* RandomizedLogsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RandomizedLogsViewController.swift; sourceTree = "<group>"; };
 		2DBA129A224F3D8C844B7AAF /* Loggable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Loggable.swift; sourceTree = "<group>"; };
 		2DBA156C2B58CF72B873423F /* HelperFunctions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HelperFunctions.swift; sourceTree = "<group>"; };
+		2DBA179E2E7EB4E3DE64E043 /* NullLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NullLogger.swift; sourceTree = "<group>"; };
+		2DBA186BD75E9B889DAFD54B /* EndpointViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EndpointViewController.swift; sourceTree = "<group>"; };
 		2DBA1A5D9C49721C5C5B335D /* RemoteLoggingBuffer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RemoteLoggingBuffer.swift; sourceTree = "<group>"; };
 		2DBA1AF5A16C39D5CE050964 /* AppKitApplicationInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppKitApplicationInfo.swift; sourceTree = "<group>"; };
 		2DBA1B7C07761B3914324E95 /* RemoteLoggingTransport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RemoteLoggingTransport.swift; sourceTree = "<group>"; };
+		2DBA1BA84DCE2ADB5089444D /* SingleLogViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SingleLogViewController.swift; sourceTree = "<group>"; };
 		2DBA1BC5D26B69FA1E649B56 /* LabeledLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LabeledLogger.swift; sourceTree = "<group>"; };
 		2DBA1BDD8C05C5AC12BAAF0D /* ApplicationInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApplicationInfo.swift; sourceTree = "<group>"; };
+		2DBA1CA56E551997C6001863 /* ConstantLogsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConstantLogsViewController.swift; sourceTree = "<group>"; };
 		2DBA1DA202B598E9F6F27C1D /* ProtoHttpRemoteLoggerTransport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProtoHttpRemoteLoggerTransport.swift; sourceTree = "<group>"; };
 		3053CC28242DF72E000125FB /* Robologs Test App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Robologs Test App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4611FCEC2398FEF100E23B25 /* MultiplexingLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiplexingLogger.swift; sourceTree = "<group>"; };
@@ -145,8 +147,7 @@
 		FA8EB09C24545A4200D438DC /* Robologs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Robologs.h; sourceTree = "<group>"; };
 		FA8EB09D24545A4200D438DC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FAD51E9C2456D5A000265E18 /* Logger.CaseIterable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Logger.CaseIterable.swift; sourceTree = "<group>"; };
-		FAD51E9D2456D5A000265E18 /* RemoteLoggerService.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RemoteLoggerService.swift; sourceTree = "<group>"; };
-		FAD51E9E2456D5A000265E18 /* DiagnosticLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DiagnosticLogger.swift; sourceTree = "<group>"; };
+		FAD51E9E2456D5A000265E18 /* BufferLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BufferLogger.swift; sourceTree = "<group>"; };
 		FAD51E9F2456D5A000265E18 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = Code/AppDelegate.swift; sourceTree = "<group>"; };
 		FAD51EA12456D5A000265E18 /* GeneratedLogRecord.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GeneratedLogRecord.swift; sourceTree = "<group>"; };
 		FAD51EA22456D5A000265E18 /* LogGeneratorRecordGenerator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogGeneratorRecordGenerator.swift; sourceTree = "<group>"; };
@@ -155,13 +156,7 @@
 		FAD51EA52456D5A000265E18 /* RandomizedRecordGenerator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RandomizedRecordGenerator.swift; sourceTree = "<group>"; };
 		FAD51EA62456D5A000265E18 /* LogsGeneratorTiming.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogsGeneratorTiming.swift; sourceTree = "<group>"; };
 		FAD51EA72456D5A000265E18 /* TimeRange.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TimeRange.swift; sourceTree = "<group>"; };
-		FAD51EA92456D5A000265E18 /* EndpointViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EndpointViewController.swift; sourceTree = "<group>"; };
-		FAD51EAA2456D5A000265E18 /* SingleLogViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SingleLogViewController.swift; sourceTree = "<group>"; };
 		FAD51EAB2456D5A000265E18 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
-		FAD51EAD2456D5A000265E18 /* ActionButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ActionButton.swift; sourceTree = "<group>"; };
-		FAD51EAE2456D5A000265E18 /* LogsTextView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LogsTextView.swift; sourceTree = "<group>"; };
-		FAD51EAF2456D5A000265E18 /* ConstantLogsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConstantLogsViewController.swift; sourceTree = "<group>"; };
-		FAD51EB02456D5A000265E18 /* RandomizedLogsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RandomizedLogsViewController.swift; sourceTree = "<group>"; };
 		FAD51EB22456D5A000265E18 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FAD51EB42456D5A000265E18 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		FAD51EB52456D5A000265E18 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -180,8 +175,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FAD51E972455DB2900265E18 /* SwiftProtobufPluginLibrary in Frameworks */,
-				FAD51E962455DB2900265E18 /* SwiftProtobuf in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -189,8 +182,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FAD51E992455DB2900265E18 /* SwiftProtobufPluginLibrary in Frameworks */,
-				FAD51E982455DB2900265E18 /* SwiftProtobuf in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -203,6 +194,17 @@
 				2DBA156C2B58CF72B873423F /* HelperFunctions.swift */,
 			);
 			path = Utility;
+			sourceTree = "<group>";
+		};
+		2DBA13351643C83F4C7982B3 /* ViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				2DBA1BA84DCE2ADB5089444D /* SingleLogViewController.swift */,
+				2DBA110DFD8D2337633A8BD5 /* RandomizedLogsViewController.swift */,
+				2DBA1CA56E551997C6001863 /* ConstantLogsViewController.swift */,
+				2DBA186BD75E9B889DAFD54B /* EndpointViewController.swift */,
+			);
+			path = ViewControllers;
 			sourceTree = "<group>";
 		};
 		3053CC29242DF72E000125FB /* Example */ = {
@@ -234,6 +236,7 @@
 				2DBA10531CBDA5D09548AE7E /* Utility */,
 				2DBA1BC5D26B69FA1E649B56 /* LabeledLogger.swift */,
 				2DBA10989530859F00D5AB8C /* InfoGatheringLogger.swift */,
+				2DBA179E2E7EB4E3DE64E043 /* NullLogger.swift */,
 			);
 			path = Loggers;
 			sourceTree = "<group>";
@@ -382,8 +385,8 @@
 			isa = PBXGroup;
 			children = (
 				FAD51E9C2456D5A000265E18 /* Logger.CaseIterable.swift */,
-				FAD51E9D2456D5A000265E18 /* RemoteLoggerService.swift */,
-				FAD51E9E2456D5A000265E18 /* DiagnosticLogger.swift */,
+				FAD51E9E2456D5A000265E18 /* BufferLogger.swift */,
+				2DBA10435D991F46DC8D89BF /* Loggers.swift */,
 			);
 			path = Logger;
 			sourceTree = "<group>";
@@ -405,23 +408,10 @@
 		FAD51EA82456D5A000265E18 /* Presentation */ = {
 			isa = PBXGroup;
 			children = (
-				FAD51EA92456D5A000265E18 /* EndpointViewController.swift */,
-				FAD51EAA2456D5A000265E18 /* SingleLogViewController.swift */,
 				FAD51EAB2456D5A000265E18 /* Main.storyboard */,
-				FAD51EAC2456D5A000265E18 /* Components */,
-				FAD51EAF2456D5A000265E18 /* ConstantLogsViewController.swift */,
-				FAD51EB02456D5A000265E18 /* RandomizedLogsViewController.swift */,
+				2DBA13351643C83F4C7982B3 /* ViewControllers */,
 			);
 			path = Presentation;
-			sourceTree = "<group>";
-		};
-		FAD51EAC2456D5A000265E18 /* Components */ = {
-			isa = PBXGroup;
-			children = (
-				FAD51EAD2456D5A000265E18 /* ActionButton.swift */,
-				FAD51EAE2456D5A000265E18 /* LogsTextView.swift */,
-			);
-			path = Components;
 			sourceTree = "<group>";
 		};
 		FAD51EB12456D5A000265E18 /* Resources */ = {
@@ -490,8 +480,8 @@
 			);
 			name = "Robologs iOS";
 			packageProductDependencies = (
-				304E87AE242B8AAD007694D2 /* SwiftProtobuf */,
-				304E87B0242B8AAD007694D2 /* SwiftProtobufPluginLibrary */,
+				304E87AE242B8AAD007694D2 /* XCSwiftPackageProductDependency */,
+				304E87B0242B8AAD007694D2 /* XCSwiftPackageProductDependency */,
 			);
 			productName = RobologsiOSNative;
 			productReference = 46AE559A238D683C00774F9E /* Robologs.framework */;
@@ -513,8 +503,8 @@
 			);
 			name = "Robologs macOS";
 			packageProductDependencies = (
-				FA8EB0A224545A7600D438DC /* SwiftProtobuf */,
-				FA8EB0A424545A7600D438DC /* SwiftProtobufPluginLibrary */,
+				FA8EB0A224545A7600D438DC /* XCSwiftPackageProductDependency */,
+				FA8EB0A424545A7600D438DC /* XCSwiftPackageProductDependency */,
 			);
 			productName = Robologs;
 			productReference = FA8EB09A24545A4200D438DC /* Robologs.framework */;
@@ -552,7 +542,7 @@
 			);
 			mainGroup = 46AE5590238D683B00774F9E;
 			packageReferences = (
-				304E87AD242B8AAD007694D2 /* XCRemoteSwiftPackageReference "swift-protobuf" */,
+				304E87AD242B8AAD007694D2 /* XCRemoteSwiftPackageReference */,
 			);
 			productRefGroup = 46AE559B238D683C00774F9E /* Products */;
 			projectDirPath = "";
@@ -637,22 +627,20 @@
 			buildActionMask = 2147483647;
 			files = (
 				FAD51EBF2456D5A000265E18 /* LogsGeneratorTiming.swift in Sources */,
-				FAD51EC72456D5A100265E18 /* RandomizedLogsViewController.swift in Sources */,
 				FAD51EC02456D5A000265E18 /* TimeRange.swift in Sources */,
-				FAD51EC62456D5A100265E18 /* ConstantLogsViewController.swift in Sources */,
 				FAD51EB92456D5A000265E18 /* AppDelegate.swift in Sources */,
-				FAD51EC22456D5A000265E18 /* SingleLogViewController.swift in Sources */,
 				FAD51EBB2456D5A000265E18 /* LogGeneratorRecordGenerator.swift in Sources */,
 				FAD51EBC2456D5A000265E18 /* LogsGenerator.swift in Sources */,
 				FAD51EBE2456D5A000265E18 /* RandomizedRecordGenerator.swift in Sources */,
-				FAD51EC52456D5A100265E18 /* LogsTextView.swift in Sources */,
-				FAD51EB82456D5A000265E18 /* DiagnosticLogger.swift in Sources */,
-				FAD51EC12456D5A000265E18 /* EndpointViewController.swift in Sources */,
+				FAD51EB82456D5A000265E18 /* BufferLogger.swift in Sources */,
 				FAD51EBA2456D5A000265E18 /* GeneratedLogRecord.swift in Sources */,
 				FAD51EBD2456D5A000265E18 /* UniformRecordGenerator.swift in Sources */,
 				FAD51EB62456D5A000265E18 /* Logger.CaseIterable.swift in Sources */,
-				FAD51EB72456D5A000265E18 /* RemoteLoggerService.swift in Sources */,
-				FAD51EC42456D5A100265E18 /* ActionButton.swift in Sources */,
+				2DBA10AFC33F1F1A8A3AF4F7 /* SingleLogViewController.swift in Sources */,
+				2DBA1BADF4991F18DBC0A66C /* RandomizedLogsViewController.swift in Sources */,
+				2DBA1423B6C39E8D29429F6E /* ConstantLogsViewController.swift in Sources */,
+				2DBA1FFDD2C4D6453D27242A /* EndpointViewController.swift in Sources */,
+				2DBA15FD8398DE775C125946 /* Loggers.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -685,6 +673,7 @@
 				2DBA1891E370AEB77B761D6B /* RemoteLoggingTransport.swift in Sources */,
 				2DBA12B468519044347BE39F /* RemoteLoggingBuffer.swift in Sources */,
 				2DBA108007128FAD4821882B /* ProtoHttpRemoteLoggerTransport.swift in Sources */,
+				2DBA1631FA44583D2A7B0897 /* NullLogger.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -717,6 +706,7 @@
 				2DBA19506894725A4885E909 /* RemoteLoggingTransport.swift in Sources */,
 				2DBA13CC4F00104AE715754A /* RemoteLoggingBuffer.swift in Sources */,
 				2DBA1BF32E6671D4815A5164 /* ProtoHttpRemoteLoggerTransport.swift in Sources */,
+				2DBA18EB097273EDCAC5E810 /* NullLogger.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1083,7 +1073,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		304E87AD242B8AAD007694D2 /* XCRemoteSwiftPackageReference "swift-protobuf" */ = {
+		304E87AD242B8AAD007694D2 /* XCRemoteSwiftPackageReference */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/apple/swift-protobuf.git";
 			requirement = {
@@ -1094,24 +1084,24 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		304E87AE242B8AAD007694D2 /* SwiftProtobuf */ = {
+		304E87AE242B8AAD007694D2 /* XCSwiftPackageProductDependency */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 304E87AD242B8AAD007694D2 /* XCRemoteSwiftPackageReference "swift-protobuf" */;
+			package = 304E87AD242B8AAD007694D2 /* XCRemoteSwiftPackageReference */;
 			productName = SwiftProtobuf;
 		};
-		304E87B0242B8AAD007694D2 /* SwiftProtobufPluginLibrary */ = {
+		304E87B0242B8AAD007694D2 /* XCSwiftPackageProductDependency */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 304E87AD242B8AAD007694D2 /* XCRemoteSwiftPackageReference "swift-protobuf" */;
+			package = 304E87AD242B8AAD007694D2 /* XCRemoteSwiftPackageReference */;
 			productName = SwiftProtobufPluginLibrary;
 		};
-		FA8EB0A224545A7600D438DC /* SwiftProtobuf */ = {
+		FA8EB0A224545A7600D438DC /* XCSwiftPackageProductDependency */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 304E87AD242B8AAD007694D2 /* XCRemoteSwiftPackageReference "swift-protobuf" */;
+			package = 304E87AD242B8AAD007694D2 /* XCRemoteSwiftPackageReference */;
 			productName = SwiftProtobuf;
 		};
-		FA8EB0A424545A7600D438DC /* SwiftProtobufPluginLibrary */ = {
+		FA8EB0A424545A7600D438DC /* XCSwiftPackageProductDependency */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 304E87AD242B8AAD007694D2 /* XCRemoteSwiftPackageReference "swift-protobuf" */;
+			package = 304E87AD242B8AAD007694D2 /* XCRemoteSwiftPackageReference */;
 			productName = SwiftProtobufPluginLibrary;
 		};
 /* End XCSwiftPackageProductDependency section */

@@ -10,7 +10,6 @@ import Foundation
 import Robologs
 
 class RandomizedRecordGenerator {
-    private let logger: Logger
     private(set) var isPlaying: Bool = false
     private var timing: LogsGeneratorTiming!
     private var recordGenerator: LogGeneratorRecordGenerator!
@@ -22,8 +21,7 @@ class RandomizedRecordGenerator {
         Float((recordsPerSecond * period) / 100)
     }
 
-    init(logger: Logger) {
-        self.logger = logger
+    init() {
         updateIntensity()
     }
 
@@ -32,11 +30,11 @@ class RandomizedRecordGenerator {
 
         timing.start { range in
             self.recordGenerator.records(for: range).forEach { generatedRecord in
-                self.logger.log(
+                Loggers.instance.logger.log(
                     level: generatedRecord.level,
-                    "\(safe: generatedRecord.message)",
+                    generatedRecord.message,
                     label: generatedRecord.label,
-                    meta: generatedRecord.meta?.mapValues { "\(safe: $0)" as LogString } ?? [:]
+                    meta: generatedRecord.meta
                 )
             }
         }
@@ -49,6 +47,14 @@ class RandomizedRecordGenerator {
         updateIntensity()
     }
 
+    private var position: UInt64 = 0
+    private var nextPosition: UInt64 {
+        position += 1
+        return position
+    }
+
+    private let lettersForRandom = Array("qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM")
+
     private func updateIntensity() {
         let period = TimeInterval.random(in: 0.1...1)
         timing = LogsGeneratorTiming(period: period)
@@ -59,8 +65,9 @@ class RandomizedRecordGenerator {
             record: {
                 GeneratedLogRecord(
                     level: Level.allCases.randomElement() ?? .info,
-                    label: "",
-                    message: "Test message")
+                    label: (0 ..< 5).map { _ in "\(self.lettersForRandom.randomElement() ?? "_")" }.joined(separator: ""),
+                    message: "Test message \(self.nextPosition)"
+                )
             },
             recordsPerSecond: recordsPerSecond
         )
