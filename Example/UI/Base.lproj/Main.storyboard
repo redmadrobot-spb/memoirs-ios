@@ -280,7 +280,7 @@
                                                 <nil key="textColor"/>
                                                 <nil key="highlightedColor"/>
                                             </label>
-                                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="https://10.110.10.50:8083/api/v1" borderStyle="roundedRect" placeholder="URL" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="3Uu-bK-ayq">
+                                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="https://robologs.dev/log/api/v1/" borderStyle="roundedRect" placeholder="URL" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="3Uu-bK-ayq">
                                                 <rect key="frame" x="0.0" y="34.5" width="350" height="34"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="34" id="Kta-xt-L2K"/>
