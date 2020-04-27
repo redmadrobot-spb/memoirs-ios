@@ -10,11 +10,15 @@ import Robologs
 import Foundation
 
 class BufferLogger: Logger {
+    private let formatter: DateFormatter
     private let updateInterval: TimeInterval = 0.5
 
     var changeHandler: (_ logs: [String]) -> Void = { _ in }
 
     init() {
+        formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm:ss.SSS"
+        formatter.locale = Locale(identifier: "en_US_POSIX")
         notify(needRepeat: true)
     }
 
@@ -28,9 +32,10 @@ class BufferLogger: Logger {
         meta: @autoclosure () -> [String: LogString]? = nil,
         file: String = #file, function: String = #function, line: UInt = #line
     ) {
-        let context = collectContext(file: file, function: function, line: line)
+        let context = collectContext(file: "SomeFile", function: "foo()", line: 42)
         let description = concatenateData(
-            time: "\(Date())", level: level, message: message, label: label, meta: meta, context: context, isSensitive: false
+            time: formatter.string(from: Date()), level: level, message: message, label: label, meta: meta, context: context,
+            isSensitive: false
         )
         lastLogs.append(description)
         if lastLogs.count > maxLastLogsCount {
