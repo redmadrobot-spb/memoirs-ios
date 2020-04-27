@@ -6,14 +6,15 @@
 // Copyright © 2020 Redmadrobot SPb. All rights reserved.
 //
 
-import Dispatch
+import Foundation
 
 class SynchronizedDictionary<Key, Value>: ExpressibleByDictionaryLiteral where Key: Hashable {
     private var dictionary: [Key: Value]
-    private let queue = DispatchQueue(label: "com.redmadrobot.robologs.synchronizedDictionary", attributes: .concurrent)
+    private let queue: DispatchQueue
 
     required init(dictionaryLiteral elements: (Key, Value)...) {
         dictionary = Dictionary(uniqueKeysWithValues: elements)
+        queue = DispatchQueue(label: "com.redmadrobot.robologs.synchronizedDictionary", attributes: .concurrent)
     }
 
     subscript(key: Key) -> Value? {
@@ -23,8 +24,10 @@ class SynchronizedDictionary<Key, Value>: ExpressibleByDictionaryLiteral where K
             }
         }
         set {
-            queue.async(flags: .barrier) { [weak self] in
-                self?.dictionary[key] = newValue
+            guard let newValue = newValue else { return }
+
+            queue.async(flags: .barrier) { [unowned self] in
+                self.dictionary[key] = newValue
             }
         }
     }
