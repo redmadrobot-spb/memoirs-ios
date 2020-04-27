@@ -1,22 +1,22 @@
 //
-//  Logger.swift
-//  Robologs
+// Logger
+// Robologs
 //
-//  Created by Dmitry Shadrin on 26.11.2019.
-//  Copyright © 2019 Redmadrobot. All rights reserved.
+// Created by Dmitry Shadrin on 26.11.2019.
+// Copyright © 2020 Redmadrobot SPb. All rights reserved.
 //
 
 /// Logger is an interface to log events sending. Usually you don't use the base method (with "level" parameter), but specific ones.
 public protocol Logger {
     /// Required method that reports the log event.
     /// - Parameters:
-    ///   - level: Logging level.
-    ///   - label: Specifies in what part log event was recorded.
-    ///   - message: Message describing log event.
-    ///   - meta: Additional log information in key-value format.
-    ///   - file: The path to the file from which the method was called. Usually you should use the #file literal for this.
-    ///   - function: The function name from which the method was called. Usually you should use the #function literal for this.
-    ///   - line: The line of code from which the method was called. Usually you should use the #line literal for this.
+    ///  - level: Logging level.
+    ///  - label: Specifies in what part log event was recorded.
+    ///  - message: Message describing log event.
+    ///  - meta: Additional log information in key-value format.
+    ///  - file: The path to the file from which the method was called. Usually you should use the #file literal for this.
+    ///  - function: The function name from which the method was called. Usually you should use the #function literal for this.
+    ///  - line: The line of code from which the method was called. Usually you should use the #line literal for this.
     func log(
         level: Level,
         _ message: @autoclosure () -> LogString,

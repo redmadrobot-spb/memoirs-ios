@@ -1,9 +1,9 @@
 //
-//  InMemoryRemoteLoggerBuffer.swift
-//  RobologsTest
+// InMemoryRemoteLoggerBuffer
+// RobologsTest
 //
-//  Created by Vladislav Maltsev on 04.03.2020.
-//  Copyright © 2020 RedMadRobot. All rights reserved.
+// Created by Vladislav Maltsev on 04.03.2020.
+// Copyright © 2020 Redmadrobot SPb. All rights reserved.
 //
 
 /// Simplest buffering - just keeps log records in memory.

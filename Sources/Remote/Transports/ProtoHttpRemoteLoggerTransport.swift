@@ -1,9 +1,9 @@
 //
-//  ProtoHttpRemoteLoggerTransport.swift
-//  RobologsTest
+// ProtoHttpRemoteLoggerTransport
+// Robologs
 //
-//  Created by Vladislav Maltsev on 05.03.2020.
-//  Copyright © 2020 Elsewhere. All rights reserved.
+// Created by Vladislav Maltsev on 05.03.2020.
+// Copyright © 2020 Redmadrobot SPb. All rights reserved.
 //
 
 import Foundation
@@ -51,7 +51,7 @@ class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
     /// - Parameter endpoint: URL to server endpoint supporting this kind of transport.
     /// - Parameter secret: Secret key received from Robologs admin panel.
     /// - Parameter challengePolicy: Policy determining how URLAuthentificationChallange will be mannaged.
-    ///       If you using self-signing certificate use `AllowSelfSignedChallengePolicy`
+    ///      If you using self-signing certificate use `AllowSelfSignedChallengePolicy`
     init(
         endpoint: URL,
         secret: String,

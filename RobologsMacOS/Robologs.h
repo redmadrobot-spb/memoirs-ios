@@ -1,9 +1,9 @@
 //
-//  Robologs.h
-//  Robologs
+// Robologs.h
+// Robologs
 //
-//  Created by Alex Babaev on 25.04.2020.
-//  Copyright © 2020 Redmadrobot. All rights reserved.
+// Created by Alex Babaev on 25.04.2020.
+// Copyright © 2020 Redmadrobot SPb. All rights reserved.
 //
 
 #import <Foundation/Foundation.h>

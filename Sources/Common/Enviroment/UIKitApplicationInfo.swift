@@ -1,9 +1,9 @@
 //
-//  UIKitApplicationInfo.swift
-//  Robologs
+// UIKitApplicationInfo
+// Robologs
 //
-//  Created by Vladislav Maltsev on 19.03.2020.
-//  Copyright © 2020 Redmadrobot. All rights reserved.
+// Created by Vladislav Maltsev on 19.03.2020.
+// Copyright © 2020 Redmadrobot SPb. All rights reserved.
 //
 
 import Foundation

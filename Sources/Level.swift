@@ -1,9 +1,9 @@
 //
-//  Level.swift
-//  Robologs
+// Level
+// Robologs
 //
-//  Created by Dmitry Shadrin on 27.11.2019.
-//  Copyright © 2019 Redmadrobot. All rights reserved.
+// Created by Dmitry Shadrin on 27.11.2019.
+// Copyright © 2020 Redmadrobot SPb. All rights reserved.
 //
 
 /// Logging level.

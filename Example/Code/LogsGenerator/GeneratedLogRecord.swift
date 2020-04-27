@@ -1,9 +1,9 @@
 //
-//  GeneratedLogRecord.swift
-//  Example
+// GeneratedLogRecord
+// Example
 //
-//  Created by Roman Mazeev on 30.03.2020.
-//  Copyright © 2020 Redmadrobot. All rights reserved.
+// Created by Roman Mazeev on 30.03.2020.
+// Copyright © 2020 Redmadrobot SPb. All rights reserved.
 //
 
 import Robologs

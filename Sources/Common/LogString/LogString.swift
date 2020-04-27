@@ -1,9 +1,9 @@
 //
-//  LogString.swift
-//  Robologs
+// LogString
+// Robologs
 //
-//  Created by Dmitry Shadrin on 23.01.2020.
-//  Copyright © 2020 Redmadrobot. All rights reserved.
+// Created by Dmitry Shadrin on 23.01.2020.
+// Copyright © 2020 Redmadrobot SPb. All rights reserved.
 //
 
 /// String with additional functionality used inside the logging system.
@@ -14,7 +14,7 @@
 ///
 /// Usage:
 ///
-///     let logString: LogString = "Username: \(public: user.name), cardNumber: \(user.cardNumber)"
+///    let logString: LogString = "Username: \(public: user.name), cardNumber: \(user.cardNumber)"
 ///
 public struct LogString: CustomStringConvertible, ExpressibleByStringLiteral, ExpressibleByStringInterpolation {
     public static var isSensitive: Bool = true

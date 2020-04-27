@@ -1,9 +1,9 @@
 //
-//  PeriodicBurstsLogsViewController.swift
-//  Example
+// PeriodicBurstsLogsViewController
+// Example
 //
-//  Created by Roman Mazeev on 29.03.2020.
-//  Copyright © 2020 Redmadrobot. All rights reserved.
+// Created by Roman Mazeev on 29.03.2020.
+// Copyright © 2020 Redmadrobot SPb. All rights reserved.
 //
 
 import UIKit

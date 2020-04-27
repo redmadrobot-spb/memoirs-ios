@@ -1,9 +1,9 @@
 //
-//  SingleLogViewController.swift
-//  Example
+// SingleLogViewController
+// Example
 //
-//  Created by Roman Mazeev on 28.03.2020.
-//  Copyright © 2020 Redmadrobot. All rights reserved.
+// Created by Roman Mazeev on 28.03.2020.
+// Copyright © 2020 Redmadrobot SPb. All rights reserved.
 //
 
 import UIKit

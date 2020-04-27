@@ -1,9 +1,9 @@
 //
-//  FilteringLogger.swift
-//  Robologs
+// FilteringLogger
+// Robologs
 //
-//  Created by Dmitry Shadrin on 05.12.2019.
-//  Copyright © 2019 Redmadrobot. All rights reserved.
+// Created by Dmitry Shadrin on 05.12.2019.
+// Copyright © 2020 Redmadrobot SPb. All rights reserved.
 //
 
 public enum ConfigurationLevel {
@@ -47,9 +47,9 @@ public class FilteringLogger: Logger {
 
     /// Creates a new instance of `FilteringLogger`.
     /// - Parameters:
-    ///   - logger: The logger for which log events will be filtered.
-    ///   - loggingLevelForLabels: Logging levels associated with registered label.
-    ///   - defaultLevel: Default minimal log level.
+    ///  - logger: The logger for which log events will be filtered.
+    ///  - loggingLevelForLabels: Logging levels associated with registered label.
+    ///  - defaultLevel: Default minimal log level.
     public init(logger: Logger, loggingLevelForLabels: [String: ConfigurationLevel], defaultLevel: ConfigurationLevel) {
         self.logger = logger
         self.loggingLevelForLabels = loggingLevelForLabels

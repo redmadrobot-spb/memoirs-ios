@@ -1,9 +1,9 @@
 //
-//  MultiplexingLogger.swift
-//  Robologs
+// MultiplexingLogger
+// Robologs
 //
-//  Created by Dmitry Shadrin on 05.12.2019.
-//  Copyright © 2019 Redmadrobot. All rights reserved.
+// Created by Dmitry Shadrin on 05.12.2019.
+// Copyright © 2020 Redmadrobot SPb. All rights reserved.
 //
 
 /// A logger that stores several loggers in itself and redirects all log events to them. It has no side effects.
