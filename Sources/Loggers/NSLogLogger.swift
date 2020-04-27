@@ -1,32 +1,33 @@
 //
-//  NSLogLogger.swift
-//  Robologs
+// NSLogLogger
+// Robologs
 //
-//  Created by Dmitry Shadrin on 05.12.2019.
-//  Copyright © 2019 Redmadrobot. All rights reserved.
+// Created by Dmitry Shadrin on 05.12.2019.
+// Copyright © 2020 Redmadrobot SPb. All rights reserved.
 //
 
 import Foundation
 
-/// Logger which incapsulate NSLog logging system.
-public struct NSLogLogger: Logger {
-    /// Creates a new instance of `NSLogLogger`.
-    public init() {}
+/// Logger which encapsulate NSLog logging system.
+public class NSLogLogger: Logger {
+    public let isSensitive: Bool
 
+    public init(isSensitive: Bool) {
+        self.isSensitive = isSensitive
+    }
+
+    @inlinable
     public func log(
         level: Level,
+        _ message: @autoclosure () -> LogString,
         label: String,
-        message: () -> LogString,
-        meta: () -> [String: LogString]?,
-        file: String,
-        function: String,
-        line: UInt
+        meta: @autoclosure () -> [String: LogString]? = nil,
+        file: String = #file, function: String = #function, line: UInt = #line
     ) {
-        let context = [ file, function, (line == 0 ? "" : "\(line)") ].filter { !$0.isEmpty }.joined(separator: ":")
-        let description = [ "\(level)", context, label, "\(message())", meta().map { $0.isEmpty ? "" : "\($0)" } ]
-            .compactMap { $0 }
-            .filter { !$0.isEmpty }
-            .joined(separator: " ")
+        let context = collectContext(file: file, function: function, line: line)
+        let description = concatenateData(
+            time: "", level: level, message: message, label: label, meta: meta, context: context, isSensitive: isSensitive
+        )
         NSLog("%@", description)
     }
 }

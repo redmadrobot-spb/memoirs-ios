@@ -1,9 +1,9 @@
 //
-//  LogString.swift
-//  Robologs
+// LogString
+// Robologs
 //
-//  Created by Dmitry Shadrin on 23.01.2020.
-//  Copyright © 2020 Redmadrobot. All rights reserved.
+// Created by Dmitry Shadrin on 23.01.2020.
+// Copyright © 2020 Redmadrobot SPb. All rights reserved.
 //
 
 /// String with additional functionality used inside the logging system.
@@ -14,34 +14,41 @@
 ///
 /// Usage:
 ///
-///     let logString: LogString = "Username: \(public: user.name), cardNumber: \(user.cardNumber)"
+///    let logString: LogString = "Username: \(public: user.name), cardNumber: \(user.cardNumber)"
 ///
 public struct LogString: CustomStringConvertible, ExpressibleByStringLiteral, ExpressibleByStringInterpolation {
-    private let interpolations: [LogStringInterpolation.Kind]
+    public static var isSensitive: Bool = true
 
-    public var description: String {
-        string(withoutSensitive: false)
-    }
+    private let interpolations: [LogStringInterpolation.Kind]
+    private let isSensitive: Bool = LogString.isSensitive
 
     public init(stringLiteral value: String) {
-        interpolations = [ .literal(value) ]
+        interpolations = [ .open(value) ]
     }
 
     public init(stringInterpolation: LogStringInterpolation) {
         interpolations = stringInterpolation.interpolations
     }
 
-    func string(withoutSensitive isSensitiveExcluded: Bool) -> String {
+    public init(_ any: Any) {
+        interpolations = [ isSensitive ? .sensitive(any) : .open(any) ]
+    }
+
+    public var description: String {
+        string(isSensitive: isSensitive)
+    }
+
+    public func string(isSensitive: Bool) -> String {
         interpolations.map { interpolation in
             switch interpolation {
-                case .literal(let string):
-                    return string
-                case .public(let value):
+                case .open(let value as Loggable):
+                    return "\(value.logDescription(isSensitive: false))"
+                case .open(let value):
                     return "\(value)"
-                case .private(let value):
-                    return isSensitiveExcluded ? "<private>" : "\(value)"
-                case .dump(let value):
-                    return "\(value.logDescription(withoutSensitive: isSensitiveExcluded))"
+                case .sensitive(let value as Loggable):
+                    return "\(value.logDescription(isSensitive: isSensitive))"
+                case .sensitive(let value):
+                    return isSensitive ? "<private>" : "\(value)"
             }
         }
         .joined()
