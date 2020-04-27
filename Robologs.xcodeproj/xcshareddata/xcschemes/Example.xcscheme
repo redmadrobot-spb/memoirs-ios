@@ -16,7 +16,7 @@
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "3053CC27242DF72E000125FB"
                BuildableName = "Robologs Test App.app"
-               BlueprintName = "Example"
+               BlueprintName = "Example App"
                ReferencedContainer = "container:Robologs.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -46,7 +46,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "3053CC27242DF72E000125FB"
             BuildableName = "Robologs Test App.app"
-            BlueprintName = "Example"
+            BlueprintName = "Example App"
             ReferencedContainer = "container:Robologs.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -63,7 +63,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "3053CC27242DF72E000125FB"
             BuildableName = "Robologs Test App.app"
-            BlueprintName = "Example"
+            BlueprintName = "Example App"
             ReferencedContainer = "container:Robologs.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

@@ -1,39 +1,37 @@
 //
-//  PrintLogger.swift
-//  Robologs
+// PrintLogger
+// Robologs
 //
-//  Created by Dmitry Shadrin on 27.11.2019.
-//  Copyright © 2019 Redmadrobot. All rights reserved.
+// Created by Dmitry Shadrin on 27.11.2019.
+// Copyright © 2020 Redmadrobot SPb. All rights reserved.
 //
 
 import Foundation
 
-/// Default `(Logger)` - implementation which just `print()` log event in LLDB-console in pretty format.
-public struct PrintLogger: Logger {
-    private let formatter: DateFormatter
-    private var timestamp: String { formatter.string(from: Date()) }
+/// Default `(Logger)` implementation which uses `print()` to output logs.
+public class PrintLogger: Logger {
+    public let formatter: DateFormatter
 
     /// Creates a new instance of `PrintLogger`.
-    public init() {
+    public init(onlyTime: Bool = false) {
         formatter = DateFormatter()
-        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSSZ"
+        formatter.dateFormat = onlyTime ? "HH:mm:ss.SSS" : "yyyy-MM-dd HH:mm:ss.SSSZ"
         formatter.locale = Locale(identifier: "en_US_POSIX")
     }
 
+    @inlinable
     public func log(
         level: Level,
+        _ message: @autoclosure () -> LogString,
         label: String,
-        message: () -> LogString,
-        meta: () -> [String: LogString]?,
-        file: String = #file,
-        function: String = #function,
-        line: UInt = #line
+        meta: @autoclosure () -> [String: LogString]?,
+        file: String = #file, function: String = #function, line: UInt = #line
     ) {
-        let context = [ file, function, (line == 0 ? "" : "\(line)") ].filter { !$0.isEmpty }.joined(separator: ":")
-        let description = [ "\(timestamp)", "\(level)", context, "\(label)", "\(message())", meta().map { $0.isEmpty ? "" : "\($0)" } ]
-            .compactMap { $0 }
-            .filter { !$0.isEmpty }
-            .joined(separator: " ")
+        let context = collectContext(file: file, function: function, line: line)
+        let time = formatter.string(from: Date())
+        let description = concatenateData(
+            time: time, level: level, message: message, label: label, meta: meta, context: context, isSensitive: false
+        )
         print(description)
     }
 }

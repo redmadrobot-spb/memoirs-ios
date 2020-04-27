@@ -1,17 +1,15 @@
 //
-//  LogStringInterpolation.swift
-//  Robologs
+// LogStringInterpolation
+// Robologs
 //
-//  Created by Dmitry Shadrin on 23.01.2020.
-//  Copyright © 2020 Redmadrobot. All rights reserved.
+// Created by Dmitry Shadrin on 23.01.2020.
+// Copyright © 2020 Redmadrobot SPb. All rights reserved.
 //
 
 public struct LogStringInterpolation: StringInterpolationProtocol {
     enum Kind {
-        case literal(String)
-        case `public`(Any)
-        case `private`(Any)
-        case dump(Loggable)
+        case open(Any)
+        case sensitive(Any)
     }
 
     var interpolations: [Kind] = []
@@ -21,18 +19,14 @@ public struct LogStringInterpolation: StringInterpolationProtocol {
     }
 
     public mutating func appendLiteral(_ literal: String) {
-        interpolations.append(.literal(literal))
+        interpolations.append(.open(literal))
     }
 
     public mutating func appendInterpolation(_ interpolation: Any) {
-        interpolations.append(.private(interpolation))
+        interpolations.append(.sensitive(interpolation))
     }
 
-    public mutating func appendInterpolation(public interpolation: Any) {
-        interpolations.append(.public(interpolation))
-    }
-
-    public mutating func appendInterpolation(_ interpolation: Loggable) {
-        interpolations.append(.dump(interpolation))
+    public mutating func appendInterpolation(safe interpolation: Any) {
+        interpolations.append(.open(interpolation))
     }
 }
