@@ -1,0 +1,56 @@
+//
+// Copyright © 2020 Redmadrobot SPb. All rights reserved.
+//
+
+syntax = "proto2";
+
+option java_package = "com.redmadrobot.robologs.protobuf.messages";
+option java_multiple_files = true;
+
+message AuthRequest {
+    required string secret = 1;
+    required Sender sender = 2;
+
+    message Sender {
+        required string id = 1;
+        optional string app_id = 2;
+        optional string app_name = 3;
+        optional string app_version = 4;
+        optional string app_build_version = 5;
+        optional string operation_system = 6;
+        optional string operation_system_version = 7;
+        optional string device_model = 8;
+    }
+}
+
+message AuthResponse {
+    required string token = 1;
+}
+
+message LiveCodeResponse {
+    required string code = 1;
+}
+
+message LogMessageBatch {
+    repeated LogMessage messages = 1;
+}
+
+message LogMessage {
+    required uint64 position = 1;
+    required uint64 timestamp_millis = 2;
+    required Priority priority = 3;
+    optional string source = 4;
+    optional string label = 5;
+    optional string body = 6;
+    map<string,string> meta = 7;
+
+    enum Priority {
+        UNDEFINED = 0;
+        VERBOSE = 1;
+        DEBUG = 2;
+        INFO = 3;
+        WARN = 4;
+        ERROR = 5;
+        CRITICAL = 6;
+    }
+}

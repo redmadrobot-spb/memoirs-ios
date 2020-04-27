@@ -16,7 +16,7 @@
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "46AE5599238D683B00774F9E"
                BuildableName = "Robologs.framework"
-               BlueprintName = "Robologs"
+               BlueprintName = "Robologs iOS"
                ReferencedContainer = "container:Robologs.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -52,7 +52,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "46AE5599238D683B00774F9E"
             BuildableName = "Robologs.framework"
-            BlueprintName = "Robologs"
+            BlueprintName = "Robologs iOS"
             ReferencedContainer = "container:Robologs.xcodeproj">
          </BuildableReference>
       </MacroExpansion>

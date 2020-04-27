@@ -31,6 +31,7 @@ opt_in_rules:
   - trailing_closure
   - multiple_closures_with_trailing_closure
   - unneeded_parentheses_in_closure_argument
+  - untyped_error_in_catch
 
 excluded:
   - Carthage
@@ -40,6 +41,9 @@ excluded:
   - Scripts
   - Generated
   - Example-iOS
+  - Sources/Remote/Transports/ProtoHttpRemoteLoggerTransport/proto/backend.pb.swift
+  - .build
+  - build
 
 force_cast: error
 force_try: error

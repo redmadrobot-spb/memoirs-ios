@@ -1,61 +1,53 @@
 //
-//  OSLogLogger.swift
-//  Robologs
+// OSLogLogger
+// Robologs
 //
-//  Created by Dmitry Shadrin on 03.12.2019.
-//  Copyright © 2019 Redmadrobot. All rights reserved.
+// Created by Dmitry Shadrin on 03.12.2019.
+// Copyright © 2020 Redmadrobot SPb. All rights reserved.
 //
 
-import Foundation
 import os.log
 
 /// `(Logger)` - implementation which use `os.log` logging system.
 @available(iOS 12.0, *)
-public struct OSLogLogger: Logger {
+public class OSLogLogger: Logger {
+    public let isSensitive: Bool
+
     /// An identifier string, in reverse DNS notation, representing the subsystem that’s performing logging.
     /// For example, `com.your_company.your_subsystem_name`.
     /// The subsystem is used for categorization and filtering of related log messages, as well as for grouping related logging settings.
     public let subsystem: String
-    private var loggers: SynchronizedDictionary<String, OSLog>
+    private var loggers: SynchronizedDictionary<String, OSLog> = [:]
 
     /// Creates a new instance of `OSLogLogger`.
     /// - Parameter subsystem: An identifier string, in reverse DNS notation, representing the subsystem that’s performing logging.
-    public init(subsystem: String) {
+    public init(subsystem: String, isSensitive: Bool) {
+        self.isSensitive = isSensitive
         self.subsystem = subsystem
-        self.loggers = [:]
     }
 
     public func log(
         level: Level,
+        _ message: @autoclosure () -> LogString,
         label: String,
-        message: () -> String,
-        meta: () -> [String: String]?,
-        file: String = #file,
-        function: String = #function,
-        line: UInt = #line
+        meta: @autoclosure () -> [String: LogString]? = nil,
+        file: String = #file, function: String = #function, line: UInt = #line
     ) {
-        let context = [ file, function, (line == 0 ? "" : "\(line)") ].filter { !$0.isEmpty }.joined(separator: ":")
-        let description = [ context, message(), meta().map { "\($0)" } ]
-            .compactMap { $0 }
-            .filter { !$0.isEmpty }
-            .joined(separator: " ")
+        let context = collectContext(file: file, function: function, line: line)
+        let description = concatenateData(
+            time: "", level: nil, message: message, label: "", meta: meta, context: context, isSensitive: isSensitive
+        )
         os_log(logType(from: level), log: logger(with: label), "%{public}@", description)
     }
 
     private func logType(from level: Level) -> OSLogType {
         switch level {
-            case .verbose:
-                return .debug
-            case .debug:
-                return .debug
-            case .info:
-                return .info
-            case .warning:
-                return .default
-            case .error:
-                return .error
-            case .critical:
-                return .fault
+            case .verbose: return .debug
+            case .debug: return .debug
+            case .info: return .info
+            case .warning: return .default
+            case .error: return .error
+            case .critical: return .fault
         }
     }
 
