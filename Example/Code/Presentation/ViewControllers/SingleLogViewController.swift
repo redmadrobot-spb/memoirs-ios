@@ -14,7 +14,6 @@ class SingleLogViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet private var selectedLogLevelSegmentedControl: UISegmentedControl!
     @IBOutlet private var labelTextField: UITextField!
     @IBOutlet private var messageTextField: UITextField!
-    @IBOutlet private var sensitiveSwitcher: UISwitch!
     @IBOutlet private var formBottomConstraint: NSLayoutConstraint!
     @IBOutlet private var formStackView: UIStackView!
 
@@ -23,7 +22,6 @@ class SingleLogViewController: UIViewController, UITextFieldDelegate {
 
         setupLogger()
         setupKeyboardShowing()
-        sensitiveSwitcher.isOn = false
     }
 
     private var logText: String = ""
@@ -88,7 +86,7 @@ class SingleLogViewController: UIViewController, UITextFieldDelegate {
     @IBAction func sendLogButtonTapped() {
         Loggers.instance.logger.log(
             level: Level.allCases[selectedLogLevelSegmentedControl.selectedSegmentIndex],
-            sensitiveSwitcher.isOn ? "\(messageTextField.text ?? "")" : "\(safe: messageTextField.text ?? "")",
+            "\(messageTextField.text ?? "empty log")",
             label: labelTextField.text ?? ""
         )
     }

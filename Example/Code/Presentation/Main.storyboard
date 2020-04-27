@@ -438,65 +438,51 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="top" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="ZLd-ij-Owi">
-                                <rect key="frame" x="16" y="577" width="382" height="220"/>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="ZLd-ij-Owi">
+                                <rect key="frame" x="16" y="666" width="382" height="131"/>
                                 <subviews>
-                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" alignment="center" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="GhP-Em-2D6">
-                                        <rect key="frame" x="0.0" y="0.0" width="382" height="154"/>
+                                    <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="GhP-Em-2D6">
+                                        <rect key="frame" x="0.0" y="0.0" width="382" height="73"/>
                                         <subviews>
                                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="x4n-zD-tv0">
-                                                <rect key="frame" x="2.5" y="0.0" width="377" height="32"/>
+                                                <rect key="frame" x="0.0" y="0.0" width="382" height="32"/>
                                                 <segments>
-                                                    <segment title="Verb"/>
+                                                    <segment title="Verbose"/>
                                                     <segment title="Debug"/>
                                                     <segment title="Info"/>
-                                                    <segment title="Warn"/>
+                                                    <segment title="Warning"/>
                                                     <segment title="Error"/>
                                                     <segment title="Critical"/>
                                                 </segments>
                                             </segmentedControl>
-                                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Label" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="uCh-6n-L3w">
+                                            <stackView opaque="NO" contentMode="scaleToFill" spacing="8" translatesAutoresizingMaskIntoConstraints="NO" id="yer-ne-Fch">
                                                 <rect key="frame" x="0.0" y="39" width="382" height="34"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                <textInputTraits key="textInputTraits" returnKeyType="next"/>
-                                                <connections>
-                                                    <outlet property="delegate" destination="K0S-tX-xNx" id="oWY-0a-zXD"/>
-                                                </connections>
-                                            </textField>
-                                            <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Message" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="YLe-nf-8qP">
-                                                <rect key="frame" x="0.0" y="81" width="382" height="34"/>
-                                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                                <textInputTraits key="textInputTraits" returnKeyType="done"/>
-                                                <connections>
-                                                    <outlet property="delegate" destination="K0S-tX-xNx" id="jAP-ta-ieE"/>
-                                                </connections>
-                                            </textField>
-                                            <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Tg8-x5-Kbz">
-                                                <rect key="frame" x="0.0" y="123" width="382" height="31"/>
                                                 <subviews>
-                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Sensitive" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lbq-kL-3N6">
-                                                        <rect key="frame" x="0.0" y="0.0" width="333" height="31"/>
-                                                        <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
-                                                        <nil key="textColor"/>
-                                                        <nil key="highlightedColor"/>
-                                                    </label>
-                                                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2Ah-rt-Oa5">
-                                                        <rect key="frame" x="333" y="0.0" width="51" height="31"/>
-                                                    </switch>
+                                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Label" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="uCh-6n-L3w">
+                                                        <rect key="frame" x="0.0" y="0.0" width="80" height="34"/>
+                                                        <constraints>
+                                                            <constraint firstAttribute="width" constant="80" id="xkl-9b-jxO"/>
+                                                        </constraints>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                        <textInputTraits key="textInputTraits" returnKeyType="next"/>
+                                                        <connections>
+                                                            <outlet property="delegate" destination="K0S-tX-xNx" id="oWY-0a-zXD"/>
+                                                        </connections>
+                                                    </textField>
+                                                    <textField opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Message" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="YLe-nf-8qP">
+                                                        <rect key="frame" x="88" y="0.0" width="294" height="34"/>
+                                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                        <textInputTraits key="textInputTraits" returnKeyType="done"/>
+                                                        <connections>
+                                                            <outlet property="delegate" destination="K0S-tX-xNx" id="jAP-ta-ieE"/>
+                                                        </connections>
+                                                    </textField>
                                                 </subviews>
                                             </stackView>
                                         </subviews>
-                                        <constraints>
-                                            <constraint firstAttribute="trailing" secondItem="Tg8-x5-Kbz" secondAttribute="trailing" id="4p6-fP-G5e"/>
-                                            <constraint firstItem="YLe-nf-8qP" firstAttribute="leading" secondItem="GhP-Em-2D6" secondAttribute="leading" id="LCh-aY-rH6"/>
-                                            <constraint firstAttribute="trailing" secondItem="YLe-nf-8qP" secondAttribute="trailing" id="WWy-gJ-sKy"/>
-                                            <constraint firstItem="uCh-6n-L3w" firstAttribute="leading" secondItem="GhP-Em-2D6" secondAttribute="leading" id="mtf-Vt-FR0"/>
-                                            <constraint firstAttribute="trailing" secondItem="uCh-6n-L3w" secondAttribute="trailing" id="t62-pH-axg"/>
-                                            <constraint firstItem="Tg8-x5-Kbz" firstAttribute="leading" secondItem="GhP-Em-2D6" secondAttribute="leading" id="t73-3g-0qH"/>
-                                        </constraints>
                                     </stackView>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="OFa-O4-odm">
-                                        <rect key="frame" x="0.0" y="170" width="382" height="50"/>
+                                        <rect key="frame" x="0.0" y="81" width="382" height="50"/>
                                         <color key="backgroundColor" systemColor="systemBlueColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="50" id="AEy-Vj-0z5"/>
@@ -515,15 +501,9 @@
                                         </connections>
                                     </button>
                                 </subviews>
-                                <constraints>
-                                    <constraint firstAttribute="trailing" secondItem="OFa-O4-odm" secondAttribute="trailing" id="0Wu-By-c6y"/>
-                                    <constraint firstItem="OFa-O4-odm" firstAttribute="leading" secondItem="ZLd-ij-Owi" secondAttribute="leading" id="D1A-s3-Ch9"/>
-                                    <constraint firstItem="GhP-Em-2D6" firstAttribute="leading" secondItem="ZLd-ij-Owi" secondAttribute="leading" id="Zeb-Ic-OHc"/>
-                                    <constraint firstAttribute="trailing" secondItem="GhP-Em-2D6" secondAttribute="trailing" id="lo1-5H-1lm"/>
-                                </constraints>
                             </stackView>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="b8L-kz-JJ4">
-                                <rect key="frame" x="16" y="104" width="382" height="469"/>
+                                <rect key="frame" x="16" y="104" width="382" height="558"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                 <color key="textColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -550,7 +530,6 @@
                         <outlet property="logsTextView" destination="b8L-kz-JJ4" id="DL6-Aa-gyN"/>
                         <outlet property="messageTextField" destination="YLe-nf-8qP" id="wLl-Fv-55M"/>
                         <outlet property="selectedLogLevelSegmentedControl" destination="x4n-zD-tv0" id="Cd0-3o-Mfc"/>
-                        <outlet property="sensitiveSwitcher" destination="2Ah-rt-Oa5" id="GOI-92-246"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="aDh-fl-P4z" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
