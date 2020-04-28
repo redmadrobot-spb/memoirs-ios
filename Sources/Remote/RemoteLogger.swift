@@ -25,8 +25,6 @@ public class RemoteLogger: Logger {
 
     #if DEBUG
     private let bonjourServer: BonjourServer
-    // Test only
-    private var bonjourClient: BonjourClient!
     #endif
 
     public init(
@@ -42,11 +40,6 @@ public class RemoteLogger: Logger {
         #if DEBUG
         bonjourServer = BonjourServer(logger: logger)
         bonjourServer.publish(senderId: applicationInfo.deviceId)
-
-        // Test only
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
-            self.bonjourClient = BonjourClient(logger: logger)
-        }
         #endif
     }
 
