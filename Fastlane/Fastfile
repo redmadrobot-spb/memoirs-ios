@@ -3,6 +3,8 @@ min_fastlane_version("2.71.0")
 default_platform(:ios)
 
 platform :ios do
+    xcversion(version: "~> 11.4.0")
+
     # Load local enviroment variables
     if File.exist?('.env')
         open('.env', 'r').readlines.each do |l|

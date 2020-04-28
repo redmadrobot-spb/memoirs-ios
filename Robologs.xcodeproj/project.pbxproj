@@ -27,7 +27,6 @@
 		2DBA1BC8525F9A84933D47B7 /* Loggable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA129A224F3D8C844B7AAF /* Loggable.swift */; platformFilter = ios; };
 		2DBA1FFDD2C4D6453D27242A /* EndpointViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA186BD75E9B889DAFD54B /* EndpointViewController.swift */; };
 		3053CC41242DFB50000125FB /* Robologs.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 46AE559A238D683C00774F9E /* Robologs.framework */; };
-		3053CC42242DFB50000125FB /* Robologs.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 46AE559A238D683C00774F9E /* Robologs.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4611FCED2398FEF100E23B25 /* MultiplexingLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4611FCEC2398FEF100E23B25 /* MultiplexingLogger.swift */; platformFilter = ios; };
 		4611FCEF239904CC00E23B25 /* FilteringLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4611FCEE239904CC00E23B25 /* FilteringLogger.swift */; platformFilter = ios; };
 		4611FCF723995F3300E23B25 /* NSLogLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4611FCF623995F3300E23B25 /* NSLogLogger.swift */; platformFilter = ios; };
@@ -92,20 +91,6 @@
 			remoteInfo = Robologs;
 		};
 /* End PBXContainerItemProxy section */
-
-/* Begin PBXCopyFilesBuildPhase section */
-		3053CC45242DFB50000125FB /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				3053CC42242DFB50000125FB /* Robologs.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		2DBA10435D991F46DC8D89BF /* Loggers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Loggers.swift; sourceTree = "<group>"; };
@@ -450,7 +435,6 @@
 				3053CC24242DF72E000125FB /* Sources */,
 				3053CC25242DF72E000125FB /* Frameworks */,
 				3053CC26242DF72E000125FB /* Resources */,
-				3053CC45242DFB50000125FB /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
