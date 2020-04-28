@@ -13,10 +13,12 @@ public class BonjourServer: NSObject, NetServiceDelegate {
     private let netService: NetService
     private var logger: LabeledLogger!
 
+    private let randomizedName: String = "Robologs-\(UUID().uuidString)"
+
     public init(logger: Logger) {
         let type = "_robologs._tcp."
 
-        netService = NetService(domain: "local.", type: type, name: "Robologs", port: (Int32(48000) ..< 65536).randomElement() ?? 32128)
+        netService = NetService(domain: "local.", type: type, name: randomizedName, port: (Int32(48000) ..< 65536).randomElement() ?? 32128)
         super.init()
 
         netService.schedule(in: RunLoop.current, forMode: .common)

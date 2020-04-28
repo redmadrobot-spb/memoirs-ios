@@ -84,7 +84,7 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
     }
 
     public func netServiceBrowser(_ browser: NetServiceBrowser, didRemove service: NetService, moreComing: Bool) {
-        logger.verbose("Disappeared: \(service.domain)/\(service.type)/\(service.name)")
+        logger.verbose("Disappeared: \(service.domain)/\(service.type)/\(service.name) (moreComing: \(moreComing))")
         switch service.type {
             case typeRobologs:
                 service.delegate = nil
@@ -111,6 +111,8 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
         logger.debug("Removed Remote Debug Link addresses: \(addresses)")
     }
 
+    private var connectedRobologSDKs: [String: String] = [:]
+
     private func tryToConnect(to service: NetService) {
         let addresses = resolveOnlyIPv4(addresses: service.addresses ?? [])
         guard
@@ -123,23 +125,18 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
         }
 
         if let senderIdData = txtRecord["senderId"], let senderId = String(data: senderIdData, encoding: .utf8) {
+            connectedRobologSDKs[service.name] = senderId
             serviceFound?(senderId)
             logger.debug("Robologs service appeared with senderId: \(senderId)")
         }
     }
 
     private func disconnect(from service: NetService) {
-        guard
-            let txtRecord = service.txtRecordData().map({ NetService.dictionary(fromTXTRecord: $0) })
-        else {
-            logger.warning("Can't disconnect from \(service.domain)/\(service.type)/\(service.name)")
-            return
-        }
+        guard let senderId = connectedRobologSDKs[service.name] else { return }
 
-        if let senderIdData = txtRecord["senderId"], let senderId = String(data: senderIdData, encoding: .utf8) {
-            logger.debug("Robologs service disappeared with senderId: \(senderId)")
-            serviceDisappeared?(senderId)
-        }
+        connectedRobologSDKs[service.name] = nil
+        logger.debug("Robologs service disappeared with senderId: \(senderId)")
+        serviceDisappeared?(senderId)
     }
 
     // MARK: - NetService Delegate
