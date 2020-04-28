@@ -23,6 +23,12 @@ public class RemoteLogger: Logger {
     private let buffer: RemoteLoggerBuffer
     private var transport: RemoteLoggerTransport?
 
+    #if DEBUG
+    private let bonjourServer: BonjourServer
+    // Test only
+    private var bonjourClient: BonjourClient!
+    #endif
+
     public init(
         applicationInfo: ApplicationInfo,
         isSensitive: Bool,
@@ -32,6 +38,16 @@ public class RemoteLogger: Logger {
         self.applicationInfo = applicationInfo
         self.logger = logger
         self.isSensitive = isSensitive
+
+        #if DEBUG
+        bonjourServer = BonjourServer(logger: logger)
+        bonjourServer.publish(senderId: applicationInfo.deviceId)
+
+        // Test only
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2) {
+            self.bonjourClient = BonjourClient(logger: logger)
+        }
+        #endif
     }
 
     public func configure(
