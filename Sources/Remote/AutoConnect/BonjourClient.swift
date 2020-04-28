@@ -66,32 +66,34 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
     private var remoteDebugLinkAddresses: Set<String> = []
 
     public func netServiceBrowser(_ browser: NetServiceBrowser, didFind service: NetService, moreComing: Bool) {
-        logger.verbose("Found: \(service.domain).\(service.type)/\(service.name)")
+        logger.verbose("Found: \(service.domain)/\(service.type)/\(service.name)")
         switch service.type {
             case typeRobologs:
                 robologsResolvingServices.append(service)
                 service.delegate = self
                 DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
-                    service.resolve(withTimeout: 2)
+                    service.resolve(withTimeout: 5)
                 }
-//                tryToConnect(to: service)
             case typeRemoteDebugLink:
                 remoteDebugLinkResolvingServices.append(service)
                 service.delegate = self
-                service.resolve(withTimeout: 2)
-//                addRemoteDebugLinkAddresses(from: service)
+                service.resolve(withTimeout: 5)
             default:
                 break
         }
     }
 
     public func netServiceBrowser(_ browser: NetServiceBrowser, didRemove service: NetService, moreComing: Bool) {
-        logger.verbose("Disappeared: \(service.domain).\(service.type)/\(service.name)")
+        logger.verbose("Disappeared: \(service.domain)/\(service.type)/\(service.name)")
         switch service.type {
             case typeRobologs:
+                service.delegate = nil
                 disconnect(from: service)
+                robologsResolvingServices = robologsResolvingServices.filter { $0 !== service }
             case typeRemoteDebugLink:
+                service.delegate = nil
                 removeRemoteDebugLinkAddresses(from: service)
+                remoteDebugLinkResolvingServices = remoteDebugLinkResolvingServices.filter { $0 !== service }
             default:
                 break
         }
@@ -116,13 +118,13 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
             let txtRecord = service.txtRecordData().map({ NetService.dictionary(fromTXTRecord: $0) }),
             isRobologsServiceLocal(addresses: addresses, txtRecord: txtRecord)
         else {
-            logger.warning("Can't connect to \(service.domain).\(service.type)/\(service.name)")
+            logger.warning("Can't connect to \(service.domain)/\(service.type)/\(service.name)")
             return
         }
 
         if let senderIdData = txtRecord["senderId"], let senderId = String(data: senderIdData, encoding: .utf8) {
-            logger.warning("Robologs service appeared with senderId: \(senderId)")
             serviceFound?(senderId)
+            logger.debug("Robologs service appeared with senderId: \(senderId)")
         }
     }
 
@@ -130,12 +132,12 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
         guard
             let txtRecord = service.txtRecordData().map({ NetService.dictionary(fromTXTRecord: $0) })
         else {
-            logger.warning("Can't disconnect from \(service.domain).\(service.type)/\(service.name)")
+            logger.warning("Can't disconnect from \(service.domain)/\(service.type)/\(service.name)")
             return
         }
 
         if let senderIdData = txtRecord["senderId"], let senderId = String(data: senderIdData, encoding: .utf8) {
-            logger.warning("Robologs service disappeared with senderId: \(senderId)")
+            logger.debug("Robologs service disappeared with senderId: \(senderId)")
             serviceDisappeared?(senderId)
         }
     }
@@ -143,23 +145,23 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
     // MARK: - NetService Delegate
 
     public func netServiceDidResolveAddress(_ service: NetService) {
-        logger.debug("Found: \(service.domain).\(service.type)/\(service.name)")
+        logger.debug("Found: \(service.domain)/\(service.type)/\(service.name)")
         switch service.type {
             case typeRobologs:
                 tryToConnect(to: service)
-                robologsResolvingServices = robologsResolvingServices.filter { $0 !== service }
             case typeRemoteDebugLink:
                 addRemoteDebugLinkAddresses(from: service)
-                remoteDebugLinkResolvingServices = remoteDebugLinkResolvingServices.filter { $0 !== service }
             default:
                 break
         }
     }
 
+    public func netServiceDidStop(_ sender: NetService) {
+
+    }
+
     public func netService(_ service: NetService, didNotResolve errorDict: [String: NSNumber]) {
         logger.debug("Error: \(errorDict)")
-        robologsResolvingServices = robologsResolvingServices.filter { $0 !== service }
-        remoteDebugLinkResolvingServices = remoteDebugLinkResolvingServices.filter { $0 !== service }
     }
 
     // MARK: - Helper Methods
@@ -169,13 +171,12 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
             logger.debug("Robologs service address is in Remote Debug Link addresses. Good!")
             return true
         }
+        guard let deviceIdData = txtRecord["deviceId"], let deviceId = String(data: deviceIdData, encoding: .utf8) else {
+            logger.debug("No deviceID in TXT records")
+            return false
+        }
 
         if #available(iOS 13.0, *) {
-            guard let deviceIdData = txtRecord["deviceId"], let deviceId = String(data: deviceIdData, encoding: .utf8) else {
-                logger.debug("No deviceID in TXT records")
-                return false
-            }
-
             let hashedUDIDs: [String] = Shell
                 .CommandLine(in: Shell.userHomeDirectory, command: "instruments -s devices", logger: logger.logger)
                 .execute()
@@ -184,8 +185,9 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
                 .compactMap { string in
                     guard let left = string.firstIndex(of: "["), let right = string.firstIndex(of: "]") else { return nil }
 
-                    logger.verbose("  Found device UDID: \(string[left ..< right])")
-                    return string[left ..< right].data(using: .utf8)
+                    let udid = string[left ..< right].dropFirst()
+                    logger.verbose("  Found device UDID: \"\(udid)\"")
+                    return udid.data(using: .utf8)
                 }
                 .map { (udidData: Data) in SHA256.hash(data: udidData).description }
 
@@ -210,7 +212,11 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
                     $0.withMemoryRebound(to: sockaddr_in.self, capacity: 1) { $0.pointee }
                 }
 
-                return String(cString: inet_ntoa(addr4.sin_addr), encoding: .ascii)
+                var address = String(cString: inet_ntoa(addr4.sin_addr), encoding: .ascii)
+                if address == "127.0.0.1" {
+                    address = nil
+                }
+                return address
             } else {
                 return nil
             }

@@ -82,6 +82,12 @@
 		FAD51EC82456D5A100265E18 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FAD51EB22456D5A000265E18 /* Assets.xcassets */; };
 		FAD51EC92456D5A100265E18 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FAD51EB32456D5A000265E18 /* LaunchScreen.storyboard */; };
 		FAD51EEF245722A500265E18 /* ProtoHttpRemoteLoggerTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1DA202B598E9F6F27C1D /* ProtoHttpRemoteLoggerTransport.swift */; };
+		FAE67F7B2458CE340083E237 /* SwiftProtobuf in Frameworks */ = {isa = PBXBuildFile; productRef = 304E87AE242B8AAD007694D2 /* SwiftProtobuf */; };
+		FAE67F7C2458CE340083E237 /* SwiftProtobufPluginLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = 304E87B0242B8AAD007694D2 /* SwiftProtobufPluginLibrary */; };
+		FAE67F7D2458CE340083E237 /* SwiftProtobuf in Frameworks */ = {isa = PBXBuildFile; productRef = FA8EB0A224545A7600D438DC /* SwiftProtobuf */; };
+		FAE67F7E2458CE340083E237 /* SwiftProtobufPluginLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = FA8EB0A424545A7600D438DC /* SwiftProtobufPluginLibrary */; };
+		FAE67F862458CE530083E237 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAE67F852458CE530083E237 /* main.swift */; };
+		FAE67F8A2458CE810083E237 /* Robologs.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA8EB09A24545A4200D438DC /* Robologs.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -92,7 +98,26 @@
 			remoteGlobalIDString = 46AE5599238D683B00774F9E;
 			remoteInfo = Robologs;
 		};
+		FAE67F8B2458CFCA0083E237 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 46AE5591238D683B00774F9E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FA8EB09924545A4200D438DC;
+			remoteInfo = "Robologs macOS";
+		};
 /* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		FAE67F812458CE530083E237 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 1;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		2DBA10435D991F46DC8D89BF /* Loggers.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Loggers.swift; sourceTree = "<group>"; };
@@ -148,6 +173,8 @@
 		FAD51EB22456D5A000265E18 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FAD51EB42456D5A000265E18 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		FAD51EB52456D5A000265E18 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		FAE67F832458CE530083E237 /* BonjourClientTest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = BonjourClientTest; sourceTree = BUILT_PRODUCTS_DIR; };
+		FAE67F852458CE530083E237 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -163,6 +190,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FAE67F7C2458CE340083E237 /* SwiftProtobufPluginLibrary in Frameworks */,
+				FAE67F7B2458CE340083E237 /* SwiftProtobuf in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -170,6 +199,16 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FAE67F7E2458CE340083E237 /* SwiftProtobufPluginLibrary in Frameworks */,
+				FAE67F7D2458CE340083E237 /* SwiftProtobuf in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FAE67F802458CE530083E237 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FAE67F8A2458CE810083E237 /* Robologs.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -275,6 +314,7 @@
 				4626E60D239656F200BD14B8 /* RobologsiOS */,
 				3053CC29242DF72E000125FB /* Example */,
 				FA8EB09B24545A4200D438DC /* RobologsMacOS */,
+				FAE67F842458CE530083E237 /* BonjourClientTest */,
 				46AE559B238D683C00774F9E /* Products */,
 				3053CC40242DFB50000125FB /* Frameworks */,
 			);
@@ -286,6 +326,7 @@
 				46AE559A238D683C00774F9E /* Robologs.framework */,
 				3053CC28242DF72E000125FB /* Robologs Test App.app */,
 				FA8EB09A24545A4200D438DC /* Robologs.framework */,
+				FAE67F832458CE530083E237 /* BonjourClientTest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -420,6 +461,14 @@
 			path = Resources;
 			sourceTree = "<group>";
 		};
+		FAE67F842458CE530083E237 /* BonjourClientTest */ = {
+			isa = PBXGroup;
+			children = (
+				FAE67F852458CE530083E237 /* main.swift */,
+			);
+			path = BonjourClientTest;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -474,8 +523,8 @@
 			);
 			name = "Robologs iOS";
 			packageProductDependencies = (
-				304E87AE242B8AAD007694D2 /* XCSwiftPackageProductDependency */,
-				304E87B0242B8AAD007694D2 /* XCSwiftPackageProductDependency */,
+				304E87AE242B8AAD007694D2 /* SwiftProtobuf */,
+				304E87B0242B8AAD007694D2 /* SwiftProtobufPluginLibrary */,
 			);
 			productName = RobologsiOSNative;
 			productReference = 46AE559A238D683C00774F9E /* Robologs.framework */;
@@ -497,12 +546,30 @@
 			);
 			name = "Robologs macOS";
 			packageProductDependencies = (
-				FA8EB0A224545A7600D438DC /* XCSwiftPackageProductDependency */,
-				FA8EB0A424545A7600D438DC /* XCSwiftPackageProductDependency */,
+				FA8EB0A224545A7600D438DC /* SwiftProtobuf */,
+				FA8EB0A424545A7600D438DC /* SwiftProtobufPluginLibrary */,
 			);
 			productName = Robologs;
 			productReference = FA8EB09A24545A4200D438DC /* Robologs.framework */;
 			productType = "com.apple.product-type.framework";
+		};
+		FAE67F822458CE530083E237 /* BonjourClientTest */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FAE67F892458CE530083E237 /* Build configuration list for PBXNativeTarget "BonjourClientTest" */;
+			buildPhases = (
+				FAE67F7F2458CE530083E237 /* Sources */,
+				FAE67F802458CE530083E237 /* Frameworks */,
+				FAE67F812458CE530083E237 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				FAE67F8C2458CFCA0083E237 /* PBXTargetDependency */,
+			);
+			name = BonjourClientTest;
+			productName = BonjourClientTest;
+			productReference = FAE67F832458CE530083E237 /* BonjourClientTest */;
+			productType = "com.apple.product-type.tool";
 		};
 /* End PBXNativeTarget section */
 
@@ -524,6 +591,9 @@
 					FA8EB09924545A4200D438DC = {
 						CreatedOnToolsVersion = 11.4.1;
 					};
+					FAE67F822458CE530083E237 = {
+						CreatedOnToolsVersion = 11.4.1;
+					};
 				};
 			};
 			buildConfigurationList = 46AE5594238D683B00774F9E /* Build configuration list for PBXProject "Robologs" */;
@@ -536,7 +606,7 @@
 			);
 			mainGroup = 46AE5590238D683B00774F9E;
 			packageReferences = (
-				304E87AD242B8AAD007694D2 /* XCRemoteSwiftPackageReference */,
+				304E87AD242B8AAD007694D2 /* XCRemoteSwiftPackageReference "swift-protobuf" */,
 			);
 			productRefGroup = 46AE559B238D683C00774F9E /* Products */;
 			projectDirPath = "";
@@ -545,6 +615,7 @@
 				46AE5599238D683B00774F9E /* Robologs iOS */,
 				FA8EB09924545A4200D438DC /* Robologs macOS */,
 				3053CC27242DF72E000125FB /* Example App */,
+				FAE67F822458CE530083E237 /* BonjourClientTest */,
 			);
 		};
 /* End PBXProject section */
@@ -708,6 +779,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		FAE67F7F2458CE530083E237 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FAE67F862458CE530083E237 /* main.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
@@ -715,6 +794,11 @@
 			isa = PBXTargetDependency;
 			target = 46AE5599238D683B00774F9E /* Robologs iOS */;
 			targetProxy = 3053CC43242DFB50000125FB /* PBXContainerItemProxy */;
+		};
+		FAE67F8C2458CFCA0083E237 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FA8EB09924545A4200D438DC /* Robologs macOS */;
+			targetProxy = FAE67F8B2458CFCA0083E237 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -1031,6 +1115,34 @@
 			};
 			name = Release;
 		};
+		FAE67F872458CE530083E237 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_HARDENED_RUNTIME = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		FAE67F882458CE530083E237 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_HARDENED_RUNTIME = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -1070,10 +1182,19 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		FAE67F892458CE530083E237 /* Build configuration list for PBXNativeTarget "BonjourClientTest" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FAE67F872458CE530083E237 /* Debug */,
+				FAE67F882458CE530083E237 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		304E87AD242B8AAD007694D2 /* XCRemoteSwiftPackageReference */ = {
+		304E87AD242B8AAD007694D2 /* XCRemoteSwiftPackageReference "swift-protobuf" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/apple/swift-protobuf.git";
 			requirement = {
@@ -1084,24 +1205,24 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		304E87AE242B8AAD007694D2 /* XCSwiftPackageProductDependency */ = {
+		304E87AE242B8AAD007694D2 /* SwiftProtobuf */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 304E87AD242B8AAD007694D2 /* XCRemoteSwiftPackageReference */;
+			package = 304E87AD242B8AAD007694D2 /* XCRemoteSwiftPackageReference "swift-protobuf" */;
 			productName = SwiftProtobuf;
 		};
-		304E87B0242B8AAD007694D2 /* XCSwiftPackageProductDependency */ = {
+		304E87B0242B8AAD007694D2 /* SwiftProtobufPluginLibrary */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 304E87AD242B8AAD007694D2 /* XCRemoteSwiftPackageReference */;
+			package = 304E87AD242B8AAD007694D2 /* XCRemoteSwiftPackageReference "swift-protobuf" */;
 			productName = SwiftProtobufPluginLibrary;
 		};
-		FA8EB0A224545A7600D438DC /* XCSwiftPackageProductDependency */ = {
+		FA8EB0A224545A7600D438DC /* SwiftProtobuf */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 304E87AD242B8AAD007694D2 /* XCRemoteSwiftPackageReference */;
+			package = 304E87AD242B8AAD007694D2 /* XCRemoteSwiftPackageReference "swift-protobuf" */;
 			productName = SwiftProtobuf;
 		};
-		FA8EB0A424545A7600D438DC /* XCSwiftPackageProductDependency */ = {
+		FA8EB0A424545A7600D438DC /* SwiftProtobufPluginLibrary */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 304E87AD242B8AAD007694D2 /* XCRemoteSwiftPackageReference */;
+			package = 304E87AD242B8AAD007694D2 /* XCRemoteSwiftPackageReference "swift-protobuf" */;
 			productName = SwiftProtobufPluginLibrary;
 		};
 /* End XCSwiftPackageProductDependency section */
