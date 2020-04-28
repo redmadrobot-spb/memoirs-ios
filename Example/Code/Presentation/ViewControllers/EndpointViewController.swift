@@ -19,6 +19,7 @@ class EndpointViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet private var activityIndicator: UIActivityIndicatorView!
     @IBOutlet private var getCodeButton: UIButton!
     @IBOutlet private var connectionCodeLabel: UILabel!
+    @IBOutlet private var disableSSLCheckSwitch: UISwitch!
 
     private var liveId: String? {
         didSet {
@@ -121,7 +122,12 @@ class EndpointViewController: UIViewController, UITextFieldDelegate {
             }
 
             isConnecting = true
-            Loggers.instance.connectAndGetCode(url: url, secret: secretTextField.text ?? "") { result in
+            let disableSSLCheck = disableSSLCheckSwitch.isOn
+            Loggers.instance.connectAndGetCode(
+                url: url,
+                secret: secretTextField.text ?? "",
+                disableSSLCheck: disableSSLCheck
+            ) { result in
                 self.isConnecting = false
                 switch result {
                     case .success(let code):

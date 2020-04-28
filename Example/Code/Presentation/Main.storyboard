@@ -268,10 +268,10 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacing="16" translatesAutoresizingMaskIntoConstraints="NO" id="HKO-Td-iCe">
-                                <rect key="frame" x="32" y="583" width="350" height="214"/>
+                                <rect key="frame" x="32" y="544" width="350" height="253"/>
                                 <subviews>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="ukO-wi-fXk">
-                                        <rect key="frame" x="0.0" y="0.0" width="350" height="66"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="350" height="105"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Connection URL" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Z6g-lO-5XH">
                                                 <rect key="frame" x="0.0" y="0.0" width="350" height="24"/>
@@ -290,10 +290,24 @@
                                                     <outlet property="delegate" destination="x3x-Z1-RFi" id="oV1-9a-7Bo"/>
                                                 </connections>
                                             </textField>
+                                            <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vzY-JR-isA">
+                                                <rect key="frame" x="0.0" y="74" width="350" height="31"/>
+                                                <subviews>
+                                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Disable SSL Certificate Check" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="1Le-hW-ooA">
+                                                        <rect key="frame" x="0.0" y="0.0" width="301" height="31"/>
+                                                        <fontDescription key="fontDescription" style="UICTFontTextStyleCallout"/>
+                                                        <nil key="textColor"/>
+                                                        <nil key="highlightedColor"/>
+                                                    </label>
+                                                    <switch opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" on="YES" translatesAutoresizingMaskIntoConstraints="NO" id="KVO-Ba-fWl">
+                                                        <rect key="frame" x="301" y="0.0" width="51" height="31"/>
+                                                    </switch>
+                                                </subviews>
+                                            </stackView>
                                         </subviews>
                                     </stackView>
                                     <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" spacingType="standard" translatesAutoresizingMaskIntoConstraints="NO" id="wd6-kh-rka">
-                                        <rect key="frame" x="0.0" y="82" width="350" height="66"/>
+                                        <rect key="frame" x="0.0" y="121" width="350" height="66"/>
                                         <subviews>
                                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Secret" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="vaV-qb-Br2">
                                                 <rect key="frame" x="0.0" y="0.0" width="350" height="24"/>
@@ -315,7 +329,7 @@
                                         </subviews>
                                     </stackView>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AVx-7s-qBU">
-                                        <rect key="frame" x="0.0" y="164" width="350" height="50"/>
+                                        <rect key="frame" x="0.0" y="203" width="350" height="50"/>
                                         <color key="backgroundColor" systemColor="systemBlueColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="50" id="uhI-8d-OqC"/>
@@ -420,6 +434,7 @@
                         <outlet property="connectButton" destination="AVx-7s-qBU" id="6aB-ev-PNl"/>
                         <outlet property="connectionCodeLabel" destination="iDl-K5-c5Q" id="Q7z-jn-EcY"/>
                         <outlet property="connectionUrlTextField" destination="3Uu-bK-ayq" id="SDB-9a-15C"/>
+                        <outlet property="disableSSLCheckSwitch" destination="KVO-Ba-fWl" id="Zwk-DD-1Q9"/>
                         <outlet property="formBottomConstraint" destination="9d9-H4-xUX" id="Qn0-2C-MYg"/>
                         <outlet property="formStackView" destination="HKO-Td-iCe" id="MG4-Rv-D6e"/>
                         <outlet property="getCodeButton" destination="d45-H0-P8n" id="bD7-30-hyk"/>
