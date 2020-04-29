@@ -47,6 +47,9 @@ public class BonjourServer: NSObject, NetServiceDelegate {
 
     public func publish(senderId: String) {
         var txtRecord: [String: Data] = [:]
+        if let data = ProcessInfo.processInfo.hostName.data(using: .utf8) {
+            txtRecord["deviceName"] = data
+        }
         if let deviceIdHash = self.deviceIdHash, let data = deviceIdHash.data(using: .utf8) {
             txtRecord["deviceId"] = data
         }
