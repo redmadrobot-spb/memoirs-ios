@@ -33,7 +33,8 @@ public class BonjourServer: NSObject, NetServiceDelegate {
         if #available(iOS 13.0, *) {
             let deviceUDID = ProcessInfo.processInfo.environment["SIMULATOR_UDID"]
             // TODO: Add fallback for manual udid setup
-            if let simulatorUDID = deviceUDID, let udidData = simulatorUDID.data(using: .utf8) {
+            if let deviceUDID = deviceUDID, let udidData = deviceUDID.data(using: .utf8) {
+                self.logger.debug("Found device UDID: \(deviceUDID)")
                 let hash = SHA256.hash(data: udidData)
                 return hash.description
             } else {
