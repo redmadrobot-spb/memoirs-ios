@@ -33,8 +33,16 @@ class Loggers {
         }
     }
 
-    func connectAndGetCode(url: URL, secret: String, completion: @escaping (Result<String, RemoteLogger.Error>) -> Void) {
-        remoteLogger.configure(endpoint: url, secret: secret) {
+    func connectAndGetCode(
+        url: URL,
+        secret: String,
+        disableSSLCheck: Bool,
+        completion: @escaping (Result<String, RemoteLogger.Error>
+    ) -> Void) {
+        let challengePolicy: AuthenticationChallengePolicy = disableSSLCheck
+            ? AllowSelfSignedChallengePolicy()
+            : DefaultChallengePolicy()
+        remoteLogger.configure(endpoint: url, secret: secret, challengePolicy: challengePolicy) {
             self.remoteLogger.startLive(completion: completion)
         }
     }

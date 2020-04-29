@@ -9,6 +9,8 @@
 /* Begin PBXBuildFile section */
 		2DBA108007128FAD4821882B /* ProtoHttpRemoteLoggerTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1DA202B598E9F6F27C1D /* ProtoHttpRemoteLoggerTransport.swift */; platformFilter = ios; };
 		2DBA10AFC33F1F1A8A3AF4F7 /* SingleLogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1BA84DCE2ADB5089444D /* SingleLogViewController.swift */; };
+		2DBA11174264D8D5FBD289B7 /* BonjourServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1CC1F043D50CC7774247 /* BonjourServer.swift */; };
+		2DBA124C75E1AC7074942230 /* Shell.CommandLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1EB77B568C6A9EB2FBAB /* Shell.CommandLine.swift */; };
 		2DBA127834F59CA61B204AB0 /* HelperFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA156C2B58CF72B873423F /* HelperFunctions.swift */; platformFilter = ios; };
 		2DBA12B468519044347BE39F /* RemoteLoggingBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1A5D9C49721C5C5B335D /* RemoteLoggingBuffer.swift */; };
 		2DBA13CC4F00104AE715754A /* RemoteLoggingBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1A5D9C49721C5C5B335D /* RemoteLoggingBuffer.swift */; };
@@ -18,16 +20,19 @@
 		2DBA15064819C6E6D4178B88 /* ApplicationInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1BDD8C05C5AC12BAAF0D /* ApplicationInfo.swift */; };
 		2DBA15FD8398DE775C125946 /* Loggers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA10435D991F46DC8D89BF /* Loggers.swift */; };
 		2DBA1631FA44583D2A7B0897 /* NullLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA179E2E7EB4E3DE64E043 /* NullLogger.swift */; };
+		2DBA16E9400794EC84CCD978 /* BonjourClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1503080D9DC86938813D /* BonjourClient.swift */; };
+		2DBA188F9117C17221DB4AE1 /* BonjourServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1CC1F043D50CC7774247 /* BonjourServer.swift */; };
 		2DBA1891E370AEB77B761D6B /* RemoteLoggingTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1B7C07761B3914324E95 /* RemoteLoggingTransport.swift */; };
 		2DBA18EB097273EDCAC5E810 /* NullLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA179E2E7EB4E3DE64E043 /* NullLogger.swift */; };
+		2DBA19280740FA9D87377FE6 /* BonjourClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1503080D9DC86938813D /* BonjourClient.swift */; };
 		2DBA194A31B60069AE4E7EE1 /* ApplicationInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1BDD8C05C5AC12BAAF0D /* ApplicationInfo.swift */; };
 		2DBA19506894725A4885E909 /* RemoteLoggingTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1B7C07761B3914324E95 /* RemoteLoggingTransport.swift */; };
 		2DBA1B2CA7478109C4020779 /* InfoGatheringLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA10989530859F00D5AB8C /* InfoGatheringLogger.swift */; };
 		2DBA1BADF4991F18DBC0A66C /* RandomizedLogsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA110DFD8D2337633A8BD5 /* RandomizedLogsViewController.swift */; };
 		2DBA1BC8525F9A84933D47B7 /* Loggable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA129A224F3D8C844B7AAF /* Loggable.swift */; platformFilter = ios; };
+		2DBA1E3F5CFFFF98C7BF14B8 /* Shell.CommandLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1EB77B568C6A9EB2FBAB /* Shell.CommandLine.swift */; };
 		2DBA1FFDD2C4D6453D27242A /* EndpointViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA186BD75E9B889DAFD54B /* EndpointViewController.swift */; };
 		3053CC41242DFB50000125FB /* Robologs.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 46AE559A238D683C00774F9E /* Robologs.framework */; };
-		3053CC42242DFB50000125FB /* Robologs.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 46AE559A238D683C00774F9E /* Robologs.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		4611FCED2398FEF100E23B25 /* MultiplexingLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4611FCEC2398FEF100E23B25 /* MultiplexingLogger.swift */; platformFilter = ios; };
 		4611FCEF239904CC00E23B25 /* FilteringLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4611FCEE239904CC00E23B25 /* FilteringLogger.swift */; platformFilter = ios; };
 		4611FCF723995F3300E23B25 /* NSLogLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4611FCF623995F3300E23B25 /* NSLogLogger.swift */; platformFilter = ios; };
@@ -77,10 +82,12 @@
 		FAD51EC82456D5A100265E18 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FAD51EB22456D5A000265E18 /* Assets.xcassets */; };
 		FAD51EC92456D5A100265E18 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FAD51EB32456D5A000265E18 /* LaunchScreen.storyboard */; };
 		FAD51EEF245722A500265E18 /* ProtoHttpRemoteLoggerTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1DA202B598E9F6F27C1D /* ProtoHttpRemoteLoggerTransport.swift */; };
-		FAD51EF824574E6100265E18 /* SwiftProtobuf in Frameworks */ = {isa = PBXBuildFile; productRef = 304E87AE242B8AAD007694D2 /* SwiftProtobuf */; };
-		FAD51EF924574E6100265E18 /* SwiftProtobufPluginLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = 304E87B0242B8AAD007694D2 /* SwiftProtobufPluginLibrary */; };
-		FAD51EFA24574E6100265E18 /* SwiftProtobuf in Frameworks */ = {isa = PBXBuildFile; productRef = FA8EB0A224545A7600D438DC /* SwiftProtobuf */; };
-		FAD51EFB24574E6100265E18 /* SwiftProtobufPluginLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = FA8EB0A424545A7600D438DC /* SwiftProtobufPluginLibrary */; };
+		FAE67F7B2458CE340083E237 /* SwiftProtobuf in Frameworks */ = {isa = PBXBuildFile; productRef = 304E87AE242B8AAD007694D2 /* SwiftProtobuf */; };
+		FAE67F7C2458CE340083E237 /* SwiftProtobufPluginLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = 304E87B0242B8AAD007694D2 /* SwiftProtobufPluginLibrary */; };
+		FAE67F7D2458CE340083E237 /* SwiftProtobuf in Frameworks */ = {isa = PBXBuildFile; productRef = FA8EB0A224545A7600D438DC /* SwiftProtobuf */; };
+		FAE67F7E2458CE340083E237 /* SwiftProtobufPluginLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = FA8EB0A424545A7600D438DC /* SwiftProtobufPluginLibrary */; };
+		FAE67F862458CE530083E237 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAE67F852458CE530083E237 /* main.swift */; };
+		FAE67F8A2458CE810083E237 /* Robologs.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA8EB09A24545A4200D438DC /* Robologs.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -91,19 +98,24 @@
 			remoteGlobalIDString = 46AE5599238D683B00774F9E;
 			remoteInfo = Robologs;
 		};
+		FAE67F8B2458CFCA0083E237 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 46AE5591238D683B00774F9E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FA8EB09924545A4200D438DC;
+			remoteInfo = "Robologs macOS";
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		3053CC45242DFB50000125FB /* Embed Frameworks */ = {
+		FAE67F812458CE530083E237 /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
+			dstPath = /usr/share/man/man1/;
+			dstSubfolderSpec = 0;
 			files = (
-				3053CC42242DFB50000125FB /* Robologs.framework in Embed Frameworks */,
 			);
-			name = "Embed Frameworks";
-			runOnlyForDeploymentPostprocessing = 0;
+			runOnlyForDeploymentPostprocessing = 1;
 		};
 /* End PBXCopyFilesBuildPhase section */
 
@@ -112,6 +124,7 @@
 		2DBA10989530859F00D5AB8C /* InfoGatheringLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InfoGatheringLogger.swift; sourceTree = "<group>"; };
 		2DBA110DFD8D2337633A8BD5 /* RandomizedLogsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RandomizedLogsViewController.swift; sourceTree = "<group>"; };
 		2DBA129A224F3D8C844B7AAF /* Loggable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Loggable.swift; sourceTree = "<group>"; };
+		2DBA1503080D9DC86938813D /* BonjourClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BonjourClient.swift; sourceTree = "<group>"; };
 		2DBA156C2B58CF72B873423F /* HelperFunctions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HelperFunctions.swift; sourceTree = "<group>"; };
 		2DBA179E2E7EB4E3DE64E043 /* NullLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NullLogger.swift; sourceTree = "<group>"; };
 		2DBA186BD75E9B889DAFD54B /* EndpointViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EndpointViewController.swift; sourceTree = "<group>"; };
@@ -121,7 +134,9 @@
 		2DBA1BC5D26B69FA1E649B56 /* LabeledLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LabeledLogger.swift; sourceTree = "<group>"; };
 		2DBA1BDD8C05C5AC12BAAF0D /* ApplicationInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApplicationInfo.swift; sourceTree = "<group>"; };
 		2DBA1CA56E551997C6001863 /* ConstantLogsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConstantLogsViewController.swift; sourceTree = "<group>"; };
+		2DBA1CC1F043D50CC7774247 /* BonjourServer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BonjourServer.swift; sourceTree = "<group>"; };
 		2DBA1DA202B598E9F6F27C1D /* ProtoHttpRemoteLoggerTransport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProtoHttpRemoteLoggerTransport.swift; sourceTree = "<group>"; };
+		2DBA1EB77B568C6A9EB2FBAB /* Shell.CommandLine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Shell.CommandLine.swift; sourceTree = "<group>"; };
 		3053CC28242DF72E000125FB /* Robologs Test App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Robologs Test App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4611FCEC2398FEF100E23B25 /* MultiplexingLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiplexingLogger.swift; sourceTree = "<group>"; };
 		4611FCEE239904CC00E23B25 /* FilteringLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilteringLogger.swift; sourceTree = "<group>"; };
@@ -158,6 +173,8 @@
 		FAD51EB22456D5A000265E18 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FAD51EB42456D5A000265E18 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		FAD51EB52456D5A000265E18 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		FAE67F832458CE530083E237 /* BonjourClientTest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = BonjourClientTest; sourceTree = BUILT_PRODUCTS_DIR; };
+		FAE67F852458CE530083E237 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -173,8 +190,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FAD51EF924574E6100265E18 /* SwiftProtobufPluginLibrary in Frameworks */,
-				FAD51EF824574E6100265E18 /* SwiftProtobuf in Frameworks */,
+				FAE67F7C2458CE340083E237 /* SwiftProtobufPluginLibrary in Frameworks */,
+				FAE67F7B2458CE340083E237 /* SwiftProtobuf in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -182,8 +199,16 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FAD51EFB24574E6100265E18 /* SwiftProtobufPluginLibrary in Frameworks */,
-				FAD51EFA24574E6100265E18 /* SwiftProtobuf in Frameworks */,
+				FAE67F7E2458CE340083E237 /* SwiftProtobufPluginLibrary in Frameworks */,
+				FAE67F7D2458CE340083E237 /* SwiftProtobuf in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FAE67F802458CE530083E237 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FAE67F8A2458CE810083E237 /* Robologs.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -209,12 +234,22 @@
 			path = ViewControllers;
 			sourceTree = "<group>";
 		};
+		2DBA1FD40A5BD019CB1E82B4 /* AutoConnect */ = {
+			isa = PBXGroup;
+			children = (
+				2DBA1CC1F043D50CC7774247 /* BonjourServer.swift */,
+				2DBA1503080D9DC86938813D /* BonjourClient.swift */,
+				2DBA1EB77B568C6A9EB2FBAB /* Shell.CommandLine.swift */,
+			);
+			path = AutoConnect;
+			sourceTree = "<group>";
+		};
 		3053CC29242DF72E000125FB /* Example */ = {
 			isa = PBXGroup;
 			children = (
 				FAD51E9A2456D5A000265E18 /* Code */,
-				FAD51E9F2456D5A000265E18 /* AppDelegate.swift */,
 				FAD51EB12456D5A000265E18 /* Resources */,
+				FAD51E9F2456D5A000265E18 /* AppDelegate.swift */,
 			);
 			path = Example;
 			sourceTree = "<group>";
@@ -279,6 +314,7 @@
 				4626E60D239656F200BD14B8 /* RobologsiOS */,
 				3053CC29242DF72E000125FB /* Example */,
 				FA8EB09B24545A4200D438DC /* RobologsMacOS */,
+				FAE67F842458CE530083E237 /* BonjourClientTest */,
 				46AE559B238D683C00774F9E /* Products */,
 				3053CC40242DFB50000125FB /* Frameworks */,
 			);
@@ -290,6 +326,7 @@
 				46AE559A238D683C00774F9E /* Robologs.framework */,
 				3053CC28242DF72E000125FB /* Robologs Test App.app */,
 				FA8EB09A24545A4200D438DC /* Robologs.framework */,
+				FAE67F832458CE530083E237 /* BonjourClientTest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -319,6 +356,7 @@
 				63D3940D241F86D2002052DA /* Transports */,
 				63D39414241F86D2002052DA /* Buffer */,
 				63D39416241F86D2002052DA /* RemoteLogger.swift */,
+				2DBA1FD40A5BD019CB1E82B4 /* AutoConnect */,
 			);
 			name = Remote;
 			path = Sources/Remote;
@@ -423,6 +461,14 @@
 			path = Resources;
 			sourceTree = "<group>";
 		};
+		FAE67F842458CE530083E237 /* BonjourClientTest */ = {
+			isa = PBXGroup;
+			children = (
+				FAE67F852458CE530083E237 /* main.swift */,
+			);
+			path = BonjourClientTest;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -450,7 +496,6 @@
 				3053CC24242DF72E000125FB /* Sources */,
 				3053CC25242DF72E000125FB /* Frameworks */,
 				3053CC26242DF72E000125FB /* Resources */,
-				3053CC45242DFB50000125FB /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -508,6 +553,24 @@
 			productReference = FA8EB09A24545A4200D438DC /* Robologs.framework */;
 			productType = "com.apple.product-type.framework";
 		};
+		FAE67F822458CE530083E237 /* BonjourClientTest */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FAE67F892458CE530083E237 /* Build configuration list for PBXNativeTarget "BonjourClientTest" */;
+			buildPhases = (
+				FAE67F7F2458CE530083E237 /* Sources */,
+				FAE67F802458CE530083E237 /* Frameworks */,
+				FAE67F812458CE530083E237 /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				FAE67F8C2458CFCA0083E237 /* PBXTargetDependency */,
+			);
+			name = BonjourClientTest;
+			productName = BonjourClientTest;
+			productReference = FAE67F832458CE530083E237 /* BonjourClientTest */;
+			productType = "com.apple.product-type.tool";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -526,6 +589,9 @@
 						LastSwiftMigration = 1120;
 					};
 					FA8EB09924545A4200D438DC = {
+						CreatedOnToolsVersion = 11.4.1;
+					};
+					FAE67F822458CE530083E237 = {
 						CreatedOnToolsVersion = 11.4.1;
 					};
 				};
@@ -549,6 +615,7 @@
 				46AE5599238D683B00774F9E /* Robologs iOS */,
 				FA8EB09924545A4200D438DC /* Robologs macOS */,
 				3053CC27242DF72E000125FB /* Example App */,
+				FAE67F822458CE530083E237 /* BonjourClientTest */,
 			);
 		};
 /* End PBXProject section */
@@ -671,6 +738,9 @@
 				2DBA12B468519044347BE39F /* RemoteLoggingBuffer.swift in Sources */,
 				2DBA108007128FAD4821882B /* ProtoHttpRemoteLoggerTransport.swift in Sources */,
 				2DBA1631FA44583D2A7B0897 /* NullLogger.swift in Sources */,
+				2DBA11174264D8D5FBD289B7 /* BonjourServer.swift in Sources */,
+				2DBA19280740FA9D87377FE6 /* BonjourClient.swift in Sources */,
+				2DBA124C75E1AC7074942230 /* Shell.CommandLine.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -703,6 +773,17 @@
 				2DBA19506894725A4885E909 /* RemoteLoggingTransport.swift in Sources */,
 				2DBA13CC4F00104AE715754A /* RemoteLoggingBuffer.swift in Sources */,
 				2DBA18EB097273EDCAC5E810 /* NullLogger.swift in Sources */,
+				2DBA188F9117C17221DB4AE1 /* BonjourServer.swift in Sources */,
+				2DBA16E9400794EC84CCD978 /* BonjourClient.swift in Sources */,
+				2DBA1E3F5CFFFF98C7BF14B8 /* Shell.CommandLine.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FAE67F7F2458CE530083E237 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FAE67F862458CE530083E237 /* main.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -713,6 +794,11 @@
 			isa = PBXTargetDependency;
 			target = 46AE5599238D683B00774F9E /* Robologs iOS */;
 			targetProxy = 3053CC43242DFB50000125FB /* PBXContainerItemProxy */;
+		};
+		FAE67F8C2458CFCA0083E237 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FA8EB09924545A4200D438DC /* Robologs macOS */;
+			targetProxy = FAE67F8B2458CFCA0083E237 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -742,7 +828,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.2.1;
+				MARKETING_VERSION = 2.2.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.redmadrobot.spb.robologs.testApplication;
 				PRODUCT_NAME = "Robologs Test App";
 				PROVISIONING_PROFILE_SPECIFIER = "Robologs Test Application Development";
@@ -765,7 +851,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.2.1;
+				MARKETING_VERSION = 2.2.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.redmadrobot.spb.robologs.testApplication;
 				PRODUCT_NAME = "Robologs Test App";
 				PROVISIONING_PROFILE_SPECIFIER = "Robologs Test Application Distribution";
@@ -920,7 +1006,7 @@
 					"@loader_path/Frameworks",
 				);
 				MACH_O_TYPE = staticlib;
-				MARKETING_VERSION = 2.2.1;
+				MARKETING_VERSION = 2.2.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.redmadrobot.spb.robologs.dev;
 				PRODUCT_NAME = Robologs;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -959,7 +1045,7 @@
 					"@loader_path/Frameworks",
 				);
 				MACH_O_TYPE = staticlib;
-				MARKETING_VERSION = 2.2.1;
+				MARKETING_VERSION = 2.2.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.redmadrobot.spb.robologs.dev;
 				PRODUCT_NAME = Robologs;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -990,7 +1076,7 @@
 				);
 				MACH_O_TYPE = staticlib;
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				MARKETING_VERSION = 2.2.1;
+				MARKETING_VERSION = 2.2.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.redmadrobot.spb.robologs.dev;
 				PRODUCT_NAME = Robologs;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1019,12 +1105,40 @@
 				);
 				MACH_O_TYPE = staticlib;
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				MARKETING_VERSION = 2.2.1;
+				MARKETING_VERSION = 2.2.2;
 				PRODUCT_BUNDLE_IDENTIFIER = com.redmadrobot.spb.robologs.dev;
 				PRODUCT_NAME = Robologs;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = macosx;
 				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		FAE67F872458CE530083E237 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_HARDENED_RUNTIME = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SDKROOT = macosx;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		FAE67F882458CE530083E237 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_HARDENED_RUNTIME = YES;
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				SDKROOT = macosx;
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
@@ -1064,6 +1178,15 @@
 			buildConfigurations = (
 				FA8EB0A024545A4200D438DC /* Debug */,
 				FA8EB0A124545A4200D438DC /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FAE67F892458CE530083E237 /* Build configuration list for PBXNativeTarget "BonjourClientTest" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FAE67F872458CE530083E237 /* Debug */,
+				FAE67F882458CE530083E237 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

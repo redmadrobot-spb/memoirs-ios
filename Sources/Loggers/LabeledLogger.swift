@@ -7,8 +7,10 @@
 //
 
 public class LabeledLogger: Logger {
-    public let label: String
-    public let logger: Logger
+    @usableFromInline
+    let label: String
+    @usableFromInline
+    let logger: Logger
 
     public init(label: String, logger: Logger) {
         self.label = label
