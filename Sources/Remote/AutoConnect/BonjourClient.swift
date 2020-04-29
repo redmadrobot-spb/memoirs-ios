@@ -11,7 +11,7 @@ import Darwin
 import CryptoKit
 
 public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDelegate {
-    public var serviceFound: ((_ sourceId: String) -> Void)?
+    public var serviceFound: ((_ sourceId: String, _ deviceName: String) -> Void)?
     public var serviceDisappeared: ((_ sourceId: String) -> Void)?
 
     private let robologsServiceBrowser = NetServiceBrowser()
@@ -125,8 +125,12 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
         }
 
         if let senderIdData = txtRecord["senderId"], let senderId = String(data: senderIdData, encoding: .utf8) {
+            var deviceName: String = "—"
+            if let deviceNameData = txtRecord["deviceName"], let name = String(data: deviceNameData, encoding: .utf8) {
+                deviceName = name
+            }
             connectedRobologSDKs[service.name] = senderId
-            serviceFound?(senderId)
+            serviceFound?(senderId, deviceName)
             logger.debug("Robologs service appeared with senderId: \(senderId)")
         }
     }

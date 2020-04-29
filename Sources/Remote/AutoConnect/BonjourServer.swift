@@ -8,6 +8,9 @@
 
 import Foundation
 import CryptoKit
+#if canImport(UIKit)
+import UIKit
+#endif
 
 public class BonjourServer: NSObject, NetServiceDelegate {
     private let netService: NetService
@@ -47,6 +50,14 @@ public class BonjourServer: NSObject, NetServiceDelegate {
 
     public func publish(senderId: String) {
         var txtRecord: [String: Data] = [:]
+        #if canImport(UIKit)
+        let deviceName = ProcessInfo.processInfo.environment["SIMULATOR_DEVICE_NAME"].map { "Simulator: \($0)" } ?? UIDevice.current.name
+        #else
+        let deviceName = ProcessInfo.processInfo.environment["SIMULATOR_DEVICE_NAME"].map { "Simulator: \($0)" } ?? "—"
+        #endif
+        if let data = deviceName.data(using: .utf8) {
+            txtRecord["deviceName"] = data
+        }
         if let deviceIdHash = self.deviceIdHash, let data = deviceIdHash.data(using: .utf8) {
             txtRecord["deviceId"] = data
         }
