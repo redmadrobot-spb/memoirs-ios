@@ -148,8 +148,8 @@
                                     </button>
                                 </subviews>
                             </stackView>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="2JT-yd-cso">
-                                <rect key="frame" x="16" y="104" width="382" height="593"/>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="2JT-yd-cso">
+                                <rect key="frame" x="4" y="92" width="406" height="605"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                 <color key="textColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -158,11 +158,11 @@
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
-                            <constraint firstItem="2JT-yd-cso" firstAttribute="leading" secondItem="dwS-AN-VOn" secondAttribute="leading" constant="16" id="90Z-SW-svJ"/>
+                            <constraint firstItem="2JT-yd-cso" firstAttribute="leading" secondItem="dwS-AN-VOn" secondAttribute="leading" constant="4" id="90Z-SW-svJ"/>
                             <constraint firstItem="78Y-MP-Roa" firstAttribute="top" secondItem="2JT-yd-cso" secondAttribute="bottom" constant="4" id="Atd-G1-kaW"/>
                             <constraint firstItem="78Y-MP-Roa" firstAttribute="leading" secondItem="dwS-AN-VOn" secondAttribute="leading" constant="16" id="J5V-Np-0za"/>
-                            <constraint firstItem="2JT-yd-cso" firstAttribute="trailing" secondItem="dwS-AN-VOn" secondAttribute="trailing" constant="-16" id="TC9-ah-c9H"/>
-                            <constraint firstItem="2JT-yd-cso" firstAttribute="top" secondItem="dwS-AN-VOn" secondAttribute="top" constant="16" id="cFX-F3-6EU"/>
+                            <constraint firstItem="2JT-yd-cso" firstAttribute="trailing" secondItem="dwS-AN-VOn" secondAttribute="trailing" constant="-4" id="TC9-ah-c9H"/>
+                            <constraint firstItem="2JT-yd-cso" firstAttribute="top" secondItem="dwS-AN-VOn" secondAttribute="top" constant="4" id="cFX-F3-6EU"/>
                             <constraint firstItem="dwS-AN-VOn" firstAttribute="trailing" secondItem="78Y-MP-Roa" secondAttribute="trailing" constant="16" id="rTS-2g-T7R"/>
                             <constraint firstItem="78Y-MP-Roa" firstAttribute="bottom" secondItem="dwS-AN-VOn" secondAttribute="bottom" constant="-16" id="tYK-0O-EKU"/>
                         </constraints>
@@ -187,8 +187,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="dBw-Id-sch">
-                                <rect key="frame" x="16" y="104" width="382" height="602.5"/>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="dBw-Id-sch">
+                                <rect key="frame" x="4" y="92" width="406" height="614.5"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                 <color key="textColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -240,11 +240,11 @@
                         <constraints>
                             <constraint firstItem="oBX-8a-ggD" firstAttribute="bottom" secondItem="UNa-hl-DAr" secondAttribute="bottom" constant="-16" id="1c9-nv-ckJ"/>
                             <constraint firstItem="oBX-8a-ggD" firstAttribute="leading" secondItem="UNa-hl-DAr" secondAttribute="leading" constant="16" id="A0t-5g-Und"/>
-                            <constraint firstItem="dBw-Id-sch" firstAttribute="trailing" secondItem="UNa-hl-DAr" secondAttribute="trailing" constant="-16" id="Iey-DC-q9f"/>
+                            <constraint firstItem="dBw-Id-sch" firstAttribute="trailing" secondItem="UNa-hl-DAr" secondAttribute="trailing" constant="-4" id="Iey-DC-q9f"/>
                             <constraint firstItem="UNa-hl-DAr" firstAttribute="trailing" secondItem="oBX-8a-ggD" secondAttribute="trailing" constant="16" id="QO8-Em-bPV"/>
                             <constraint firstItem="oBX-8a-ggD" firstAttribute="top" secondItem="dBw-Id-sch" secondAttribute="bottom" constant="4" id="SfD-DZ-OID"/>
-                            <constraint firstItem="dBw-Id-sch" firstAttribute="leading" secondItem="UNa-hl-DAr" secondAttribute="leading" constant="16" id="bvk-dm-Din"/>
-                            <constraint firstItem="dBw-Id-sch" firstAttribute="top" secondItem="UNa-hl-DAr" secondAttribute="top" constant="16" id="yZC-vZ-aTr"/>
+                            <constraint firstItem="dBw-Id-sch" firstAttribute="leading" secondItem="UNa-hl-DAr" secondAttribute="leading" constant="4" id="bvk-dm-Din"/>
+                            <constraint firstItem="dBw-Id-sch" firstAttribute="top" secondItem="UNa-hl-DAr" secondAttribute="top" constant="4" id="yZC-vZ-aTr"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="UNa-hl-DAr"/>
                     </view>
@@ -517,8 +517,8 @@
                                     </button>
                                 </subviews>
                             </stackView>
-                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="b8L-kz-JJ4">
-                                <rect key="frame" x="16" y="104" width="382" height="558"/>
+                            <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" editable="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="b8L-kz-JJ4">
+                                <rect key="frame" x="4" y="88" width="406" height="574"/>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                                 <color key="textColor" systemColor="labelColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
@@ -527,10 +527,10 @@
                         </subviews>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <constraints>
-                            <constraint firstItem="b8L-kz-JJ4" firstAttribute="leading" secondItem="bCG-EH-GFs" secondAttribute="leading" constant="16" id="1lr-Lj-NnZ"/>
+                            <constraint firstItem="b8L-kz-JJ4" firstAttribute="leading" secondItem="bCG-EH-GFs" secondAttribute="leading" constant="4" id="1lr-Lj-NnZ"/>
                             <constraint firstItem="bCG-EH-GFs" firstAttribute="bottom" secondItem="ZLd-ij-Owi" secondAttribute="bottom" constant="16" id="84C-mi-67C"/>
-                            <constraint firstItem="b8L-kz-JJ4" firstAttribute="top" secondItem="bCG-EH-GFs" secondAttribute="top" constant="16" id="DUi-0t-hn8"/>
-                            <constraint firstItem="b8L-kz-JJ4" firstAttribute="trailing" secondItem="bCG-EH-GFs" secondAttribute="trailing" constant="-16" id="E8b-X1-9VN"/>
+                            <constraint firstItem="b8L-kz-JJ4" firstAttribute="top" secondItem="bCG-EH-GFs" secondAttribute="top" id="DUi-0t-hn8"/>
+                            <constraint firstItem="b8L-kz-JJ4" firstAttribute="trailing" secondItem="bCG-EH-GFs" secondAttribute="trailing" constant="-4" id="E8b-X1-9VN"/>
                             <constraint firstItem="ZLd-ij-Owi" firstAttribute="leading" secondItem="bCG-EH-GFs" secondAttribute="leading" constant="16" id="kPS-f2-Vdf"/>
                             <constraint firstItem="bCG-EH-GFs" firstAttribute="trailing" secondItem="ZLd-ij-Owi" secondAttribute="trailing" constant="16" id="rcG-JO-ZJb"/>
                             <constraint firstItem="ZLd-ij-Owi" firstAttribute="top" secondItem="b8L-kz-JJ4" secondAttribute="bottom" constant="4" id="ri9-qB-HtJ"/>
