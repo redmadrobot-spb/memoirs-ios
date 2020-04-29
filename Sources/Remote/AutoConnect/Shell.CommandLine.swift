@@ -62,9 +62,7 @@ enum Shell {
             process.arguments = [
                 "-l",
                 "-c",
-                // These helper commands are needed for me (for rvm and for fastlane).
-                // TODO: They must be moved to a config someday
-                "source ~/.rvm/scripts/rvm && " + command + ""
+                command
             ]
 
             let pipeOutput = Pipe()
