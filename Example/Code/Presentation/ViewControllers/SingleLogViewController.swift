@@ -93,10 +93,6 @@ class SingleLogViewController: UIViewController, UITextFieldDelegate {
 
     @IBAction
     private func autoGenerateMessage() {
-        let stringToCut = [ randomXML, randomString, randomJson ].randomElement() ?? randomString
-        let from = (0 ..< stringToCut.count).randomElement() ?? 42
-        let to = from + ((0 ..< stringToCut.count - from).randomElement() ?? 239)
-        messageTextField.text = String(stringToCut.prefix(from + to).suffix(to - from))
     }
 
     // MARK: - UITextFieldDelegate
@@ -115,15 +111,27 @@ class SingleLogViewController: UIViewController, UITextFieldDelegate {
 
     // MARK: - Data Generation
 
-    private var randomString: String {
-        let indexes: Range<Int> = (0 ..< (4 + ((0 ..< 5).randomElement() ?? 0)))
-        return indexes
-            .map { _ in "\("qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM<>\"\\".randomElement() ?? "_")" }
-            .joined(separator: "")
+    static var randomString: String {
+        let stringToCut = [ randomXML, randomAlphanumericString, randomJson ].randomElement() ?? randomAlphanumericString
+        let from = (0 ..< stringToCut.count).randomElement() ?? 42
+        let to = from + ((0 ..< stringToCut.count - from).randomElement() ?? 239)
+        return String(stringToCut.prefix(from + to).suffix(to - from))
+    }
+
+    private static var randomAlphanumericString: String {
+        let words = (0 ..< (5 + ((0 ..< 25).randomElement() ?? 0)))
+        return words
+            .map { _ in
+                let indexes: Range<Int> = (0 ..< (4 + ((0 ..< 5).randomElement() ?? 0)))
+                return indexes
+                    .map { _ in "\("qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM<>\"\\".randomElement() ?? "_")" }
+                    .joined(separator: "")
+            }
+            .joined(separator: " ")
     }
 
     // swiftlint:disable line_length
-    private let loremIpsum: String =
+    private static let loremIpsum: String =
         """
         Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Commodo viverra maecenas accumsan lacus vel facilisis volutpat est velit. Dui vivamus arcu felis bibendum. Felis bibendum ut tristique et egestas quis ipsum suspendisse. Parturient montes nascetur ridiculus mus mauris vitae ultricies leo. Interdum velit laoreet id donec ultrices. Tincidunt augue interdum velit euismod in pellentesque. Scelerisque eu ultrices vitae auctor eu. Morbi tincidunt augue interdum velit euismod in pellentesque. Tristique senectus et netus et malesuada fames. Vulputate sapien nec sagittis aliquam malesuada bibendum.
         Ac turpis egestas sed tempus urna et pharetra. Sit amet est placerat in egestas erat imperdiet sed. Praesent elementum facilisis leo vel fringilla est ullamcorper eget nulla. Varius duis at consectetur lorem donec massa sapien faucibus. Amet purus gravida quis blandit. Consectetur lorem donec massa sapien faucibus. In aliquam sem fringilla ut morbi tincidunt. Lectus mauris ultrices eros in. Velit ut tortor pretium viverra suspendisse potenti nullam ac. Velit laoreet id donec ultrices tincidunt. Mauris sit amet massa vitae tortor condimentum lacinia quis vel. Platea dictumst quisque sagittis purus sit. Lectus sit amet est placerat in egestas erat imperdiet. Volutpat sed cras ornare arcu dui vivamus. Tincidunt praesent semper feugiat nibh sed. Vestibulum mattis ullamcorper velit sed ullamcorper. Nullam vehicula ipsum a arcu cursus vitae congue mauris.
@@ -157,7 +165,7 @@ class SingleLogViewController: UIViewController, UITextFieldDelegate {
         Tempor nec feugiat nisl pretium fusce id velit ut. Risus nullam eget felis eget nunc lobortis mattis aliquam. Diam volutpat commodo sed egestas egestas fringilla phasellus faucibus. Malesuada fames ac turpis egestas sed tempus. Nunc aliquet bibendum enim facilisis gravida neque. Tristique sollicitudin nibh sit amet. Praesent tristique magna sit amet purus gravida quis blandit. Elementum nisi quis eleifend quam adipiscing vitae. Vehicula ipsum a arcu cursus vitae. Quam vulputate dignissim suspendisse in est. Mauris ultrices eros in cursus turpis massa tincidunt dui ut. Vestibulum morbi blandit cursus risus at ultrices mi tempus.
         """
 
-    private let randomXML: String =
+    private static let randomXML: String =
         """
         <root>
           <mental>exact</mental>
@@ -234,7 +242,7 @@ class SingleLogViewController: UIViewController, UITextFieldDelegate {
         </root>
         """
 
-    private let randomJson: String =
+    private static let randomJson: String =
         """
         [
           {
