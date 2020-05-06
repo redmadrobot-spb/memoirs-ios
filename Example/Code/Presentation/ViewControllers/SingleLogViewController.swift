@@ -93,6 +93,8 @@ class SingleLogViewController: UIViewController, UITextFieldDelegate {
 
     @IBAction
     private func autoGenerateMessage() {
+        labelTextField.text = Self.randomWord
+        messageTextField.text = Self.randomString
     }
 
     // MARK: - UITextFieldDelegate
@@ -121,13 +123,15 @@ class SingleLogViewController: UIViewController, UITextFieldDelegate {
     private static var randomAlphanumericString: String {
         let words = (0 ..< (5 + ((0 ..< 25).randomElement() ?? 0)))
         return words
-            .map { _ in
-                let indexes: Range<Int> = (0 ..< (4 + ((0 ..< 5).randomElement() ?? 0)))
-                return indexes
-                    .map { _ in "\("qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM<>\"\\".randomElement() ?? "_")" }
-                    .joined(separator: "")
-            }
+            .map { _ in randomWord }
             .joined(separator: " ")
+    }
+
+    private static var randomWord: String {
+        let indexes: Range<Int> = (0 ..< (4 + ((0 ..< 5).randomElement() ?? 0)))
+        return indexes
+            .map { _ in "\("qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM<>\"\\".randomElement() ?? "_")" }
+            .joined(separator: "")
     }
 
     // swiftlint:disable line_length
