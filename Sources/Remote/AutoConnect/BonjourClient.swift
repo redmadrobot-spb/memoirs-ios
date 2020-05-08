@@ -8,7 +8,6 @@
 
 import Foundation
 import Darwin
-import CryptoKit
 
 public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDelegate {
     public var serviceFound: ((_ sourceId: String, _ deviceName: String) -> Void)?
@@ -214,9 +213,8 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
 
                     let udid = string[left ..< right].dropFirst()
                     logger.verbose("  Found device UDID: \"\(udid)\"")
-                    return udid.data(using: .utf8)
+                    return sha256(string: String(udid))
                 }
-                .map { (udidData: Data) in SHA256.hash(data: udidData).description }
 
             let isLocalUDID = hashedUDIDs.contains(deviceId)
             logger.debug(
