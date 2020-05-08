@@ -7,10 +7,21 @@
 //
 
 import Foundation
-import CryptoKit
+import Darwin
+import CommonCrypto
 #if canImport(UIKit)
 import UIKit
 #endif
+
+func sha256(string: String) -> String? {
+    guard let data = string.data(using: .utf8) else { return nil }
+
+    var hash = [UInt8](repeating: 0, count: Int(CC_SHA256_DIGEST_LENGTH))
+    data.withUnsafeBytes {
+        _ = CC_SHA256($0.baseAddress, CC_LONG(data.count), &hash)
+    }
+    return Data(hash).base64EncodedString()
+}
 
 public class BonjourServer: NSObject, NetServiceDelegate {
     private let netService: NetService
@@ -36,10 +47,9 @@ public class BonjourServer: NSObject, NetServiceDelegate {
         if #available(iOS 13.0, *) {
             let deviceUDID = ProcessInfo.processInfo.environment["SIMULATOR_UDID"]
             // TODO: Add fallback for manual udid setup
-            if let deviceUDID = deviceUDID, let udidData = deviceUDID.data(using: .utf8) {
+            if let deviceUDID = deviceUDID, let hash = sha256(string: deviceUDID) {
                 self.logger.debug("Found device UDID: \(deviceUDID)")
-                let hash = SHA256.hash(data: udidData)
-                return hash.description
+                return hash
             } else {
                 return nil
             }
