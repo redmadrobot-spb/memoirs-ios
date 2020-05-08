@@ -41,6 +41,22 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
         self.logger.debug("Started")
     }
 
+    private var foundServiceNamesBySourceId: [String: String] = [:]
+    private var subscriptions: [String: ([(sourceId: String, deviceName: String)]) -> Void] = [:]
+
+    public func subscribeOnSDKsListUpdate(listener: @escaping ([(sourceId: String, deviceName: String)]) -> Void) -> Subscription {
+        let id = UUID().uuidString
+        subscriptions[id] = listener
+        listener(foundServiceNamesBySourceId.map { ($0, $1) })
+        return Subscription {
+            self.subscriptions[id] = nil
+        }
+    }
+
+    private func notify() {
+        subscriptions.values.forEach { $0(foundServiceNamesBySourceId.map { ($0, $1) }) }
+    }
+
     public func netServiceBrowserWillSearch(_ browser: NetServiceBrowser) {
         self.logger.debug("")
     }
@@ -111,34 +127,44 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
         logger.debug("Removed Remote Debug Link addresses: \(addresses)")
     }
 
-    private var connectedRobologSDKs: [String: String] = [:]
+    private var localRobologSDKs: [String: String] = [:]
+    private var foundRobologSDKs: [String: String] = [:]
 
     private func tryToConnect(to service: NetService) {
-        let addresses = resolveOnlyIPv4(addresses: service.addresses ?? [])
-        guard
-            !addresses.isEmpty,
-            let txtRecord = service.txtRecordData().map({ NetService.dictionary(fromTXTRecord: $0) }),
-            isRobologsServiceLocal(addresses: addresses, txtRecord: txtRecord)
-        else {
+        guard let txtRecord = service.txtRecordData().map({ NetService.dictionary(fromTXTRecord: $0) }) else {
             logger.warning("Can't connect to \(service.domain)/\(service.type)/\(service.name)")
             return
         }
+        guard let senderIdData = txtRecord["senderId"], let senderId = String(data: senderIdData, encoding: .utf8) else {
+            logger.warning("Service does not have senderId info: \(service.domain)/\(service.type)/\(service.name)")
+            return
+        }
 
-        if let senderIdData = txtRecord["senderId"], let senderId = String(data: senderIdData, encoding: .utf8) {
-            var deviceName: String = "—"
-            if let deviceNameData = txtRecord["deviceName"], let name = String(data: deviceNameData, encoding: .utf8) {
-                deviceName = name
+        let deviceName = txtRecord["deviceName"].map { String(data: $0, encoding: .utf8) ?? "—" } ?? "—"
+        foundRobologSDKs[service.name] = senderId
+        foundServiceNamesBySourceId[senderId] = deviceName
+        notify()
+
+        let addresses = resolveOnlyIPv4(addresses: service.addresses ?? [])
+        if isRobologsServiceLocal(addresses: addresses, txtRecord: txtRecord) {
+            if let senderIdData = txtRecord["senderId"], let senderId = String(data: senderIdData, encoding: .utf8) {
+                localRobologSDKs[service.name] = senderId
+                serviceFound?(senderId, deviceName)
+                logger.debug("Robologs service appeared with senderId: \(senderId)")
             }
-            connectedRobologSDKs[service.name] = senderId
-            serviceFound?(senderId, deviceName)
-            logger.debug("Robologs service appeared with senderId: \(senderId)")
+        } else {
+            logger.debug("Not local service: \(service.domain)/\(service.type)/\(service.name)")
         }
     }
 
     private func disconnect(from service: NetService) {
-        guard let senderId = connectedRobologSDKs[service.name] else { return }
+        guard let senderId = foundRobologSDKs[service.name] else { return }
 
-        connectedRobologSDKs[service.name] = nil
+        foundServiceNamesBySourceId[senderId] = nil
+        notify()
+
+        foundRobologSDKs[service.name] = nil
+        localRobologSDKs[service.name] = nil
         logger.debug("Robologs service disappeared with senderId: \(senderId)")
         serviceDisappeared?(senderId)
     }

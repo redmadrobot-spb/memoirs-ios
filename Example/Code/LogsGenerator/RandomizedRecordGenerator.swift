@@ -66,7 +66,7 @@ class RandomizedRecordGenerator {
                 GeneratedLogRecord(
                     level: Level.allCases.randomElement() ?? .info,
                     label: (0 ..< 5).map { _ in "\(self.lettersForRandom.randomElement() ?? "_")" }.joined(separator: ""),
-                    message: "Test message \(self.nextPosition)"
+                    message: "Test message \(self.nextPosition): \(SingleLogViewController.randomString)"
                 )
             },
             recordsPerSecond: recordsPerSecond

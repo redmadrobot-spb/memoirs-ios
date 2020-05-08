@@ -10,4 +10,8 @@ import Foundation
 import Robologs
 
 let client = BonjourClient(logger: PrintLogger(onlyTime: true))
+let subscription = client.subscribeOnSDKsListUpdate { list in
+    print("\nFound!\n\(list)\n")
+}
+
 RunLoop.main.run()

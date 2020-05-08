@@ -8,6 +8,7 @@
 
 import Robologs
 
+// TODO: All these generators must be refactored.
 struct GeneratedLogRecord {
     let level: Level
     let label: String
