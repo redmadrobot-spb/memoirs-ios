@@ -42,7 +42,9 @@ public func concatenateData(
         "\(label)",
         context,
         message().string(isSensitive: isSensitive),
-        meta()?.string(isSensitive: isSensitive).replacingOccurrences(of: "\n", with: " ") // TODO: serialize map manually
+        // TODO: serialize map manually
+        // TODO: sort meta
+        meta()?.string(isSensitive: isSensitive).replacingOccurrences(of: "\n", with: " ")
     ]
     .compactMap { $0 }
     .filter { !$0.isEmpty }
