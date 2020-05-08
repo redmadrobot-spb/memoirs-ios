@@ -31,7 +31,7 @@ public func concatenateData(
     isSensitive: Bool
 ) -> String {
     let meta = meta()?
-        .sorted { $0.key > $1.key }
+        .sorted { $0.key < $1.key }
         .map { "\($0): \($1.string(isSensitive: isSensitive))" }
         .joined(separator: ", ")
 
