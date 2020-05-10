@@ -8,12 +8,6 @@
 
 import Foundation
 
-extension Dictionary where Key == String, Value == LogString {
-    public func string(isSensitive: Bool) -> String {
-        "[ \(self.map { "\"\($0)\": \($1.string(isSensitive: isSensitive))" }.joined(separator: ", ")) ]"
-    }
-}
-
 @inlinable
 public func collectContext(file: String, function: String, line: UInt) -> String {
     // TODO: Remove this hack after Swift Evolution #0274 will be implemented
@@ -36,13 +30,18 @@ public func concatenateData(
     context: String,
     isSensitive: Bool
 ) -> String {
-    [
+    let meta = meta()?
+        .sorted { $0.key < $1.key }
+        .map { "\($0): \($1.string(isSensitive: isSensitive))" }
+        .joined(separator: ", ")
+
+    return [
         time,
         "\(level.map { "\($0)" } ?? "")",
         "\(label)",
         context,
+        meta.map { "[ \($0) ]" } ?? "",
         message().string(isSensitive: isSensitive),
-        meta()?.string(isSensitive: isSensitive).replacingOccurrences(of: "\n", with: " ") // TODO: serialize map manually
     ]
     .compactMap { $0 }
     .filter { !$0.isEmpty }

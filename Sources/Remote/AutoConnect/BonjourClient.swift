@@ -9,9 +9,15 @@
 import Foundation
 import Darwin
 
+public struct RobologsRemoteSDK {
+    var name: String
+    var id: String
+    var apiEndpoint: String
+}
+
 public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDelegate {
-    public var serviceFound: ((_ sourceId: String, _ deviceName: String) -> Void)?
-    public var serviceDisappeared: ((_ sourceId: String) -> Void)?
+    public var serviceFound: ((RobologsRemoteSDK) -> Void)?
+    public var serviceDisappeared: ((RobologsRemoteSDK) -> Void)?
 
     private let robologsServiceBrowser = NetServiceBrowser()
     private let rdLinkServiceBrowser = NetServiceBrowser()
@@ -19,6 +25,9 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
 
     private let typeRobologs = "_robologs._tcp."
     private let typeRemoteDebugLink = "_rdlink._tcp."
+
+    private let workingQueue: DispatchQueue = DispatchQueue(label: "BonjourClient")
+    private let completionQueue: DispatchQueue = DispatchQueue.main
 
     public init(logger: Logger) {
         super.init()
@@ -40,21 +49,31 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
         self.logger.debug("Started")
     }
 
-    private var foundServiceNamesBySourceId: [String: String] = [:]
-    private var subscriptions: [String: ([(sourceId: String, deviceName: String)]) -> Void] = [:]
+    // MARK: - Subscriptions
 
-    public func subscribeOnSDKsListUpdate(listener: @escaping ([(sourceId: String, deviceName: String)]) -> Void) -> Subscription {
+    private var foundSDKsById: [String: RobologsRemoteSDK] = [:]
+    private var subscriptions: [String: ([RobologsRemoteSDK]) -> Void] = [:]
+
+    public func subscribeOnSDKsListUpdate(listener: @escaping ([RobologsRemoteSDK]) -> Void) -> Subscription {
         let id = UUID().uuidString
         subscriptions[id] = listener
-        listener(foundServiceNamesBySourceId.map { ($0, $1) })
+        let sources = Array(foundSDKsById.values)
+        completionQueue.async {
+            listener(Array(sources))
+        }
         return Subscription {
             self.subscriptions[id] = nil
         }
     }
 
     private func notify() {
-        subscriptions.values.forEach { $0(foundServiceNamesBySourceId.map { ($0, $1) }) }
+        let sources = Array(foundSDKsById.values)
+        completionQueue.async { [weak self] in
+            self?.subscriptions.values.forEach { $0(sources) }
+        }
     }
+
+    // MARK: - NetServiceBrowser Delegate
 
     public func netServiceBrowserWillSearch(_ browser: NetServiceBrowser) {
         self.logger.debug("")
@@ -86,13 +105,15 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
             case typeRobologs:
                 robologsResolvingServices.append(service)
                 service.delegate = self
-                DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
+                workingQueue.asyncAfter(deadline: .now() + 1) {
                     service.resolve(withTimeout: 5)
                 }
             case typeRemoteDebugLink:
                 remoteDebugLinkResolvingServices.append(service)
                 service.delegate = self
-                service.resolve(withTimeout: 5)
+                workingQueue.async {
+                    service.resolve(withTimeout: 5)
+                }
             default:
                 break
         }
@@ -114,58 +135,74 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
         }
     }
 
+    // MARK: - Connecting/Disconnecting
+
     private func addRemoteDebugLinkAddresses(from service: NetService) {
-        let addresses = resolveOnlyIPv4(addresses: service.addresses ?? [])
+        let addresses = resolveIPv4(addresses: service.addresses ?? [])
         remoteDebugLinkAddresses.formUnion(addresses)
         logger.debug("Found Remote Debug Links with addresses: \(addresses)")
     }
 
     private func removeRemoteDebugLinkAddresses(from service: NetService) {
-        let addresses = resolveOnlyIPv4(addresses: service.addresses ?? [])
+        let addresses = resolveIPv4(addresses: service.addresses ?? [])
         remoteDebugLinkAddresses.subtract(addresses)
         logger.debug("Removed Remote Debug Link addresses: \(addresses)")
     }
 
-    private var localRobologSDKs: [String: String] = [:]
-    private var foundRobologSDKs: [String: String] = [:]
+    private var localRobologSDKsByNetServiceName: [String: String] = [:]
+    private var foundRobologSDKsByNetServiceName: [String: String] = [:]
 
     private func tryToConnect(to service: NetService) {
         guard let txtRecord = service.txtRecordData().map({ NetService.dictionary(fromTXTRecord: $0) }) else {
             logger.warning("Can't connect to \(service.domain)/\(service.type)/\(service.name)")
             return
         }
-        guard let senderIdData = txtRecord["senderId"], let senderId = String(data: senderIdData, encoding: .utf8) else {
-            logger.warning("Service does not have senderId info: \(service.domain)/\(service.type)/\(service.name)")
+        guard
+            let nameData = txtRecord[BonjourServer.recordName],
+            let name = String(data: nameData, encoding: .utf8),
+            let senderIdData = txtRecord[BonjourServer.recordSenderId],
+            let senderId = String(data: senderIdData, encoding: .utf8),
+            let endpointData = txtRecord[BonjourServer.recordEndpoint],
+            let endpoint = String(data: endpointData, encoding: .utf8)
+        else {
+            logger.warning("Service does not have sender info: \(service.domain)/\(service.type)/\(service.name)")
             return
         }
 
-        let deviceName = txtRecord["deviceName"].map { String(data: $0, encoding: .utf8) ?? "—" } ?? "—"
-        foundRobologSDKs[service.name] = senderId
-        foundServiceNamesBySourceId[senderId] = deviceName
+        foundRobologSDKsByNetServiceName[service.name] = senderId
+        let remoteSDK = RobologsRemoteSDK(name: name, id: senderId, apiEndpoint: endpoint)
+        foundSDKsById[senderId] = remoteSDK
         notify()
 
-        let addresses = resolveOnlyIPv4(addresses: service.addresses ?? [])
-        if isRobologsServiceLocal(addresses: addresses, txtRecord: txtRecord) {
-            if let senderIdData = txtRecord["senderId"], let senderId = String(data: senderIdData, encoding: .utf8) {
-                localRobologSDKs[service.name] = senderId
-                serviceFound?(senderId, deviceName)
-                logger.debug("Robologs service appeared with senderId: \(senderId)")
+        let addresses = resolveIPv4(addresses: service.addresses ?? [])
+        isRobologsServiceLocal(addresses: addresses, txtRecord: txtRecord) { isLocal in
+            guard isLocal else {
+                return self.logger.debug("Not local service: \(service.domain)/\(service.type)/\(service.name)")
             }
-        } else {
-            logger.debug("Not local service: \(service.domain)/\(service.type)/\(service.name)")
+
+            self.localRobologSDKsByNetServiceName[service.name] = senderId
+            self.completionQueue.async { [weak self] in
+                self?.serviceFound?(remoteSDK)
+            }
+            self.logger.debug("Robologs service appeared with senderId: \(senderId)")
         }
     }
 
     private func disconnect(from service: NetService) {
-        guard let senderId = foundRobologSDKs[service.name] else { return }
+        guard let senderId = foundRobologSDKsByNetServiceName[service.name] else { return }
 
-        foundServiceNamesBySourceId[senderId] = nil
-        notify()
+        foundRobologSDKsByNetServiceName[service.name] = nil
+        localRobologSDKsByNetServiceName[service.name] = nil
 
-        foundRobologSDKs[service.name] = nil
-        localRobologSDKs[service.name] = nil
+        if let remoteSDK = foundSDKsById[senderId] {
+            foundSDKsById[senderId] = nil
+            completionQueue.async { [weak self] in
+                self?.serviceDisappeared?(remoteSDK)
+            }
+            notify()
+        }
+
         logger.debug("Robologs service disappeared with senderId: \(senderId)")
-        serviceDisappeared?(senderId)
     }
 
     // MARK: - NetService Delegate
@@ -174,7 +211,9 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
         logger.debug("Found: \(service.domain)/\(service.type)/\(service.name)")
         switch service.type {
             case typeRobologs:
-                tryToConnect(to: service)
+                workingQueue.async {
+                    self.tryToConnect(to: service)
+                }
             case typeRemoteDebugLink:
                 addRemoteDebugLinkAddresses(from: service)
             default:
@@ -183,7 +222,7 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
     }
 
     public func netServiceDidStop(_ sender: NetService) {
-
+        logger.debug("Did Stop")
     }
 
     public func netService(_ service: NetService, didNotResolve errorDict: [String: NSNumber]) {
@@ -192,41 +231,47 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
 
     // MARK: - Helper Methods
 
-    private func isRobologsServiceLocal(addresses: [String], txtRecord: [String: Data]) -> Bool {
+    private func isRobologsServiceLocal(addresses: [String], txtRecord: [String: Data], completion: @escaping (Bool) -> Void) {
         guard !addresses.contains(where: { remoteDebugLinkAddresses.contains($0) }) else {
             logger.debug("Robologs service address is in Remote Debug Link addresses. Good!")
-            return true
+            return completion(true)
         }
-        guard let deviceIdData = txtRecord["deviceId"], let deviceId = String(data: deviceIdData, encoding: .utf8) else {
-            logger.debug("No deviceID in TXT records")
-            return false
+        guard
+            let simulatorIdData = txtRecord[BonjourServer.recordIOSSimulator],
+            let simulatorId = String(data: simulatorIdData, encoding: .utf8)
+        else {
+            logger.debug("No \(BonjourServer.recordIOSSimulator) in TXT records")
+            return completion(false)
         }
 
         if #available(iOS 13.0, *) {
-            let hashedUDIDs: [String] = Shell
-                .CommandLine(in: Shell.userHomeDirectory, command: "instruments -s devices", logger: logger.logger)
-                .execute()
-                .components(separatedBy: "\n")
-                .filter { $0 != "Known Devices:" && !$0.isEmpty }
-                .compactMap { string in
-                    guard let left = string.firstIndex(of: "["), let right = string.firstIndex(of: "]") else { return nil }
+            let command = Shell.ZSHCommandLine(command: "instruments -s devices", directory: Shell.userHomeDirectory, logger: logger)
+            command.execute { _, _, output, _ in
+                let hashedUDIDs: [String] = output
+                    .components(separatedBy: "\n")
+                    .filter { $0 != "Known Devices:" && !$0.isEmpty }
+                    .compactMap { string in
+                        guard let left = string.firstIndex(of: "["), let right = string.firstIndex(of: "]") else { return nil }
 
-                    let udid = string[left ..< right].dropFirst()
-                    logger.verbose("  Found device UDID: \"\(udid)\"")
-                    return sha256(string: String(udid))
-                }
+                        let udid = string[left ..< right].dropFirst()
+                        self.logger.verbose("  Found device UDID: \"\(udid)\"")
+                        return sha256(string: String(udid))
+                    }
 
-            let isLocalUDID = hashedUDIDs.contains(deviceId)
-            logger.debug(
-                isLocalUDID ? "> deviceId from TXT (\(deviceId)) is in local UDIDs. Good!" : "> deviceId from TXT not found in local UDIDs"
-            )
-            return isLocalUDID
+                let isLocalUDID = hashedUDIDs.contains(simulatorId)
+                self.logger.debug(
+                    isLocalUDID
+                        ? "> \(BonjourServer.recordIOSSimulator) from TXT (\(simulatorId)) matched one from local UDIDs. Good!"
+                        : "> \(BonjourServer.recordIOSSimulator) from TXT not found in local UDIDs"
+                )
+                completion(isLocalUDID)
+            }
         } else {
-            return false
+            completion(false)
         }
     }
 
-    private func resolveOnlyIPv4(addresses: [Data]) -> [String] {
+    private func resolveIPv4(addresses: [Data]) -> [String] {
         addresses.compactMap { address in
             let data = address as NSData
             var storage = sockaddr_storage()

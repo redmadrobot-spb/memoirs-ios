@@ -24,19 +24,15 @@ func sha256(string: String) -> String? {
 }
 
 public class BonjourServer: NSObject, NetServiceDelegate {
-    private let netService: NetService
+    private let netServiceType = "_robologs._tcp."
+    private let netServiceDomain = "local."
+
+    private let netServiceNamePrefix: String = "Robologs-"
+    private var netService: NetService?
     private var logger: LabeledLogger!
 
-    private let randomizedName: String = "Robologs-\(UUID().uuidString)"
-
     public init(logger: Logger) {
-        let type = "_robologs._tcp."
-
-        netService = NetService(domain: "local.", type: type, name: randomizedName, port: (Int32(48000) ..< 65536).randomElement() ?? 32128)
         super.init()
-
-        netService.schedule(in: RunLoop.current, forMode: .common)
-        netService.delegate = self
 
         self.logger = LabeledLogger(object: self, logger: logger)
         self.logger.debug("\(ProcessInfo.processInfo.environment)")
@@ -58,21 +54,44 @@ public class BonjourServer: NSObject, NetServiceDelegate {
         }
     }
 
-    public func publish(senderId: String) {
+    static let recordName = "name"
+    static let recordEndpoint = "endpoint"
+    static let recordSenderId = "senderId"
+    static let recordIOSSimulator = "iOSSimulator"
+
+    public func publish(endpoint: String, senderId: String) {
+        if netService != nil {
+            stopPublishing()
+        }
+
+        let serviceName = "\(netServiceNamePrefix)\(UUID().uuidString)"
+        let netService = NetService(
+            domain: netServiceDomain,
+            type: netServiceType,
+            name: serviceName,
+            port: (Int32(48000) ..< 65536).randomElement() ?? 32128
+        )
+        netService.schedule(in: RunLoop.main, forMode: .common)
+        netService.delegate = self
+        self.netService = netService
+
         var txtRecord: [String: Data] = [:]
+        if let data = senderId.data(using: String.Encoding.utf8) {
+            txtRecord[BonjourServer.recordSenderId] = data
+        }
+        if let data = endpoint.data(using: String.Encoding.utf8) {
+            txtRecord[BonjourServer.recordEndpoint] = data
+        }
         #if canImport(UIKit)
         let deviceName = ProcessInfo.processInfo.environment["SIMULATOR_DEVICE_NAME"].map { "Simulator: \($0)" } ?? UIDevice.current.name
         #else
         let deviceName = ProcessInfo.processInfo.environment["SIMULATOR_DEVICE_NAME"].map { "Simulator: \($0)" } ?? "—"
         #endif
         if let data = deviceName.data(using: .utf8) {
-            txtRecord["deviceName"] = data
+            txtRecord[BonjourServer.recordName] = data
         }
         if let deviceIdHash = self.deviceIdHash, let data = deviceIdHash.data(using: .utf8) {
-            txtRecord["deviceId"] = data
-        }
-        if let data = senderId.data(using: String.Encoding.utf8) {
-            txtRecord["senderId"] = data
+            txtRecord[BonjourServer.recordIOSSimulator] = data
         }
         guard !txtRecord.isEmpty else {
             self.logger.error("Can't publish empty txt record :(")
@@ -84,15 +103,12 @@ public class BonjourServer: NSObject, NetServiceDelegate {
         self.logger.debug("Published senderId: \(senderId) (result: \(result))")
     }
 
-    public func publish(liveId: String) {
-        guard let txtRecord: [String: Data] = liveId.data(using: String.Encoding.utf8).map({ [ "liveID": $0 ] }) else {
-            self.logger.error("Can't publish senderId as txt record")
-            return
-        }
+    public func stopPublishing() {
+        guard let netService = netService else { return }
 
-        let result = netService.setTXTRecord(NetService.data(fromTXTRecord: txtRecord))
-        netService.publish(options: .listenForConnections)
-        self.logger.debug("Published liveId: \(liveId) (result: \(result))")
+        netService.stop()
+        netService.remove(from: RunLoop.main, forMode: .common)
+        self.netService = nil
     }
 
     // MARK: - NetService Delegate
