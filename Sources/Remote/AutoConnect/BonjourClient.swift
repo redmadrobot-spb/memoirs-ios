@@ -10,9 +10,9 @@ import Foundation
 import Darwin
 
 public struct RobologsRemoteSDK {
-    var name: String
-    var id: String
-    var apiEndpoint: String
+    public var name: String
+    public var id: String
+    public var apiEndpoint: String
 }
 
 public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDelegate {
