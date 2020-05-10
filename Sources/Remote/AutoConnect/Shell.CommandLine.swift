@@ -19,41 +19,29 @@ enum Shell {
         return URL(fileURLWithPath: homeDirectory)
     }()
 
-    class CommandLine {
-        let shell: String
+    class ZSHCommandLine {
         let directory: URL
         let command: String
 
-        enum State {
-            case notStarted
-            case inProgress(output: String, tailOutput: String, error: String, tailError: String)
-            case success(output: String, error: String)
-            case failure(output: String, error: String, code: Int32)
-        }
+        private let handlersQueue: DispatchQueue
+        private let logger: LabeledLogger
 
-        var stateHandler: ((State) -> Void)?
-
-        private(set) var state: State = .notStarted {
-            didSet {
-                stateHandler?(state)
-            }
-        }
-
-        private var logger: LabeledLogger!
-
-        init(shell: String = "/bin/zsh", in directory: URL, command: String, logger: Logger) {
-            self.shell = shell
+        init(command: String, directory: URL, handlersQueue: DispatchQueue = DispatchQueue.main, logger: LabeledLogger) {
             self.directory = directory
             self.command = command
-            self.logger = LabeledLogger(object: self, logger: logger)
+            self.handlersQueue = handlersQueue
+            self.logger = logger
         }
 
-        @discardableResult
-        func execute() -> String {
+        func execute(completion: @escaping (_ success: Bool, _ terminationCode: Int32, _ output: String, _ error: String) -> Void) {
             #if canImport(AppKit)
+            let completion: (Bool, Int32, String, String) -> Void = { success, terminationCode, output, error in
+                self.handlersQueue.async { completion(success, terminationCode, output, error) }
+            }
+
             let process = Process()
             process.currentDirectoryURL = directory
-            process.launchPath = shell
+            process.launchPath = "/bin/zsh"
             process.environment = [
                 "home": Shell.userHomeDirectory.path,
                 "LC_ALL": "en_US.UTF-8",
@@ -71,21 +59,18 @@ enum Shell {
             process.standardError = pipeError
 
             var data: Data = Data()
-            var output = ""
-            var error = ""
 
-            let gatherOutput: (Pipe, @escaping (String) -> Void) -> Any = { pipe, gatherer in
-                pipe.fileHandleForReading.waitForDataInBackgroundAndNotify()
-                let newDataNotification = NSNotification.Name.NSFileHandleDataAvailable
-                let center = NotificationCenter.default
-                // swiftlint:disable:next discarded_notification_center_observer
-                return center.addObserver(forName: newDataNotification, object: pipe.fileHandleForReading, queue: nil) { _ in
-                    guard process.isRunning else { return }
-
+            let gatherOutput: (Pipe, @escaping (String) -> Void) -> Void = { pipe, gatherer in
+                DispatchQueue.global().async {
                     while true {
                         do {
-                            if let newData = try pipe.fileHandleForReading.read(upToCount: 1024), !newData.isEmpty {
+                            if let newData = try pipe.fileHandleForReading.read(upToCount: 8), !newData.isEmpty {
                                 data.append(newData)
+
+                                if let string = String(data: data, encoding: String.Encoding.utf8) {
+                                    data.removeAll()
+                                    gatherer(string)
+                                }
                             } else {
                                 break
                             }
@@ -97,50 +82,33 @@ enum Shell {
 
                     if let string = String(data: data, encoding: String.Encoding.utf8) {
                         data.removeAll()
-                        gatherer(string)
-                    }
-                    do {
-                        _ = try pipe.fileHandleForReading.read(upToCount: 0)
-                        pipe.fileHandleForReading.waitForDataInBackgroundAndNotify()
-                    } catch {
-                        self.logger.error(error)
+                        DispatchQueue.main.async {
+                            gatherer(string)
+                        }
                     }
                 }
             }
 
-            let outputObserver = gatherOutput(pipeOutput) { string in
-                output += string
-                self.state = .inProgress(output: output, tailOutput: string, error: error, tailError: "")
+            var outputLog = ""
+            var errorLog = ""
+            gatherOutput(pipeOutput) { string in
+                outputLog += string
             }
-            let errorObserver = gatherOutput(pipeError) { string in
-                error += string
-                self.state = .inProgress(output: output, tailOutput: "", error: error, tailError: string)
-            }
-
-            process.terminationHandler = { process in
-                NotificationCenter.default.removeObserver(outputObserver)
-                NotificationCenter.default.removeObserver(errorObserver)
+            gatherOutput(pipeError) { string in
+                errorLog += string
             }
 
-            state = .inProgress(output: output, tailOutput: output, error: error, tailError: error)
             process.launch()
             process.waitUntilExit()
-            if !output.isEmpty {
-                output += "\n"
-                state = .inProgress(output: output, tailOutput: "\n", error: error, tailError: "")
-            }
+
+            let success = process.terminationStatus == 0
+            completion(success, process.terminationStatus, outputLog, errorLog)
 
             // I can't do this immediately because if I do that, notification will break :(
             DispatchQueue.main.asyncAfter(deadline: .now() + 1) {
                 try? pipeOutput.fileHandleForReading.close()
                 try? pipeError.fileHandleForReading.close()
             }
-
-            state = process.terminationStatus == 0
-                ? .success(output: output, error: error)
-                : .failure(output: output, error: error, code: process.terminationStatus)
-
-            return output
             #else
             fatalError("Not supported")
             #endif

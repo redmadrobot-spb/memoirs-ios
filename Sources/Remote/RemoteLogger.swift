@@ -39,7 +39,6 @@ public class RemoteLogger: Logger {
 
         #if DEBUG
         bonjourServer = BonjourServer(logger: logger)
-        bonjourServer.publish(senderId: applicationInfo.deviceId)
         #endif
     }
 
@@ -49,6 +48,10 @@ public class RemoteLogger: Logger {
         challengePolicy: AuthenticationChallengePolicy = DefaultChallengePolicy(),
         completion: @escaping () -> Void
     ) {
+        #if DEBUG
+        bonjourServer.stopPublishing()
+        bonjourServer.publish(endpoint: endpoint.absoluteString, senderId: applicationInfo.deviceId)
+        #endif
         let updateTransport = {
             self.transport = ProtoHttpRemoteLoggerTransport(
                 endpoint: endpoint,
@@ -131,6 +134,10 @@ public class RemoteLogger: Logger {
     }
 
     public func stopLive(completion: @escaping (Result<Void, Error>) -> Void) {
+        #if DEBUG
+        bonjourServer.stopPublishing()
+        #endif
+
         guard let transport = transport else { return completion(.failure(.transportIsNotConfigured)) }
 
         transport.invalidateConnectionCode { _ in
