@@ -172,7 +172,9 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
         foundRobologSDKsByNetServiceName[service.name] = senderId
         let remoteSDK = RobologsRemoteSDK(name: name, id: senderId, apiEndpoint: endpoint)
         foundSDKsById[senderId] = remoteSDK
-        notify()
+        completionQueue.async {
+            self.notify()
+        }
 
         let addresses = resolveIPv4(addresses: service.addresses ?? [])
         isRobologsServiceLocal(addresses: addresses, txtRecord: txtRecord) { isLocal in
@@ -196,10 +198,10 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
 
         if let remoteSDK = foundSDKsById[senderId] {
             foundSDKsById[senderId] = nil
-            completionQueue.async { [weak self] in
-                self?.serviceDisappeared?(remoteSDK)
+            completionQueue.async {
+                self.serviceDisappeared?(remoteSDK)
+                self.notify()
             }
-            notify()
         }
 
         logger.debug("Robologs service disappeared with senderId: \(senderId)")
