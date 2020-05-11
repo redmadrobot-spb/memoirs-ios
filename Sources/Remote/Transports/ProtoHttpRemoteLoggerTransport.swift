@@ -160,7 +160,7 @@ class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
         needAuthorization: Bool = true,
         completion: @escaping (Result<Response, RemoteLoggerTransportError>) -> Void
     ) {
-        request(path: path, needAuthorization: needAuthorization, requestObject: EmptyMessage(), completion: completion)
+        request(path: path, method: method, needAuthorization: needAuthorization, requestObject: EmptyMessage(), completion: completion)
     }
 
     private func request<Request: Message, Response: Message>(

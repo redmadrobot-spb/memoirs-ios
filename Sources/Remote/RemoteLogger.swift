@@ -48,11 +48,11 @@ public class RemoteLogger: Logger {
         challengePolicy: AuthenticationChallengePolicy = DefaultChallengePolicy(),
         completion: @escaping () -> Void
     ) {
-        #if DEBUG
-        bonjourServer.stopPublishing()
-        bonjourServer.publish(endpoint: endpoint.absoluteString, senderId: applicationInfo.deviceId)
-        #endif
         let updateTransport = {
+            #if DEBUG
+            self.bonjourServer.stopPublishing()
+            self.bonjourServer.publish(endpoint: endpoint.absoluteString, senderId: self.applicationInfo.deviceId)
+            #endif
             self.transport = ProtoHttpRemoteLoggerTransport(
                 endpoint: endpoint,
                 secret: secret,
