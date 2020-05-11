@@ -20,6 +20,7 @@ class SingleLogViewController: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        selectedLogLevelSegmentedControl.selectedSegmentIndex = 2
         setupLogger()
         setupKeyboardShowing()
     }
@@ -61,7 +62,8 @@ class SingleLogViewController: UIViewController, UITextFieldDelegate {
         view.endEditing(true)
     }
 
-    @objc private func keyboardWillShow(notification: Notification) {
+    @objc
+    private func keyboardWillShow(notification: Notification) {
         guard let keyboardSize = (notification.userInfo?  [UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else {
             return
         }
@@ -75,7 +77,8 @@ class SingleLogViewController: UIViewController, UITextFieldDelegate {
         }
     }
 
-    @objc private func keyboardWillHide(notification: Notification) {
+    @objc
+    private func keyboardWillHide(notification: Notification) {
         formBottomConstraint.constant = 0
 
         UIView.animate(withDuration: 0.5) {
@@ -83,7 +86,8 @@ class SingleLogViewController: UIViewController, UITextFieldDelegate {
         }
     }
 
-    @IBAction func sendLogButtonTapped() {
+    @IBAction
+    func sendLogButtonTapped() {
         Loggers.instance.logger.log(
             level: Level.allCases[selectedLogLevelSegmentedControl.selectedSegmentIndex],
             "\(messageTextField.text ?? "empty log")",
@@ -93,6 +97,8 @@ class SingleLogViewController: UIViewController, UITextFieldDelegate {
 
     @IBAction
     private func autoGenerateMessage() {
+        selectedLogLevelSegmentedControl.selectedSegmentIndex =
+            (0 ..< selectedLogLevelSegmentedControl.numberOfSegments).randomElement() ?? 2
         labelTextField.text = Self.randomWord
         messageTextField.text = Self.randomString
     }
