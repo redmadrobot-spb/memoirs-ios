@@ -149,6 +149,7 @@ class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
             }
         }
 
+//        logger.verbose("Sending messages:\n\(logMessages)")
         request(path: "live/send", requestObject: logMessages) { (result: Result<EmptyMessage, RemoteLoggerTransportError>) in
             completion(result.map { _ in Void() })
         }
@@ -179,9 +180,12 @@ class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
         var request = URLRequest(url: endpoint.appendingPathComponent(path))
         request.httpMethod = method
         request.setValue("application/x-protobuf", forHTTPHeaderField: "Content-Type")
+        request.setValue("deflate, gzip", forHTTPHeaderField: "Accept-Encoding")
         if !(requestObject is EmptyMessage) {
             do {
-                request.httpBody = try requestObject.serializedData()
+                let body = try requestObject.serializedData()
+//                logger.verbose("Sending body:\n\(body.base64EncodedString())")
+                request.httpBody = body
             } catch {
                 logger.error(error, message: "Serialization problem")
                 completion(.failure(.serialization(error)))

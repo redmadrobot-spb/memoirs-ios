@@ -61,7 +61,7 @@ class ConstantLogsViewController: UIViewController {
                 GeneratedLogRecord(
                     level: Level.allCases.randomElement() ?? .info,
                     label: self.labels.randomElement() ?? "Boo!",
-                    message: "Test message \(self.nextPosition): \(SingleLogViewController.randomString)"
+                    message: "\(SingleLogViewController.randomString)"
                 )
             },
             recordsPerSecond: Double(loadIntensitySlider.value * 100)

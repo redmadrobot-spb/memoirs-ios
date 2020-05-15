@@ -107,9 +107,10 @@ public class RemoteLogger: Logger {
             )
 
             self.buffer.append(record: record)
-            if self.canSend {
-                self.sendIfNeeded()
-            }
+            self.sendIfNeeded()
+//            if self.canSend {
+//                self.sendIfNeeded()
+//            }
         }
     }
 

@@ -23,11 +23,11 @@ class InMemoryRemoteLoggerBuffer: RemoteLoggerBuffer {
     }
 
     func retrieve(_ actions: @escaping ([LogRecord], @escaping (Bool) -> Void) -> Void) {
-        let pendedRecords = records
+        let pendingRecords = records
         records = []
-        actions(pendedRecords) { isFinished in
+        actions(pendingRecords) { isFinished in
             if !isFinished {
-                self.records = pendedRecords + self.records
+                self.records = pendingRecords + self.records
             }
         }
     }

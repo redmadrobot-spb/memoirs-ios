@@ -151,16 +151,15 @@ class SingleLogViewController: UIViewController, UITextFieldDelegate {
             .joined(separator: "")
     }
 
+    // https://github.com/minimaxir/big-list-of-naughty-strings
     private static let naughtyStrings: [String] = {
         guard
-            let url = Bundle.main.url(forResource: "BigListOfNaughtyStringsBase64.txt", withExtension: nil),
-            let strings = (try? String(contentsOf: url))?.components(separatedBy: "\n")
+            let url = Bundle.main.url(forResource: "BigListOfNaughtyStringsBase64.json", withExtension: nil),
+            let data = try? Data(contentsOf: url),
+            let strings = try? JSONDecoder().decode([String].self, from: data)
         else { return [ ":-<" ] }
 
         return strings
-//            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
-            .filter { !$0.hasPrefix("#") && !$0.isEmpty }
-//            .map { String(data: (Data(base64Encoded: $0) ?? Data()), encoding: .utf8) ?? ":-<" }
     }()
 
     // swiftlint:disable line_length
