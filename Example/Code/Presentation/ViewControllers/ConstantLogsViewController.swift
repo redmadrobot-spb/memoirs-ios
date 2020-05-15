@@ -46,13 +46,23 @@ class ConstantLogsViewController: UIViewController {
         return position
     }
 
+    private let labels = [
+        "SomeClass",
+        "NetworkTest",
+        "UIViewController",
+        "BlaBlaBla",
+        "BlaBlaDva",
+        "BlaTriFooBar",
+    ]
+
     private func configureLogsGenerator() {
         let recordsGenerator = UniformRecordGenerator(
             record: {
                 GeneratedLogRecord(
                     level: Level.allCases.randomElement() ?? .info,
-                    label: "ConstantLog",
-                    message: "Test message \(self.nextPosition): \(SingleLogViewController.randomString)")
+                    label: self.labels.randomElement() ?? "Boo!",
+                    message: "Test message \(self.nextPosition): \(SingleLogViewController.randomString)"
+                )
             },
             recordsPerSecond: Double(loadIntensitySlider.value * 100)
         )

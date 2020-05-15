@@ -30,6 +30,7 @@
 		2DBA1B2CA7478109C4020779 /* InfoGatheringLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA10989530859F00D5AB8C /* InfoGatheringLogger.swift */; };
 		2DBA1BADF4991F18DBC0A66C /* RandomizedLogsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA110DFD8D2337633A8BD5 /* RandomizedLogsViewController.swift */; };
 		2DBA1BC8525F9A84933D47B7 /* Loggable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA129A224F3D8C844B7AAF /* Loggable.swift */; platformFilter = ios; };
+		2DBA1D59114EF19875C20936 /* BigListOfNaughtyStringsBase64.txt in Resources */ = {isa = PBXBuildFile; fileRef = 2DBA1816DDD7994350E0A72A /* BigListOfNaughtyStringsBase64.txt */; };
 		2DBA1E3F5CFFFF98C7BF14B8 /* Shell.CommandLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1EB77B568C6A9EB2FBAB /* Shell.CommandLine.swift */; };
 		2DBA1FFDD2C4D6453D27242A /* EndpointViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA186BD75E9B889DAFD54B /* EndpointViewController.swift */; };
 		3053CC41242DFB50000125FB /* Robologs.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 46AE559A238D683C00774F9E /* Robologs.framework */; };
@@ -82,10 +83,6 @@
 		FAD51EC82456D5A100265E18 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FAD51EB22456D5A000265E18 /* Assets.xcassets */; };
 		FAD51EC92456D5A100265E18 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FAD51EB32456D5A000265E18 /* LaunchScreen.storyboard */; };
 		FAD51EEF245722A500265E18 /* ProtoHttpRemoteLoggerTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1DA202B598E9F6F27C1D /* ProtoHttpRemoteLoggerTransport.swift */; };
-		FAE67F7B2458CE340083E237 /* SwiftProtobuf in Frameworks */ = {isa = PBXBuildFile; productRef = 304E87AE242B8AAD007694D2 /* SwiftProtobuf */; };
-		FAE67F7C2458CE340083E237 /* SwiftProtobufPluginLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = 304E87B0242B8AAD007694D2 /* SwiftProtobufPluginLibrary */; };
-		FAE67F7D2458CE340083E237 /* SwiftProtobuf in Frameworks */ = {isa = PBXBuildFile; productRef = FA8EB0A224545A7600D438DC /* SwiftProtobuf */; };
-		FAE67F7E2458CE340083E237 /* SwiftProtobufPluginLibrary in Frameworks */ = {isa = PBXBuildFile; productRef = FA8EB0A424545A7600D438DC /* SwiftProtobufPluginLibrary */; };
 		FAE67F862458CE530083E237 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAE67F852458CE530083E237 /* main.swift */; };
 		FAE67F8A2458CE810083E237 /* Robologs.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA8EB09A24545A4200D438DC /* Robologs.framework */; };
 /* End PBXBuildFile section */
@@ -127,6 +124,7 @@
 		2DBA1503080D9DC86938813D /* BonjourClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BonjourClient.swift; sourceTree = "<group>"; };
 		2DBA156C2B58CF72B873423F /* HelperFunctions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HelperFunctions.swift; sourceTree = "<group>"; };
 		2DBA179E2E7EB4E3DE64E043 /* NullLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NullLogger.swift; sourceTree = "<group>"; };
+		2DBA1816DDD7994350E0A72A /* BigListOfNaughtyStringsBase64.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = BigListOfNaughtyStringsBase64.txt; sourceTree = "<group>"; };
 		2DBA186BD75E9B889DAFD54B /* EndpointViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EndpointViewController.swift; sourceTree = "<group>"; };
 		2DBA1A5D9C49721C5C5B335D /* RemoteLoggingBuffer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RemoteLoggingBuffer.swift; sourceTree = "<group>"; };
 		2DBA1B7C07761B3914324E95 /* RemoteLoggingTransport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RemoteLoggingTransport.swift; sourceTree = "<group>"; };
@@ -190,8 +188,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FAE67F7C2458CE340083E237 /* SwiftProtobufPluginLibrary in Frameworks */,
-				FAE67F7B2458CE340083E237 /* SwiftProtobuf in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -199,8 +195,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FAE67F7E2458CE340083E237 /* SwiftProtobufPluginLibrary in Frameworks */,
-				FAE67F7D2458CE340083E237 /* SwiftProtobuf in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -457,6 +451,7 @@
 				FAD51EB22456D5A000265E18 /* Assets.xcassets */,
 				FAD51EB32456D5A000265E18 /* LaunchScreen.storyboard */,
 				FAD51EB52456D5A000265E18 /* Info.plist */,
+				2DBA1816DDD7994350E0A72A /* BigListOfNaughtyStringsBase64.txt */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -523,8 +518,8 @@
 			);
 			name = "Robologs iOS";
 			packageProductDependencies = (
-				304E87AE242B8AAD007694D2 /* SwiftProtobuf */,
-				304E87B0242B8AAD007694D2 /* SwiftProtobufPluginLibrary */,
+				304E87AE242B8AAD007694D2 /* XCSwiftPackageProductDependency */,
+				304E87B0242B8AAD007694D2 /* XCSwiftPackageProductDependency */,
 			);
 			productName = RobologsiOSNative;
 			productReference = 46AE559A238D683C00774F9E /* Robologs.framework */;
@@ -546,8 +541,8 @@
 			);
 			name = "Robologs macOS";
 			packageProductDependencies = (
-				FA8EB0A224545A7600D438DC /* SwiftProtobuf */,
-				FA8EB0A424545A7600D438DC /* SwiftProtobufPluginLibrary */,
+				FA8EB0A224545A7600D438DC /* XCSwiftPackageProductDependency */,
+				FA8EB0A424545A7600D438DC /* XCSwiftPackageProductDependency */,
 			);
 			productName = Robologs;
 			productReference = FA8EB09A24545A4200D438DC /* Robologs.framework */;
@@ -606,7 +601,7 @@
 			);
 			mainGroup = 46AE5590238D683B00774F9E;
 			packageReferences = (
-				304E87AD242B8AAD007694D2 /* XCRemoteSwiftPackageReference "swift-protobuf" */,
+				304E87AD242B8AAD007694D2 /* XCRemoteSwiftPackageReference */,
 			);
 			productRefGroup = 46AE559B238D683C00774F9E /* Products */;
 			projectDirPath = "";
@@ -628,6 +623,7 @@
 				FAD51EC92456D5A100265E18 /* LaunchScreen.storyboard in Resources */,
 				FAD51EC82456D5A100265E18 /* Assets.xcassets in Resources */,
 				FAD51EC32456D5A000265E18 /* Main.storyboard in Resources */,
+				2DBA1D59114EF19875C20936 /* BigListOfNaughtyStringsBase64.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1194,7 +1190,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		304E87AD242B8AAD007694D2 /* XCRemoteSwiftPackageReference "swift-protobuf" */ = {
+		304E87AD242B8AAD007694D2 /* XCRemoteSwiftPackageReference */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/apple/swift-protobuf.git";
 			requirement = {
@@ -1205,24 +1201,24 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		304E87AE242B8AAD007694D2 /* SwiftProtobuf */ = {
+		304E87AE242B8AAD007694D2 /* XCSwiftPackageProductDependency */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 304E87AD242B8AAD007694D2 /* XCRemoteSwiftPackageReference "swift-protobuf" */;
+			package = 304E87AD242B8AAD007694D2 /* XCRemoteSwiftPackageReference */;
 			productName = SwiftProtobuf;
 		};
-		304E87B0242B8AAD007694D2 /* SwiftProtobufPluginLibrary */ = {
+		304E87B0242B8AAD007694D2 /* XCSwiftPackageProductDependency */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 304E87AD242B8AAD007694D2 /* XCRemoteSwiftPackageReference "swift-protobuf" */;
+			package = 304E87AD242B8AAD007694D2 /* XCRemoteSwiftPackageReference */;
 			productName = SwiftProtobufPluginLibrary;
 		};
-		FA8EB0A224545A7600D438DC /* SwiftProtobuf */ = {
+		FA8EB0A224545A7600D438DC /* XCSwiftPackageProductDependency */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 304E87AD242B8AAD007694D2 /* XCRemoteSwiftPackageReference "swift-protobuf" */;
+			package = 304E87AD242B8AAD007694D2 /* XCRemoteSwiftPackageReference */;
 			productName = SwiftProtobuf;
 		};
-		FA8EB0A424545A7600D438DC /* SwiftProtobufPluginLibrary */ = {
+		FA8EB0A424545A7600D438DC /* XCSwiftPackageProductDependency */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 304E87AD242B8AAD007694D2 /* XCRemoteSwiftPackageReference "swift-protobuf" */;
+			package = 304E87AD242B8AAD007694D2 /* XCRemoteSwiftPackageReference */;
 			productName = SwiftProtobufPluginLibrary;
 		};
 /* End XCSwiftPackageProductDependency section */

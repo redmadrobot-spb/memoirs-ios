@@ -119,11 +119,22 @@ class SingleLogViewController: UIViewController, UITextFieldDelegate {
 
     // MARK: - Data Generation
 
+    static var currentNaughtyStringIndex = 0
+
     static var randomString: String {
-        let stringToCut = [ randomXML, randomAlphanumericString, randomJson ].randomElement() ?? randomAlphanumericString
-        let from = (0 ..< stringToCut.count).randomElement() ?? 42
-        let to = from + ((0 ..< stringToCut.count - from).randomElement() ?? 239)
-        return String(stringToCut.prefix(from + to).suffix(to - from))
+        if Double.random(in: 0.0 ..< 1.0) < 0.25 {
+            let stringToCut = [ randomXML, randomAlphanumericString, randomJson ].randomElement() ?? randomAlphanumericString
+            let from = (0 ..< stringToCut.count).randomElement() ?? 42
+            let to = from + ((0 ..< stringToCut.count - from).randomElement() ?? 239)
+            return String(stringToCut.prefix(from + to).suffix(to - from))
+        } else {
+            let naughtyStrings = self.naughtyStrings
+            currentNaughtyStringIndex += 1
+            if currentNaughtyStringIndex >= naughtyStrings.count {
+                currentNaughtyStringIndex = 0
+            }
+            return naughtyStrings[currentNaughtyStringIndex]
+        }
     }
 
     private static var randomAlphanumericString: String {
@@ -139,6 +150,18 @@ class SingleLogViewController: UIViewController, UITextFieldDelegate {
             .map { _ in "\("qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM<>\"\\".randomElement() ?? "_")" }
             .joined(separator: "")
     }
+
+    private static let naughtyStrings: [String] = {
+        guard
+            let url = Bundle.main.url(forResource: "BigListOfNaughtyStringsBase64.txt", withExtension: nil),
+            let strings = (try? String(contentsOf: url))?.components(separatedBy: "\n")
+        else { return [ ":-<" ] }
+
+        return strings
+//            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
+            .filter { !$0.hasPrefix("#") && !$0.isEmpty }
+//            .map { String(data: (Data(base64Encoded: $0) ?? Data()), encoding: .utf8) ?? ":-<" }
+    }()
 
     // swiftlint:disable line_length
     private static let loremIpsum: String =
@@ -483,4 +506,6 @@ class SingleLogViewController: UIViewController, UITextFieldDelegate {
         ]
         """
     // swiftlint:enable line_length
+
+    // swiftlint:disable file_length
 }
