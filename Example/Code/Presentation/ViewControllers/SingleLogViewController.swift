@@ -20,6 +20,7 @@ class SingleLogViewController: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        selectedLogLevelSegmentedControl.selectedSegmentIndex = 2
         setupLogger()
         setupKeyboardShowing()
     }
@@ -61,7 +62,8 @@ class SingleLogViewController: UIViewController, UITextFieldDelegate {
         view.endEditing(true)
     }
 
-    @objc private func keyboardWillShow(notification: Notification) {
+    @objc
+    private func keyboardWillShow(notification: Notification) {
         guard let keyboardSize = (notification.userInfo?  [UIResponder.keyboardFrameEndUserInfoKey] as? NSValue)?.cgRectValue else {
             return
         }
@@ -75,7 +77,8 @@ class SingleLogViewController: UIViewController, UITextFieldDelegate {
         }
     }
 
-    @objc private func keyboardWillHide(notification: Notification) {
+    @objc
+    private func keyboardWillHide(notification: Notification) {
         formBottomConstraint.constant = 0
 
         UIView.animate(withDuration: 0.5) {
@@ -83,7 +86,8 @@ class SingleLogViewController: UIViewController, UITextFieldDelegate {
         }
     }
 
-    @IBAction func sendLogButtonTapped() {
+    @IBAction
+    func sendLogButtonTapped() {
         Loggers.instance.logger.log(
             level: Level.allCases[selectedLogLevelSegmentedControl.selectedSegmentIndex],
             "\(messageTextField.text ?? "empty log")",
@@ -93,6 +97,8 @@ class SingleLogViewController: UIViewController, UITextFieldDelegate {
 
     @IBAction
     private func autoGenerateMessage() {
+        selectedLogLevelSegmentedControl.selectedSegmentIndex =
+            (0 ..< selectedLogLevelSegmentedControl.numberOfSegments).randomElement() ?? 2
         labelTextField.text = Self.randomWord
         messageTextField.text = Self.randomString
     }
@@ -113,11 +119,22 @@ class SingleLogViewController: UIViewController, UITextFieldDelegate {
 
     // MARK: - Data Generation
 
+    static var currentNaughtyStringIndex = 0
+
     static var randomString: String {
-        let stringToCut = [ randomXML, randomAlphanumericString, randomJson ].randomElement() ?? randomAlphanumericString
-        let from = (0 ..< stringToCut.count).randomElement() ?? 42
-        let to = from + ((0 ..< stringToCut.count - from).randomElement() ?? 239)
-        return String(stringToCut.prefix(from + to).suffix(to - from))
+        if Double.random(in: 0.0 ..< 1.0) < 0.25 {
+            let stringToCut = [ randomXML, randomAlphanumericString, randomJson ].randomElement() ?? randomAlphanumericString
+            let from = (0 ..< stringToCut.count).randomElement() ?? 42
+            let to = from + ((0 ..< stringToCut.count - from).randomElement() ?? 239)
+            return String(stringToCut.prefix(from + to).suffix(to - from))
+        } else {
+            let naughtyStrings = self.naughtyStrings
+            currentNaughtyStringIndex += 1
+            if currentNaughtyStringIndex >= naughtyStrings.count {
+                currentNaughtyStringIndex = 0
+            }
+            return naughtyStrings[currentNaughtyStringIndex]
+        }
     }
 
     private static var randomAlphanumericString: String {
@@ -133,6 +150,17 @@ class SingleLogViewController: UIViewController, UITextFieldDelegate {
             .map { _ in "\("qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM<>\"\\".randomElement() ?? "_")" }
             .joined(separator: "")
     }
+
+    // https://github.com/minimaxir/big-list-of-naughty-strings
+    private static let naughtyStrings: [String] = {
+        guard
+            let url = Bundle.main.url(forResource: "BigListOfNaughtyStringsBase64.json", withExtension: nil),
+            let data = try? Data(contentsOf: url),
+            let strings = try? JSONDecoder().decode([String].self, from: data)
+        else { return [ ":-<" ] }
+
+        return strings
+    }()
 
     // swiftlint:disable line_length
     private static let loremIpsum: String =
@@ -477,4 +505,6 @@ class SingleLogViewController: UIViewController, UITextFieldDelegate {
         ]
         """
     // swiftlint:enable line_length
+
+    // swiftlint:disable file_length
 }

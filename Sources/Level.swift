@@ -7,6 +7,7 @@
 //
 
 /// Logging level.
+@frozen
 public enum Level: Comparable, CustomDebugStringConvertible {
     /// Extremely detailed log events. This is the only level that can spam output in a second.
     case verbose

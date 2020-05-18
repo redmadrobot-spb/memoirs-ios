@@ -6,6 +6,7 @@
 // Copyright © 2020 Redmadrobot SPb. All rights reserved.
 //
 
+@frozen
 public enum ConfigurationLevel {
     case verbose
     case debug
