@@ -173,6 +173,7 @@ public class RemoteLogger: Logger {
     }
 
     private func sendIfNeeded() {
+        guard let transport = self.transport, transport.isConnected else { return }
         guard buffer.haveBufferedData else { return }
 
         canSend = false

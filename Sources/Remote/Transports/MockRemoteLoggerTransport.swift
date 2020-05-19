@@ -10,6 +10,7 @@ import Foundation
 
 /// Mock remote logger transport. Emulate behaviour of transport for offline testing.
 public class MockRemoteLoggerTransport: RemoteLoggerTransport {
+    let isConnected: Bool = true
     private let logger: LabeledLogger
 
     /// Create instance of MockRemoteLoggerTransport.

@@ -41,6 +41,7 @@ class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
 
     private let applicationInfo: ApplicationInfo
 
+    var isConnected: Bool { isAuthorized }
     var isAuthorized: Bool {
         authToken != nil
     }

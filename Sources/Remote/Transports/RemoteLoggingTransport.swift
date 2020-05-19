@@ -20,6 +20,8 @@ public enum RemoteLoggerTransportError: Error {
 }
 
 protocol RemoteLoggerTransport {
+    var isConnected: Bool { get }
+
     func liveConnectionCode(_ completion: @escaping (Result<String, RemoteLoggerTransportError>) -> Void)
     func invalidateConnectionCode(_ completion: @escaping (Result<Void, RemoteLoggerTransportError>) -> Void)
 
