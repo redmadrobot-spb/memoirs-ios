@@ -23,13 +23,12 @@ public class RemoteLogger: Logger {
     private let buffer: RemoteLoggerBuffer
     private var transport: RemoteLoggerTransport?
 
-    #if DEBUG
-    private let bonjourServer: BonjourServer
-    #endif
+    private var bonjourServer: BonjourServer?
 
     public init(
         applicationInfo: ApplicationInfo,
         isSensitive: Bool,
+        publishServerInLocalWeb: Bool,
         logger: Logger = NullLogger()
     ) {
         buffer = InMemoryRemoteLoggerBuffer()
@@ -37,9 +36,9 @@ public class RemoteLogger: Logger {
         self.logger = logger
         self.isSensitive = isSensitive
 
-        #if DEBUG
-        bonjourServer = BonjourServer(logger: logger)
-        #endif
+        if publishServerInLocalWeb {
+            bonjourServer = BonjourServer(logger: logger)
+        }
     }
 
     public func configure(
@@ -49,10 +48,10 @@ public class RemoteLogger: Logger {
         completion: @escaping () -> Void
     ) {
         let updateTransport = {
-            #if DEBUG
-            self.bonjourServer.stopPublishing()
-            self.bonjourServer.publish(endpoint: endpoint.absoluteString, senderId: self.applicationInfo.deviceId)
-            #endif
+            if let bonjourServer = self.bonjourServer {
+                bonjourServer.stopPublishing()
+                bonjourServer.publish(endpoint: endpoint.absoluteString, senderId: self.applicationInfo.deviceId)
+            }
             self.transport = ProtoHttpRemoteLoggerTransport(
                 endpoint: endpoint,
                 secret: secret,
@@ -72,8 +71,21 @@ public class RemoteLogger: Logger {
         }
     }
 
-    // TODO: Persist position
-    private var position: UInt64 = 0
+    private let positionKey: String = "robologs.remoteLogger.position"
+    private var cachedPosition: UInt64!
+    private var position: UInt64 {
+        get {
+            if cachedPosition == nil {
+                cachedPosition = UserDefaults.standard.object(forKey: positionKey) as? UInt64 ?? 0
+            }
+
+            return cachedPosition
+        }
+        set {
+            cachedPosition = newValue
+            UserDefaults.standard.set(cachedPosition, forKey: positionKey)
+        }
+    }
     private var nextPosition: UInt64 {
         if position == UInt64.max {
             position = 0
@@ -107,10 +119,9 @@ public class RemoteLogger: Logger {
             )
 
             self.buffer.append(record: record)
-            self.sendIfNeeded()
-//            if self.canSend {
-//                self.sendIfNeeded()
-//            }
+            if self.canSend {
+                self.sendIfNeeded()
+            }
         }
     }
 
@@ -135,9 +146,9 @@ public class RemoteLogger: Logger {
     }
 
     public func stopLive(completion: @escaping (Result<Void, Error>) -> Void) {
-        #if DEBUG
-        bonjourServer.stopPublishing()
-        #endif
+        if let bonjourServer = bonjourServer {
+            bonjourServer.stopPublishing()
+        }
 
         guard let transport = transport else { return completion(.failure(.transportIsNotConfigured)) }
 

@@ -12,10 +12,17 @@ import Foundation
 class Loggers {
     static let instance: Loggers = .init()
 
+    #if DEBUG
+    private static let publishServerInLocalWeb: Bool = true
+    #else
+    private static let publishServerInLocalWeb: Bool = false
+    #endif
+
     private let bufferLogger: BufferLogger = BufferLogger()
     private let remoteLogger: RemoteLogger = RemoteLogger(
         applicationInfo: UIKitApplicationInfo.current,
         isSensitive: false,
+        publishServerInLocalWeb: Loggers.publishServerInLocalWeb,
         logger: PrintLogger(onlyTime: true)
     )
     private(set) lazy var logger = MultiplexingLogger(loggers: [ self.bufferLogger, self.remoteLogger ])
