@@ -85,7 +85,7 @@ public class BonjourServer: NSObject, NetServiceDelegate {
         #if canImport(UIKit)
         let deviceName = ProcessInfo.processInfo.environment["SIMULATOR_DEVICE_NAME"].map { "Simulator: \($0)" } ?? UIDevice.current.name
         #else
-        let deviceName = ProcessInfo.processInfo.environment["SIMULATOR_DEVICE_NAME"].map { "Simulator: \($0)" } ?? "—"
+        let deviceName = (Bundle.main.infoDictionary?["CFBundleName"] as? String).map { "Bundle id: \($0)" } ?? "—"
         #endif
         if let data = deviceName.data(using: .utf8) {
             txtRecord[BonjourServer.recordName] = data
