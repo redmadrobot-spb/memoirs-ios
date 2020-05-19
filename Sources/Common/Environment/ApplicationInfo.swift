@@ -30,7 +30,11 @@ private var standardDeviceId: String {
     if let deviceId = deviceId {
         return deviceId
     } else {
+        #if canImport(UIKit)
         let vendorOrGeneratedId = UIDevice.current.identifierForVendor?.uuidString ?? UUID().uuidString
+        #elseif canImport(AppKit)
+        let vendorOrGeneratedId = UUID().uuidString
+        #endif
         UserDefaults.standard.set(vendorOrGeneratedId, forKey: standardDeviceIdKey)
         return vendorOrGeneratedId
     }
