@@ -283,7 +283,8 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
             var storage = sockaddr_storage()
             data.getBytes(&storage, length: MemoryLayout<sockaddr_storage>.size)
 
-            if Int32(storage.ss_family) == AF_INET {
+            let family = Int32(storage.ss_family)
+            if family == AF_INET || family == AF_LOCAL {
                 let addr4 = withUnsafePointer(to: &storage) {
                     $0.withMemoryRebound(to: sockaddr_in.self, capacity: 1) { $0.pointee }
                 }
