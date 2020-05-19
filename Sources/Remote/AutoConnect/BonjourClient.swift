@@ -234,6 +234,10 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
     // MARK: - Helper Methods
 
     private func isRobologsServiceLocal(addresses: [String], txtRecord: [String: Data], completion: @escaping (Bool) -> Void) {
+        guard !addresses.contains("127.0.0.1") else {
+            logger.debug("Robologs service is on localhost. Good!")
+            return completion(true)
+        }
         guard !addresses.contains(where: { remoteDebugLinkAddresses.contains($0) }) else {
             logger.debug("Robologs service address is in Remote Debug Link addresses. Good!")
             return completion(true)
@@ -284,11 +288,7 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
                     $0.withMemoryRebound(to: sockaddr_in.self, capacity: 1) { $0.pointee }
                 }
 
-                var address = String(cString: inet_ntoa(addr4.sin_addr), encoding: .ascii)
-                if address == "127.0.0.1" {
-                    address = nil
-                }
-                return address
+                return String(cString: inet_ntoa(addr4.sin_addr), encoding: .ascii)
             } else {
                 return nil
             }
