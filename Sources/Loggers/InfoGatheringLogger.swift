@@ -12,7 +12,7 @@ public class InfoGatheringLogger: Logger {
     public let logger: Logger
     public let meta: [String: LogString]
 
-    public init(meta: [String: LogString] = [:], logger: Logger) {
+    public init(meta: [String: LogString], logger: Logger) {
         self.meta = meta
         self.logger = logger
     }

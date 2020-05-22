@@ -27,6 +27,7 @@ class Loggers {
     )
 
     private(set) lazy var logger = InfoGatheringLogger(
+        meta: [:],
         logger: MultiplexingLogger(
             loggers: [ self.bufferLogger, remoteLogger ]
         )
