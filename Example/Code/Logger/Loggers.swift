@@ -26,8 +26,10 @@ class Loggers {
         logger: PrintLogger(onlyTime: true)
     )
 
-    private(set) lazy var logger = MultiplexingLogger(
-        loggers: [ self.bufferLogger, InfoGatheringLogger(meta: [:], logger: remoteLogger) ]
+    private(set) lazy var logger = InfoGatheringLogger(
+        logger: MultiplexingLogger(
+            loggers: [ self.bufferLogger, remoteLogger ]
+        )
     )
 
     private(set) var liveConnectionId: String?
