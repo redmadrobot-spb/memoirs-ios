@@ -25,7 +25,10 @@ class Loggers {
         publishServerInLocalWeb: Loggers.publishServerInLocalWeb,
         logger: PrintLogger(onlyTime: true)
     )
-    private(set) lazy var logger = MultiplexingLogger(loggers: [ self.bufferLogger, self.remoteLogger ])
+
+    private(set) lazy var logger = MultiplexingLogger(
+        loggers: [ self.bufferLogger, InfoGatheringLogger(meta: [:], logger: remoteLogger) ]
+    )
 
     private(set) var liveConnectionId: String?
 
