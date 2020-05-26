@@ -9,7 +9,7 @@
 import Foundation
 
 enum Shell {
-    static var userHomeDirectory: URL = {
+    private(set) static var userHomeDirectory: URL = {
         guard
             let passwd = getpwuid(getuid()),
             let home = passwd.pointee.pw_dir
