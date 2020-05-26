@@ -16,7 +16,7 @@ public class RemoteLogger: Logger {
     }
     public enum ArchiveMode {
         case disabled
-        case enabled(cacheDirectoryUrl: URL, batchSize: Int)
+        case enabled(cacheDirectoryUrl: URL, batchSize: Int, maxBatchesCount: Int)
     }
 
     public enum Error: Swift.Error {
@@ -54,8 +54,13 @@ public class RemoteLogger: Logger {
         switch archiveMode {
             case .disabled:
                 archiveBuffer = NullRemoteLoggerBuffer()
-            case .enabled(let cacheDirectoryUrl, let batchSize):
-                archiveBuffer = PersistingLoggingBuffer(cachePath: cacheDirectoryUrl, batchSize: batchSize, logger: logger)
+            case .enabled(let cacheDirectoryUrl, let maxBatchSize, let maxBatchesCount):
+                archiveBuffer = PersistingLoggingBuffer(
+                    cachePath: cacheDirectoryUrl,
+                    maxBatchSize: maxBatchSize,
+                    maxBatchesCount: maxBatchesCount,
+                    logger: logger
+                )
         }
         sendBuffers = [ liveBuffer, archiveBuffer ]
 

@@ -13,12 +13,16 @@ class PersistingLoggingBuffer: RemoteLoggerBuffer {
     let kind: RemoteLoggerBufferKind = .archive
 
     private let cachePath: URL
-    private let saveBatchSize: Int
+
+    private let maxBatchesCount: Int
+    private let maxBatchSize: Int
+
     private var logger: LabeledLogger!
 
-    init(cachePath: URL, batchSize: Int, logger: Logger) {
+    init(cachePath: URL, maxBatchSize: Int, maxBatchesCount: Int, logger: Logger) {
         self.cachePath = cachePath
-        self.saveBatchSize = batchSize
+        self.maxBatchesCount = maxBatchesCount
+        self.maxBatchSize = maxBatchSize
         self.logger = LabeledLogger(object: self, logger: logger)
         if !FileManager.default.fileExists(atPath: cachePath.path) {
             do {
@@ -27,6 +31,8 @@ class PersistingLoggingBuffer: RemoteLoggerBuffer {
                 self.logger.error(error)
             }
         }
+
+        self.logger.info("Initialized")
     }
 
     private let queue: DispatchQueue = .init(label: "PersistingLoggingBuffer")
@@ -39,11 +45,22 @@ class PersistingLoggingBuffer: RemoteLoggerBuffer {
 
     func getNextBatch() -> (batchId: String, records: [CachedLogMessage])? {
         queue.sync {
-            let firstPath: String? = FileManager.default
-                .enumerator(atPath: cachePath.path)?
-                .first { name in (name as? String) != savingBatchId } as? String
-            let batchId = firstPath.map { URL(fileURLWithPath: $0).lastPathComponent }
-            guard let id = batchId else { return nil }
+            guard let enumerator = FileManager.default.enumerator(atPath: cachePath.path) else { return nil }
+            let batches = enumerator
+                .compactMap { $0 as? String }
+                .filter { $0 != savingBatchId }
+                .sorted(by: <)
+            while batches.count > maxBatchesCount {
+                guard let url = batches.first.map({ URL(fileURLWithPath: $0) }) else { break }
+
+                logger.debug("Removing archive batch file (number of batch files exceeded \(maxBatchesCount)) \"\(url.lastPathComponent)\"")
+                do {
+                    try FileManager.default.removeItem(at: url)
+                } catch {
+                    logger.error(error, message: "Error removing file \"\(url.lastPathComponent)\"")
+                }
+            }
+            guard let id = batches.first.map({ URL(fileURLWithPath: $0).lastPathComponent }) else { return nil }
 
             return records(for: id).map { (id, $0) }
         }
@@ -52,7 +69,9 @@ class PersistingLoggingBuffer: RemoteLoggerBuffer {
     func removeBatch(id: String) {
         queue.async(flags: .barrier) {
             do {
-                try FileManager.default.removeItem(at: self.cachePath.appendingPathComponent(id))
+                let url = self.cachePath.appendingPathComponent(id)
+                self.logger.debug("Removing archive batch file \"\(url.lastPathComponent)\"")
+                try FileManager.default.removeItem(at: url)
             } catch {
                 self.logger.error(error)
             }
@@ -71,11 +90,12 @@ class PersistingLoggingBuffer: RemoteLoggerBuffer {
             records = self.records(for: savingBatchId) ?? []
             records.append(record)
 
-            if records.count > saveBatchSize {
+            if records.count > maxBatchSize {
                 self.savingBatchId = nil
             }
         } else {
-            id = UUID().uuidString
+            id = "\(Int(Date.timeIntervalSinceReferenceDate))-\(UUID().uuidString)"
+            self.logger.debug("Creating new batch id (and file) \"\(id)\"")
             savingBatchId = id
             records = [ record ]
         }
@@ -84,6 +104,7 @@ class PersistingLoggingBuffer: RemoteLoggerBuffer {
             let encoder = JSONEncoder()
             let data = try encoder.encode(records)
             try data.write(to: cachePath.appendingPathComponent(id), options: .atomic)
+            self.logger.verbose("Persisted log with position \(record.position) \"\(id)\"")
         } catch {
             logger.error(error)
         }

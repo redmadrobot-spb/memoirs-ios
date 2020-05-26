@@ -28,7 +28,7 @@ class Loggers {
         isSensitive: false,
         publishServerInLocalWeb: Loggers.publishServerInLocalWeb,
         liveMode: .enabled(bufferSize: 1000),
-        archiveMode: .enabled(cacheDirectoryUrl: cacheDirectoryUrl, batchSize: 100),
+        archiveMode: .enabled(cacheDirectoryUrl: cacheDirectoryUrl, batchSize: 100, maxBatchesCount: 50),
         logger: PrintLogger(onlyTime: true)
     )
 
