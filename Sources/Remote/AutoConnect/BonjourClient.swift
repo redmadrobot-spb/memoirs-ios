@@ -118,6 +118,12 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
 
         self.adbConnectionProcess = adbConnectionProcess
 
+        // ADB disconnects if a device gets disconnected. We have to reconnect.
+        adbConnectionProcess.terminationHandler = { _ in
+            self.logger.debug("ADB Monitoring terminated, restarting")
+            self.startAdbMonitoring(adbRunDirectory: adbRunDirectory)
+        }
+
         adbConnectionProcess.launch()
         self.logger.info("ADB Monitoring started")
         #else

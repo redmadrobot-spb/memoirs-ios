@@ -18,11 +18,17 @@ class Loggers {
     private static let publishServerInLocalWeb: Bool = false
     #endif
 
+    private lazy var cacheDirectoryUrl: URL = {
+        Storage.documentsDirectory.appendingPathComponent("archiveLogsCache")
+    }()
+
     private let bufferLogger: BufferLogger = BufferLogger()
-    private let remoteLogger: RemoteLogger = RemoteLogger(
+    private lazy var remoteLogger: RemoteLogger = RemoteLogger(
         applicationInfo: UIKitApplicationInfo.current,
         isSensitive: false,
         publishServerInLocalWeb: Loggers.publishServerInLocalWeb,
+        liveMode: .enabled(bufferSize: 1000),
+        archiveMode: .enabled(cacheDirectoryUrl: cacheDirectoryUrl, batchSize: 100),
         logger: PrintLogger(onlyTime: true)
     )
 

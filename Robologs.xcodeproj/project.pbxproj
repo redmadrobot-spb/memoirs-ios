@@ -7,7 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2DBA1061077B7D16AD44FAD0 /* CachedLogMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA19F3805C10A7C41E4FF4 /* CachedLogMessage.swift */; };
 		2DBA108007128FAD4821882B /* ProtoHttpRemoteLoggerTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1DA202B598E9F6F27C1D /* ProtoHttpRemoteLoggerTransport.swift */; platformFilter = ios; };
+		2DBA10879669DEAF907EB72D /* NullRemoteLoggerBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA15502C1F90EF2E875AD2 /* NullRemoteLoggerBuffer.swift */; };
 		2DBA10AFC33F1F1A8A3AF4F7 /* SingleLogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1BA84DCE2ADB5089444D /* SingleLogViewController.swift */; };
 		2DBA11174264D8D5FBD289B7 /* BonjourServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1CC1F043D50CC7774247 /* BonjourServer.swift */; };
 		2DBA124C75E1AC7074942230 /* Shell.CommandLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1EB77B568C6A9EB2FBAB /* Shell.CommandLine.swift */; };
@@ -17,20 +19,25 @@
 		2DBA1423B6C39E8D29429F6E /* ConstantLogsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1CA56E551997C6001863 /* ConstantLogsViewController.swift */; };
 		2DBA142977D7D4CD90ECDEAF /* LabeledLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1BC5D26B69FA1E649B56 /* LabeledLogger.swift */; platformFilter = ios; };
 		2DBA1439BAEBD8D5961A05A0 /* InfoGatheringLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA10989530859F00D5AB8C /* InfoGatheringLogger.swift */; };
+		2DBA143BA61A1F40544D681A /* PersistingLoggingBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1E92BFBF1D21C9146183 /* PersistingLoggingBuffer.swift */; };
 		2DBA15064819C6E6D4178B88 /* ApplicationInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1BDD8C05C5AC12BAAF0D /* ApplicationInfo.swift */; };
 		2DBA1521233CC17F79CBBF50 /* DirectConnector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA10C88047C8771D4F9B8A /* DirectConnector.swift */; };
+		2DBA159EB61B1C312FEE1528 /* PersistingLoggingBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1E92BFBF1D21C9146183 /* PersistingLoggingBuffer.swift */; };
 		2DBA15FD8398DE775C125946 /* Loggers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA10435D991F46DC8D89BF /* Loggers.swift */; };
 		2DBA1631FA44583D2A7B0897 /* NullLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA179E2E7EB4E3DE64E043 /* NullLogger.swift */; };
 		2DBA16E9400794EC84CCD978 /* BonjourClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1503080D9DC86938813D /* BonjourClient.swift */; };
+		2DBA1854A4453EA6AE6BCF84 /* Storage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1C5D52B7EB410674F2E8 /* Storage.swift */; };
 		2DBA188F9117C17221DB4AE1 /* BonjourServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1CC1F043D50CC7774247 /* BonjourServer.swift */; };
 		2DBA1891E370AEB77B761D6B /* RemoteLoggingTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1B7C07761B3914324E95 /* RemoteLoggingTransport.swift */; };
 		2DBA18EB097273EDCAC5E810 /* NullLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA179E2E7EB4E3DE64E043 /* NullLogger.swift */; };
 		2DBA194A31B60069AE4E7EE1 /* ApplicationInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1BDD8C05C5AC12BAAF0D /* ApplicationInfo.swift */; };
 		2DBA19506894725A4885E909 /* RemoteLoggingTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1B7C07761B3914324E95 /* RemoteLoggingTransport.swift */; };
+		2DBA1977E6291A01A7988901 /* CachedLogMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA19F3805C10A7C41E4FF4 /* CachedLogMessage.swift */; };
 		2DBA19AD16DD8F3051F127B1 /* DirectConnector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA10C88047C8771D4F9B8A /* DirectConnector.swift */; };
 		2DBA1B2CA7478109C4020779 /* InfoGatheringLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA10989530859F00D5AB8C /* InfoGatheringLogger.swift */; };
 		2DBA1BADF4991F18DBC0A66C /* RandomizedLogsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA110DFD8D2337633A8BD5 /* RandomizedLogsViewController.swift */; };
 		2DBA1BC8525F9A84933D47B7 /* Loggable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA129A224F3D8C844B7AAF /* Loggable.swift */; platformFilter = ios; };
+		2DBA1D429CD7BE4140B824AB /* NullRemoteLoggerBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA15502C1F90EF2E875AD2 /* NullRemoteLoggerBuffer.swift */; };
 		2DBA1E3F5CFFFF98C7BF14B8 /* Shell.CommandLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1EB77B568C6A9EB2FBAB /* Shell.CommandLine.swift */; };
 		2DBA1F496F5E0BC411A2E6CC /* BigListOfNaughtyStringsBase64.json in Resources */ = {isa = PBXBuildFile; fileRef = 2DBA1018CEF1F344845BB07F /* BigListOfNaughtyStringsBase64.json */; };
 		2DBA1FFDD2C4D6453D27242A /* EndpointViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA186BD75E9B889DAFD54B /* EndpointViewController.swift */; };
@@ -125,17 +132,21 @@
 		2DBA110DFD8D2337633A8BD5 /* RandomizedLogsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RandomizedLogsViewController.swift; sourceTree = "<group>"; };
 		2DBA129A224F3D8C844B7AAF /* Loggable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Loggable.swift; sourceTree = "<group>"; };
 		2DBA1503080D9DC86938813D /* BonjourClient.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BonjourClient.swift; sourceTree = "<group>"; };
+		2DBA15502C1F90EF2E875AD2 /* NullRemoteLoggerBuffer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NullRemoteLoggerBuffer.swift; sourceTree = "<group>"; };
 		2DBA156C2B58CF72B873423F /* HelperFunctions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HelperFunctions.swift; sourceTree = "<group>"; };
 		2DBA179E2E7EB4E3DE64E043 /* NullLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NullLogger.swift; sourceTree = "<group>"; };
 		2DBA186BD75E9B889DAFD54B /* EndpointViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EndpointViewController.swift; sourceTree = "<group>"; };
+		2DBA19F3805C10A7C41E4FF4 /* CachedLogMessage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CachedLogMessage.swift; sourceTree = "<group>"; };
 		2DBA1A5D9C49721C5C5B335D /* RemoteLoggingBuffer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RemoteLoggingBuffer.swift; sourceTree = "<group>"; };
 		2DBA1B7C07761B3914324E95 /* RemoteLoggingTransport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RemoteLoggingTransport.swift; sourceTree = "<group>"; };
 		2DBA1BA84DCE2ADB5089444D /* SingleLogViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SingleLogViewController.swift; sourceTree = "<group>"; };
 		2DBA1BC5D26B69FA1E649B56 /* LabeledLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LabeledLogger.swift; sourceTree = "<group>"; };
 		2DBA1BDD8C05C5AC12BAAF0D /* ApplicationInfo.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ApplicationInfo.swift; sourceTree = "<group>"; };
+		2DBA1C5D52B7EB410674F2E8 /* Storage.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Storage.swift; sourceTree = "<group>"; };
 		2DBA1CA56E551997C6001863 /* ConstantLogsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConstantLogsViewController.swift; sourceTree = "<group>"; };
 		2DBA1CC1F043D50CC7774247 /* BonjourServer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BonjourServer.swift; sourceTree = "<group>"; };
 		2DBA1DA202B598E9F6F27C1D /* ProtoHttpRemoteLoggerTransport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProtoHttpRemoteLoggerTransport.swift; sourceTree = "<group>"; };
+		2DBA1E92BFBF1D21C9146183 /* PersistingLoggingBuffer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PersistingLoggingBuffer.swift; sourceTree = "<group>"; };
 		2DBA1EB77B568C6A9EB2FBAB /* Shell.CommandLine.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Shell.CommandLine.swift; sourceTree = "<group>"; };
 		3053CC28242DF72E000125FB /* Robologs Test App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Robologs Test App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		4611FCEC2398FEF100E23B25 /* MultiplexingLogger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MultiplexingLogger.swift; sourceTree = "<group>"; };
@@ -228,6 +239,14 @@
 				2DBA186BD75E9B889DAFD54B /* EndpointViewController.swift */,
 			);
 			path = ViewControllers;
+			sourceTree = "<group>";
+		};
+		2DBA17B5C8E88E469C3F8240 /* Common */ = {
+			isa = PBXGroup;
+			children = (
+				2DBA1C5D52B7EB410674F2E8 /* Storage.swift */,
+			);
+			path = Common;
 			sourceTree = "<group>";
 		};
 		2DBA1FD40A5BD019CB1E82B4 /* AutoConnect */ = {
@@ -393,6 +412,9 @@
 			children = (
 				63D39415241F86D2002052DA /* InMemoryRemoteLoggerBuffer.swift */,
 				2DBA1A5D9C49721C5C5B335D /* RemoteLoggingBuffer.swift */,
+				2DBA1E92BFBF1D21C9146183 /* PersistingLoggingBuffer.swift */,
+				2DBA19F3805C10A7C41E4FF4 /* CachedLogMessage.swift */,
+				2DBA15502C1F90EF2E875AD2 /* NullRemoteLoggerBuffer.swift */,
 			);
 			path = Buffer;
 			sourceTree = "<group>";
@@ -411,6 +433,7 @@
 				FAD51E9B2456D5A000265E18 /* Logger */,
 				FAD51EA02456D5A000265E18 /* LogsGenerator */,
 				FAD51EA82456D5A000265E18 /* Presentation */,
+				2DBA17B5C8E88E469C3F8240 /* Common */,
 			);
 			path = Code;
 			sourceTree = "<group>";
@@ -703,6 +726,7 @@
 				2DBA1423B6C39E8D29429F6E /* ConstantLogsViewController.swift in Sources */,
 				2DBA1FFDD2C4D6453D27242A /* EndpointViewController.swift in Sources */,
 				2DBA15FD8398DE775C125946 /* Loggers.swift in Sources */,
+				2DBA1854A4453EA6AE6BCF84 /* Storage.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -738,6 +762,9 @@
 				2DBA11174264D8D5FBD289B7 /* BonjourServer.swift in Sources */,
 				2DBA124C75E1AC7074942230 /* Shell.CommandLine.swift in Sources */,
 				2DBA19AD16DD8F3051F127B1 /* DirectConnector.swift in Sources */,
+				2DBA159EB61B1C312FEE1528 /* PersistingLoggingBuffer.swift in Sources */,
+				2DBA1061077B7D16AD44FAD0 /* CachedLogMessage.swift in Sources */,
+				2DBA10879669DEAF907EB72D /* NullRemoteLoggerBuffer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -774,6 +801,9 @@
 				2DBA16E9400794EC84CCD978 /* BonjourClient.swift in Sources */,
 				2DBA1E3F5CFFFF98C7BF14B8 /* Shell.CommandLine.swift in Sources */,
 				2DBA1521233CC17F79CBBF50 /* DirectConnector.swift in Sources */,
+				2DBA143BA61A1F40544D681A /* PersistingLoggingBuffer.swift in Sources */,
+				2DBA1977E6291A01A7988901 /* CachedLogMessage.swift in Sources */,
+				2DBA1D429CD7BE4140B824AB /* NullRemoteLoggerBuffer.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
