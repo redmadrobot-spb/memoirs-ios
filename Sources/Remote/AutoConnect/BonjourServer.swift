@@ -58,6 +58,7 @@ public class BonjourServer: NSObject, NetServiceDelegate {
     static let recordEndpoint = "endpoint"
     static let recordSenderId = "senderId"
     static let recordIOSSimulator = "iOSSimulator"
+    static let recordAndroidId = "androidId"
 
     public func publish(endpoint: String, senderId: String) {
         if netService != nil {

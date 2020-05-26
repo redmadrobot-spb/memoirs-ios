@@ -25,7 +25,6 @@
 		2DBA188F9117C17221DB4AE1 /* BonjourServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1CC1F043D50CC7774247 /* BonjourServer.swift */; };
 		2DBA1891E370AEB77B761D6B /* RemoteLoggingTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1B7C07761B3914324E95 /* RemoteLoggingTransport.swift */; };
 		2DBA18EB097273EDCAC5E810 /* NullLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA179E2E7EB4E3DE64E043 /* NullLogger.swift */; };
-		2DBA19280740FA9D87377FE6 /* BonjourClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1503080D9DC86938813D /* BonjourClient.swift */; };
 		2DBA194A31B60069AE4E7EE1 /* ApplicationInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1BDD8C05C5AC12BAAF0D /* ApplicationInfo.swift */; };
 		2DBA19506894725A4885E909 /* RemoteLoggingTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1B7C07761B3914324E95 /* RemoteLoggingTransport.swift */; };
 		2DBA19AD16DD8F3051F127B1 /* DirectConnector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA10C88047C8771D4F9B8A /* DirectConnector.swift */; };
@@ -85,8 +84,6 @@
 		FAD51EC82456D5A100265E18 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FAD51EB22456D5A000265E18 /* Assets.xcassets */; };
 		FAD51EC92456D5A100265E18 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FAD51EB32456D5A000265E18 /* LaunchScreen.storyboard */; };
 		FAD51EEF245722A500265E18 /* ProtoHttpRemoteLoggerTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1DA202B598E9F6F27C1D /* ProtoHttpRemoteLoggerTransport.swift */; };
-		FADF34442472A5CD0020BFFF /* SwiftProtobuf in Frameworks */ = {isa = PBXBuildFile; productRef = 304E87AE242B8AAD007694D2 /* SwiftProtobuf */; };
-		FADF34452472A5CD0020BFFF /* SwiftProtobuf in Frameworks */ = {isa = PBXBuildFile; productRef = FA8EB0A224545A7600D438DC /* SwiftProtobuf */; };
 		FAE67F862458CE530083E237 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAE67F852458CE530083E237 /* main.swift */; };
 		FAE67F8A2458CE810083E237 /* Robologs.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA8EB09A24545A4200D438DC /* Robologs.framework */; };
 /* End PBXBuildFile section */
@@ -193,7 +190,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FADF34442472A5CD0020BFFF /* SwiftProtobuf in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -201,7 +197,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FADF34452472A5CD0020BFFF /* SwiftProtobuf in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -526,7 +521,7 @@
 			);
 			name = "Robologs iOS";
 			packageProductDependencies = (
-				304E87AE242B8AAD007694D2 /* SwiftProtobuf */,
+				304E87AE242B8AAD007694D2 /* XCSwiftPackageProductDependency */,
 			);
 			productName = RobologsiOSNative;
 			productReference = 46AE559A238D683C00774F9E /* Robologs.framework */;
@@ -548,7 +543,7 @@
 			);
 			name = "Robologs macOS";
 			packageProductDependencies = (
-				FA8EB0A224545A7600D438DC /* SwiftProtobuf */,
+				FA8EB0A224545A7600D438DC /* XCSwiftPackageProductDependency */,
 			);
 			productName = Robologs;
 			productReference = FA8EB09A24545A4200D438DC /* Robologs.framework */;
@@ -607,7 +602,7 @@
 			);
 			mainGroup = 46AE5590238D683B00774F9E;
 			packageReferences = (
-				304E87AD242B8AAD007694D2 /* XCRemoteSwiftPackageReference "swift-protobuf" */,
+				304E87AD242B8AAD007694D2 /* XCRemoteSwiftPackageReference */,
 			);
 			productRefGroup = 46AE559B238D683C00774F9E /* Products */;
 			projectDirPath = "";
@@ -741,7 +736,6 @@
 				2DBA108007128FAD4821882B /* ProtoHttpRemoteLoggerTransport.swift in Sources */,
 				2DBA1631FA44583D2A7B0897 /* NullLogger.swift in Sources */,
 				2DBA11174264D8D5FBD289B7 /* BonjourServer.swift in Sources */,
-				2DBA19280740FA9D87377FE6 /* BonjourClient.swift in Sources */,
 				2DBA124C75E1AC7074942230 /* Shell.CommandLine.swift in Sources */,
 				2DBA19AD16DD8F3051F127B1 /* DirectConnector.swift in Sources */,
 			);
@@ -1200,7 +1194,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		304E87AD242B8AAD007694D2 /* XCRemoteSwiftPackageReference "swift-protobuf" */ = {
+		304E87AD242B8AAD007694D2 /* XCRemoteSwiftPackageReference */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/apple/swift-protobuf.git";
 			requirement = {
@@ -1211,14 +1205,14 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		304E87AE242B8AAD007694D2 /* SwiftProtobuf */ = {
+		304E87AE242B8AAD007694D2 /* XCSwiftPackageProductDependency */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 304E87AD242B8AAD007694D2 /* XCRemoteSwiftPackageReference "swift-protobuf" */;
+			package = 304E87AD242B8AAD007694D2 /* XCRemoteSwiftPackageReference */;
 			productName = SwiftProtobuf;
 		};
-		FA8EB0A224545A7600D438DC /* SwiftProtobuf */ = {
+		FA8EB0A224545A7600D438DC /* XCSwiftPackageProductDependency */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 304E87AD242B8AAD007694D2 /* XCRemoteSwiftPackageReference "swift-protobuf" */;
+			package = 304E87AD242B8AAD007694D2 /* XCRemoteSwiftPackageReference */;
 			productName = SwiftProtobuf;
 		};
 /* End XCSwiftPackageProductDependency section */
