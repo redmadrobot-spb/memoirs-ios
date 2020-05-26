@@ -203,7 +203,7 @@ public class RemoteLogger: Logger {
         }
     }
 
-    // MARK: - Sending logs to live stream
+    // MARK: - Sending logs from buffers to the backend
 
     private var buffersSendingInProgress: Int = 0
 
