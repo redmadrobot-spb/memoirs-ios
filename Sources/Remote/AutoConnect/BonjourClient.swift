@@ -73,7 +73,7 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
             "LC_ALL": "en_US.UTF-8",
             "LANG": "en_US.UTF-8"
         ]
-        adbConnectionProcess.arguments = [ "-l", "-c", "adb logcat -s -v raw robologs.autoconnect.android:V" ]
+        adbConnectionProcess.arguments = [ "-l", "-c", "adb logcat -s -v raw robologs.auto.android:V" ]
 
         let pipeOutput = Pipe()
         let pipeError = Pipe()
