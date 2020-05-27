@@ -13,6 +13,12 @@ public struct RobologsRemoteSDK {
     public var name: String
     public var id: String
     public var apiEndpoint: String
+
+    public init(name: String, id: String, apiEndpoint: String) {
+        self.name = name
+        self.id = id
+        self.apiEndpoint = apiEndpoint
+    }
 }
 
 public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDelegate {
