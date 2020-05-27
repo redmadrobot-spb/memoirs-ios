@@ -8,17 +8,8 @@
 
 import Foundation
 
-enum RemoteLoggerBufferKind {
-    case live
-    case archive
-    case unknown
-}
-
 protocol RemoteLoggerBuffer {
-    var name: String { get }
-    var kind: RemoteLoggerBufferKind { get }
-
-    func add(record: CachedLogMessage)
+    func add(message: CachedLogMessage)
     func getNextBatch() -> (batchId: String, records: [CachedLogMessage])?
     func removeBatch(id: String)
 }

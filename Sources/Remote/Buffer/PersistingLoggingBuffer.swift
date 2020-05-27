@@ -9,9 +9,6 @@
 import Foundation
 
 class PersistingLoggingBuffer: RemoteLoggerBuffer {
-    private(set) lazy var name: String = String(describing: type(of: self))
-    let kind: RemoteLoggerBufferKind = .archive
-
     private let cachePath: URL
 
     private let maxBatchesCount: Int
@@ -37,9 +34,9 @@ class PersistingLoggingBuffer: RemoteLoggerBuffer {
 
     private let queue: DispatchQueue = .init(label: "PersistingLoggingBuffer")
 
-    func add(record: CachedLogMessage) {
+    func add(message: CachedLogMessage) {
         queue.async(flags: .barrier) {
-            self.persist(record: record)
+            self.persist(record: message)
         }
     }
 

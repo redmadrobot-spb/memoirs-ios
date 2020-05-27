@@ -56,7 +56,7 @@ class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
     init(
         endpoint: URL,
         secret: String,
-        challengePolicy: AuthenticationChallengePolicy = DefaultChallengePolicy(),
+        challengePolicy: AuthenticationChallengePolicy = ValidateSSLChallengePolicy(),
         applicationInfo: ApplicationInfo,
         logger: Logger
     ) {

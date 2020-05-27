@@ -7,9 +7,6 @@
 //
 
 class InMemoryRemoteLoggerBuffer: RemoteLoggerBuffer {
-    private(set) lazy var name: String = String(describing: type(of: self))
-    let kind: RemoteLoggerBufferKind = .live
-
     var isEmpty: Bool { records.isEmpty }
 
     private let maxRecordsCount: Int
@@ -20,8 +17,8 @@ class InMemoryRemoteLoggerBuffer: RemoteLoggerBuffer {
 
     private var records: [CachedLogMessage] = []
 
-    func add(record: CachedLogMessage) {
-        records.append(record)
+    func add(message: CachedLogMessage) {
+        records.append(message)
         if records.count > maxRecordsCount {
             records = records.suffix(records.count - maxRecordsCount)
         }

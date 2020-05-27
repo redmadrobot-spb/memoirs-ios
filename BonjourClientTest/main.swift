@@ -111,6 +111,7 @@ RunLoop.main.run()
 //        ("[ { ] }", "[[{ ] }]]"),
 //        ("{ { foo1 }", "[[{ foo1 }]]"),
 //        ("[ { foo1 }, { foo2 }", "[[{ foo1 }, { foo2 }]]"),
+//        ("[{}, {}, {}, [{}, {}][]", "[[{}, {}, {}, [{}, {}], []]]"),
 //    ]
 //    tests.forEach { test, correct in
 //        let possibleJSONs = findPossibleJSONs(in: test).possibilities

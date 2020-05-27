@@ -29,11 +29,10 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
     private let workingQueue: DispatchQueue = DispatchQueue(label: "BonjourClient")
     private let completionQueue: DispatchQueue = DispatchQueue.main
 
-    #if canImport(AppKit)
-    private var adbConnectionProcess: Process?
-    #endif
+    private let adbDirectoryUrl: URL?
 
     public init(adbRunDirectory: String?, logger: Logger) {
+        self.adbDirectoryUrl = adbRunDirectory.map { URL(fileURLWithPath: $0) }
         super.init()
 
         self.logger = LabeledLogger(object: self, logger: logger)
@@ -47,88 +46,10 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
         rdLinkServiceBrowser.schedule(in: RunLoop.current, forMode: .common)
         rdLinkServiceBrowser.searchForServices(ofType: typeRemoteDebugLink, inDomain: "local.")
 
-        #if canImport(AppKit)
-        if let adbRunDirectory = adbRunDirectory {
-            startAdbMonitoring(adbRunDirectory: adbRunDirectory)
-        } else {
-            self.logger.warning("ADB Monitoring was not started, directory for ADB is not specified")
-        }
-        #endif
-
         // This is service that is shown in Bonjour when app is connected for WiFi debug
         // And we can't use it afaik because it is shown to everybody. Don't know if it is right
 //        browser.searchForServices(ofType: "_apple-mobdev2._tcp.", inDomain: "local.")
         self.logger.debug("Started")
-    }
-
-    // MARK: - Android Automatic Connection
-
-    private func startAdbMonitoring(adbRunDirectory: String) {
-        #if canImport(AppKit)
-        let adbConnectionProcess = Process()
-        adbConnectionProcess.currentDirectoryURL = URL(fileURLWithPath: adbRunDirectory)
-        adbConnectionProcess.launchPath = "/bin/zsh"
-        adbConnectionProcess.environment = [
-            "home": Shell.userHomeDirectory.path,
-            "LC_ALL": "en_US.UTF-8",
-            "LANG": "en_US.UTF-8"
-        ]
-        adbConnectionProcess.arguments = [ "-l", "-c", "adb logcat -s -v raw robologs.auto.android:V" ]
-
-        let pipeOutput = Pipe()
-        let pipeError = Pipe()
-        adbConnectionProcess.standardOutput = pipeOutput
-        adbConnectionProcess.standardError = pipeError
-
-        var data: Data = Data()
-
-        let gatherOutput: (Pipe, @escaping (String) -> Void) -> Void = { pipe, gatherer in
-            DispatchQueue.global().async {
-                while true {
-                    do {
-                        if let newData = try pipe.fileHandleForReading.read(upToCount: 8), !newData.isEmpty {
-                            data.append(newData)
-
-                            if let string = String(data: data, encoding: String.Encoding.utf8) {
-                                data.removeAll()
-                                gatherer(string)
-                            }
-                        } else {
-                            break
-                        }
-                    } catch {
-                        self.logger.error(error)
-                        break
-                    }
-                }
-
-                if let string = String(data: data, encoding: String.Encoding.utf8) {
-                    data.removeAll()
-                    DispatchQueue.main.async {
-                        gatherer(string)
-                    }
-                }
-            }
-        }
-
-        var outputLog = ""
-        gatherOutput(pipeOutput) { string in
-            outputLog = self.checkForAdbDevices(outputLog + string)
-        }
-
-        self.adbConnectionProcess = adbConnectionProcess
-
-        // ADB disconnects if a device gets disconnected. We have to reconnect.
-        adbConnectionProcess.terminationHandler = { _ in
-            self.logger.debug("ADB Monitoring terminated, restarting")
-            self.startAdbMonitoring(adbRunDirectory: adbRunDirectory)
-        }
-
-        adbConnectionProcess.launch()
-        self.logger.info("ADB Monitoring started")
-        #else
-        self.logger.warning("ADB Monitoring can be started only on macOS")
-        #endif
     }
 
     // MARK: - Subscriptions
@@ -370,7 +291,7 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
                     let isLocalUDID = hashedUDIDs.contains(simulatorId)
                     self.logger.debug(
                         isLocalUDID
-                            ? "> \(BonjourServer.recordIOSSimulator) from TXT (\(simulatorId)) matched one from local UDIDs. Good!"
+                            ? "> \(BonjourServer.recordIOSSimulator) from TXT (\(simulatorId)) matched local UDID. Good!"
                             : "> \(BonjourServer.recordIOSSimulator) from TXT not found in local UDIDs"
                     )
                     completion(isLocalUDID)
@@ -378,8 +299,31 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
             } else {
                 completion(false)
             }
-        } else if let androidId = androidId {
-            completion(androidADBConnectedIds.contains(androidId))
+        } else if let androidId = androidId, let adbDirectoryUrl = adbDirectoryUrl {
+            if #available(iOS 13.0, *) {
+                let command = Shell.ZSHCommandLine(command: "adb devices", directory: adbDirectoryUrl, logger: logger)
+                command.execute { _, _, output, _ in
+                    let hashedConnectionIDs: [String] = output
+                        .components(separatedBy: "\n")
+                        .filter { $0 != "List of devices attached" && !$0.isEmpty }
+                        .compactMap { string in
+                            let connectionId = string
+                                .components(separatedBy: " ")
+                                .first { !$0.isEmpty }
+                            return connectionId.flatMap { sha256(string: String($0)) }
+                        }
+
+                    let isLocalUDID = hashedConnectionIDs.contains(androidId)
+                    self.logger.debug(
+                        isLocalUDID
+                            ? "> \(BonjourServer.recordIOSSimulator) from TXT (\(androidId)) matched local Android connection ID. Good!"
+                            : "> \(BonjourServer.recordIOSSimulator) from TXT not found in local Android connection IDs"
+                    )
+                    completion(isLocalUDID)
+                }
+            } else {
+                completion(false)
+            }
         } else {
             completion(false)
         }

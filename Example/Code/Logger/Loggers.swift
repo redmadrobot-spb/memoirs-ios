@@ -26,9 +26,8 @@ class Loggers {
     private lazy var remoteLogger: RemoteLogger = RemoteLogger(
         applicationInfo: UIKitApplicationInfo.current,
         isSensitive: false,
-        publishServerInLocalWeb: Loggers.publishServerInLocalWeb,
-        liveMode: .enabled(bufferSize: 1000),
-        archiveMode: .enabled(cacheDirectoryUrl: cacheDirectoryUrl, batchSize: 100, maxBatchesCount: 50),
+        live: .enabled(allowAutoConnectViaBonjour: true, bufferSize: 1000),
+        archive: .enabled(cacheDirectoryUrl: cacheDirectoryUrl, maxBatchSize: 100, maxBatchesCount: 50),
         logger: PrintLogger(onlyTime: true)
     )
 
@@ -56,17 +55,17 @@ class Loggers {
         url: URL,
         secret: String,
         disableSSLCheck: Bool,
-        completion: @escaping (Result<String, RemoteLogger.Error>
+        completion: @escaping (Result<String, RemoteLoggerError>
     ) -> Void) {
         let challengePolicy: AuthenticationChallengePolicy = disableSSLCheck
             ? AllowSelfSignedChallengePolicy()
-            : DefaultChallengePolicy()
+            : ValidateSSLChallengePolicy()
         remoteLogger.configure(endpoint: url, secret: secret, challengePolicy: challengePolicy) {
             self.remoteLogger.startLive(completion: completion)
         }
     }
 
-    func getCode(completion: @escaping (Result<String, RemoteLogger.Error>) -> Void) {
+    func getCode(completion: @escaping (Result<String, RemoteLoggerError>) -> Void) {
         remoteLogger.getCode(completion: completion)
     }
 }

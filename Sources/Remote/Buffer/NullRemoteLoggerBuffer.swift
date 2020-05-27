@@ -9,10 +9,7 @@
 import Foundation
 
 class NullRemoteLoggerBuffer: RemoteLoggerBuffer {
-    private(set) lazy var name: String = String(describing: type(of: self))
-    let kind: RemoteLoggerBufferKind = .unknown
-
-    func add(record: CachedLogMessage) {
+    func add(message: CachedLogMessage) {
     }
 
     func getNextBatch() -> (batchId: String, records: [CachedLogMessage])? {
