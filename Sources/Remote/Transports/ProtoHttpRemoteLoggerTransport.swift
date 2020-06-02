@@ -28,7 +28,7 @@ extension Level {
     }
 }
 
-/// Remote logger transport that uses HTTP + Protubuf.
+/// Remote logger transport that uses HTTP + Protobuf.
 class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
     private let endpoint: URL
     private let secret: String
