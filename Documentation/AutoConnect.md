@@ -21,9 +21,10 @@ You usually do not need to use BonjourServer (it is integrated in Debug version 
 
 Well, there are heuristics for this.
 
-Precondition: Xcode must be installed (I've tested with Xcode 11.4.1, 11.5 beta)
+Precondition: Xcode must be installed (I've tested with Xcode 11.4.1, 11.5 beta) for step 2.
 
-1. iOS Simulator matching. If TXT does have `deviceId` record, we need to get all possible local devices (`instruments -s devices` command will give you almost what you need. Some parsing required) and match. If match is found, device is local and we can auto connect.
-2. iOS Devices matching. Client always watches for bonjour services with type `_rdlink._tcp.`. This services are appearing when the device is being connected to a Mac via USB. So we can match IP addresses that are resolved for these services with `_rdlink._tcp.` type with addresses that are resolved for Robologs services. If `_rdlink._tcp.` service with same IP is found, there is a match! We can auto-connect.
+1. Check if the connection is from localhost (127.0.0.1 or similar). If it is — connect automatically.
+2. iOS Simulator matching. If TXT does have `deviceId` record, we need to get all possible local devices (`instruments -s devices` command will give you almost what you need. Some parsing required) and match. If match is found, device is local and we can auto connect.
+3. iOS Devices matching. Client always watches for bonjour services with type `_rdlink._tcp.`. This services are appearing when the device is being connected to a Mac via USB. So we can match IP addresses that are resolved for these services with `_rdlink._tcp.` type with addresses that are resolved for Robologs services. If `_rdlink._tcp.` service with same IP is found, there is a match! We can auto-connect.
 
 All other Robologs services are considered non-local. They can be connected to (or be tried to connect to) manually.

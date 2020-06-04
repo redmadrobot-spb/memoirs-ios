@@ -45,12 +45,21 @@ public class MockRemoteLoggerTransport: RemoteLoggerTransport {
         isLiveActive = false
     }
 
-    func sendLive(records: [LogRecord], completion: @escaping (Result<Void, RemoteLoggerTransportError>) -> Void) {
+    func sendLive(records: [CachedLogMessage], completion: @escaping (Result<Void, RemoteLoggerTransportError>) -> Void) {
         guard isLiveActive else { return completion(.failure(.liveIsInactive)) }
 
-        logger.debug("Sending \(safe: records.count) records...")
+        logger.debug("Sending live \(safe: records.count) records...")
         DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-            self.logger.debug("Sent \(safe: records.count) records.")
+            self.logger.debug("Sent live \(safe: records.count) records.")
+            self.logger.verbose("\(records)")
+            completion(.success(()))
+        }
+    }
+
+    func sendArchive(records: [CachedLogMessage], completion: @escaping (Result<Void, RemoteLoggerTransportError>) -> Void) {
+        logger.debug("Sending archive \(safe: records.count) records...")
+        DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+            self.logger.debug("Sent archive \(safe: records.count) records.")
             self.logger.verbose("\(records)")
             completion(.success(()))
         }

@@ -6,29 +6,33 @@
 // Copyright © 2020 Redmadrobot SPb. All rights reserved.
 //
 
-/// Simplest buffering - just keeps log records in memory.
 class InMemoryRemoteLoggerBuffer: RemoteLoggerBuffer {
-    private let maxRecordsCount: Int = 1000
-    private var records: [LogRecord] = []
+    var isEmpty: Bool { records.isEmpty }
 
-    var haveBufferedData: Bool {
-        !records.isEmpty
+    private let maxRecordsCount: Int
+
+    init(maxRecordsCount: Int = 1000) {
+        self.maxRecordsCount = maxRecordsCount
     }
 
-    func append(record: LogRecord) {
-        records.append(record)
+    private var records: [CachedLogMessage] = []
+
+    func add(message: CachedLogMessage) {
+        records.append(message)
         if records.count > maxRecordsCount {
             records = records.suffix(records.count - maxRecordsCount)
         }
     }
 
-    func retrieve(_ actions: @escaping ([LogRecord], @escaping (Bool) -> Void) -> Void) {
-        let pendingRecords = records
-        records = []
-        actions(pendingRecords) { isFinished in
-            if !isFinished {
-                self.records = pendingRecords + self.records
-            }
+    func getNextBatch() -> (batchId: String, records: [CachedLogMessage])? {
+        if records.isEmpty {
+            return nil
+        } else {
+            return ("WhateverId", records)
         }
+    }
+
+    func removeBatch(id: String) {
+        records = []
     }
 }

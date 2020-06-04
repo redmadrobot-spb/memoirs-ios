@@ -28,7 +28,7 @@ extension Level {
     }
 }
 
-/// Remote logger transport that uses HTTP + Protubuf.
+/// Remote logger transport that uses HTTP + Protobuf.
 class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
     private let endpoint: URL
     private let secret: String
@@ -56,7 +56,7 @@ class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
     init(
         endpoint: URL,
         secret: String,
-        challengePolicy: AuthenticationChallengePolicy = DefaultChallengePolicy(),
+        challengePolicy: AuthenticationChallengePolicy = ValidateSSLChallengePolicy(),
         applicationInfo: ApplicationInfo,
         logger: Logger
     ) {
@@ -135,9 +135,21 @@ class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
         }
     }
 
-    func sendLive(records: [LogRecord], completion: @escaping (Result<Void, RemoteLoggerTransportError>) -> Void) {
-        let logMessages = LogMessageBatch.with { logMessages in
-            logMessages.messages = records.map { record in
+    func sendLive(records: [CachedLogMessage], completion: @escaping (Result<Void, RemoteLoggerTransportError>) -> Void) {
+        request(path: "live/send", requestObject: batch(from: records)) { (result: Result<EmptyMessage, RemoteLoggerTransportError>) in
+            completion(result.map { _ in Void() })
+        }
+    }
+
+    func sendArchive(records: [CachedLogMessage], completion: @escaping (Result<Void, RemoteLoggerTransportError>) -> Void) {
+        request(path: "archive/send", requestObject: batch(from: records)) { (result: Result<EmptyMessage, RemoteLoggerTransportError>) in
+            completion(result.map { _ in Void() })
+        }
+    }
+
+    private func batch(from messages: [CachedLogMessage]) -> LogMessageBatch {
+        LogMessageBatch.with { logMessages in
+            logMessages.messages = messages.map { record in
                 LogMessage.with { logMessage in
                     logMessage.position = record.position
                     logMessage.priority = record.level.protoBufLevel
@@ -148,11 +160,6 @@ class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
                     logMessage.meta = record.meta ?? [:]
                 }
             }
-        }
-
-//        logger.verbose("Sending messages:\n\(logMessages)")
-        request(path: "live/send", requestObject: logMessages) { (result: Result<EmptyMessage, RemoteLoggerTransportError>) in
-            completion(result.map { _ in Void() })
         }
     }
 

@@ -31,7 +31,7 @@ public protocol AuthenticationChallengePolicy {
 }
 
 /// Default system wide authentication challenge policy.
-public struct DefaultChallengePolicy: AuthenticationChallengePolicy {
+public struct ValidateSSLChallengePolicy: AuthenticationChallengePolicy {
     /// Create new instance of `DefaultChallengePolicy`
     public init() {}
 
