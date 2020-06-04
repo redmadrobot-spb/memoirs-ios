@@ -28,7 +28,14 @@ class Loggers {
         isSensitive: false,
         live: .enabled(allowAutoConnectViaBonjour: true, bufferSize: 1000),
         archive: .enabled(cacheDirectoryUrl: cacheDirectoryUrl, maxBatchSize: 100, maxBatchesCount: 50),
-        logger: PrintLogger(onlyTime: true)
+        logger: FilteringLogger(
+            logger: PrintLogger(onlyTime: true),
+            loggingLevelForLabels: [
+                "ProtoHttpRemoteLoggerTransport": .debug,
+                "BonjourClient": .debug,
+            ],
+            defaultLevel: .verbose
+        )
     )
 
     private(set) lazy var logger = InfoGatheringLogger(

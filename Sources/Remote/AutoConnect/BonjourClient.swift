@@ -42,7 +42,7 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
         self.adbDirectoryUrl = adbRunDirectory.map { URL(fileURLWithPath: $0) }
         super.init()
 
-        adbTimer = Timer(timeInterval: 2, target: self, selector: #selector(adbTimerFired), userInfo: nil, repeats: true)
+        adbTimer = Timer(timeInterval: 6, target: self, selector: #selector(adbTimerFired), userInfo: nil, repeats: true)
         self.logger = LabeledLogger(object: self, logger: logger)
 
         start()
@@ -74,28 +74,31 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
     }
 
     private func collectAdbRobologIds() {
-        var connectedRobologIds: [String] = []
+        var connectedRobologIds: Set<String> = []
 
+        let queue = DispatchQueue(label: "adbCollectingData")
         let group = DispatchGroup()
-
+        group.enter()
         adbDevices { serialIds in
             for serialId in serialIds {
                 group.enter()
                 DispatchQueue.global(qos: .default).async {
                     let devices = self.adbLogCat(for: serialId)
-                    DispatchQueue.main.async {
-                        connectedRobologIds.append(contentsOf: devices)
+                    queue.sync {
+                        connectedRobologIds.formUnion(devices)
                         group.leave()
                     }
                 }
             }
+            group.leave()
         }
-
         group.wait()
 
-        androidADBConnectedIds = Set(connectedRobologIds)
-        logger.debug("Found robologIds in adb: \(androidADBConnectedIds)")
-        androidADBConnectedIds.forEach { foundAndroidLocalDevice(id: $0) }
+        queue.sync {
+            androidADBConnectedIds = Set(connectedRobologIds)
+            logger.verbose("Found robologIds in adb: \(androidADBConnectedIds)")
+            androidADBConnectedIds.forEach { foundAndroidLocalDevice(id: $0) }
+        }
     }
 
     private func adbDevices(completion: @escaping (_ deviceSerialIds: [String]) -> Void) {
@@ -109,7 +112,7 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
             let serialIds: [String] = output
                 .components(separatedBy: "\n")
                 .filter { $0 != "List of devices attached" && !$0.isEmpty }
-                .compactMap { $0.components(separatedBy: " ").first { !$0.isEmpty } }
+                .compactMap { $0.components(separatedBy: CharacterSet(charactersIn: " \t")).first { !$0.isEmpty } }
             completion(serialIds)
         }
     }
@@ -129,7 +132,7 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
             "LC_ALL": "en_US.UTF-8",
             "LANG": "en_US.UTF-8"
         ]
-        adbConnectionProcess.arguments = [ "-l", "-c", "./adb -s serialId logcat -s -v raw robologs.auto.android:V" ]
+        adbConnectionProcess.arguments = [ "-l", "-c", "./adb -s \(serialId) logcat -s -v raw robologs.auto.android:V" ]
 
         let pipeOutput = Pipe()
         let pipeError = Pipe()
@@ -137,6 +140,8 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
         adbConnectionProcess.standardError = pipeError
 
         var data: Data = Data()
+        var outputLog = ""
+        var errorLog = ""
 
         let gatherOutput: (Pipe, @escaping (String) -> Void) -> Void = { pipe, gatherer in
             DispatchQueue.global().async {
@@ -167,18 +172,19 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
             }
         }
 
-        var outputLog = ""
-        gatherOutput(pipeOutput) { string in
-            outputLog += string
-        }
+        gatherOutput(pipeOutput) { outputLog += $0 }
+        gatherOutput(pipeError) { errorLog += $0 }
 
         logger.verbose("ADB Monitoring. Searching device \(serialId)")
         adbConnectionProcess.launch()
-        DispatchQueue.global(qos: .default).asyncAfter(deadline: .now() + 1) {
+        DispatchQueue.global(qos: .default).asyncAfter(deadline: .now() + 3) {
             adbConnectionProcess.terminate()
         }
         adbConnectionProcess.waitUntilExit()
 
+        logger.verbose(
+            "Output: \(outputLog.replacingOccurrences(of: "\n", with: " ")); Error: \(errorLog.replacingOccurrences(of: "\n", with: " "))"
+        )
         return outputLog
             .components(separatedBy: "\n")
             .filter { $0.hasPrefix("robologsId:") && $0.count >= 48 }

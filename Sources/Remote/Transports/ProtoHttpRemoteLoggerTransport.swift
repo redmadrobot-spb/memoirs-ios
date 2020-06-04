@@ -191,8 +191,8 @@ class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
         request.setValue("deflate, gzip", forHTTPHeaderField: "Accept-Encoding")
         if !(requestObject is EmptyMessage) {
             do {
+                logger.verbose("Sending: \((try? requestObject.jsonString()) ?? "???")")
                 let body = try requestObject.serializedData()
-//                logger.verbose("Sending body:\n\(body.base64EncodedString())")
                 request.httpBody = body
             } catch {
                 logger.error(error, message: "Serialization problem")
