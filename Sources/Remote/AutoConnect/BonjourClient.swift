@@ -42,7 +42,7 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
         self.adbDirectoryUrl = adbRunDirectory.map { URL(fileURLWithPath: $0) }
         super.init()
 
-        adbTimer = Timer(timeInterval: 6, target: self, selector: #selector(adbTimerFired), userInfo: nil, repeats: true)
+        adbTimer = Timer(timeInterval: 3, target: self, selector: #selector(adbTimerFired), userInfo: nil, repeats: true)
         self.logger = LabeledLogger(object: self, logger: logger)
 
         start()
@@ -74,12 +74,10 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
     }
 
     private func collectAdbRobologIds() {
-        var connectedRobologIds: Set<String> = []
-
         let queue = DispatchQueue(label: "adbCollectingData")
-        let group = DispatchGroup()
-        group.enter()
         adbDevices { serialIds in
+            let group = DispatchGroup()
+            var connectedRobologIds: Set<String> = []
             for serialId in serialIds {
                 group.enter()
                 DispatchQueue.global(qos: .default).async {
@@ -90,14 +88,13 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
                     }
                 }
             }
-            group.leave()
-        }
-        group.wait()
+            group.wait()
 
-        queue.sync {
-            androidADBConnectedIds = Set(connectedRobologIds)
-            logger.verbose("Found robologIds in adb: \(androidADBConnectedIds)")
-            androidADBConnectedIds.forEach { foundAndroidLocalDevice(id: $0) }
+            queue.sync {
+                self.androidADBConnectedIds = Set(connectedRobologIds)
+                self.logger.verbose("Found robologIds in adb: \(self.androidADBConnectedIds)")
+                self.androidADBConnectedIds.forEach { self.foundAndroidLocalDevice(id: $0) }
+            }
         }
     }
 
@@ -177,7 +174,7 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
 
         logger.verbose("ADB Monitoring. Searching device \(serialId)")
         adbConnectionProcess.launch()
-        DispatchQueue.global(qos: .default).asyncAfter(deadline: .now() + 3) {
+        DispatchQueue.global(qos: .default).asyncAfter(deadline: .now() + 1) {
             adbConnectionProcess.terminate()
         }
         adbConnectionProcess.waitUntilExit()
