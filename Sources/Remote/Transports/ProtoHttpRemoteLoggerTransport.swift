@@ -202,7 +202,7 @@ class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
 
         if needAuthorization {
             if let authToken = authToken {
-                request.setValue("Bearer: \(authToken)", forHTTPHeaderField: "Authorization")
+                request.setValue(authToken, forHTTPHeaderField: "Authorization")
                 executeRequest(urlRequest: request, retryCounter: 0, completion: completion)
             } else {
                 logger.debug("Authorization required, but absent for \(path)")
