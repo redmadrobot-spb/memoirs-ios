@@ -35,14 +35,20 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
     private let workingQueue: DispatchQueue = DispatchQueue(label: "BonjourClient")
     private let completionQueue: DispatchQueue = DispatchQueue.main
 
+    private var adbTimer: Timer!
     private let adbDirectoryUrl: URL?
 
     public init(adbRunDirectory: String?, logger: Logger) {
         self.adbDirectoryUrl = adbRunDirectory.map { URL(fileURLWithPath: $0) }
         super.init()
 
+        adbTimer = Timer(timeInterval: 2, target: self, selector: #selector(adbTimerFired), userInfo: nil, repeats: true)
         self.logger = LabeledLogger(object: self, logger: logger)
 
+        start()
+    }
+
+    private func start() {
         robologsServiceBrowser.delegate = self
         robologsServiceBrowser.schedule(in: RunLoop.current, forMode: .common)
         robologsServiceBrowser.searchForServices(ofType: typeRobologs, inDomain: "local.")
@@ -54,34 +60,138 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
 
         // This is service that is shown in Bonjour when app is connected for WiFi debug
         // And we can't use it afaik because it is shown to everybody. Don't know if it is right
-//        browser.searchForServices(ofType: "_apple-mobdev2._tcp.", inDomain: "local.")
+        //        browser.searchForServices(ofType: "_apple-mobdev2._tcp.", inDomain: "local.")
         self.logger.debug("Started")
+
+        RunLoop.current.add(adbTimer, forMode: .common)
+    }
+
+    // MARK: - ADB Android Device Monitoring
+
+    @objc
+    private func adbTimerFired(_ timer: Timer) {
+        collectAdbRobologIds()
+    }
+
+    private func collectAdbRobologIds() {
+        var connectedRobologIds: [String] = []
+
+        let group = DispatchGroup()
+
+        adbDevices { serialIds in
+            for serialId in serialIds {
+                group.enter()
+                DispatchQueue.global(qos: .default).async {
+                    let devices = self.adbLogCat(for: serialId)
+                    DispatchQueue.main.async {
+                        connectedRobologIds.append(contentsOf: devices)
+                        group.leave()
+                    }
+                }
+            }
+        }
+
+        group.wait()
+
+        androidADBConnectedIds = Set(connectedRobologIds)
+        logger.debug("Found robologIds in adb: \(androidADBConnectedIds)")
+        androidADBConnectedIds.forEach { foundAndroidLocalDevice(id: $0) }
+    }
+
+    private func adbDevices(completion: @escaping (_ deviceSerialIds: [String]) -> Void) {
+        guard let adbDirectoryUrl = adbDirectoryUrl else {
+            self.logger.warning("ADB Monitoring was not started, directory for ADB is not specified")
+            return
+        }
+
+        let command = Shell.ZSHCommandLine(command: "./adb devices", directory: adbDirectoryUrl, logger: logger)
+        command.execute { _, _, output, _ in
+            let serialIds: [String] = output
+                .components(separatedBy: "\n")
+                .filter { $0 != "List of devices attached" && !$0.isEmpty }
+                .compactMap { $0.components(separatedBy: " ").first { !$0.isEmpty } }
+            completion(serialIds)
+        }
+    }
+
+    private func adbLogCat(for serialId: String) -> [String] {
+        guard let adbDirectoryUrl = adbDirectoryUrl else {
+            logger.warning("ADB Monitoring was not started, directory for ADB is not specified")
+            return []
+        }
+
+        #if canImport(AppKit)
+        let adbConnectionProcess = Process()
+        adbConnectionProcess.currentDirectoryURL = adbDirectoryUrl
+        adbConnectionProcess.launchPath = "/bin/zsh"
+        adbConnectionProcess.environment = [
+            "home": Shell.userHomeDirectory.path,
+            "LC_ALL": "en_US.UTF-8",
+            "LANG": "en_US.UTF-8"
+        ]
+        adbConnectionProcess.arguments = [ "-l", "-c", "./adb -s serialId logcat -s -v raw robologs.auto.android:V" ]
+
+        let pipeOutput = Pipe()
+        let pipeError = Pipe()
+        adbConnectionProcess.standardOutput = pipeOutput
+        adbConnectionProcess.standardError = pipeError
+
+        var data: Data = Data()
+
+        let gatherOutput: (Pipe, @escaping (String) -> Void) -> Void = { pipe, gatherer in
+            DispatchQueue.global().async {
+                while true {
+                    do {
+                        if let newData = try pipe.fileHandleForReading.read(upToCount: 8), !newData.isEmpty {
+                            data.append(newData)
+
+                            if let string = String(data: data, encoding: String.Encoding.utf8) {
+                                data.removeAll()
+                                gatherer(string)
+                            }
+                        } else {
+                            break
+                        }
+                    } catch {
+                        self.logger.error(error)
+                        break
+                    }
+                }
+
+                if let string = String(data: data, encoding: String.Encoding.utf8) {
+                    data.removeAll()
+                    DispatchQueue.main.async {
+                        gatherer(string)
+                    }
+                }
+            }
+        }
+
+        var outputLog = ""
+        gatherOutput(pipeOutput) { string in
+            outputLog += string
+        }
+
+        logger.verbose("ADB Monitoring. Searching device \(serialId)")
+        adbConnectionProcess.launch()
+        DispatchQueue.global(qos: .default).asyncAfter(deadline: .now() + 1) {
+            adbConnectionProcess.terminate()
+        }
+        adbConnectionProcess.waitUntilExit()
+
+        return outputLog
+            .components(separatedBy: "\n")
+            .filter { $0.hasPrefix("robologsId:") && $0.count >= 48 }
+            .map { $0.replacingOccurrences(of: "robologsId:", with: "").trimmingCharacters(in: .whitespacesAndNewlines) }
+        #else
+        logger.warning("ADB Monitoring can be started only on macOS")
+        #endif
     }
 
     // MARK: - Subscriptions
 
     private var foundSDKsById: [String: RobologsRemoteSDK] = [:]
     private var subscriptions: [String: ([RobologsRemoteSDK]) -> Void] = [:]
-
-    private func checkForAdbDevices(_ adbOutput: String) -> String {
-        guard adbOutput.contains("\n") else { return adbOutput }
-
-        let lines = adbOutput
-            .components(separatedBy: "\n")
-            .map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
-        var restLines: [String] = []
-        for line in lines {
-            if line.hasPrefix("robologsId:") && line.count >= 48 {
-                let robologsId = line.replacingOccurrences(of: "robologsId:", with: "").trimmingCharacters(in: .whitespacesAndNewlines)
-                androidADBConnectedIds.insert(robologsId)
-                foundAndroidLocalDevice(id: robologsId)
-            } else {
-                restLines.append(line)
-            }
-        }
-
-        return restLines.joined(separator: "\n")
-    }
 
     public func subscribeOnSDKsListUpdate(listener: @escaping ([RobologsRemoteSDK]) -> Void) -> Subscription {
         let id = UUID().uuidString
@@ -280,56 +390,31 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
         let simulatorId = txtRecord[BonjourServer.recordIOSSimulator].flatMap { String(data: $0, encoding: .utf8) }
         let androidId = txtRecord[BonjourServer.recordAndroidId].flatMap { String(data: $0, encoding: .utf8) }
         if let simulatorId = simulatorId {
-            if #available(iOS 13.0, *) {
-                let command = Shell.ZSHCommandLine(command: "instruments -s devices", directory: Shell.userHomeDirectory, logger: logger)
-                command.execute { _, _, output, _ in
-                    let hashedUDIDs: [String] = output
-                        .components(separatedBy: "\n")
-                        .filter { $0 != "Known Devices:" && !$0.isEmpty }
-                        .compactMap { string in
-                            guard let left = string.firstIndex(of: "["), let right = string.firstIndex(of: "]") else { return nil }
+            let command = Shell.ZSHCommandLine(command: "instruments -s devices", directory: Shell.userHomeDirectory, logger: logger)
+            command.execute { _, _, output, _ in
+                let hashedUDIDs: [String] = output
+                    .components(separatedBy: "\n")
+                    .filter { $0 != "Known Devices:" && !$0.isEmpty }
+                    .compactMap { string in
+                        guard let left = string.firstIndex(of: "["), let right = string.firstIndex(of: "]") else { return nil }
 
-                            let udid = string[left ..< right].dropFirst()
-                            self.logger.verbose("  Found device UDID: \"\(udid)\"")
-                            return sha256(string: String(udid))
-                        }
+                        let udid = string[left ..< right].dropFirst()
+                        self.logger.verbose("  Found device UDID: \"\(udid)\"")
+                        return sha256(string: String(udid))
+                    }
 
-                    let isLocalUDID = hashedUDIDs.contains(simulatorId)
-                    self.logger.debug(
-                        isLocalUDID
-                            ? "> \(BonjourServer.recordIOSSimulator) from TXT (\(simulatorId)) matched local UDID. Good!"
-                            : "> \(BonjourServer.recordIOSSimulator) from TXT not found in local UDIDs"
-                    )
-                    completion(isLocalUDID)
-                }
-            } else {
-                completion(false)
+                let isLocalUDID = hashedUDIDs.contains(simulatorId)
+                self.logger.debug(
+                    isLocalUDID
+                        ? "> \(BonjourServer.recordIOSSimulator) from TXT (\(simulatorId)) matched local UDID. Good!"
+                        : "> \(BonjourServer.recordIOSSimulator) from TXT not found in local UDIDs"
+                )
+                completion(isLocalUDID)
             }
-        } else if let androidId = androidId, let adbDirectoryUrl = adbDirectoryUrl {
-            if #available(iOS 13.0, *) {
-                let command = Shell.ZSHCommandLine(command: "adb devices", directory: adbDirectoryUrl, logger: logger)
-                command.execute { _, _, output, _ in
-                    let hashedConnectionIDs: [String] = output
-                        .components(separatedBy: "\n")
-                        .filter { $0 != "List of devices attached" && !$0.isEmpty }
-                        .compactMap { string in
-                            let connectionId = string
-                                .components(separatedBy: " ")
-                                .first { !$0.isEmpty }
-                            return connectionId.flatMap { sha256(string: String($0)) }
-                        }
-
-                    let isLocalUDID = hashedConnectionIDs.contains(androidId)
-                    self.logger.debug(
-                        isLocalUDID
-                            ? "> \(BonjourServer.recordIOSSimulator) from TXT (\(androidId)) matched local Android connection ID. Good!"
-                            : "> \(BonjourServer.recordIOSSimulator) from TXT not found in local Android connection IDs"
-                    )
-                    completion(isLocalUDID)
-                }
-            } else {
-                completion(false)
-            }
+        } else if let androidId = androidId {
+            collectAdbRobologIds()
+            let isLocalId = androidADBConnectedIds.contains(androidId)
+            completion(isLocalId)
         } else {
             completion(false)
         }
