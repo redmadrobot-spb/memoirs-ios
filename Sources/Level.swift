@@ -8,10 +8,10 @@
 
 /// Logging level.
 @frozen
-public enum Level: Comparable, CustomDebugStringConvertible {
-    /// Extremely detailed log events. This is the only level that can spam output in a second.
+public enum Level: Comparable {
+    /// Extremely detailed log events. This is the only level that can spam output instantly.
     case verbose
-    /// Events that can be useful for understanding steps that program makes, that make it easy to debug.
+    /// Events that can be useful for understanding steps that program does. Makes it easier to debug.
     case debug
     /// General log events. Like "something happened in a program". Can be useful even in non-debug mode.
     case info
@@ -21,24 +21,6 @@ public enum Level: Comparable, CustomDebugStringConvertible {
     case error
     /// Fatal errors that result in application termination.
     case critical
-
-    public static var stringVerbose: String = "VERBOSE"
-    public static var stringDebug: String = "DEBUG"
-    public static var stringInfo: String = "INFO"
-    public static var stringWarning: String = "WARNING"
-    public static var stringError: String = "ERROR"
-    public static var stringCritical: String = "CRITICAL"
-
-    public var debugDescription: String {
-        switch self {
-            case .verbose: return Self.stringVerbose
-            case .debug: return Self.stringDebug
-            case .info: return Self.stringInfo
-            case .warning: return Self.stringWarning
-            case .error: return Self.stringError
-            case .critical: return Self.stringCritical
-        }
-    }
 
     var integralValue: Int {
         switch self {

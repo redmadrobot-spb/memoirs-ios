@@ -8,6 +8,33 @@
 
 import Foundation
 
+// TODO: This is a wrong place for this kind of customization.
+public extension Level {
+    /// You can redefine these to display other symbols in PrintLogger
+    static var stringVerbose: String = "VERBOSE"
+    /// You can redefine these to display other symbols in PrintLogger
+    static var stringDebug: String = "DEBUG"
+    /// You can redefine these to display other symbols in PrintLogger
+    static var stringInfo: String = "INFO"
+    /// You can redefine these to display other symbols in PrintLogger
+    static var stringWarning: String = "WARNING"
+    /// You can redefine these to display other symbols in PrintLogger
+    static var stringError: String = "ERROR"
+    /// You can redefine these to display other symbols in PrintLogger
+    static var stringCritical: String = "CRITICAL"
+
+    var printString: String {
+        switch self {
+            case .verbose: return Self.stringVerbose
+            case .debug: return Self.stringDebug
+            case .info: return Self.stringInfo
+            case .warning: return Self.stringWarning
+            case .error: return Self.stringError
+            case .critical: return Self.stringCritical
+        }
+    }
+}
+
 @inlinable
 public func collectContext(file: String, function: String, line: UInt) -> String {
     // TODO: Remove this hack after Swift Evolution #0274 will be implemented
@@ -37,7 +64,7 @@ public func concatenateData(
 
     return [
         time,
-        "\(level.map { "\($0)" } ?? "")",
+        "\(level.map { "\($0.printString)" } ?? "")",
         "\(label)",
         context,
         meta.map { "[ \($0) ]" } ?? "",
