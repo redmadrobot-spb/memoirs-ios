@@ -58,6 +58,7 @@ public class BonjourServer: NSObject, NetServiceDelegate {
     static let recordEndpoint = "endpoint"
     static let recordSenderId = "senderId"
     static let recordIOSSimulator = "iOSSimulator"
+    static let recordAndroidId = "androidId"
 
     public func publish(endpoint: String, senderId: String) {
         if netService != nil {
@@ -85,7 +86,7 @@ public class BonjourServer: NSObject, NetServiceDelegate {
         #if canImport(UIKit)
         let deviceName = ProcessInfo.processInfo.environment["SIMULATOR_DEVICE_NAME"].map { "Simulator: \($0)" } ?? UIDevice.current.name
         #else
-        let deviceName = ProcessInfo.processInfo.environment["SIMULATOR_DEVICE_NAME"].map { "Simulator: \($0)" } ?? "—"
+        let deviceName = (Bundle.main.infoDictionary?["CFBundleName"] as? String).map { "Bundle Name: \($0)" } ?? "—"
         #endif
         if let data = deviceName.data(using: .utf8) {
             txtRecord[BonjourServer.recordName] = data

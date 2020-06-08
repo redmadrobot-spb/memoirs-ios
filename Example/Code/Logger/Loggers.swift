@@ -12,13 +12,38 @@ import Foundation
 class Loggers {
     static let instance: Loggers = .init()
 
+    #if DEBUG
+    private static let publishServerInLocalWeb: Bool = true
+    #else
+    private static let publishServerInLocalWeb: Bool = false
+    #endif
+
+    private lazy var cacheDirectoryUrl: URL = {
+        Storage.documentsDirectory.appendingPathComponent("archiveLogsCache")
+    }()
+
     private let bufferLogger: BufferLogger = BufferLogger()
-    private let remoteLogger: RemoteLogger = RemoteLogger(
+    private lazy var remoteLogger: RemoteLogger = RemoteLogger(
         applicationInfo: UIKitApplicationInfo.current,
         isSensitive: false,
-        logger: PrintLogger(onlyTime: true)
+        live: .enabled(allowAutoConnectViaBonjour: true, bufferSize: 1000),
+        archive: .enabled(cacheDirectoryUrl: cacheDirectoryUrl, maxBatchSize: 100, maxBatchesCount: 50),
+        logger: FilteringLogger(
+            logger: PrintLogger(onlyTime: true),
+            loggingLevelForLabels: [
+                "ProtoHttpRemoteLoggerTransport": .debug,
+                "BonjourClient": .debug,
+            ],
+            defaultLevel: .verbose
+        )
     )
-    private(set) lazy var logger = MultiplexingLogger(loggers: [ self.bufferLogger, self.remoteLogger ])
+
+    private(set) lazy var logger = InfoGatheringLogger(
+        meta: [:],
+        logger: MultiplexingLogger(
+            loggers: [ self.bufferLogger, remoteLogger ]
+        )
+    )
 
     private(set) var liveConnectionId: String?
 
@@ -37,17 +62,17 @@ class Loggers {
         url: URL,
         secret: String,
         disableSSLCheck: Bool,
-        completion: @escaping (Result<String, RemoteLogger.Error>
+        completion: @escaping (Result<String, RemoteLoggerError>
     ) -> Void) {
         let challengePolicy: AuthenticationChallengePolicy = disableSSLCheck
             ? AllowSelfSignedChallengePolicy()
-            : DefaultChallengePolicy()
+            : ValidateSSLChallengePolicy()
         remoteLogger.configure(endpoint: url, secret: secret, challengePolicy: challengePolicy) {
             self.remoteLogger.startLive(completion: completion)
         }
     }
 
-    func getCode(completion: @escaping (Result<String, RemoteLogger.Error>) -> Void) {
+    func getCode(completion: @escaping (Result<String, RemoteLoggerError>) -> Void) {
         remoteLogger.getCode(completion: completion)
     }
 }

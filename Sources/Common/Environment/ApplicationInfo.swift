@@ -24,6 +24,22 @@ public protocol ApplicationInfo {
     var deviceId: String { get }
 }
 
+private let standardDeviceIdKey: String = "robologs.uiKitApplicationInfo.deviceId"
+private var standardDeviceId: String {
+    let deviceId = UserDefaults.standard.string(forKey: standardDeviceIdKey)
+    if let deviceId = deviceId {
+        return deviceId
+    } else {
+        #if canImport(UIKit)
+        let vendorOrGeneratedId = UIDevice.current.identifierForVendor?.uuidString ?? UUID().uuidString
+        #elseif canImport(AppKit)
+        let vendorOrGeneratedId = UUID().uuidString
+        #endif
+        UserDefaults.standard.set(vendorOrGeneratedId, forKey: standardDeviceIdKey)
+        return vendorOrGeneratedId
+    }
+}
+
 #if canImport(UIKit)
 public struct UIKitApplicationInfo: ApplicationInfo {
     public let appId: String
@@ -34,8 +50,7 @@ public struct UIKitApplicationInfo: ApplicationInfo {
     public let operationSystemVersion: String?
     public let deviceModel: String?
 
-    // TODO: Persist this string
-    public var deviceId: String { UIDevice.current.identifierForVendor?.uuidString ?? "" }
+    public var deviceId: String = standardDeviceId
 
     public static var current: UIKitApplicationInfo {
         guard
@@ -64,7 +79,7 @@ public struct UIKitApplicationInfo: ApplicationInfo {
         )
     }
 }
-#else
+#elseif canImport(AppKit)
 public struct AppKitApplicationInfo: ApplicationInfo {
     public let appId: String
     public let appName: String?
@@ -74,8 +89,7 @@ public struct AppKitApplicationInfo: ApplicationInfo {
     public let operationSystemVersion: String?
     public let deviceModel: String?
 
-    // TODO: Persist this string
-    public var deviceId: String { UUID().uuidString }
+    public var deviceId: String = standardDeviceId
 
     public static var current: AppKitApplicationInfo {
         guard

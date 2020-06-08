@@ -68,6 +68,7 @@ class EndpointViewController: UIViewController, UITextFieldDelegate {
 
         isConnected = false
         connectionUrlTextField.text = "https://robologs.dev/log/api/v1"
+        secretTextField.text = "TOP_SECRET"
         connectionCodeLabel.layer.cornerRadius = 8
         connectionCodeLabel.layer.borderColor = UIColor.systemBlue.withAlphaComponent(0.2).cgColor
         connectionCodeLabel.layer.borderWidth = 1

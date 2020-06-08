@@ -13,6 +13,12 @@ public struct RobologsRemoteSDK {
     public var name: String
     public var id: String
     public var apiEndpoint: String
+
+    public init(name: String, id: String, apiEndpoint: String) {
+        self.name = name
+        self.id = id
+        self.apiEndpoint = apiEndpoint
+    }
 }
 
 public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDelegate {
@@ -29,11 +35,20 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
     private let workingQueue: DispatchQueue = DispatchQueue(label: "BonjourClient")
     private let completionQueue: DispatchQueue = DispatchQueue.main
 
-    public init(logger: Logger) {
+    private var adbTimer: Timer!
+    private let adbDirectoryUrl: URL?
+
+    public init(adbRunDirectory: String?, logger: Logger) {
+        self.adbDirectoryUrl = adbRunDirectory.map { URL(fileURLWithPath: $0) }
         super.init()
 
+        adbTimer = Timer(timeInterval: 3, target: self, selector: #selector(adbTimerFired), userInfo: nil, repeats: true)
         self.logger = LabeledLogger(object: self, logger: logger)
 
+        start()
+    }
+
+    private func start() {
         robologsServiceBrowser.delegate = self
         robologsServiceBrowser.schedule(in: RunLoop.current, forMode: .common)
         robologsServiceBrowser.searchForServices(ofType: typeRobologs, inDomain: "local.")
@@ -45,8 +60,135 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
 
         // This is service that is shown in Bonjour when app is connected for WiFi debug
         // And we can't use it afaik because it is shown to everybody. Don't know if it is right
-//        browser.searchForServices(ofType: "_apple-mobdev2._tcp.", inDomain: "local.")
+        //        browser.searchForServices(ofType: "_apple-mobdev2._tcp.", inDomain: "local.")
         self.logger.debug("Started")
+
+        RunLoop.current.add(adbTimer, forMode: .common)
+    }
+
+    // MARK: - ADB Android Device Monitoring
+
+    @objc
+    private func adbTimerFired(_ timer: Timer) {
+        collectAdbRobologIds()
+    }
+
+    private func collectAdbRobologIds() {
+        let queue = DispatchQueue(label: "adbCollectingData")
+        adbDevices { serialIds in
+            let group = DispatchGroup()
+            var connectedRobologIds: Set<String> = []
+            for serialId in serialIds {
+                group.enter()
+                DispatchQueue.global(qos: .default).async {
+                    let devices = self.adbLogCat(for: serialId)
+                    queue.sync {
+                        connectedRobologIds.formUnion(devices)
+                        group.leave()
+                    }
+                }
+            }
+            group.wait()
+
+            queue.sync {
+                self.androidADBConnectedIds = Set(connectedRobologIds)
+                self.logger.verbose("Found robologIds in adb: \(self.androidADBConnectedIds)")
+                self.androidADBConnectedIds.forEach { self.foundAndroidLocalDevice(id: $0) }
+            }
+        }
+    }
+
+    private func adbDevices(completion: @escaping (_ deviceSerialIds: [String]) -> Void) {
+        guard let adbDirectoryUrl = adbDirectoryUrl else {
+            self.logger.warning("ADB Monitoring was not started, directory for ADB is not specified")
+            return
+        }
+
+        let command = Shell.ZSHCommandLine(command: "./adb devices", directory: adbDirectoryUrl, logger: logger)
+        command.execute { _, _, output, _ in
+            let serialIds: [String] = output
+                .components(separatedBy: "\n")
+                .filter { $0 != "List of devices attached" && !$0.isEmpty }
+                .compactMap { $0.components(separatedBy: CharacterSet(charactersIn: " \t")).first { !$0.isEmpty } }
+            completion(serialIds)
+        }
+    }
+
+    private func adbLogCat(for serialId: String) -> [String] {
+        guard let adbDirectoryUrl = adbDirectoryUrl else {
+            logger.warning("ADB Monitoring was not started, directory for ADB is not specified")
+            return []
+        }
+
+        #if canImport(AppKit)
+        let adbConnectionProcess = Process()
+        adbConnectionProcess.currentDirectoryURL = adbDirectoryUrl
+        adbConnectionProcess.launchPath = "/bin/zsh"
+        adbConnectionProcess.environment = [
+            "home": Shell.userHomeDirectory.path,
+            "LC_ALL": "en_US.UTF-8",
+            "LANG": "en_US.UTF-8"
+        ]
+        adbConnectionProcess.arguments = [ "-l", "-c", "./adb -s \(serialId) logcat -s -v raw robologs.auto.android:V" ]
+
+        let pipeOutput = Pipe()
+        let pipeError = Pipe()
+        adbConnectionProcess.standardOutput = pipeOutput
+        adbConnectionProcess.standardError = pipeError
+
+        var data: Data = Data()
+        var outputLog = ""
+        var errorLog = ""
+
+        let gatherOutput: (Pipe, @escaping (String) -> Void) -> Void = { pipe, gatherer in
+            DispatchQueue.global().async {
+                while true {
+                    do {
+                        if let newData = try pipe.fileHandleForReading.read(upToCount: 8), !newData.isEmpty {
+                            data.append(newData)
+
+                            if let string = String(data: data, encoding: String.Encoding.utf8) {
+                                data.removeAll()
+                                gatherer(string)
+                            }
+                        } else {
+                            break
+                        }
+                    } catch {
+                        self.logger.error(error)
+                        break
+                    }
+                }
+
+                if let string = String(data: data, encoding: String.Encoding.utf8) {
+                    data.removeAll()
+                    DispatchQueue.main.async {
+                        gatherer(string)
+                    }
+                }
+            }
+        }
+
+        gatherOutput(pipeOutput) { outputLog += $0 }
+        gatherOutput(pipeError) { errorLog += $0 }
+
+        logger.verbose("ADB Monitoring. Searching device \(serialId)")
+        adbConnectionProcess.launch()
+        DispatchQueue.global(qos: .default).asyncAfter(deadline: .now() + 1) {
+            adbConnectionProcess.terminate()
+        }
+        adbConnectionProcess.waitUntilExit()
+
+        logger.verbose(
+            "Output: \(outputLog.replacingOccurrences(of: "\n", with: " ")); Error: \(errorLog.replacingOccurrences(of: "\n", with: " "))"
+        )
+        return outputLog
+            .components(separatedBy: "\n")
+            .filter { $0.hasPrefix("robologsId:") && $0.count >= 48 }
+            .map { $0.replacingOccurrences(of: "robologsId:", with: "").trimmingCharacters(in: .whitespacesAndNewlines) }
+        #else
+        logger.warning("ADB Monitoring can be started only on macOS")
+        #endif
     }
 
     // MARK: - Subscriptions
@@ -95,21 +237,24 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
         self.logger.debug("")
     }
 
-    private var robologsResolvingServices: [NetService] = []
-    private var remoteDebugLinkResolvingServices: [NetService] = []
-    private var remoteDebugLinkAddresses: Set<String> = []
+    private var foundRobologsServices: [NetService] = []
+    private var foundAppleUSBConnectedServices: [NetService] = []
+
+    private var appleUSBConnectedIPs: Set<String> = []
+    private var androidADBConnectedIds: Set<String> = []
+    // TODO: Need to remove these from this list after timeout? Maybe? Or not?
 
     public func netServiceBrowser(_ browser: NetServiceBrowser, didFind service: NetService, moreComing: Bool) {
         logger.verbose("Found: \(service.domain)/\(service.type)/\(service.name)")
         switch service.type {
             case typeRobologs:
-                robologsResolvingServices.append(service)
+                foundRobologsServices.append(service)
                 service.delegate = self
-                workingQueue.asyncAfter(deadline: .now() + 1) {
+                workingQueue.async {
                     service.resolve(withTimeout: 5)
                 }
             case typeRemoteDebugLink:
-                remoteDebugLinkResolvingServices.append(service)
+                foundAppleUSBConnectedServices.append(service)
                 service.delegate = self
                 workingQueue.async {
                     service.resolve(withTimeout: 5)
@@ -125,11 +270,11 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
             case typeRobologs:
                 service.delegate = nil
                 disconnect(from: service)
-                robologsResolvingServices = robologsResolvingServices.filter { $0 !== service }
+                foundRobologsServices = foundRobologsServices.filter { $0 !== service }
             case typeRemoteDebugLink:
                 service.delegate = nil
                 removeRemoteDebugLinkAddresses(from: service)
-                remoteDebugLinkResolvingServices = remoteDebugLinkResolvingServices.filter { $0 !== service }
+                foundAppleUSBConnectedServices = foundAppleUSBConnectedServices.filter { $0 !== service }
             default:
                 break
         }
@@ -139,13 +284,14 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
 
     private func addRemoteDebugLinkAddresses(from service: NetService) {
         let addresses = resolveIPv4(addresses: service.addresses ?? [])
-        remoteDebugLinkAddresses.formUnion(addresses)
+        appleUSBConnectedIPs.formUnion(addresses)
+        foundIOSLocalDevice(deviceAddresses: addresses)
         logger.debug("Found Remote Debug Links with addresses: \(addresses)")
     }
 
     private func removeRemoteDebugLinkAddresses(from service: NetService) {
         let addresses = resolveIPv4(addresses: service.addresses ?? [])
-        remoteDebugLinkAddresses.subtract(addresses)
+        appleUSBConnectedIPs.subtract(addresses)
         logger.debug("Removed Remote Debug Link addresses: \(addresses)")
     }
 
@@ -153,6 +299,7 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
     private var foundRobologSDKsByNetServiceName: [String: String] = [:]
 
     private func tryToConnect(to service: NetService) {
+        guard !foundRobologSDKsByNetServiceName.keys.contains(service.name) else { return }
         guard let txtRecord = service.txtRecordData().map({ NetService.dictionary(fromTXTRecord: $0) }) else {
             logger.warning("Can't connect to \(service.domain)/\(service.type)/\(service.name)")
             return
@@ -234,19 +381,18 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
     // MARK: - Helper Methods
 
     private func isRobologsServiceLocal(addresses: [String], txtRecord: [String: Data], completion: @escaping (Bool) -> Void) {
-        guard !addresses.contains(where: { remoteDebugLinkAddresses.contains($0) }) else {
+        guard !addresses.contains("127.0.0.1") else {
+            logger.debug("Robologs service is on localhost. Good!")
+            return completion(true)
+        }
+        guard !addresses.contains(where: { appleUSBConnectedIPs.contains($0) }) else {
             logger.debug("Robologs service address is in Remote Debug Link addresses. Good!")
             return completion(true)
         }
-        guard
-            let simulatorIdData = txtRecord[BonjourServer.recordIOSSimulator],
-            let simulatorId = String(data: simulatorIdData, encoding: .utf8)
-        else {
-            logger.debug("No \(BonjourServer.recordIOSSimulator) in TXT records")
-            return completion(false)
-        }
 
-        if #available(iOS 13.0, *) {
+        let simulatorId = txtRecord[BonjourServer.recordIOSSimulator].flatMap { String(data: $0, encoding: .utf8) }
+        let androidId = txtRecord[BonjourServer.recordAndroidId].flatMap { String(data: $0, encoding: .utf8) }
+        if let simulatorId = simulatorId {
             let command = Shell.ZSHCommandLine(command: "instruments -s devices", directory: Shell.userHomeDirectory, logger: logger)
             command.execute { _, _, output, _ in
                 let hashedUDIDs: [String] = output
@@ -263,11 +409,15 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
                 let isLocalUDID = hashedUDIDs.contains(simulatorId)
                 self.logger.debug(
                     isLocalUDID
-                        ? "> \(BonjourServer.recordIOSSimulator) from TXT (\(simulatorId)) matched one from local UDIDs. Good!"
+                        ? "> \(BonjourServer.recordIOSSimulator) from TXT (\(simulatorId)) matched local UDID. Good!"
                         : "> \(BonjourServer.recordIOSSimulator) from TXT not found in local UDIDs"
                 )
                 completion(isLocalUDID)
             }
+        } else if let androidId = androidId {
+            collectAdbRobologIds()
+            let isLocalId = androidADBConnectedIds.contains(androidId)
+            completion(isLocalId)
         } else {
             completion(false)
         }
@@ -279,18 +429,42 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
             var storage = sockaddr_storage()
             data.getBytes(&storage, length: MemoryLayout<sockaddr_storage>.size)
 
-            if Int32(storage.ss_family) == AF_INET {
+            let family = Int32(storage.ss_family)
+            if family == AF_INET || family == AF_LOCAL {
                 let addr4 = withUnsafePointer(to: &storage) {
                     $0.withMemoryRebound(to: sockaddr_in.self, capacity: 1) { $0.pointee }
                 }
 
-                var address = String(cString: inet_ntoa(addr4.sin_addr), encoding: .ascii)
-                if address == "127.0.0.1" {
-                    address = nil
-                }
-                return address
+                return String(cString: inet_ntoa(addr4.sin_addr), encoding: .ascii)
             } else {
                 return nil
+            }
+        }
+    }
+
+    // MARK: - Check if found device matches local device
+
+    private func foundAndroidLocalDevice(id androidRobologsId: String) {
+        foundRobologsServices.forEach { robologsService in
+            guard let txtRecord = robologsService.txtRecordData().map({ NetService.dictionary(fromTXTRecord: $0) }) else { return }
+            guard
+                let androidIdData = txtRecord[BonjourServer.recordAndroidId],
+                let androidId = String(data: androidIdData, encoding: .utf8)
+            else { return }
+
+            if androidId == androidRobologsId {
+                tryToConnect(to: robologsService)
+            }
+        }
+    }
+
+    private func foundIOSLocalDevice(deviceAddresses: [String]) {
+        foundRobologsServices.forEach { robologsService in
+            guard let addressesData = robologsService.addresses else { return }
+
+            let addresses = resolveIPv4(addresses: addressesData)
+            if deviceAddresses.contains(where: { addresses.contains($0) }) {
+                tryToConnect(to: robologsService)
             }
         }
     }

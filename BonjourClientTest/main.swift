@@ -9,7 +9,12 @@
 import Foundation
 import Robologs
 
-let client = BonjourClient(logger: PrintLogger(onlyTime: true))
+let androidHome = ProcessInfo.processInfo.environment["ANDROID_HOME"]
+if androidHome == nil {
+    print("Set up ANDROID_HOME environment variable to Android SDK root be able to listen for Android devices automatically")
+}
+
+let client = BonjourClient(adbRunDirectory: androidHome.map { "\($0)/platform-tools" }, logger: PrintLogger(onlyTime: true))
 let subscription = client.subscribeOnSDKsListUpdate { list in
     print("\nFound!\n\(list)\n")
 }
