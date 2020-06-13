@@ -188,7 +188,7 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
             .map { $0.replacingOccurrences(of: "robologsId:", with: "").trimmingCharacters(in: .whitespacesAndNewlines) }
         #else
         logger.warning("ADB Monitoring can be started only on macOS")
-        return ""
+        return []
         #endif
     }
 
