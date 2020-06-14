@@ -120,7 +120,7 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
             return []
         }
 
-        #if canImport(AppKit)
+        #if !targetEnvironment(macCatalyst) && canImport(AppKit)
         let adbConnectionProcess = Process()
         adbConnectionProcess.currentDirectoryURL = adbDirectoryUrl
         adbConnectionProcess.launchPath = "/bin/zsh"

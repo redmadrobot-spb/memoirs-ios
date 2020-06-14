@@ -34,7 +34,7 @@ enum Shell {
         }
 
         func execute(completion: @escaping (_ success: Bool, _ terminationCode: Int32, _ output: String, _ error: String) -> Void) {
-            #if canImport(AppKit)
+            #if !targetEnvironment(macCatalyst) && canImport(AppKit)
             let completion: (Bool, Int32, String, String) -> Void = { success, terminationCode, output, error in
                 self.handlersQueue.async { completion(success, terminationCode, output, error) }
             }
