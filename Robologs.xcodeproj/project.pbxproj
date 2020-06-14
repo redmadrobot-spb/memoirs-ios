@@ -8,16 +8,16 @@
 
 /* Begin PBXBuildFile section */
 		2DBA1061077B7D16AD44FAD0 /* CachedLogMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA19F3805C10A7C41E4FF4 /* CachedLogMessage.swift */; };
-		2DBA108007128FAD4821882B /* ProtoHttpRemoteLoggerTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1DA202B598E9F6F27C1D /* ProtoHttpRemoteLoggerTransport.swift */; platformFilter = ios; };
+		2DBA108007128FAD4821882B /* ProtoHttpRemoteLoggerTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1DA202B598E9F6F27C1D /* ProtoHttpRemoteLoggerTransport.swift */; };
 		2DBA10879669DEAF907EB72D /* NullRemoteLoggerBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA15502C1F90EF2E875AD2 /* NullRemoteLoggerBuffer.swift */; };
 		2DBA10AFC33F1F1A8A3AF4F7 /* SingleLogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1BA84DCE2ADB5089444D /* SingleLogViewController.swift */; };
 		2DBA11174264D8D5FBD289B7 /* BonjourServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1CC1F043D50CC7774247 /* BonjourServer.swift */; };
 		2DBA124C75E1AC7074942230 /* Shell.CommandLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1EB77B568C6A9EB2FBAB /* Shell.CommandLine.swift */; };
-		2DBA127834F59CA61B204AB0 /* HelperFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA156C2B58CF72B873423F /* HelperFunctions.swift */; platformFilter = ios; };
+		2DBA127834F59CA61B204AB0 /* HelperFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA156C2B58CF72B873423F /* HelperFunctions.swift */; };
 		2DBA12B468519044347BE39F /* RemoteLoggingBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1A5D9C49721C5C5B335D /* RemoteLoggingBuffer.swift */; };
 		2DBA13CC4F00104AE715754A /* RemoteLoggingBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1A5D9C49721C5C5B335D /* RemoteLoggingBuffer.swift */; };
 		2DBA1423B6C39E8D29429F6E /* ConstantLogsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1CA56E551997C6001863 /* ConstantLogsViewController.swift */; };
-		2DBA142977D7D4CD90ECDEAF /* LabeledLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1BC5D26B69FA1E649B56 /* LabeledLogger.swift */; platformFilter = ios; };
+		2DBA142977D7D4CD90ECDEAF /* LabeledLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1BC5D26B69FA1E649B56 /* LabeledLogger.swift */; };
 		2DBA1439BAEBD8D5961A05A0 /* InfoGatheringLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA10989530859F00D5AB8C /* InfoGatheringLogger.swift */; };
 		2DBA143BA61A1F40544D681A /* PersistingLoggingBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1E92BFBF1D21C9146183 /* PersistingLoggingBuffer.swift */; };
 		2DBA15064819C6E6D4178B88 /* ApplicationInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1BDD8C05C5AC12BAAF0D /* ApplicationInfo.swift */; };
@@ -41,29 +41,31 @@
 		2DBA1A4FEE810103877D9D72 /* ArchiveRemoteLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA12496FD9DE3D0B796D94 /* ArchiveRemoteLogger.swift */; };
 		2DBA1B2CA7478109C4020779 /* InfoGatheringLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA10989530859F00D5AB8C /* InfoGatheringLogger.swift */; };
 		2DBA1BADF4991F18DBC0A66C /* RandomizedLogsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA110DFD8D2337633A8BD5 /* RandomizedLogsViewController.swift */; };
-		2DBA1BC8525F9A84933D47B7 /* Loggable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA129A224F3D8C844B7AAF /* Loggable.swift */; platformFilter = ios; };
+		2DBA1BC8525F9A84933D47B7 /* Loggable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA129A224F3D8C844B7AAF /* Loggable.swift */; };
 		2DBA1C95127DB389C084D751 /* RemoteLoggerError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA11EEAEF2D189DD0C89B9 /* RemoteLoggerError.swift */; };
 		2DBA1D429CD7BE4140B824AB /* NullRemoteLoggerBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA15502C1F90EF2E875AD2 /* NullRemoteLoggerBuffer.swift */; };
 		2DBA1E3F5CFFFF98C7BF14B8 /* Shell.CommandLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1EB77B568C6A9EB2FBAB /* Shell.CommandLine.swift */; };
 		2DBA1F496F5E0BC411A2E6CC /* BigListOfNaughtyStringsBase64.json in Resources */ = {isa = PBXBuildFile; fileRef = 2DBA1018CEF1F344845BB07F /* BigListOfNaughtyStringsBase64.json */; };
 		2DBA1FFDD2C4D6453D27242A /* EndpointViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA186BD75E9B889DAFD54B /* EndpointViewController.swift */; };
-		3053CC41242DFB50000125FB /* Robologs.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 46AE559A238D683C00774F9E /* Robologs.framework */; };
-		4611FCED2398FEF100E23B25 /* MultiplexingLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4611FCEC2398FEF100E23B25 /* MultiplexingLogger.swift */; platformFilter = ios; };
-		4611FCEF239904CC00E23B25 /* FilteringLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4611FCEE239904CC00E23B25 /* FilteringLogger.swift */; platformFilter = ios; };
-		4611FCF723995F3300E23B25 /* NSLogLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4611FCF623995F3300E23B25 /* NSLogLogger.swift */; platformFilter = ios; };
-		46131F5D238EADD800612712 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46131F5C238EADD800612712 /* Logger.swift */; platformFilter = ios; };
-		46131F5F238EADF900612712 /* Level.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46131F5E238EADF900612712 /* Level.swift */; platformFilter = ios; };
-		461A55E223DA07BF00A28F38 /* LogStringInterpolation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 461A55E123DA07BF00A28F38 /* LogStringInterpolation.swift */; platformFilter = ios; };
-		461A55E623DA07FC00A28F38 /* LogString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 461A55E523DA07FC00A28F38 /* LogString.swift */; platformFilter = ios; };
-		4626E60B23956D5800BD14B8 /* PrintLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46131F60238EAE8200612712 /* PrintLogger.swift */; platformFilter = ios; };
-		4626E6112396709A00BD14B8 /* OSLogLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4626E6102396709700BD14B8 /* OSLogLogger.swift */; platformFilter = ios; };
-		46E239082397A748006539C5 /* SynchronizedDictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46E239072397A748006539C5 /* SynchronizedDictionary.swift */; platformFilter = ios; };
-		630F99FC2435FAE5009DAD18 /* AuthenticationChallengeResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630F99FB2435FAE5009DAD18 /* AuthenticationChallengeResolver.swift */; platformFilter = ios; };
-		6324E32B242A43060084312D /* MockRemoteLoggerTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6324E32A242A43060084312D /* MockRemoteLoggerTransport.swift */; platformFilter = ios; };
-		6399CBED24349BBF00B6C3A1 /* Subscriptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6399CBEC24349BBF00B6C3A1 /* Subscriptions.swift */; platformFilter = ios; };
-		63D39418241F86D2002052DA /* backend.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D39411241F86D2002052DA /* backend.pb.swift */; platformFilter = ios; };
-		63D3941B241F86D2002052DA /* InMemoryRemoteLoggerBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D39415241F86D2002052DA /* InMemoryRemoteLoggerBuffer.swift */; platformFilter = ios; };
-		63D3941C241F86D2002052DA /* LiveRemoteLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D39416241F86D2002052DA /* LiveRemoteLogger.swift */; platformFilter = ios; };
+		3053CC41242DFB50000125FB /* Robologs.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 46AE559A238D683C00774F9E /* Robologs.framework */; platformFilter = ios; };
+		4611FCED2398FEF100E23B25 /* MultiplexingLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4611FCEC2398FEF100E23B25 /* MultiplexingLogger.swift */; };
+		4611FCEF239904CC00E23B25 /* FilteringLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4611FCEE239904CC00E23B25 /* FilteringLogger.swift */; };
+		4611FCF723995F3300E23B25 /* NSLogLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4611FCF623995F3300E23B25 /* NSLogLogger.swift */; };
+		46131F5D238EADD800612712 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46131F5C238EADD800612712 /* Logger.swift */; };
+		46131F5F238EADF900612712 /* Level.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46131F5E238EADF900612712 /* Level.swift */; };
+		461A55E223DA07BF00A28F38 /* LogStringInterpolation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 461A55E123DA07BF00A28F38 /* LogStringInterpolation.swift */; };
+		461A55E623DA07FC00A28F38 /* LogString.swift in Sources */ = {isa = PBXBuildFile; fileRef = 461A55E523DA07FC00A28F38 /* LogString.swift */; };
+		4626E60B23956D5800BD14B8 /* PrintLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46131F60238EAE8200612712 /* PrintLogger.swift */; };
+		4626E6112396709A00BD14B8 /* OSLogLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4626E6102396709700BD14B8 /* OSLogLogger.swift */; };
+		46E239082397A748006539C5 /* SynchronizedDictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46E239072397A748006539C5 /* SynchronizedDictionary.swift */; };
+		630F99FC2435FAE5009DAD18 /* AuthenticationChallengeResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630F99FB2435FAE5009DAD18 /* AuthenticationChallengeResolver.swift */; };
+		6324E32B242A43060084312D /* MockRemoteLoggerTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6324E32A242A43060084312D /* MockRemoteLoggerTransport.swift */; };
+		6399CBED24349BBF00B6C3A1 /* Subscriptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6399CBEC24349BBF00B6C3A1 /* Subscriptions.swift */; };
+		63D39418241F86D2002052DA /* backend.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D39411241F86D2002052DA /* backend.pb.swift */; };
+		63D3941B241F86D2002052DA /* InMemoryRemoteLoggerBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D39415241F86D2002052DA /* InMemoryRemoteLoggerBuffer.swift */; };
+		63D3941C241F86D2002052DA /* LiveRemoteLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D39416241F86D2002052DA /* LiveRemoteLogger.swift */; };
+		FA1BDE2E2496678C0033F134 /* SwiftProtobuf in Frameworks */ = {isa = PBXBuildFile; productRef = 304E87AE242B8AAD007694D2 /* SwiftProtobuf */; };
+		FA1BDE2F2496678C0033F134 /* SwiftProtobuf in Frameworks */ = {isa = PBXBuildFile; productRef = FA8EB0A224545A7600D438DC /* SwiftProtobuf */; };
 		FA8EB0A724545B2C00D438DC /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46131F5C238EADD800612712 /* Logger.swift */; };
 		FA8EB0A824545B2C00D438DC /* Level.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46131F5E238EADF900612712 /* Level.swift */; };
 		FA8EB0A924545B2C00D438DC /* MockRemoteLoggerTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6324E32A242A43060084312D /* MockRemoteLoggerTransport.swift */; };
@@ -177,6 +179,7 @@
 		63D39412241F86D2002052DA /* backend.proto */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.protobuf; path = backend.proto; sourceTree = "<group>"; };
 		63D39415241F86D2002052DA /* InMemoryRemoteLoggerBuffer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = InMemoryRemoteLoggerBuffer.swift; sourceTree = "<group>"; };
 		63D39416241F86D2002052DA /* LiveRemoteLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LiveRemoteLogger.swift; sourceTree = "<group>"; };
+		FA1BDE30249667950033F134 /* Robologs Test App.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Robologs Test App.entitlements"; sourceTree = "<group>"; };
 		FA8EB09A24545A4200D438DC /* Robologs.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Robologs.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		FA8EB09D24545A4200D438DC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FAD51E9C2456D5A000265E18 /* Logger.CaseIterable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Logger.CaseIterable.swift; sourceTree = "<group>"; };
@@ -210,6 +213,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FA1BDE2E2496678C0033F134 /* SwiftProtobuf in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -217,6 +221,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FA1BDE2F2496678C0033F134 /* SwiftProtobuf in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -335,6 +340,7 @@
 		46AE5590238D683B00774F9E = {
 			isa = PBXGroup;
 			children = (
+				FA1BDE30249667950033F134 /* Robologs Test App.entitlements */,
 				4626E60C2395707500BD14B8 /* Sources */,
 				4626E60D239656F200BD14B8 /* RobologsiOS */,
 				3053CC29242DF72E000125FB /* Example */,
@@ -556,7 +562,7 @@
 			);
 			name = "Robologs iOS";
 			packageProductDependencies = (
-				304E87AE242B8AAD007694D2 /* XCSwiftPackageProductDependency */,
+				304E87AE242B8AAD007694D2 /* SwiftProtobuf */,
 			);
 			productName = RobologsiOSNative;
 			productReference = 46AE559A238D683C00774F9E /* Robologs.framework */;
@@ -578,7 +584,7 @@
 			);
 			name = "Robologs macOS";
 			packageProductDependencies = (
-				FA8EB0A224545A7600D438DC /* XCSwiftPackageProductDependency */,
+				FA8EB0A224545A7600D438DC /* SwiftProtobuf */,
 			);
 			productName = Robologs;
 			productReference = FA8EB09A24545A4200D438DC /* Robologs.framework */;
@@ -609,7 +615,7 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 1140;
-				LastUpgradeCheck = 1130;
+				LastUpgradeCheck = 1150;
 				ORGANIZATIONNAME = Redmadrobot;
 				TargetAttributes = {
 					3053CC27242DF72E000125FB = {
@@ -637,7 +643,7 @@
 			);
 			mainGroup = 46AE5590238D683B00774F9E;
 			packageReferences = (
-				304E87AD242B8AAD007694D2 /* XCRemoteSwiftPackageReference */,
+				304E87AD242B8AAD007694D2 /* XCRemoteSwiftPackageReference "swift-protobuf" */,
 			);
 			productRefGroup = 46AE559B238D683C00774F9E /* Products */;
 			projectDirPath = "";
@@ -838,6 +844,7 @@
 /* Begin PBXTargetDependency section */
 		3053CC44242DFB50000125FB /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
+			platformFilter = ios;
 			target = 46AE5599238D683B00774F9E /* Robologs iOS */;
 			targetProxy = 3053CC43242DFB50000125FB /* PBXContainerItemProxy */;
 		};
@@ -864,7 +871,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "Robologs Test App.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = Q257CW2V39;
@@ -878,6 +887,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.redmadrobot.spb.robologs.testApplication;
 				PRODUCT_NAME = "Robologs Test App";
 				PROVISIONING_PROFILE_SPECIFIER = "Robologs Test Application Development";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "Robologs Test Application Development (Catalyst)";
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -887,7 +898,9 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = "Robologs Test App.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Distribution";
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = Q257CW2V39;
@@ -901,6 +914,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.redmadrobot.spb.robologs.testApplication;
 				PRODUCT_NAME = "Robologs Test App";
 				PROVISIONING_PROFILE_SPECIFIER = "Robologs Test Application Distribution";
+				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "Robologs Test Application App Store (Catalyst)";
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -1031,7 +1046,7 @@
 		46AE55A3238D683C00774F9E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				APPLICATION_EXTENSION_API_ONLY = NO;
+				APPLICATION_EXTENSION_API_ONLY = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Manual;
@@ -1060,7 +1075,7 @@
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
 				SKIP_INSTALL = YES;
-				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -1070,7 +1085,7 @@
 		46AE55A4238D683C00774F9E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				APPLICATION_EXTENSION_API_ONLY = NO;
+				APPLICATION_EXTENSION_API_ONLY = YES;
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "";
 				CODE_SIGN_STYLE = Manual;
@@ -1099,7 +1114,7 @@
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
 				SKIP_INSTALL = YES;
-				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MACCATALYST = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -1108,6 +1123,7 @@
 		FA8EB0A024545A4200D438DC /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
@@ -1137,6 +1153,7 @@
 		FA8EB0A124545A4200D438DC /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				APPLICATION_EXTENSION_API_ONLY = YES;
 				CODE_SIGN_STYLE = Manual;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEFINES_MODULE = YES;
@@ -1166,6 +1183,7 @@
 		FAE67F872458CE530083E237 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -1180,6 +1198,7 @@
 		FAE67F882458CE530083E237 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Manual;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -1242,7 +1261,7 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		304E87AD242B8AAD007694D2 /* XCRemoteSwiftPackageReference */ = {
+		304E87AD242B8AAD007694D2 /* XCRemoteSwiftPackageReference "swift-protobuf" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/apple/swift-protobuf.git";
 			requirement = {
@@ -1253,14 +1272,14 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		304E87AE242B8AAD007694D2 /* XCSwiftPackageProductDependency */ = {
+		304E87AE242B8AAD007694D2 /* SwiftProtobuf */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 304E87AD242B8AAD007694D2 /* XCRemoteSwiftPackageReference */;
+			package = 304E87AD242B8AAD007694D2 /* XCRemoteSwiftPackageReference "swift-protobuf" */;
 			productName = SwiftProtobuf;
 		};
-		FA8EB0A224545A7600D438DC /* XCSwiftPackageProductDependency */ = {
+		FA8EB0A224545A7600D438DC /* SwiftProtobuf */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 304E87AD242B8AAD007694D2 /* XCRemoteSwiftPackageReference */;
+			package = 304E87AD242B8AAD007694D2 /* XCRemoteSwiftPackageReference "swift-protobuf" */;
 			productName = SwiftProtobuf;
 		};
 /* End XCSwiftPackageProductDependency section */
