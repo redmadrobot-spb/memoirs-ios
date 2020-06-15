@@ -47,7 +47,7 @@
 		2DBA1E3F5CFFFF98C7BF14B8 /* Shell.CommandLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1EB77B568C6A9EB2FBAB /* Shell.CommandLine.swift */; };
 		2DBA1F496F5E0BC411A2E6CC /* BigListOfNaughtyStringsBase64.json in Resources */ = {isa = PBXBuildFile; fileRef = 2DBA1018CEF1F344845BB07F /* BigListOfNaughtyStringsBase64.json */; };
 		2DBA1FFDD2C4D6453D27242A /* EndpointViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA186BD75E9B889DAFD54B /* EndpointViewController.swift */; };
-		3053CC41242DFB50000125FB /* Robologs.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 46AE559A238D683C00774F9E /* Robologs.framework */; platformFilter = ios; };
+		3053CC41242DFB50000125FB /* Robologs.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 46AE559A238D683C00774F9E /* Robologs.framework */; };
 		4611FCED2398FEF100E23B25 /* MultiplexingLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4611FCEC2398FEF100E23B25 /* MultiplexingLogger.swift */; };
 		4611FCEF239904CC00E23B25 /* FilteringLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4611FCEE239904CC00E23B25 /* FilteringLogger.swift */; };
 		4611FCF723995F3300E23B25 /* NSLogLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4611FCF623995F3300E23B25 /* NSLogLogger.swift */; };
@@ -844,7 +844,6 @@
 /* Begin PBXTargetDependency section */
 		3053CC44242DFB50000125FB /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			platformFilter = ios;
 			target = 46AE5599238D683B00774F9E /* Robologs iOS */;
 			targetProxy = 3053CC43242DFB50000125FB /* PBXContainerItemProxy */;
 		};
@@ -883,7 +882,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.3.1;
+				MARKETING_VERSION = 2.3.5;
 				PRODUCT_BUNDLE_IDENTIFIER = com.redmadrobot.spb.robologs.testApplication;
 				PRODUCT_NAME = "Robologs Test App";
 				PROVISIONING_PROFILE_SPECIFIER = "Robologs Test Application Development";
@@ -910,10 +909,10 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.3.1;
+				MARKETING_VERSION = 2.3.5;
 				PRODUCT_BUNDLE_IDENTIFIER = com.redmadrobot.spb.robologs.testApplication;
 				PRODUCT_NAME = "Robologs Test App";
-				PROVISIONING_PROFILE_SPECIFIER = "Robologs Test Application Distribution";
+				PROVISIONING_PROFILE_SPECIFIER = "Robologs Test Application App Store";
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "Robologs Test Application App Store (Catalyst)";
 				SUPPORTS_MACCATALYST = YES;
 				SWIFT_VERSION = 5.0;
@@ -1069,7 +1068,7 @@
 					"@loader_path/Frameworks",
 				);
 				MACH_O_TYPE = staticlib;
-				MARKETING_VERSION = 2.3.1;
+				MARKETING_VERSION = 2.3.5;
 				PRODUCT_BUNDLE_IDENTIFIER = com.redmadrobot.spb.robologs.dev;
 				PRODUCT_NAME = Robologs;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1108,7 +1107,7 @@
 					"@loader_path/Frameworks",
 				);
 				MACH_O_TYPE = staticlib;
-				MARKETING_VERSION = 2.3.1;
+				MARKETING_VERSION = 2.3.5;
 				PRODUCT_BUNDLE_IDENTIFIER = com.redmadrobot.spb.robologs.dev;
 				PRODUCT_NAME = Robologs;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1140,7 +1139,7 @@
 				);
 				MACH_O_TYPE = staticlib;
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				MARKETING_VERSION = 2.3.1;
+				MARKETING_VERSION = 2.3.5;
 				PRODUCT_BUNDLE_IDENTIFIER = com.redmadrobot.spb.robologs.dev;
 				PRODUCT_NAME = Robologs;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1170,7 +1169,7 @@
 				);
 				MACH_O_TYPE = staticlib;
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				MARKETING_VERSION = 2.3.1;
+				MARKETING_VERSION = 2.3.5;
 				PRODUCT_BUNDLE_IDENTIFIER = com.redmadrobot.spb.robologs.dev;
 				PRODUCT_NAME = Robologs;
 				PROVISIONING_PROFILE_SPECIFIER = "";
