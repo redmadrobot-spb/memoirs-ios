@@ -43,7 +43,7 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
         super.init()
 
         adbTimer = Timer(timeInterval: 5, target: self, selector: #selector(adbTimerFired), userInfo: nil, repeats: true)
-        self.logger = LabeledLogger(object: self, logger: logger)
+        self.logger = LabeledLogger(object: self, logger: InfoGatheringLogger(meta: [:], logger: logger))
 
         start()
     }
@@ -61,41 +61,47 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
         // This is service that is shown in Bonjour when app is connected for WiFi debug
         // And we can't use it afaik because it is shown to everybody. Don't know if it is right
         //        browser.searchForServices(ofType: "_apple-mobdev2._tcp.", inDomain: "local.")
-        self.logger.debug("Started")
+        logger.debug("Started")
 
         RunLoop.current.add(adbTimer, forMode: .common)
     }
 
     // MARK: - ADB Android Device Monitoring
 
+    private var needCheckAdb: Bool = false
+
     @objc
     private func adbTimerFired(_ timer: Timer) {
-        DispatchQueue.global(qos: .default).async {
+        guard needCheckAdb else { return }
+
+        workingQueue.async {
+            self.needCheckAdb = false
             self.collectAdbRobologIds()
         }
     }
 
     private func collectAdbRobologIds() {
-        let queue = DispatchQueue(label: "adbCollectingData", target: DispatchQueue.global(qos: .default))
+        let queue = DispatchQueue(label: "adbCollectingData")
+
         adbDevices { serialIds in
             let group = DispatchGroup()
             var connectedRobologIds: Set<String> = []
             for serialId in serialIds {
                 group.enter()
-                DispatchQueue.global(qos: .default).async {
-                    let devices = self.adbLogCat(for: serialId)
-                    queue.sync {
-                        connectedRobologIds.formUnion(devices)
-                        group.leave()
-                    }
+                let devices = self.adbLogCat(for: serialId)
+                queue.async {
+                    connectedRobologIds.formUnion(devices)
+                    group.leave()
                 }
             }
             group.wait()
 
-            queue.sync {
-                self.androidADBConnectedIds = Set(connectedRobologIds)
-                self.logger.verbose("Found robologIds in adb: \(self.androidADBConnectedIds)")
-                self.androidADBConnectedIds.forEach { self.foundAndroidLocalDevice(id: $0) }
+            queue.async {
+                if self.androidADBConnectedIds != Set(connectedRobologIds) {
+                    self.androidADBConnectedIds = Set(connectedRobologIds)
+                    self.logger.verbose("Found robologIds in adb: \(self.androidADBConnectedIds)")
+                    self.androidADBConnectedIds.forEach { self.foundAndroidLocalDevice(id: $0) }
+                }
             }
         }
     }
@@ -117,6 +123,8 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
     }
 
     private func adbLogCat(for serialId: String) -> [String] {
+        self.logger.verbose("Looking robolog connection ids in adb for device \(serialId)")
+
         guard let adbDirectoryUrl = adbDirectoryUrl else {
             logger.warning("ADB Monitoring was not started, directory for ADB is not specified")
             return []
@@ -143,7 +151,7 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
         var errorLog = ""
 
         let gatherOutput: (Pipe, @escaping (String) -> Void) -> Void = { pipe, gatherer in
-            DispatchQueue.global().async {
+            self.workingQueue.async {
                 while true {
                     do {
                         if let newData = try pipe.fileHandleForReading.read(upToCount: 8), !newData.isEmpty {
@@ -164,7 +172,7 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
 
                 if let string = String(data: data, encoding: String.Encoding.utf8) {
                     data.removeAll()
-                    DispatchQueue.main.async {
+                    self.workingQueue.async {
                         gatherer(string)
                     }
                 }
@@ -251,6 +259,7 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
         logger.verbose("Found: \(service.domain)/\(service.type)/\(service.name)")
         switch service.type {
             case typeRobologs:
+                needCheckAdb = true
                 foundRobologsServices.append(service)
                 service.delegate = self
                 workingQueue.async {
@@ -322,9 +331,7 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
         foundRobologSDKsByNetServiceName[service.name] = senderId
         let remoteSDK = RobologsRemoteSDK(name: name, id: senderId, apiEndpoint: endpoint)
         foundSDKsById[senderId] = remoteSDK
-        completionQueue.async {
-            self.notify()
-        }
+        notify()
 
         let addresses = resolveIPv4(addresses: service.addresses ?? [])
         isRobologsServiceLocal(addresses: addresses, txtRecord: txtRecord) { isLocal in
