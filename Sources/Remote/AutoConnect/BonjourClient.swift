@@ -42,7 +42,7 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
         self.adbDirectoryUrl = adbRunDirectory.map { URL(fileURLWithPath: $0) }
         super.init()
 
-        adbTimer = Timer(timeInterval: 3, target: self, selector: #selector(adbTimerFired), userInfo: nil, repeats: true)
+        adbTimer = Timer(timeInterval: 5, target: self, selector: #selector(adbTimerFired), userInfo: nil, repeats: true)
         self.logger = LabeledLogger(object: self, logger: logger)
 
         start()
@@ -70,11 +70,13 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
 
     @objc
     private func adbTimerFired(_ timer: Timer) {
-        collectAdbRobologIds()
+        DispatchQueue.global(qos: .default).async {
+            self.collectAdbRobologIds()
+        }
     }
 
     private func collectAdbRobologIds() {
-        let queue = DispatchQueue(label: "adbCollectingData")
+        let queue = DispatchQueue(label: "adbCollectingData", target: DispatchQueue.global(qos: .default))
         adbDevices { serialIds in
             let group = DispatchGroup()
             var connectedRobologIds: Set<String> = []
