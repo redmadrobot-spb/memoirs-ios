@@ -64,8 +64,8 @@
 		63D39418241F86D2002052DA /* backend.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D39411241F86D2002052DA /* backend.pb.swift */; };
 		63D3941B241F86D2002052DA /* InMemoryRemoteLoggerBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D39415241F86D2002052DA /* InMemoryRemoteLoggerBuffer.swift */; };
 		63D3941C241F86D2002052DA /* LiveRemoteLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D39416241F86D2002052DA /* LiveRemoteLogger.swift */; };
-		FA1BDE2E2496678C0033F134 /* SwiftProtobuf in Frameworks */ = {isa = PBXBuildFile; productRef = 304E87AE242B8AAD007694D2 /* SwiftProtobuf */; };
-		FA1BDE2F2496678C0033F134 /* SwiftProtobuf in Frameworks */ = {isa = PBXBuildFile; productRef = FA8EB0A224545A7600D438DC /* SwiftProtobuf */; };
+		FA0E3F7824A7D16B000EF2C0 /* SwiftProtobuf in Frameworks */ = {isa = PBXBuildFile; productRef = 304E87AE242B8AAD007694D2 /* SwiftProtobuf */; };
+		FA0E3F7924A7D16B000EF2C0 /* SwiftProtobuf in Frameworks */ = {isa = PBXBuildFile; productRef = FA8EB0A224545A7600D438DC /* SwiftProtobuf */; };
 		FA8EB0A724545B2C00D438DC /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46131F5C238EADD800612712 /* Logger.swift */; };
 		FA8EB0A824545B2C00D438DC /* Level.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46131F5E238EADF900612712 /* Level.swift */; };
 		FA8EB0A924545B2C00D438DC /* MockRemoteLoggerTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6324E32A242A43060084312D /* MockRemoteLoggerTransport.swift */; };
@@ -170,7 +170,7 @@
 		461A55E523DA07FC00A28F38 /* LogString.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogString.swift; sourceTree = "<group>"; };
 		4626E6102396709700BD14B8 /* OSLogLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = OSLogLogger.swift; sourceTree = "<group>"; };
 		46AE559A238D683C00774F9E /* Robologs.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Robologs.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		46AE559E238D683C00774F9E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		46AE559E238D683C00774F9E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.info; path = Info.plist; sourceTree = "<group>"; };
 		46E239072397A748006539C5 /* SynchronizedDictionary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SynchronizedDictionary.swift; sourceTree = "<group>"; };
 		630F99FB2435FAE5009DAD18 /* AuthenticationChallengeResolver.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthenticationChallengeResolver.swift; sourceTree = "<group>"; };
 		6324E32A242A43060084312D /* MockRemoteLoggerTransport.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MockRemoteLoggerTransport.swift; sourceTree = "<group>"; };
@@ -181,7 +181,7 @@
 		63D39416241F86D2002052DA /* LiveRemoteLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LiveRemoteLogger.swift; sourceTree = "<group>"; };
 		FA1BDE30249667950033F134 /* Robologs Test App.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Robologs Test App.entitlements"; sourceTree = "<group>"; };
 		FA8EB09A24545A4200D438DC /* Robologs.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Robologs.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		FA8EB09D24545A4200D438DC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		FA8EB09D24545A4200D438DC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.info; path = Info.plist; sourceTree = "<group>"; };
 		FAD51E9C2456D5A000265E18 /* Logger.CaseIterable.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Logger.CaseIterable.swift; sourceTree = "<group>"; };
 		FAD51E9E2456D5A000265E18 /* BufferLogger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = BufferLogger.swift; sourceTree = "<group>"; };
 		FAD51E9F2456D5A000265E18 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = AppDelegate.swift; path = Code/AppDelegate.swift; sourceTree = "<group>"; };
@@ -195,7 +195,7 @@
 		FAD51EAB2456D5A000265E18 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		FAD51EB22456D5A000265E18 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FAD51EB42456D5A000265E18 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
-		FAD51EB52456D5A000265E18 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		FAD51EB52456D5A000265E18 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.info; path = Info.plist; sourceTree = "<group>"; };
 		FAE67F832458CE530083E237 /* BonjourClientTest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = BonjourClientTest; sourceTree = BUILT_PRODUCTS_DIR; };
 		FAE67F852458CE530083E237 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -213,7 +213,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FA1BDE2E2496678C0033F134 /* SwiftProtobuf in Frameworks */,
+				FA0E3F7824A7D16B000EF2C0 /* SwiftProtobuf in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -221,7 +221,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FA1BDE2F2496678C0033F134 /* SwiftProtobuf in Frameworks */,
+				FA0E3F7924A7D16B000EF2C0 /* SwiftProtobuf in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -263,6 +263,20 @@
 			path = Common;
 			sourceTree = "<group>";
 		};
+		2DBA1C51F96E726222DFBB6B /* Sources.Robologs.Remote */ = {
+			isa = PBXGroup;
+			children = (
+				63D3940D241F86D2002052DA /* Transports */,
+				63D39414241F86D2002052DA /* Buffer */,
+				2DBA1FD40A5BD019CB1E82B4 /* AutoConnect */,
+				63D39416241F86D2002052DA /* LiveRemoteLogger.swift */,
+				2DBA12496FD9DE3D0B796D94 /* ArchiveRemoteLogger.swift */,
+				2DBA11EEAEF2D189DD0C89B9 /* RemoteLoggerError.swift */,
+				2DBA1ECEACC41683F326358B /* RemoteLogger.swift */,
+			);
+			path = Sources.Robologs.Remote;
+			sourceTree = "<group>";
+		};
 		2DBA1FD40A5BD019CB1E82B4 /* AutoConnect */ = {
 			isa = PBXGroup;
 			children = (
@@ -274,14 +288,14 @@
 			path = AutoConnect;
 			sourceTree = "<group>";
 		};
-		3053CC29242DF72E000125FB /* Example */ = {
+		3053CC29242DF72E000125FB /* Sources.Example */ = {
 			isa = PBXGroup;
 			children = (
 				FAD51E9A2456D5A000265E18 /* Code */,
 				FAD51EB12456D5A000265E18 /* Resources */,
 				FAD51E9F2456D5A000265E18 /* AppDelegate.swift */,
 			);
-			path = Example;
+			path = Sources.Example;
 			sourceTree = "<group>";
 		};
 		3053CC40242DFB50000125FB /* Frameworks */ = {
@@ -294,7 +308,6 @@
 		46131F7023911AB100612712 /* Loggers */ = {
 			isa = PBXGroup;
 			children = (
-				63D3940C241F86D2002052DA /* Remote */,
 				2DBA10531CBDA5D09548AE7E /* Utility */,
 				46131F60238EAE8200612712 /* PrintLogger.swift */,
 				4626E6102396709700BD14B8 /* OSLogLogger.swift */,
@@ -318,7 +331,7 @@
 			path = LogString;
 			sourceTree = "<group>";
 		};
-		4626E60C2395707500BD14B8 /* Sources */ = {
+		4626E60C2395707500BD14B8 /* Sources.Robologs */ = {
 			isa = PBXGroup;
 			children = (
 				46131F7023911AB100612712 /* Loggers */,
@@ -326,28 +339,29 @@
 				46131F5C238EADD800612712 /* Logger.swift */,
 				46131F5E238EADF900612712 /* Level.swift */,
 			);
-			path = Sources;
+			path = Sources.Robologs;
 			sourceTree = "<group>";
 		};
-		4626E60D239656F200BD14B8 /* RobologsiOS */ = {
+		4626E60D239656F200BD14B8 /* FrameworkiOS */ = {
 			isa = PBXGroup;
 			children = (
 				46AE559E238D683C00774F9E /* Info.plist */,
 			);
-			path = RobologsiOS;
+			path = FrameworkiOS;
 			sourceTree = "<group>";
 		};
 		46AE5590238D683B00774F9E = {
 			isa = PBXGroup;
 			children = (
-				FA1BDE30249667950033F134 /* Robologs Test App.entitlements */,
-				4626E60C2395707500BD14B8 /* Sources */,
-				4626E60D239656F200BD14B8 /* RobologsiOS */,
-				3053CC29242DF72E000125FB /* Example */,
-				FA8EB09B24545A4200D438DC /* RobologsMacOS */,
+				3053CC29242DF72E000125FB /* Sources.Example */,
+				4626E60C2395707500BD14B8 /* Sources.Robologs */,
+				2DBA1C51F96E726222DFBB6B /* Sources.Robologs.Remote */,
+				4626E60D239656F200BD14B8 /* FrameworkiOS */,
+				FA8EB09B24545A4200D438DC /* FrameworkMacOS */,
 				FAE67F842458CE530083E237 /* BonjourClientTest */,
 				46AE559B238D683C00774F9E /* Products */,
 				3053CC40242DFB50000125FB /* Frameworks */,
+				FA1BDE30249667950033F134 /* Robologs Test App.entitlements */,
 			);
 			sourceTree = "<group>";
 		};
@@ -380,21 +394,6 @@
 			);
 			path = Environment;
 			sourceTree = "<group>";
-		};
-		63D3940C241F86D2002052DA /* Remote */ = {
-			isa = PBXGroup;
-			children = (
-				63D3940D241F86D2002052DA /* Transports */,
-				63D39414241F86D2002052DA /* Buffer */,
-				63D39416241F86D2002052DA /* LiveRemoteLogger.swift */,
-				2DBA1FD40A5BD019CB1E82B4 /* AutoConnect */,
-				2DBA12496FD9DE3D0B796D94 /* ArchiveRemoteLogger.swift */,
-				2DBA11EEAEF2D189DD0C89B9 /* RemoteLoggerError.swift */,
-				2DBA1ECEACC41683F326358B /* RemoteLogger.swift */,
-			);
-			name = Remote;
-			path = Sources/Remote;
-			sourceTree = SOURCE_ROOT;
 		};
 		63D3940D241F86D2002052DA /* Transports */ = {
 			isa = PBXGroup;
@@ -437,12 +436,12 @@
 			path = Buffer;
 			sourceTree = "<group>";
 		};
-		FA8EB09B24545A4200D438DC /* RobologsMacOS */ = {
+		FA8EB09B24545A4200D438DC /* FrameworkMacOS */ = {
 			isa = PBXGroup;
 			children = (
 				FA8EB09D24545A4200D438DC /* Info.plist */,
 			);
-			path = RobologsMacOS;
+			path = FrameworkMacOS;
 			sourceTree = "<group>";
 		};
 		FAD51E9A2456D5A000265E18 /* Code */ = {
@@ -876,7 +875,7 @@
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = Q257CW2V39;
-				INFOPLIST_FILE = Example/Resources/Info.plist;
+				INFOPLIST_FILE = Sources.Example/Resources/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -903,7 +902,7 @@
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = Q257CW2V39;
-				INFOPLIST_FILE = Example/Resources/Info.plist;
+				INFOPLIST_FILE = Sources.Example/Resources/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1059,7 +1058,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 				);
-				INFOPLIST_FILE = RobologsiOS/Info.plist;
+				INFOPLIST_FILE = FrameworkiOS/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1098,7 +1097,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 				);
-				INFOPLIST_FILE = RobologsiOS/Info.plist;
+				INFOPLIST_FILE = FrameworkiOS/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1130,7 +1129,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = RobologsMacOS/Info.plist;
+				INFOPLIST_FILE = FrameworkMacOS/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1160,7 +1159,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = RobologsMacOS/Info.plist;
+				INFOPLIST_FILE = FrameworkMacOS/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
