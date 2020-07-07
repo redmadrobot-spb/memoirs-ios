@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Robologs
 import Darwin
 
 public struct RobologsRemoteSDK {

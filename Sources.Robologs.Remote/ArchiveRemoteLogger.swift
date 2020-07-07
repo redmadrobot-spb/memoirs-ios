@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Robologs
 
 class ArchiveRemoteLogger: Logger {
     public let isSensitive: Bool

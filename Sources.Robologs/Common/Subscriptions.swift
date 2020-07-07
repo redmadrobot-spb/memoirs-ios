@@ -11,7 +11,7 @@ import Foundation
 public class Subscription {
     private let onDispose: () -> Void
 
-    init(onDispose: @escaping () -> Void) {
+    public init(onDispose: @escaping () -> Void) {
         self.onDispose = onDispose
     }
 

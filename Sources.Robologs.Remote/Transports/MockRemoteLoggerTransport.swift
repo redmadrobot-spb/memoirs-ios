@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Robologs
 
 /// Mock remote logger transport. Emulate behaviour of transport for offline testing.
 public class MockRemoteLoggerTransport: RemoteLoggerTransport {

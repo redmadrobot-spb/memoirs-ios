@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Robologs
 import SwiftProtobuf
 
 extension Level {

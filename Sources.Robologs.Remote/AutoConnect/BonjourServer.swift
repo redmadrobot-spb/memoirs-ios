@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Robologs
 import Darwin
 import CommonCrypto
 #if canImport(UIKit)

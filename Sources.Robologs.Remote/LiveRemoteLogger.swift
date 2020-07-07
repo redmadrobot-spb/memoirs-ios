@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Robologs
 
 class LiveRemoteLogger: Logger {
     public let isSensitive: Bool

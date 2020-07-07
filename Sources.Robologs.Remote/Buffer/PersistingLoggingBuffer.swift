@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Robologs
 
 class PersistingLoggingBuffer: RemoteLoggerBuffer {
     private let cachePath: URL
