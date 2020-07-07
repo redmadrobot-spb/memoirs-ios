@@ -7,44 +7,20 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2DBA1061077B7D16AD44FAD0 /* CachedLogMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA19F3805C10A7C41E4FF4 /* CachedLogMessage.swift */; };
-		2DBA108007128FAD4821882B /* ProtoHttpRemoteLoggerTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1DA202B598E9F6F27C1D /* ProtoHttpRemoteLoggerTransport.swift */; };
-		2DBA10879669DEAF907EB72D /* NullRemoteLoggerBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA15502C1F90EF2E875AD2 /* NullRemoteLoggerBuffer.swift */; };
 		2DBA10AFC33F1F1A8A3AF4F7 /* SingleLogViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1BA84DCE2ADB5089444D /* SingleLogViewController.swift */; };
-		2DBA11174264D8D5FBD289B7 /* BonjourServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1CC1F043D50CC7774247 /* BonjourServer.swift */; };
-		2DBA124C75E1AC7074942230 /* Shell.CommandLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1EB77B568C6A9EB2FBAB /* Shell.CommandLine.swift */; };
 		2DBA127834F59CA61B204AB0 /* HelperFunctions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA156C2B58CF72B873423F /* HelperFunctions.swift */; };
-		2DBA12B468519044347BE39F /* RemoteLoggingBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1A5D9C49721C5C5B335D /* RemoteLoggingBuffer.swift */; };
-		2DBA13CC4F00104AE715754A /* RemoteLoggingBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1A5D9C49721C5C5B335D /* RemoteLoggingBuffer.swift */; };
 		2DBA1423B6C39E8D29429F6E /* ConstantLogsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1CA56E551997C6001863 /* ConstantLogsViewController.swift */; };
 		2DBA142977D7D4CD90ECDEAF /* LabeledLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1BC5D26B69FA1E649B56 /* LabeledLogger.swift */; };
 		2DBA1439BAEBD8D5961A05A0 /* InfoGatheringLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA10989530859F00D5AB8C /* InfoGatheringLogger.swift */; };
-		2DBA143BA61A1F40544D681A /* PersistingLoggingBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1E92BFBF1D21C9146183 /* PersistingLoggingBuffer.swift */; };
 		2DBA15064819C6E6D4178B88 /* ApplicationInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1BDD8C05C5AC12BAAF0D /* ApplicationInfo.swift */; };
-		2DBA1521233CC17F79CBBF50 /* DirectConnector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA10C88047C8771D4F9B8A /* DirectConnector.swift */; };
-		2DBA159EB61B1C312FEE1528 /* PersistingLoggingBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1E92BFBF1D21C9146183 /* PersistingLoggingBuffer.swift */; };
 		2DBA15FD8398DE775C125946 /* Loggers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA10435D991F46DC8D89BF /* Loggers.swift */; };
 		2DBA1631FA44583D2A7B0897 /* NullLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA179E2E7EB4E3DE64E043 /* NullLogger.swift */; };
-		2DBA16E9400794EC84CCD978 /* BonjourClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1503080D9DC86938813D /* BonjourClient.swift */; };
-		2DBA171D0A7EA2FA8C30A191 /* ArchiveRemoteLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA12496FD9DE3D0B796D94 /* ArchiveRemoteLogger.swift */; };
-		2DBA1743988912D16DAD4DA2 /* RemoteLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1ECEACC41683F326358B /* RemoteLogger.swift */; };
-		2DBA17B3AA29D3B9DC1BB9ED /* RemoteLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1ECEACC41683F326358B /* RemoteLogger.swift */; };
 		2DBA1854A4453EA6AE6BCF84 /* Storage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1C5D52B7EB410674F2E8 /* Storage.swift */; };
-		2DBA188F9117C17221DB4AE1 /* BonjourServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1CC1F043D50CC7774247 /* BonjourServer.swift */; };
-		2DBA1891E370AEB77B761D6B /* RemoteLoggingTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1B7C07761B3914324E95 /* RemoteLoggingTransport.swift */; };
 		2DBA18EB097273EDCAC5E810 /* NullLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA179E2E7EB4E3DE64E043 /* NullLogger.swift */; };
 		2DBA194A31B60069AE4E7EE1 /* ApplicationInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1BDD8C05C5AC12BAAF0D /* ApplicationInfo.swift */; };
-		2DBA19506894725A4885E909 /* RemoteLoggingTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1B7C07761B3914324E95 /* RemoteLoggingTransport.swift */; };
-		2DBA1977E6291A01A7988901 /* CachedLogMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA19F3805C10A7C41E4FF4 /* CachedLogMessage.swift */; };
-		2DBA19AD16DD8F3051F127B1 /* DirectConnector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA10C88047C8771D4F9B8A /* DirectConnector.swift */; };
-		2DBA19CF74B71A4451E94967 /* RemoteLoggerError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA11EEAEF2D189DD0C89B9 /* RemoteLoggerError.swift */; };
-		2DBA1A4FEE810103877D9D72 /* ArchiveRemoteLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA12496FD9DE3D0B796D94 /* ArchiveRemoteLogger.swift */; };
 		2DBA1B2CA7478109C4020779 /* InfoGatheringLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA10989530859F00D5AB8C /* InfoGatheringLogger.swift */; };
 		2DBA1BADF4991F18DBC0A66C /* RandomizedLogsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA110DFD8D2337633A8BD5 /* RandomizedLogsViewController.swift */; };
 		2DBA1BC8525F9A84933D47B7 /* Loggable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA129A224F3D8C844B7AAF /* Loggable.swift */; };
-		2DBA1C95127DB389C084D751 /* RemoteLoggerError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA11EEAEF2D189DD0C89B9 /* RemoteLoggerError.swift */; };
-		2DBA1D429CD7BE4140B824AB /* NullRemoteLoggerBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA15502C1F90EF2E875AD2 /* NullRemoteLoggerBuffer.swift */; };
-		2DBA1E3F5CFFFF98C7BF14B8 /* Shell.CommandLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1EB77B568C6A9EB2FBAB /* Shell.CommandLine.swift */; };
 		2DBA1F496F5E0BC411A2E6CC /* BigListOfNaughtyStringsBase64.json in Resources */ = {isa = PBXBuildFile; fileRef = 2DBA1018CEF1F344845BB07F /* BigListOfNaughtyStringsBase64.json */; };
 		2DBA1FFDD2C4D6453D27242A /* EndpointViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA186BD75E9B889DAFD54B /* EndpointViewController.swift */; };
 		3053CC41242DFB50000125FB /* Robologs.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 46AE559A238D683C00774F9E /* Robologs.framework */; };
@@ -58,21 +34,9 @@
 		4626E60B23956D5800BD14B8 /* PrintLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46131F60238EAE8200612712 /* PrintLogger.swift */; };
 		4626E6112396709A00BD14B8 /* OSLogLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4626E6102396709700BD14B8 /* OSLogLogger.swift */; };
 		46E239082397A748006539C5 /* SynchronizedDictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46E239072397A748006539C5 /* SynchronizedDictionary.swift */; };
-		630F99FC2435FAE5009DAD18 /* AuthenticationChallengeResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630F99FB2435FAE5009DAD18 /* AuthenticationChallengeResolver.swift */; };
-		6324E32B242A43060084312D /* MockRemoteLoggerTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6324E32A242A43060084312D /* MockRemoteLoggerTransport.swift */; };
 		6399CBED24349BBF00B6C3A1 /* Subscriptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6399CBEC24349BBF00B6C3A1 /* Subscriptions.swift */; };
-		63D39418241F86D2002052DA /* backend.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D39411241F86D2002052DA /* backend.pb.swift */; };
-		63D3941B241F86D2002052DA /* InMemoryRemoteLoggerBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D39415241F86D2002052DA /* InMemoryRemoteLoggerBuffer.swift */; };
-		63D3941C241F86D2002052DA /* LiveRemoteLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D39416241F86D2002052DA /* LiveRemoteLogger.swift */; };
-		FA0E3F7824A7D16B000EF2C0 /* SwiftProtobuf in Frameworks */ = {isa = PBXBuildFile; productRef = 304E87AE242B8AAD007694D2 /* SwiftProtobuf */; };
-		FA0E3F7924A7D16B000EF2C0 /* SwiftProtobuf in Frameworks */ = {isa = PBXBuildFile; productRef = FA8EB0A224545A7600D438DC /* SwiftProtobuf */; };
 		FA8EB0A724545B2C00D438DC /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46131F5C238EADD800612712 /* Logger.swift */; };
 		FA8EB0A824545B2C00D438DC /* Level.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46131F5E238EADF900612712 /* Level.swift */; };
-		FA8EB0A924545B2C00D438DC /* MockRemoteLoggerTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6324E32A242A43060084312D /* MockRemoteLoggerTransport.swift */; };
-		FA8EB0AA24545B2C00D438DC /* backend.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D39411241F86D2002052DA /* backend.pb.swift */; };
-		FA8EB0AC24545B2C00D438DC /* AuthenticationChallengeResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630F99FB2435FAE5009DAD18 /* AuthenticationChallengeResolver.swift */; };
-		FA8EB0AD24545B2C00D438DC /* InMemoryRemoteLoggerBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D39415241F86D2002052DA /* InMemoryRemoteLoggerBuffer.swift */; };
-		FA8EB0AE24545B2C00D438DC /* LiveRemoteLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D39416241F86D2002052DA /* LiveRemoteLogger.swift */; };
 		FA8EB0AF24545B2C00D438DC /* PrintLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46131F60238EAE8200612712 /* PrintLogger.swift */; };
 		FA8EB0B024545B2C00D438DC /* OSLogLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4626E6102396709700BD14B8 /* OSLogLogger.swift */; };
 		FA8EB0B124545B2C00D438DC /* NSLogLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4611FCF623995F3300E23B25 /* NSLogLogger.swift */; };
@@ -98,9 +62,52 @@
 		FAD51EC32456D5A000265E18 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FAD51EAB2456D5A000265E18 /* Main.storyboard */; };
 		FAD51EC82456D5A100265E18 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FAD51EB22456D5A000265E18 /* Assets.xcassets */; };
 		FAD51EC92456D5A100265E18 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FAD51EB32456D5A000265E18 /* LaunchScreen.storyboard */; };
-		FAD51EEF245722A500265E18 /* ProtoHttpRemoteLoggerTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1DA202B598E9F6F27C1D /* ProtoHttpRemoteLoggerTransport.swift */; };
 		FAE67F862458CE530083E237 /* main.swift in Sources */ = {isa = PBXBuildFile; fileRef = FAE67F852458CE530083E237 /* main.swift */; };
 		FAE67F8A2458CE810083E237 /* Robologs.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA8EB09A24545A4200D438DC /* Robologs.framework */; };
+		FAF15CCD24B4C79800912AB9 /* RobologsRemote.h in Headers */ = {isa = PBXBuildFile; fileRef = FAF15CCB24B4C79800912AB9 /* RobologsRemote.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		FAF15CD024B4C79800912AB9 /* RobologsRemote.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FAF15CC924B4C79800912AB9 /* RobologsRemote.framework */; };
+		FAF15CD124B4C79800912AB9 /* RobologsRemote.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = FAF15CC924B4C79800912AB9 /* RobologsRemote.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		FAF15CDF24B4C7D400912AB9 /* RobologsRemote_macOS.h in Headers */ = {isa = PBXBuildFile; fileRef = FAF15CDD24B4C7D400912AB9 /* RobologsRemote_macOS.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		FAF15CE324B4C86700912AB9 /* MockRemoteLoggerTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6324E32A242A43060084312D /* MockRemoteLoggerTransport.swift */; };
+		FAF15CE424B4C86700912AB9 /* backend.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D39411241F86D2002052DA /* backend.pb.swift */; };
+		FAF15CE524B4C86700912AB9 /* AuthenticationChallengeResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630F99FB2435FAE5009DAD18 /* AuthenticationChallengeResolver.swift */; };
+		FAF15CE624B4C86700912AB9 /* RemoteLoggingTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1B7C07761B3914324E95 /* RemoteLoggingTransport.swift */; };
+		FAF15CE724B4C86700912AB9 /* ProtoHttpRemoteLoggerTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1DA202B598E9F6F27C1D /* ProtoHttpRemoteLoggerTransport.swift */; };
+		FAF15CE824B4C86700912AB9 /* InMemoryRemoteLoggerBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D39415241F86D2002052DA /* InMemoryRemoteLoggerBuffer.swift */; };
+		FAF15CE924B4C86700912AB9 /* RemoteLoggingBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1A5D9C49721C5C5B335D /* RemoteLoggingBuffer.swift */; };
+		FAF15CEA24B4C86700912AB9 /* PersistingLoggingBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1E92BFBF1D21C9146183 /* PersistingLoggingBuffer.swift */; };
+		FAF15CEB24B4C86700912AB9 /* CachedLogMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA19F3805C10A7C41E4FF4 /* CachedLogMessage.swift */; };
+		FAF15CEC24B4C86700912AB9 /* NullRemoteLoggerBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA15502C1F90EF2E875AD2 /* NullRemoteLoggerBuffer.swift */; };
+		FAF15CED24B4C86700912AB9 /* BonjourServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1CC1F043D50CC7774247 /* BonjourServer.swift */; };
+		FAF15CEE24B4C86700912AB9 /* BonjourClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1503080D9DC86938813D /* BonjourClient.swift */; };
+		FAF15CEF24B4C86700912AB9 /* Shell.CommandLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1EB77B568C6A9EB2FBAB /* Shell.CommandLine.swift */; };
+		FAF15CF024B4C86700912AB9 /* DirectConnector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA10C88047C8771D4F9B8A /* DirectConnector.swift */; };
+		FAF15CF124B4C86700912AB9 /* LiveRemoteLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D39416241F86D2002052DA /* LiveRemoteLogger.swift */; };
+		FAF15CF224B4C86700912AB9 /* ArchiveRemoteLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA12496FD9DE3D0B796D94 /* ArchiveRemoteLogger.swift */; };
+		FAF15CF324B4C86700912AB9 /* RemoteLoggerError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA11EEAEF2D189DD0C89B9 /* RemoteLoggerError.swift */; };
+		FAF15CF424B4C86700912AB9 /* RemoteLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1ECEACC41683F326358B /* RemoteLogger.swift */; };
+		FAF15CF524B4C8A800912AB9 /* MockRemoteLoggerTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6324E32A242A43060084312D /* MockRemoteLoggerTransport.swift */; };
+		FAF15CF624B4C8A800912AB9 /* backend.pb.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D39411241F86D2002052DA /* backend.pb.swift */; };
+		FAF15CF724B4C8A800912AB9 /* AuthenticationChallengeResolver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 630F99FB2435FAE5009DAD18 /* AuthenticationChallengeResolver.swift */; };
+		FAF15CF824B4C8A800912AB9 /* RemoteLoggingTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1B7C07761B3914324E95 /* RemoteLoggingTransport.swift */; };
+		FAF15CF924B4C8A800912AB9 /* ProtoHttpRemoteLoggerTransport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1DA202B598E9F6F27C1D /* ProtoHttpRemoteLoggerTransport.swift */; };
+		FAF15CFA24B4C8A800912AB9 /* InMemoryRemoteLoggerBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D39415241F86D2002052DA /* InMemoryRemoteLoggerBuffer.swift */; };
+		FAF15CFB24B4C8A800912AB9 /* RemoteLoggingBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1A5D9C49721C5C5B335D /* RemoteLoggingBuffer.swift */; };
+		FAF15CFC24B4C8A800912AB9 /* PersistingLoggingBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1E92BFBF1D21C9146183 /* PersistingLoggingBuffer.swift */; };
+		FAF15CFD24B4C8A800912AB9 /* CachedLogMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA19F3805C10A7C41E4FF4 /* CachedLogMessage.swift */; };
+		FAF15CFE24B4C8A800912AB9 /* NullRemoteLoggerBuffer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA15502C1F90EF2E875AD2 /* NullRemoteLoggerBuffer.swift */; };
+		FAF15CFF24B4C8A800912AB9 /* BonjourServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1CC1F043D50CC7774247 /* BonjourServer.swift */; };
+		FAF15D0024B4C8A800912AB9 /* BonjourClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1503080D9DC86938813D /* BonjourClient.swift */; };
+		FAF15D0124B4C8A800912AB9 /* Shell.CommandLine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1EB77B568C6A9EB2FBAB /* Shell.CommandLine.swift */; };
+		FAF15D0224B4C8A800912AB9 /* DirectConnector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA10C88047C8771D4F9B8A /* DirectConnector.swift */; };
+		FAF15D0324B4C8A800912AB9 /* LiveRemoteLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D39416241F86D2002052DA /* LiveRemoteLogger.swift */; };
+		FAF15D0424B4C8A800912AB9 /* ArchiveRemoteLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA12496FD9DE3D0B796D94 /* ArchiveRemoteLogger.swift */; };
+		FAF15D0524B4C8A800912AB9 /* RemoteLoggerError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA11EEAEF2D189DD0C89B9 /* RemoteLoggerError.swift */; };
+		FAF15D0624B4C8A800912AB9 /* RemoteLogger.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2DBA1ECEACC41683F326358B /* RemoteLogger.swift */; };
+		FAF15D0824B4CA3900912AB9 /* SwiftProtobuf in Frameworks */ = {isa = PBXBuildFile; productRef = FAF15D0724B4CA3900912AB9 /* SwiftProtobuf */; };
+		FAF15D0924B4CA3E00912AB9 /* Robologs.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 46AE559A238D683C00774F9E /* Robologs.framework */; };
+		FAF15D0B24B4CA4500912AB9 /* SwiftProtobuf in Frameworks */ = {isa = PBXBuildFile; productRef = FAF15D0A24B4CA4500912AB9 /* SwiftProtobuf */; };
+		FAF15D0C24B4CA4500912AB9 /* Robologs.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FA8EB09A24545A4200D438DC /* Robologs.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -118,6 +125,13 @@
 			remoteGlobalIDString = FA8EB09924545A4200D438DC;
 			remoteInfo = "Robologs macOS";
 		};
+		FAF15CCE24B4C79800912AB9 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 46AE5591238D683B00774F9E /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = FAF15CC824B4C79800912AB9;
+			remoteInfo = RobologsRemote;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -129,6 +143,17 @@
 			files = (
 			);
 			runOnlyForDeploymentPostprocessing = 1;
+		};
+		FAF15CD224B4C79800912AB9 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				FAF15CD124B4C79800912AB9 /* RobologsRemote.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXCopyFilesBuildPhase section */
 
@@ -198,6 +223,12 @@
 		FAD51EB52456D5A000265E18 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.info; path = Info.plist; sourceTree = "<group>"; };
 		FAE67F832458CE530083E237 /* BonjourClientTest */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = BonjourClientTest; sourceTree = BUILT_PRODUCTS_DIR; };
 		FAE67F852458CE530083E237 /* main.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = main.swift; sourceTree = "<group>"; };
+		FAF15CC924B4C79800912AB9 /* RobologsRemote.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = RobologsRemote.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		FAF15CCB24B4C79800912AB9 /* RobologsRemote.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RobologsRemote.h; sourceTree = "<group>"; };
+		FAF15CCC24B4C79800912AB9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		FAF15CDB24B4C7D400912AB9 /* RobologsRemote.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = RobologsRemote.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		FAF15CDD24B4C7D400912AB9 /* RobologsRemote_macOS.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = RobologsRemote_macOS.h; sourceTree = "<group>"; };
+		FAF15CDE24B4C7D400912AB9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -206,6 +237,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3053CC41242DFB50000125FB /* Robologs.framework in Frameworks */,
+				FAF15CD024B4C79800912AB9 /* RobologsRemote.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -213,7 +245,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FA0E3F7824A7D16B000EF2C0 /* SwiftProtobuf in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -221,7 +252,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				FA0E3F7924A7D16B000EF2C0 /* SwiftProtobuf in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -230,6 +260,24 @@
 			buildActionMask = 2147483647;
 			files = (
 				FAE67F8A2458CE810083E237 /* Robologs.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FAF15CC624B4C79800912AB9 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FAF15D0924B4CA3E00912AB9 /* Robologs.framework in Frameworks */,
+				FAF15D0824B4CA3900912AB9 /* SwiftProtobuf in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FAF15CD824B4C7D400912AB9 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FAF15D0C24B4CA4500912AB9 /* Robologs.framework in Frameworks */,
+				FAF15D0B24B4CA4500912AB9 /* SwiftProtobuf in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -342,23 +390,25 @@
 			path = Sources.Robologs;
 			sourceTree = "<group>";
 		};
-		4626E60D239656F200BD14B8 /* FrameworkiOS */ = {
+		4626E60D239656F200BD14B8 /* Robologs iOS */ = {
 			isa = PBXGroup;
 			children = (
 				46AE559E238D683C00774F9E /* Info.plist */,
 			);
-			path = FrameworkiOS;
+			path = "Robologs iOS";
 			sourceTree = "<group>";
 		};
 		46AE5590238D683B00774F9E = {
 			isa = PBXGroup;
 			children = (
+				FAE67F842458CE530083E237 /* BonjourClientTest */,
 				3053CC29242DF72E000125FB /* Sources.Example */,
 				4626E60C2395707500BD14B8 /* Sources.Robologs */,
 				2DBA1C51F96E726222DFBB6B /* Sources.Robologs.Remote */,
-				4626E60D239656F200BD14B8 /* FrameworkiOS */,
-				FA8EB09B24545A4200D438DC /* FrameworkMacOS */,
-				FAE67F842458CE530083E237 /* BonjourClientTest */,
+				4626E60D239656F200BD14B8 /* Robologs iOS */,
+				FA8EB09B24545A4200D438DC /* Robologs macOS */,
+				FAF15CCA24B4C79800912AB9 /* RobologsRemote iOS */,
+				FAF15CDC24B4C7D400912AB9 /* RobologsRemote macOS */,
 				46AE559B238D683C00774F9E /* Products */,
 				3053CC40242DFB50000125FB /* Frameworks */,
 				FA1BDE30249667950033F134 /* Robologs Test App.entitlements */,
@@ -372,6 +422,8 @@
 				3053CC28242DF72E000125FB /* Robologs Test App.app */,
 				FA8EB09A24545A4200D438DC /* Robologs.framework */,
 				FAE67F832458CE530083E237 /* BonjourClientTest */,
+				FAF15CC924B4C79800912AB9 /* RobologsRemote.framework */,
+				FAF15CDB24B4C7D400912AB9 /* RobologsRemote.framework */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -436,12 +488,12 @@
 			path = Buffer;
 			sourceTree = "<group>";
 		};
-		FA8EB09B24545A4200D438DC /* FrameworkMacOS */ = {
+		FA8EB09B24545A4200D438DC /* Robologs macOS */ = {
 			isa = PBXGroup;
 			children = (
 				FA8EB09D24545A4200D438DC /* Info.plist */,
 			);
-			path = FrameworkMacOS;
+			path = "Robologs macOS";
 			sourceTree = "<group>";
 		};
 		FAD51E9A2456D5A000265E18 /* Code */ = {
@@ -507,6 +559,24 @@
 			path = BonjourClientTest;
 			sourceTree = "<group>";
 		};
+		FAF15CCA24B4C79800912AB9 /* RobologsRemote iOS */ = {
+			isa = PBXGroup;
+			children = (
+				FAF15CCB24B4C79800912AB9 /* RobologsRemote.h */,
+				FAF15CCC24B4C79800912AB9 /* Info.plist */,
+			);
+			path = "RobologsRemote iOS";
+			sourceTree = "<group>";
+		};
+		FAF15CDC24B4C7D400912AB9 /* RobologsRemote macOS */ = {
+			isa = PBXGroup;
+			children = (
+				FAF15CDD24B4C7D400912AB9 /* RobologsRemote_macOS.h */,
+				FAF15CDE24B4C7D400912AB9 /* Info.plist */,
+			);
+			path = "RobologsRemote macOS";
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -524,6 +594,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		FAF15CC424B4C79800912AB9 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FAF15CCD24B4C79800912AB9 /* RobologsRemote.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FAF15CD624B4C7D400912AB9 /* Headers */ = {
+			isa = PBXHeadersBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FAF15CDF24B4C7D400912AB9 /* RobologsRemote_macOS.h in Headers */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
@@ -534,11 +620,13 @@
 				3053CC24242DF72E000125FB /* Sources */,
 				3053CC25242DF72E000125FB /* Frameworks */,
 				3053CC26242DF72E000125FB /* Resources */,
+				FAF15CD224B4C79800912AB9 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 				3053CC44242DFB50000125FB /* PBXTargetDependency */,
+				FAF15CCF24B4C79800912AB9 /* PBXTargetDependency */,
 			);
 			name = "Example App";
 			productName = Example;
@@ -561,7 +649,6 @@
 			);
 			name = "Robologs iOS";
 			packageProductDependencies = (
-				304E87AE242B8AAD007694D2 /* SwiftProtobuf */,
 			);
 			productName = RobologsiOSNative;
 			productReference = 46AE559A238D683C00774F9E /* Robologs.framework */;
@@ -583,7 +670,6 @@
 			);
 			name = "Robologs macOS";
 			packageProductDependencies = (
-				FA8EB0A224545A7600D438DC /* SwiftProtobuf */,
 			);
 			productName = Robologs;
 			productReference = FA8EB09A24545A4200D438DC /* Robologs.framework */;
@@ -606,6 +692,48 @@
 			productName = BonjourClientTest;
 			productReference = FAE67F832458CE530083E237 /* BonjourClientTest */;
 			productType = "com.apple.product-type.tool";
+		};
+		FAF15CC824B4C79800912AB9 /* RobologsRemote iOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FAF15CD524B4C79800912AB9 /* Build configuration list for PBXNativeTarget "RobologsRemote iOS" */;
+			buildPhases = (
+				FAF15CC424B4C79800912AB9 /* Headers */,
+				FAF15CC524B4C79800912AB9 /* Sources */,
+				FAF15CC624B4C79800912AB9 /* Frameworks */,
+				FAF15CC724B4C79800912AB9 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "RobologsRemote iOS";
+			packageProductDependencies = (
+				FAF15D0724B4CA3900912AB9 /* SwiftProtobuf */,
+			);
+			productName = RobologsRemote;
+			productReference = FAF15CC924B4C79800912AB9 /* RobologsRemote.framework */;
+			productType = "com.apple.product-type.framework";
+		};
+		FAF15CDA24B4C7D400912AB9 /* RobologsRemote macOS */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = FAF15CE024B4C7D400912AB9 /* Build configuration list for PBXNativeTarget "RobologsRemote macOS" */;
+			buildPhases = (
+				FAF15CD624B4C7D400912AB9 /* Headers */,
+				FAF15CD724B4C7D400912AB9 /* Sources */,
+				FAF15CD824B4C7D400912AB9 /* Frameworks */,
+				FAF15CD924B4C7D400912AB9 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "RobologsRemote macOS";
+			packageProductDependencies = (
+				FAF15D0A24B4CA4500912AB9 /* SwiftProtobuf */,
+			);
+			productName = "RobologsRemote macOS";
+			productReference = FAF15CDB24B4C7D400912AB9 /* RobologsRemote.framework */;
+			productType = "com.apple.product-type.framework";
 		};
 /* End PBXNativeTarget section */
 
@@ -630,6 +758,12 @@
 					FAE67F822458CE530083E237 = {
 						CreatedOnToolsVersion = 11.4.1;
 					};
+					FAF15CC824B4C79800912AB9 = {
+						CreatedOnToolsVersion = 11.5;
+					};
+					FAF15CDA24B4C7D400912AB9 = {
+						CreatedOnToolsVersion = 11.5;
+					};
 				};
 			};
 			buildConfigurationList = 46AE5594238D683B00774F9E /* Build configuration list for PBXProject "Robologs" */;
@@ -650,6 +784,8 @@
 			targets = (
 				46AE5599238D683B00774F9E /* Robologs iOS */,
 				FA8EB09924545A4200D438DC /* Robologs macOS */,
+				FAF15CC824B4C79800912AB9 /* RobologsRemote iOS */,
+				FAF15CDA24B4C7D400912AB9 /* RobologsRemote macOS */,
 				3053CC27242DF72E000125FB /* Example App */,
 				FAE67F822458CE530083E237 /* BonjourClientTest */,
 			);
@@ -676,6 +812,20 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		FA8EB09824545A4200D438DC /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FAF15CC724B4C79800912AB9 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FAF15CD924B4C7D400912AB9 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -752,39 +902,22 @@
 			buildActionMask = 2147483647;
 			files = (
 				6399CBED24349BBF00B6C3A1 /* Subscriptions.swift in Sources */,
-				630F99FC2435FAE5009DAD18 /* AuthenticationChallengeResolver.swift in Sources */,
 				4611FCED2398FEF100E23B25 /* MultiplexingLogger.swift in Sources */,
 				4626E6112396709A00BD14B8 /* OSLogLogger.swift in Sources */,
-				63D39418241F86D2002052DA /* backend.pb.swift in Sources */,
 				4611FCEF239904CC00E23B25 /* FilteringLogger.swift in Sources */,
 				461A55E623DA07FC00A28F38 /* LogString.swift in Sources */,
 				4626E60B23956D5800BD14B8 /* PrintLogger.swift in Sources */,
 				46131F5F238EADF900612712 /* Level.swift in Sources */,
-				63D3941B241F86D2002052DA /* InMemoryRemoteLoggerBuffer.swift in Sources */,
-				63D3941C241F86D2002052DA /* LiveRemoteLogger.swift in Sources */,
 				4611FCF723995F3300E23B25 /* NSLogLogger.swift in Sources */,
 				461A55E223DA07BF00A28F38 /* LogStringInterpolation.swift in Sources */,
 				46131F5D238EADD800612712 /* Logger.swift in Sources */,
-				6324E32B242A43060084312D /* MockRemoteLoggerTransport.swift in Sources */,
 				46E239082397A748006539C5 /* SynchronizedDictionary.swift in Sources */,
 				2DBA127834F59CA61B204AB0 /* HelperFunctions.swift in Sources */,
 				2DBA142977D7D4CD90ECDEAF /* LabeledLogger.swift in Sources */,
 				2DBA1BC8525F9A84933D47B7 /* Loggable.swift in Sources */,
 				2DBA15064819C6E6D4178B88 /* ApplicationInfo.swift in Sources */,
 				2DBA1439BAEBD8D5961A05A0 /* InfoGatheringLogger.swift in Sources */,
-				2DBA1891E370AEB77B761D6B /* RemoteLoggingTransport.swift in Sources */,
-				2DBA12B468519044347BE39F /* RemoteLoggingBuffer.swift in Sources */,
-				2DBA108007128FAD4821882B /* ProtoHttpRemoteLoggerTransport.swift in Sources */,
 				2DBA1631FA44583D2A7B0897 /* NullLogger.swift in Sources */,
-				2DBA11174264D8D5FBD289B7 /* BonjourServer.swift in Sources */,
-				2DBA124C75E1AC7074942230 /* Shell.CommandLine.swift in Sources */,
-				2DBA19AD16DD8F3051F127B1 /* DirectConnector.swift in Sources */,
-				2DBA159EB61B1C312FEE1528 /* PersistingLoggingBuffer.swift in Sources */,
-				2DBA1061077B7D16AD44FAD0 /* CachedLogMessage.swift in Sources */,
-				2DBA10879669DEAF907EB72D /* NullRemoteLoggerBuffer.swift in Sources */,
-				2DBA171D0A7EA2FA8C30A191 /* ArchiveRemoteLogger.swift in Sources */,
-				2DBA1C95127DB389C084D751 /* RemoteLoggerError.swift in Sources */,
-				2DBA1743988912D16DAD4DA2 /* RemoteLogger.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -794,11 +927,6 @@
 			files = (
 				FA8EB0A724545B2C00D438DC /* Logger.swift in Sources */,
 				FA8EB0A824545B2C00D438DC /* Level.swift in Sources */,
-				FA8EB0A924545B2C00D438DC /* MockRemoteLoggerTransport.swift in Sources */,
-				FA8EB0AA24545B2C00D438DC /* backend.pb.swift in Sources */,
-				FA8EB0AC24545B2C00D438DC /* AuthenticationChallengeResolver.swift in Sources */,
-				FA8EB0AD24545B2C00D438DC /* InMemoryRemoteLoggerBuffer.swift in Sources */,
-				FA8EB0AE24545B2C00D438DC /* LiveRemoteLogger.swift in Sources */,
 				FA8EB0AF24545B2C00D438DC /* PrintLogger.swift in Sources */,
 				FA8EB0B024545B2C00D438DC /* OSLogLogger.swift in Sources */,
 				FA8EB0B124545B2C00D438DC /* NSLogLogger.swift in Sources */,
@@ -806,7 +934,6 @@
 				FA8EB0B424545B2C00D438DC /* MultiplexingLogger.swift in Sources */,
 				FA8EB0B524545B2C00D438DC /* HelperFunctions.swift in Sources */,
 				FA8EB0B624545B2C00D438DC /* LabeledLogger.swift in Sources */,
-				FAD51EEF245722A500265E18 /* ProtoHttpRemoteLoggerTransport.swift in Sources */,
 				FA8EB0B724545B2C00D438DC /* Subscriptions.swift in Sources */,
 				FA8EB0B824545B2C00D438DC /* SynchronizedDictionary.swift in Sources */,
 				FA8EB0BA24545B2C00D438DC /* LogString.swift in Sources */,
@@ -814,19 +941,7 @@
 				FA8EB0BC24545B2C00D438DC /* Loggable.swift in Sources */,
 				2DBA194A31B60069AE4E7EE1 /* ApplicationInfo.swift in Sources */,
 				2DBA1B2CA7478109C4020779 /* InfoGatheringLogger.swift in Sources */,
-				2DBA19506894725A4885E909 /* RemoteLoggingTransport.swift in Sources */,
-				2DBA13CC4F00104AE715754A /* RemoteLoggingBuffer.swift in Sources */,
 				2DBA18EB097273EDCAC5E810 /* NullLogger.swift in Sources */,
-				2DBA188F9117C17221DB4AE1 /* BonjourServer.swift in Sources */,
-				2DBA16E9400794EC84CCD978 /* BonjourClient.swift in Sources */,
-				2DBA1E3F5CFFFF98C7BF14B8 /* Shell.CommandLine.swift in Sources */,
-				2DBA1521233CC17F79CBBF50 /* DirectConnector.swift in Sources */,
-				2DBA143BA61A1F40544D681A /* PersistingLoggingBuffer.swift in Sources */,
-				2DBA1977E6291A01A7988901 /* CachedLogMessage.swift in Sources */,
-				2DBA1D429CD7BE4140B824AB /* NullRemoteLoggerBuffer.swift in Sources */,
-				2DBA1A4FEE810103877D9D72 /* ArchiveRemoteLogger.swift in Sources */,
-				2DBA19CF74B71A4451E94967 /* RemoteLoggerError.swift in Sources */,
-				2DBA17B3AA29D3B9DC1BB9ED /* RemoteLogger.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -835,6 +950,56 @@
 			buildActionMask = 2147483647;
 			files = (
 				FAE67F862458CE530083E237 /* main.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FAF15CC524B4C79800912AB9 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FAF15CE324B4C86700912AB9 /* MockRemoteLoggerTransport.swift in Sources */,
+				FAF15CE424B4C86700912AB9 /* backend.pb.swift in Sources */,
+				FAF15CE524B4C86700912AB9 /* AuthenticationChallengeResolver.swift in Sources */,
+				FAF15CE624B4C86700912AB9 /* RemoteLoggingTransport.swift in Sources */,
+				FAF15CE724B4C86700912AB9 /* ProtoHttpRemoteLoggerTransport.swift in Sources */,
+				FAF15CE824B4C86700912AB9 /* InMemoryRemoteLoggerBuffer.swift in Sources */,
+				FAF15CE924B4C86700912AB9 /* RemoteLoggingBuffer.swift in Sources */,
+				FAF15CEA24B4C86700912AB9 /* PersistingLoggingBuffer.swift in Sources */,
+				FAF15CEB24B4C86700912AB9 /* CachedLogMessage.swift in Sources */,
+				FAF15CEC24B4C86700912AB9 /* NullRemoteLoggerBuffer.swift in Sources */,
+				FAF15CED24B4C86700912AB9 /* BonjourServer.swift in Sources */,
+				FAF15CEE24B4C86700912AB9 /* BonjourClient.swift in Sources */,
+				FAF15CEF24B4C86700912AB9 /* Shell.CommandLine.swift in Sources */,
+				FAF15CF024B4C86700912AB9 /* DirectConnector.swift in Sources */,
+				FAF15CF124B4C86700912AB9 /* LiveRemoteLogger.swift in Sources */,
+				FAF15CF224B4C86700912AB9 /* ArchiveRemoteLogger.swift in Sources */,
+				FAF15CF324B4C86700912AB9 /* RemoteLoggerError.swift in Sources */,
+				FAF15CF424B4C86700912AB9 /* RemoteLogger.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		FAF15CD724B4C7D400912AB9 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				FAF15CF524B4C8A800912AB9 /* MockRemoteLoggerTransport.swift in Sources */,
+				FAF15CF624B4C8A800912AB9 /* backend.pb.swift in Sources */,
+				FAF15CF724B4C8A800912AB9 /* AuthenticationChallengeResolver.swift in Sources */,
+				FAF15CF824B4C8A800912AB9 /* RemoteLoggingTransport.swift in Sources */,
+				FAF15CF924B4C8A800912AB9 /* ProtoHttpRemoteLoggerTransport.swift in Sources */,
+				FAF15CFA24B4C8A800912AB9 /* InMemoryRemoteLoggerBuffer.swift in Sources */,
+				FAF15CFB24B4C8A800912AB9 /* RemoteLoggingBuffer.swift in Sources */,
+				FAF15CFC24B4C8A800912AB9 /* PersistingLoggingBuffer.swift in Sources */,
+				FAF15CFD24B4C8A800912AB9 /* CachedLogMessage.swift in Sources */,
+				FAF15CFE24B4C8A800912AB9 /* NullRemoteLoggerBuffer.swift in Sources */,
+				FAF15CFF24B4C8A800912AB9 /* BonjourServer.swift in Sources */,
+				FAF15D0024B4C8A800912AB9 /* BonjourClient.swift in Sources */,
+				FAF15D0124B4C8A800912AB9 /* Shell.CommandLine.swift in Sources */,
+				FAF15D0224B4C8A800912AB9 /* DirectConnector.swift in Sources */,
+				FAF15D0324B4C8A800912AB9 /* LiveRemoteLogger.swift in Sources */,
+				FAF15D0424B4C8A800912AB9 /* ArchiveRemoteLogger.swift in Sources */,
+				FAF15D0524B4C8A800912AB9 /* RemoteLoggerError.swift in Sources */,
+				FAF15D0624B4C8A800912AB9 /* RemoteLogger.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -850,6 +1015,11 @@
 			isa = PBXTargetDependency;
 			target = FA8EB09924545A4200D438DC /* Robologs macOS */;
 			targetProxy = FAE67F8B2458CFCA0083E237 /* PBXContainerItemProxy */;
+		};
+		FAF15CCF24B4C79800912AB9 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = FAF15CC824B4C79800912AB9 /* RobologsRemote iOS */;
+			targetProxy = FAF15CCE24B4C79800912AB9 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -868,6 +1038,7 @@
 		3053CC39242DF733000125FB /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "Robologs Test App.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Developer";
@@ -895,6 +1066,7 @@
 		3053CC3A242DF733000125FB /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = "Robologs Test App.entitlements";
 				CODE_SIGN_IDENTITY = "iPhone Distribution";
@@ -1058,7 +1230,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 				);
-				INFOPLIST_FILE = FrameworkiOS/Info.plist;
+				INFOPLIST_FILE = "Robologs iOS/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1068,7 +1240,7 @@
 				);
 				MACH_O_TYPE = staticlib;
 				MARKETING_VERSION = 2.3.5;
-				PRODUCT_BUNDLE_IDENTIFIER = com.redmadrobot.spb.robologs.dev;
+				PRODUCT_BUNDLE_IDENTIFIER = com.redmadrobot.spb.robologs;
 				PRODUCT_NAME = Robologs;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
@@ -1097,7 +1269,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)",
 				);
-				INFOPLIST_FILE = FrameworkiOS/Info.plist;
+				INFOPLIST_FILE = "Robologs iOS/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -1107,7 +1279,7 @@
 				);
 				MACH_O_TYPE = staticlib;
 				MARKETING_VERSION = 2.3.5;
-				PRODUCT_BUNDLE_IDENTIFIER = com.redmadrobot.spb.robologs.dev;
+				PRODUCT_BUNDLE_IDENTIFIER = com.redmadrobot.spb.robologs;
 				PRODUCT_NAME = Robologs;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				"PROVISIONING_PROFILE_SPECIFIER[sdk=macosx*]" = "";
@@ -1129,7 +1301,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = FrameworkMacOS/Info.plist;
+				INFOPLIST_FILE = "Robologs macOS/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1139,7 +1311,7 @@
 				MACH_O_TYPE = staticlib;
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				MARKETING_VERSION = 2.3.5;
-				PRODUCT_BUNDLE_IDENTIFIER = com.redmadrobot.spb.robologs.dev;
+				PRODUCT_BUNDLE_IDENTIFIER = com.redmadrobot.spb.robologs;
 				PRODUCT_NAME = Robologs;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = macosx;
@@ -1159,7 +1331,7 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				INFOPLIST_FILE = FrameworkMacOS/Info.plist;
+				INFOPLIST_FILE = "Robologs macOS/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -1169,7 +1341,7 @@
 				MACH_O_TYPE = staticlib;
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
 				MARKETING_VERSION = 2.3.5;
-				PRODUCT_BUNDLE_IDENTIFIER = com.redmadrobot.spb.robologs.dev;
+				PRODUCT_BUNDLE_IDENTIFIER = com.redmadrobot.spb.robologs;
 				PRODUCT_NAME = Robologs;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = macosx;
@@ -1204,6 +1376,112 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SDKROOT = macosx;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		FAF15CD324B4C79800912AB9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = Q257CW2V39;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "RobologsRemote iOS/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.redmadrobot.spb.robologsremote;
+				PRODUCT_NAME = RobologsRemote;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		FAF15CD424B4C79800912AB9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "iPhone Distribution";
+				"CODE_SIGN_IDENTITY[sdk=macosx*]" = "Developer ID Application";
+				CODE_SIGN_STYLE = Automatic;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = Q257CW2V39;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "RobologsRemote iOS/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.redmadrobot.spb.robologsremote;
+				PRODUCT_NAME = RobologsRemote;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+		FAF15CE124B4C7D400912AB9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = Q257CW2V39;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "RobologsRemote macOS/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				PRODUCT_BUNDLE_IDENTIFIER = com.redmadrobot.spb.robologsremote;
+				PRODUCT_NAME = RobologsRemote;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		FAF15CE224B4C7D400912AB9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEFINES_MODULE = YES;
+				DEVELOPMENT_TEAM = Q257CW2V39;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				INFOPLIST_FILE = "RobologsRemote macOS/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+					"@loader_path/Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				PRODUCT_BUNDLE_IDENTIFIER = com.redmadrobot.spb.robologsremote;
+				PRODUCT_NAME = RobologsRemote;
+				SDKROOT = macosx;
+				SKIP_INSTALL = YES;
 				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
@@ -1256,6 +1534,24 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
+		FAF15CD524B4C79800912AB9 /* Build configuration list for PBXNativeTarget "RobologsRemote iOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FAF15CD324B4C79800912AB9 /* Debug */,
+				FAF15CD424B4C79800912AB9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		FAF15CE024B4C7D400912AB9 /* Build configuration list for PBXNativeTarget "RobologsRemote macOS" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FAF15CE124B4C7D400912AB9 /* Debug */,
+				FAF15CE224B4C7D400912AB9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
@@ -1270,12 +1566,12 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		304E87AE242B8AAD007694D2 /* SwiftProtobuf */ = {
+		FAF15D0724B4CA3900912AB9 /* SwiftProtobuf */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 304E87AD242B8AAD007694D2 /* XCRemoteSwiftPackageReference "swift-protobuf" */;
 			productName = SwiftProtobuf;
 		};
-		FA8EB0A224545A7600D438DC /* SwiftProtobuf */ = {
+		FAF15D0A24B4CA4500912AB9 /* SwiftProtobuf */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 304E87AD242B8AAD007694D2 /* XCRemoteSwiftPackageReference "swift-protobuf" */;
 			productName = SwiftProtobuf;
