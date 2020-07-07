@@ -6,8 +6,9 @@
 // Copyright © 2020 Redmadrobot SPb. All rights reserved.
 //
 
-import Robologs
 import Foundation
+import Robologs
+import RobologsRemote
 
 class Loggers {
     static let instance: Loggers = .init()
