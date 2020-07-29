@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Robologs
 import Darwin
 import CommonCrypto
 #if canImport(UIKit)
@@ -54,11 +55,13 @@ public class BonjourServer: NSObject, NetServiceDelegate {
         }
     }
 
-    static let recordName = "name"
-    static let recordEndpoint = "endpoint"
-    static let recordSenderId = "senderId"
-    static let recordIOSSimulator = "iOSSimulator"
-    static let recordAndroidId = "androidId"
+    static let recordName: String = "name"
+    static let recordEndpoint: String = "endpoint"
+    static let recordSenderId: String = "senderId"
+    static let recordIOSSimulator: String = "iOSSimulator"
+    static let recordAndroidId: String = "androidId"
+
+    let generatedPort: Int32 = (Int32(48000) ..< 65536).randomElement() ?? 32128
 
     public func publish(endpoint: String, senderId: String) {
         if netService != nil {
@@ -70,7 +73,7 @@ public class BonjourServer: NSObject, NetServiceDelegate {
             domain: netServiceDomain,
             type: netServiceType,
             name: serviceName,
-            port: (Int32(48000) ..< 65536).randomElement() ?? 32128
+            port: generatedPort
         )
         netService.schedule(in: RunLoop.main, forMode: .common)
         netService.delegate = self

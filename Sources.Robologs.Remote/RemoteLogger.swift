@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Robologs
 
 public class RemoteLogger: Logger {
     public enum LiveMode {

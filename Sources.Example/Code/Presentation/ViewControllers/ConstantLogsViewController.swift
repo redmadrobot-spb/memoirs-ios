@@ -55,13 +55,29 @@ class ConstantLogsViewController: UIViewController {
         "BlaTriFooBar",
     ]
 
+    private let trackers = [
+        "Tracker One",
+        "New Tracker",
+        "Another Thing",
+        "Hoho",
+        "BlaBla",
+        "FooBar",
+        "Hoho 1",
+        "BlaBla 1",
+        "FooBar 1",
+        "Hoho 2",
+        "BlaBla 2",
+        "FooBar 2",
+    ]
+
     private func configureLogsGenerator() {
         let recordsGenerator = UniformRecordGenerator(
             record: {
                 GeneratedLogRecord(
                     level: Level.allCases.randomElement() ?? .info,
-                    label: self.labels.randomElement() ?? "Boo!",
-                    message: "\(SingleLogViewController.randomString)"
+                    label: self.labels.randomElement() ?? "Boo",
+                    message: "\(SingleLogViewController.randomString)",
+                    meta: [ "Tracking": "\(self.trackers.randomElement() ?? "No Tracker")" ]
                 )
             },
             recordsPerSecond: Double(loadIntensitySlider.value * 100)

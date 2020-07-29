@@ -24,6 +24,11 @@ public class InfoGatheringLogger: Logger {
     }
 
     @inlinable
+    public var currentThreadName: String? {
+        Thread.current.name ?? String(describing: Thread.current)
+    }
+
+    @inlinable
     public func log(
         level: Level,
         _ message: @autoclosure () -> LogString,
@@ -32,7 +37,7 @@ public class InfoGatheringLogger: Logger {
         file: String = #file, function: String = #function, line: UInt = #line
     ) {
         var updatedMeta = self.meta
-        if let threadName = Thread.current.name, !threadName.isEmpty {
+        if let threadName = currentThreadName, !threadName.isEmpty {
             updatedMeta["_thread"] = LogString(threadName)
         }
         if let queueName = currentQueueName, !queueName.isEmpty {

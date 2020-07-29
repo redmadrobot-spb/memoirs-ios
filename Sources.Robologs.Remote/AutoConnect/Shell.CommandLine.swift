@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Robologs
 
 enum Shell {
     private(set) static var userHomeDirectory: URL = {

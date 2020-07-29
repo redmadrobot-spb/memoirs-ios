@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/robologs-ios.iml" filepath="$PROJECT_DIR$/.idea/robologs-ios.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/sdk-apple.iml" filepath="$PROJECT_DIR$/.idea/sdk-apple.iml" />
     </modules>
   </component>
 </project>

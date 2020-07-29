@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Robologs
 
 struct CachedLogMessage: Codable {
     let position: UInt64

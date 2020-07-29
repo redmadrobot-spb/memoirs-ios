@@ -8,6 +8,7 @@
 
 import Foundation
 import Robologs
+import RobologsRemote
 
 let androidHome = ProcessInfo.processInfo.environment["ANDROID_HOME"]
 if androidHome == nil {
