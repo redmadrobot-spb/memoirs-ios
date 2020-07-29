@@ -1050,7 +1050,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.3.5;
+				MARKETING_VERSION = 3.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.redmadrobot.spb.robologs.testApplication;
 				PRODUCT_NAME = "Robologs Test App";
 				PROVISIONING_PROFILE_SPECIFIER = "Robologs Test Application Development";
@@ -1078,7 +1078,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 2.3.5;
+				MARKETING_VERSION = 3.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.redmadrobot.spb.robologs.testApplication;
 				PRODUCT_NAME = "Robologs Test App";
 				PROVISIONING_PROFILE_SPECIFIER = "Robologs Test Application App Store";
@@ -1239,7 +1239,7 @@
 					"@loader_path/Frameworks",
 				);
 				MACH_O_TYPE = staticlib;
-				MARKETING_VERSION = 2.3.5;
+				MARKETING_VERSION = 3.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.redmadrobot.spb.robologs;
 				PRODUCT_NAME = Robologs;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1278,7 +1278,7 @@
 					"@loader_path/Frameworks",
 				);
 				MACH_O_TYPE = staticlib;
-				MARKETING_VERSION = 2.3.5;
+				MARKETING_VERSION = 3.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.redmadrobot.spb.robologs;
 				PRODUCT_NAME = Robologs;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1310,7 +1310,7 @@
 				);
 				MACH_O_TYPE = staticlib;
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				MARKETING_VERSION = 2.3.5;
+				MARKETING_VERSION = 3.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.redmadrobot.spb.robologs;
 				PRODUCT_NAME = Robologs;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1340,7 +1340,7 @@
 				);
 				MACH_O_TYPE = staticlib;
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				MARKETING_VERSION = 2.3.5;
+				MARKETING_VERSION = 3.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.redmadrobot.spb.robologs;
 				PRODUCT_NAME = Robologs;
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1396,6 +1396,7 @@
 					"@loader_path/Frameworks",
 				);
 				MACH_O_TYPE = staticlib;
+				MARKETING_VERSION = 3.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.redmadrobot.spb.robologsremote;
 				PRODUCT_NAME = RobologsRemote;
 				SKIP_INSTALL = YES;
@@ -1420,6 +1421,7 @@
 					"@loader_path/Frameworks",
 				);
 				MACH_O_TYPE = staticlib;
+				MARKETING_VERSION = 3.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.redmadrobot.spb.robologsremote;
 				PRODUCT_NAME = RobologsRemote;
 				SKIP_INSTALL = YES;
@@ -1445,6 +1447,7 @@
 				);
 				MACH_O_TYPE = staticlib;
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MARKETING_VERSION = 3.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.redmadrobot.spb.robologsremote;
 				PRODUCT_NAME = RobologsRemote;
 				SDKROOT = macosx;
@@ -1470,6 +1473,7 @@
 				);
 				MACH_O_TYPE = staticlib;
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
+				MARKETING_VERSION = 3.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = com.redmadrobot.spb.robologsremote;
 				PRODUCT_NAME = RobologsRemote;
 				SDKROOT = macosx;
