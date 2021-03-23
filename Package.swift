@@ -1,4 +1,4 @@
-// swift-tools-version:5.2
+// swift-tools-version:5.3
 
 import PackageDescription
 
@@ -13,8 +13,8 @@ let package = Package(
         .package(name: "SwiftProtobuf", url: "https://github.com/apple/swift-protobuf.git", from: "1.8.0"),
     ],
     targets: [
-        .target(name: "Robologs", dependencies: [], path: "", sources: [ "Sources.Robologs" ]),
-        .target(name: "RobologsRemote", dependencies: [ "Robologs", "SwiftProtobuf" ], path: "", sources: [ "Sources.Robologs.Remote" ]),
+        .target(name: "Robologs", dependencies: [], path: "Sources.Robologs"),
+        .target(name: "RobologsRemote", dependencies: [ "Robologs", "SwiftProtobuf" ], path: "Sources.Robologs.Remote"),
     ],
     swiftLanguageVersions: [.v5]
 )
