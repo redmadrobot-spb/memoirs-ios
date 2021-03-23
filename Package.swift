@@ -4,7 +4,7 @@ import PackageDescription
 
 let package = Package(
     name: "Robologs",
-    platforms: [ .iOS(.v11), .macOS(.v10_15) ],
+    platforms: [ .iOS(.v11), .macOS(.v11) ],
     products: [
         .library(name: "Robologs", type: .static, targets: [ "Robologs" ]),
         .library(name: "RobologsRemote", type: .static, targets: [ "RobologsRemote" ]),
