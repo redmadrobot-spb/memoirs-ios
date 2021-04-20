@@ -8,18 +8,35 @@ let package = Package(
     products: [
         .library(name: "Robologs", type: .static, targets: [ "Robologs" ]),
         .library(name: "RobologsRemote", type: .static, targets: [ "RobologsRemote" ]),
-        .executable(name: "BonjourClientTest", targets: [ "BonjourClientTest" ])
+        .library(name: "RobologsServer", type: .static, targets: [ "RobologsServer" ]),
+        .executable(name: "ExampleBonjourClient", targets: [ "ExampleBonjourClient" ]),
+        .executable(name: "ExampleServer", targets: [ "ExampleServer" ]),
     ],
     dependencies: [
         .package(name: "SwiftProtobuf", url: "https://github.com/apple/swift-protobuf.git", from: "1.8.0"),
+        .package(url: "https://github.com/apple/swift-nio.git", from: "2.0.0"),
+        .package(url: "https://github.com/daltoniam/Starscream.git", from: "3.1.1")
     ],
     targets: [
-        .target(name: "BonjourClientTest", dependencies: [ "RobologsRemote" ], path: "Sources.BonjourClientTest"),
+        .target(name: "ExampleBonjourClient", dependencies: [ "RobologsRemote" ], path: "Sources.Example.BonjourClient"),
+        .target(name: "ExampleServer", dependencies: [ "RobologsServer" ], path: "Sources.Example.Server"),
+
         .target(name: "Robologs", dependencies: [], path: "Sources.Robologs"),
         .target(
             name: "RobologsRemote",
-            dependencies: [ "Robologs", "SwiftProtobuf" ],
+            dependencies: [ "Robologs", "SwiftProtobuf", "Starscream" ],
             path: "Sources.Robologs.Remote",
+            exclude: [ "Transports/ProtoHttpRemoteLoggerTransport/proto/backend.proto" ]
+        ),
+        .target(
+            name: "RobologsServer",
+            dependencies: [
+                "RobologsRemote",
+                .product(name: "NIO", package: "swift-nio"),
+                .product(name: "NIOHTTP1", package: "swift-nio"),
+                .product(name: "NIOWebSocket", package: "swift-nio"),
+            ],
+            path: "Sources.Robologs.Server",
             exclude: [ "Transports/ProtoHttpRemoteLoggerTransport/proto/backend.proto" ]
         ),
     ],

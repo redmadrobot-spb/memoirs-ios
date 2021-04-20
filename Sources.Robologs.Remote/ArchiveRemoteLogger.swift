@@ -77,12 +77,12 @@ class ArchiveRemoteLogger: Logger {
         }
 
         self.logger.debug("Sending archive \(batch.count) log messages")
-        transport.sendArchive(records: batch) { result in
-            switch result {
-                case .success:
+        transport.sendArchive(records: batch) { error in
+            switch error {
+                case nil:
                     self.logger.debug("Successfully sent archive \(batch.count) log messages")
                     self.sendBuffer.removeBatch(id: batchId)
-                case .failure(let error):
+                case let error?:
                     self.logger.error(error, message: "Failure sending archive \(batch.count) log messages")
             }
             self.sendingInProgress = false

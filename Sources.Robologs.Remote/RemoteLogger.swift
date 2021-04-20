@@ -62,17 +62,17 @@ public class RemoteLogger: Logger {
         file: String = #file, function: String = #function, line: UInt = #line
     ) {
         let timestamp = Date().timeIntervalSince1970
-        let position = self.nextPosition
+        let position = nextPosition
         let cachedMessage = CachedLogMessage(
             position: position,
             timestamp: timestamp,
             level: level,
-            message: message().string(isSensitive: self.isSensitive),
+            message: message().string(isSensitive: isSensitive),
             label: label,
-            meta: meta()?.mapValues { $0.string(isSensitive: self.isSensitive) },
-            file: self.isSensitive ? "" : file,
-            function: self.isSensitive ? "" : function,
-            line: self.isSensitive ? 0 : line
+            meta: meta()?.mapValues { $0.string(isSensitive: isSensitive) },
+            file: isSensitive ? "" : file,
+            function: isSensitive ? "" : function,
+            line: isSensitive ? 0 : line
         )
 
         liveLogger?.log(message: cachedMessage)

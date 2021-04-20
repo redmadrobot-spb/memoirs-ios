@@ -81,7 +81,7 @@ class LiveRemoteLogger: Logger {
 
         transport.startLive { liveResult in
             switch liveResult {
-                case .success:
+                case nil:
                     transport.liveConnectionCode { codeResult in
                         switch codeResult {
                             case .success(let code):
@@ -90,7 +90,7 @@ class LiveRemoteLogger: Logger {
                                 completion(.failure(.transport(error)))
                         }
                     }
-                case .failure(let error):
+                case let error?:
                     completion(.failure(.transport(error)))
             }
         }
@@ -145,10 +145,10 @@ class LiveRemoteLogger: Logger {
         self.logger.debug("Sending live \(batch.count) log messages")
         transport.sendLive(records: batch) { result in
             switch result {
-                case .success:
+                case nil:
                     self.logger.debug("Successfully sent live \(batch.count) log messages")
                     self.sendBuffer.removeBatch(id: batchId)
-                case .failure(let error):
+                case let error?:
                     self.logger.error(error, message: "Failure sending live \(batch.count) log messages")
             }
             self.sendingInProgress = false

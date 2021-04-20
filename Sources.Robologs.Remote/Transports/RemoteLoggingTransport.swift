@@ -23,11 +23,11 @@ protocol RemoteLoggerTransport {
     var isConnected: Bool { get }
 
     func liveConnectionCode(_ completion: @escaping (Result<String, RemoteLoggerTransportError>) -> Void)
-    func invalidateConnectionCode(_ completion: @escaping (Result<Void, RemoteLoggerTransportError>) -> Void)
+    func invalidateConnectionCode(_ completion: @escaping (RemoteLoggerTransportError?) -> Void)
 
-    func startLive(_ completion: @escaping (Result<Void, RemoteLoggerTransportError>) -> Void)
-    func stopLive(_ completion: @escaping (Result<Void, RemoteLoggerTransportError>) -> Void)
+    func startLive(_ completion: @escaping (RemoteLoggerTransportError?) -> Void)
+    func stopLive(_ completion: @escaping (RemoteLoggerTransportError?) -> Void)
 
-    func sendLive(records: [CachedLogMessage], completion: @escaping (Result<Void, RemoteLoggerTransportError>) -> Void)
-    func sendArchive(records: [CachedLogMessage], completion: @escaping (Result<Void, RemoteLoggerTransportError>) -> Void)
+    func sendLive(records: [CachedLogMessage], completion: @escaping (RemoteLoggerTransportError?) -> Void)
+    func sendArchive(records: [CachedLogMessage], completion: @escaping (RemoteLoggerTransportError?) -> Void)
 }
