@@ -17,6 +17,10 @@ class HttpTransport {
 
     private let delegateObject: URLSessionDelegateObject
 
+    // Should return token in `success` case, error otherwise.
+    var authorizeHandler: (_ completion: @escaping (Result<String, RemoteLoggerTransportError>) -> Void) -> Void = { completion in
+        completion(.failure(.notAuthorized))
+    }
     var authToken: String?
     var isAuthorized: Bool {
         authToken != nil
@@ -116,7 +120,7 @@ class HttpTransport {
                 executeRequest(urlRequest: request, retryCounter: 0, completion: completion)
             } else {
                 logger.debug("Authorization required, but absent for \(path)")
-                authorize { result in
+                authorizeHandler { result in
                     switch result {
                         case .success(let authToken):
                             request.setValue(authToken, forHTTPHeaderField: "Authorization")
@@ -290,7 +294,7 @@ class HttpTransport {
                         completion(.failure(.serialization(error)))
                     }
                 case 401:
-                    self.authorize { result in
+                    self.authorizeHandler { result in
                         switch result {
                             case .success(let authToken):
                                 var urlRequest = urlRequest

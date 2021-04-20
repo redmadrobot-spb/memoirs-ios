@@ -33,14 +33,11 @@ extension Level {
 class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
     private let secret: String
     private var isLoading = false
-
-    private var logger: LabeledLogger!
-
     private let applicationInfo: ApplicationInfo
+    private var logger: LabeledLogger!
+    private let httpTransport: HttpTransport
 
     var isConnected: Bool { httpTransport.isAuthorized }
-
-    private let httpTransport: HttpTransport
 
     /// Creates new instance of `ProtoHttpRemoteLoggerTransport`.
     /// - Parameter endpoint: URL to server endpoint supporting this kind of transport.
@@ -57,6 +54,7 @@ class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
         self.applicationInfo = applicationInfo
         self.secret = secret
         httpTransport = HttpTransport(endpoint: endpoint, challengePolicy: challengePolicy, logger: logger)
+        httpTransport.authorizeHandler = authorize
         self.logger = LabeledLogger(object: self, logger: logger)
     }
 
