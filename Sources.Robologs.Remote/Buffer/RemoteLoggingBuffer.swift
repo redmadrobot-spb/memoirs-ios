@@ -9,7 +9,7 @@
 import Foundation
 
 protocol RemoteLoggerBuffer {
-    func add(message: CachedLogMessage)
-    func getNextBatch() -> (batchId: String, records: [CachedLogMessage])?
+    func add(message: SerializedLogMessage)
+    func getNextBatch() -> (batchId: String, records: [SerializedLogMessage])?
     func removeBatch(id: String)
 }

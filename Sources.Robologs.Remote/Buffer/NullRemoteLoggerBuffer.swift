@@ -9,10 +9,10 @@
 import Foundation
 
 class NullRemoteLoggerBuffer: RemoteLoggerBuffer {
-    func add(message: CachedLogMessage) {
+    func add(message: SerializedLogMessage) {
     }
 
-    func getNextBatch() -> (batchId: String, records: [CachedLogMessage])? {
+    func getNextBatch() -> (batchId: String, records: [SerializedLogMessage])? {
         nil
     }
 

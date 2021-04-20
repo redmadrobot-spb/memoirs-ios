@@ -35,13 +35,13 @@ class PersistingLoggingBuffer: RemoteLoggerBuffer {
 
     private let queue: DispatchQueue = .init(label: "PersistingLoggingBuffer")
 
-    func add(message: CachedLogMessage) {
+    func add(message: SerializedLogMessage) {
         queue.async(flags: .barrier) {
             self.persist(record: message)
         }
     }
 
-    func getNextBatch() -> (batchId: String, records: [CachedLogMessage])? {
+    func getNextBatch() -> (batchId: String, records: [SerializedLogMessage])? {
         queue.sync {
             guard let enumerator = FileManager.default.enumerator(atPath: cachePath.path) else { return nil }
             let batches = enumerator
@@ -80,9 +80,9 @@ class PersistingLoggingBuffer: RemoteLoggerBuffer {
 
     private var savingBatchId: String?
 
-    private func persist(record: CachedLogMessage) {
+    private func persist(record: SerializedLogMessage) {
         let id: String
-        var records: [CachedLogMessage]
+        var records: [SerializedLogMessage]
         if let savingBatchId = savingBatchId {
             id = savingBatchId
             records = self.records(for: savingBatchId) ?? []
@@ -93,7 +93,7 @@ class PersistingLoggingBuffer: RemoteLoggerBuffer {
             }
         } else {
             id = "\(Int(Date.timeIntervalSinceReferenceDate))-\(UUID().uuidString)"
-            self.logger.debug("Creating new batch id (and file) \"\(id)\"")
+            logger.debug("Creating new batch id (and file) \"\(id)\"")
             savingBatchId = id
             records = [ record ]
         }
@@ -102,17 +102,17 @@ class PersistingLoggingBuffer: RemoteLoggerBuffer {
             let encoder = JSONEncoder()
             let data = try encoder.encode(records)
             try data.write(to: cachePath.appendingPathComponent(id), options: .atomic)
-            self.logger.verbose("Persisted log with position \(record.position) \"\(id)\"")
+            logger.verbose("Persisted log with position \(record.position) \"\(id)\"")
         } catch {
             logger.error(error)
         }
     }
 
-    private func records(for id: String) -> [CachedLogMessage]? {
+    private func records(for id: String) -> [SerializedLogMessage]? {
         do {
             let decoder = JSONDecoder()
             let data = try Data(contentsOf: cachePath.appendingPathComponent(id))
-            return try decoder.decode([CachedLogMessage].self, from: data)
+            return try decoder.decode([SerializedLogMessage].self, from: data)
         } catch {
             logger.error(error)
             return nil

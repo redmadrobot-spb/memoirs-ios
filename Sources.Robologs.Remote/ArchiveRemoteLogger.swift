@@ -50,7 +50,7 @@ class ArchiveRemoteLogger: Logger {
         )
     }
 
-    func log(message: CachedLogMessage) {
+    func log(message: SerializedLogMessage) {
         workingQueue.async {
             self.sendBuffer.add(message: message)
             self.sendLogMessages()
@@ -76,7 +76,7 @@ class ArchiveRemoteLogger: Logger {
             return
         }
 
-        self.logger.debug("Sending archive \(batch.count) log messages")
+        logger.debug("Sending archive \(batch.count) log messages")
         transport.sendArchive(records: batch) { error in
             switch error {
                 case nil:

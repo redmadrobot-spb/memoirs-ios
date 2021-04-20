@@ -26,7 +26,7 @@ class HttpTransport {
         authToken != nil
     }
 
-    /// Creates new instance of `ProtoHttpRemoteLoggerTransport`.
+    /// Creates new instance of `HttpTransport`.
     /// - Parameter endpoint: URL to server endpoint supporting this kind of transport.
     /// - Parameter secret: Secret key received from Robologs admin panel.
     /// - Parameter challengePolicy: Policy determining how URLAuthenticationChallenge will be managed.
@@ -46,16 +46,16 @@ class HttpTransport {
         self.logger = LabeledLogger(object: self, logger: logger)
     }
 
-    func requestNoResponse(
+    func request(
         path: String,
         method: String = "POST",
         needAuthorization: Bool = true,
         completion: @escaping (RemoteLoggerTransportError?) -> Void
     ) {
-        requestNoResponse(path: path, method: method, needAuthorization: needAuthorization, object: EmptyMessage(), completion: completion)
+        request(path: path, method: method, needAuthorization: needAuthorization, object: EmptyMessage(), completion: completion)
     }
 
-    func requestNoResponse<Request: Message>(
+    func request<Request: Message>(
         path: String,
         method: String = "POST",
         needAuthorization: Bool = true,

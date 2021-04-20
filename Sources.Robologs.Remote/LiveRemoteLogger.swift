@@ -69,7 +69,7 @@ class LiveRemoteLogger: Logger {
         }
     }
 
-    func log(message: CachedLogMessage) {
+    func log(message: SerializedLogMessage) {
         workingQueue.async {
             self.sendBuffer.add(message: message)
             self.sendLogMessages()

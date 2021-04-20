@@ -15,16 +15,16 @@ class InMemoryRemoteLoggerBuffer: RemoteLoggerBuffer {
         self.maxRecordsCount = maxRecordsCount
     }
 
-    private var records: [CachedLogMessage] = []
+    private var records: [SerializedLogMessage] = []
 
-    func add(message: CachedLogMessage) {
+    func add(message: SerializedLogMessage) {
         records.append(message)
         if records.count > maxRecordsCount {
             records = records.suffix(records.count - maxRecordsCount)
         }
     }
 
-    func getNextBatch() -> (batchId: String, records: [CachedLogMessage])? {
+    func getNextBatch() -> (batchId: String, records: [SerializedLogMessage])? {
         if records.isEmpty {
             return nil
         } else {

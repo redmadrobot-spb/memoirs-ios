@@ -63,7 +63,7 @@ public class RemoteLogger: Logger {
     ) {
         let timestamp = Date().timeIntervalSince1970
         let position = nextPosition
-        let cachedMessage = CachedLogMessage(
+        let cachedMessage = SerializedLogMessage(
             position: position,
             timestamp: timestamp,
             level: level,

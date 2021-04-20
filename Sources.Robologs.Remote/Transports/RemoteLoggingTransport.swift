@@ -28,6 +28,6 @@ protocol RemoteLoggerTransport {
     func startLive(_ completion: @escaping (RemoteLoggerTransportError?) -> Void)
     func stopLive(_ completion: @escaping (RemoteLoggerTransportError?) -> Void)
 
-    func sendLive(records: [CachedLogMessage], completion: @escaping (RemoteLoggerTransportError?) -> Void)
-    func sendArchive(records: [CachedLogMessage], completion: @escaping (RemoteLoggerTransportError?) -> Void)
+    func sendLive(records: [SerializedLogMessage], completion: @escaping (RemoteLoggerTransportError?) -> Void)
+    func sendArchive(records: [SerializedLogMessage], completion: @escaping (RemoteLoggerTransportError?) -> Void)
 }

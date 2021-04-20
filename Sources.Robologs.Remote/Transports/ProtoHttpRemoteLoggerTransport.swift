@@ -103,38 +103,28 @@ class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
     }
 
     func invalidateConnectionCode(_ completion: @escaping (RemoteLoggerTransportError?) -> Void) {
-        httpTransport.requestNoResponse(path: "code", method: "DELETE", completion: completion)
+        httpTransport.request(path: "code", method: "DELETE", completion: completion)
     }
 
     func startLive(_ completion: @escaping (RemoteLoggerTransportError?) -> Void) {
-        httpTransport.requestNoResponse(path: "live/start", completion: completion)
+        httpTransport.request(path: "live/start", completion: completion)
     }
 
     func stopLive(_ completion: @escaping (RemoteLoggerTransportError?) -> Void) {
-        httpTransport.requestNoResponse(path: "live/stop", completion: completion)
+        httpTransport.request(path: "live/stop", completion: completion)
     }
 
-    func sendLive(records: [CachedLogMessage], completion: @escaping (RemoteLoggerTransportError?) -> Void) {
-        httpTransport.requestNoResponse(path: "live/send", object: batch(from: records), completion: completion)
+    func sendLive(records: [SerializedLogMessage], completion: @escaping (RemoteLoggerTransportError?) -> Void) {
+        httpTransport.request(path: "live/send", object: batch(from: records), completion: completion)
     }
 
-    func sendArchive(records: [CachedLogMessage], completion: @escaping (RemoteLoggerTransportError?) -> Void) {
-        httpTransport.requestNoResponse(path: "archive/send", object: batch(from: records), completion: completion)
+    func sendArchive(records: [SerializedLogMessage], completion: @escaping (RemoteLoggerTransportError?) -> Void) {
+        httpTransport.request(path: "archive/send", object: batch(from: records), completion: completion)
     }
 
-    private func batch(from messages: [CachedLogMessage]) -> LogMessageBatch {
+    private func batch(from messages: [SerializedLogMessage]) -> LogMessageBatch {
         LogMessageBatch.with { logMessages in
-            logMessages.messages = messages.map { record in
-                LogMessage.with { logMessage in
-                    logMessage.position = record.position
-                    logMessage.priority = record.level.protoBufLevel
-                    logMessage.label = record.label
-                    logMessage.body = record.message
-                    logMessage.source = collectContext(file: record.file, function: record.function, line: record.line)
-                    logMessage.timestampMillis = UInt64(record.timestamp * 1000)
-                    logMessage.meta = record.meta ?? [:]
-                }
-            }
+            logMessages.messages = messages.map { $0.protobufMessage }
         }
     }
 }

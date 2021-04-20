@@ -1,7 +1,3 @@
-//
-// Copyright © 2020 Redmadrobot SPb. All rights reserved.
-//
-
 syntax = "proto2";
 
 option java_package = "com.redmadrobot.robologs.protobuf.messages";
