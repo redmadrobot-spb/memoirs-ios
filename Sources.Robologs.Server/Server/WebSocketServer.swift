@@ -32,14 +32,19 @@ public class WebSocketServer {
     }
 
     public func send(log: SerializedLogMessage) throws {
-        let data = try log.protobufMessageData()
-        handlers.values.forEach { channel, handler in
-            guard channel.isActive else { return }
+        channels = channels.filter { _, channel in
+            channel.isActive && channel.isWritable
+        }
+        logger.info("Channels: \(channels.count)")
+
+        let data = try log.protobufMessageInBatchData()
+        channels.values.forEach { channel in
+            guard channel.isActive && channel.isWritable else { return }
 
             let buffer = channel.allocator.buffer(bytes: data)
             let frame = WebSocketFrame(fin: true, opcode: .text, data: buffer)
             channel
-                .writeAndFlush(handler.wrapOutboundOut(frame))
+                .writeAndFlush(NIOAny(frame))
                 .whenFailure { error in
                     self.logger.error(error)
                     channel.close(promise: nil)
@@ -47,7 +52,7 @@ public class WebSocketServer {
         }
     }
 
-    private var handlers: [String: (Channel, WebSocketSendingLogsHandler)] = [:]
+    private var channels: [String: Channel] = [:]
 
     private var group: EventLoopGroup!
     private var bootstrap: ServerBootstrap!
@@ -60,7 +65,7 @@ public class WebSocketServer {
             },
             upgradePipelineHandler: { (channel: Channel, _: HTTPRequestHead) in
                 let handler = WebSocketSendingLogsHandler(logger: self.originalLogger)
-                self.handlers[UUID().uuidString] = (channel, handler)
+                self.channels[UUID().uuidString] = channel
                 return channel.pipeline.addHandler(handler)
             }
         )

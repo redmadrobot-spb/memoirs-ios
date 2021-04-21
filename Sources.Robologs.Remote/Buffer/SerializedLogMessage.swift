@@ -44,9 +44,17 @@ public struct SerializedLogMessage: Codable {
             logMessage.meta = meta ?? [:]
         }
     }
+}
 
-    public func protobufMessageData() throws -> Data {
+public extension SerializedLogMessage {
+    func protobufMessageData() throws -> Data {
         try protobufMessage.serializedData()
+    }
+
+    func protobufMessageInBatchData() throws -> Data {
+        try LogMessageBatch
+            .with { $0.messages = [ protobufMessage ] }
+            .serializedData()
     }
 }
 
