@@ -35,8 +35,7 @@ let package = Package(
                 .product(name: "NIOHTTP1", package: "swift-nio"),
                 .product(name: "NIOWebSocket", package: "swift-nio"),
             ],
-            path: "Sources.Robologs.Server",
-            exclude: [ "Transports/ProtoHttpRemoteLoggerTransport/proto/backend.proto" ]
+            path: "Sources.Robologs.Server"
         ),
     ],
     swiftLanguageVersions: [.v5]
