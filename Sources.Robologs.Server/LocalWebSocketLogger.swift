@@ -6,18 +6,18 @@ import Foundation
 import Robologs
 import RobologsRemote
 
-class LocalWebSocketLogger: Logger {
+public class LocalWebSocketLogger: Logger {
     private let server: WebSocketServer
     private var position: UInt64
     private var isSensitive: Bool
 
-    init(server: WebSocketServer, initialPosition: UInt64 = 0, isSensitive: Bool = false) {
+    public init(server: WebSocketServer, initialPosition: UInt64 = 0, isSensitive: Bool = false) {
         self.server = server
         self.isSensitive = isSensitive
         position = initialPosition
     }
 
-    func log(
+    public func log(
         level: Level,
         _ message: @autoclosure () -> LogString,
         label: String,

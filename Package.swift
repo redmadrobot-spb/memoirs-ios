@@ -23,7 +23,7 @@ let package = Package(
         .target(name: "Robologs", dependencies: [], path: "Sources.Robologs"),
         .target(
             name: "RobologsRemote",
-            dependencies: [ "Robologs", "SwiftProtobuf", "Starscream" ],
+            dependencies: [ "Robologs", "SwiftProtobuf" ],
             path: "Sources.Robologs.Remote",
             exclude: [ "Transports/ProtoHttpRemoteLoggerTransport/proto/backend.proto" ]
         ),

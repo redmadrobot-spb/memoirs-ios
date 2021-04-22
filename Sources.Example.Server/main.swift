@@ -11,35 +11,20 @@ import Robologs
 import RobologsRemote
 import RobologsServer
 
-var webSocket: WebSocketServer = WebSocketServer(port: 9999, logger: PrintLogger(onlyTime: true, shortSource: true))
+var server: WebSocketServer = WebSocketServer(port: 9999, logger: PrintLogger(onlyTime: true, shortSource: true))
 
 DispatchQueue.global().async {
     do {
-        try webSocket.start()
+        try server.start()
     } catch {
         print("\(error)")
     }
 }
 
+let logger = LocalWebSocketLogger(server: server, isSensitive: false)
+
 while true {
-    let message = SerializedLogMessage(
-        position: UInt64.random(in: 0 ... UInt64.max),
-        timestamp: Date().timeIntervalSince1970,
-        level: .debug,
-        message: "Test message",
-        label: "Label",
-        meta: nil,
-        file: "FILE",
-        function: "FUNCTION",
-        line: 0
-    )
-
     Thread.sleep(forTimeInterval: 3)
-
-    print("... ")
-    do {
-        try webSocket.send(log: message)
-    } catch {
-        print("\(error)")
-    }
+    print("...")
+    logger.debug("Test Message", label: "TestLabel")
 }
