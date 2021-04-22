@@ -6,6 +6,8 @@ import Foundation
 import Robologs
 import RobologsRemote
 
+// 1
+
 public class LocalWebSocketLogger: Logger {
     private let server: WebSocketServer
     private var position: UInt64
