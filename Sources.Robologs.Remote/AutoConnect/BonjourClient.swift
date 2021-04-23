@@ -40,7 +40,7 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
     private let adbDirectoryUrl: URL?
 
     public init(adbRunDirectory: String?, logger: Logger) {
-        self.adbDirectoryUrl = adbRunDirectory.map { URL(fileURLWithPath: $0) }
+        adbDirectoryUrl = adbRunDirectory.map { URL(fileURLWithPath: $0) }
         super.init()
 
         adbTimer = Timer(timeInterval: 5, target: self, selector: #selector(adbTimerFired), userInfo: nil, repeats: true)
@@ -109,7 +109,7 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
 
     private func adbDevices(completion: @escaping (_ deviceSerialIds: [String]) -> Void) {
         guard let adbDirectoryUrl = adbDirectoryUrl else {
-            self.logger.warning("ADB Monitoring was not started, directory for ADB is not specified")
+            logger.warning("ADB Monitoring was not started, directory for ADB is not specified")
             return
         }
 
@@ -124,7 +124,7 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
     }
 
     private func adbLogCat(for serialId: String) -> [String] {
-        self.logger.verbose("Looking robolog connection ids in adb for device \(serialId)")
+        logger.verbose("Looking robolog connection ids in adb for device \(serialId)")
 
         guard let adbDirectoryUrl = adbDirectoryUrl else {
             logger.warning("ADB Monitoring was not started, directory for ADB is not specified")
@@ -167,7 +167,6 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
                         }
                     } catch {
                         self.logger.error(error)
-                        break
                     }
                 }
 
@@ -230,23 +229,23 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
     // MARK: - NetServiceBrowser Delegate
 
     public func netServiceBrowserWillSearch(_ browser: NetServiceBrowser) {
-        self.logger.debug("")
+        logger.debug("")
     }
 
     public func netServiceBrowserDidStopSearch(_ browser: NetServiceBrowser) {
-        self.logger.debug("")
+        logger.debug("")
     }
 
     public func netServiceBrowser(_ browser: NetServiceBrowser, didNotSearch errorDict: [String: NSNumber]) {
-        self.logger.debug("Error: \(errorDict)")
+        logger.debug("Error: \(errorDict)")
     }
 
     public func netServiceBrowser(_ browser: NetServiceBrowser, didFindDomain domainString: String, moreComing: Bool) {
-        self.logger.debug("")
+        logger.debug("")
     }
 
     public func netServiceBrowser(_ browser: NetServiceBrowser, didRemoveDomain domainString: String, moreComing: Bool) {
-        self.logger.debug("")
+        logger.debug("")
     }
 
     private var foundRobologsServices: [NetService] = []
@@ -321,30 +320,49 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
             let nameData = txtRecord[BonjourServer.recordName],
             let name = String(data: nameData, encoding: .utf8),
             let senderIdData = txtRecord[BonjourServer.recordSenderId],
-            let senderId = String(data: senderIdData, encoding: .utf8),
-            let endpointData = txtRecord[BonjourServer.recordEndpoint],
-            let endpoint = String(data: endpointData, encoding: .utf8)
+            let senderId = String(data: senderIdData, encoding: .utf8)
         else {
             logger.warning("Service does not have sender info: \(service.domain)/\(service.type)/\(service.name)")
             return
         }
 
         foundRobologSDKsByNetServiceName[service.name] = senderId
-        let remoteSDK = RobologsRemoteSDK(name: name, id: senderId, apiEndpoint: endpoint)
-        foundSDKsById[senderId] = remoteSDK
-        notify()
+        if let endpointData = txtRecord[BonjourServer.recordEndpoint], let endpoint = String(data: endpointData, encoding: .utf8) {
+            let remoteSDK = RobologsRemoteSDK(name: name, id: senderId, apiEndpoint: endpoint)
+            foundSDKsById[senderId] = remoteSDK
+            notify()
 
-        let addresses = resolveIPv4(addresses: service.addresses ?? [])
-        isRobologsServiceLocal(addresses: addresses, txtRecord: txtRecord) { isLocal in
-            guard isLocal else {
-                return self.logger.debug("Not local service: \(service.domain)/\(service.type)/\(service.name)")
-            }
+            let addresses = resolveIPv4(addresses: service.addresses ?? [])
+            isRobologsServiceLocal(addresses: addresses, txtRecord: txtRecord) { isLocal in
+                guard isLocal else {
+                    return self.logger.debug("Not local service: \(service.domain)/\(service.type)/\(service.name)")
+                }
 
-            self.localRobologSDKsByNetServiceName[service.name] = senderId
-            self.completionQueue.async { [weak self] in
-                self?.serviceFound?(remoteSDK)
+                self.localRobologSDKsByNetServiceName[service.name] = senderId
+                self.completionQueue.async { [weak self] in
+                    self?.serviceFound?(remoteSDK)
+                }
+                self.logger.debug("Robologs service appeared with senderId: \(senderId)")
             }
-            self.logger.debug("Robologs service appeared with senderId: \(senderId)")
+        }
+
+        if let liveData = txtRecord[BonjourServer.recordLiveStarted], let live = String(data: liveData, encoding: .utf8), live == "true" {
+            let remoteSDK = RobologsRemoteSDK(name: name, id: senderId, apiEndpoint: service.)
+            foundSDKsById[senderId] = remoteSDK
+            notify()
+
+            let addresses = resolveIPv4(addresses: service.addresses ?? [])
+            isRobologsServiceLocal(addresses: addresses, txtRecord: txtRecord) { isLocal in
+                guard isLocal else {
+                    return self.logger.debug("Not local service: \(service.domain)/\(service.type)/\(service.name)")
+                }
+
+                self.localRobologSDKsByNetServiceName[service.name] = senderId
+                self.completionQueue.async { [weak self] in
+                    self?.serviceFound?(remoteSDK)
+                }
+                self.logger.debug("Robologs service appeared with senderId: \(senderId)")
+            }
         }
     }
 
