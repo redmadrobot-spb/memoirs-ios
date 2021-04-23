@@ -13,7 +13,7 @@ import NIOWebSocket
 import Robologs
 import RobologsRemote
 
-public class WebSocketServer {
+public class WebSocketLogSender: LogSender {
     enum Problem: Error {
         case cantBind
     }
@@ -31,24 +31,28 @@ public class WebSocketServer {
         prepare()
     }
 
-    public func send(log: SerializedLogMessage) throws {
+    public func send(message: SerializedLogMessage) {
         channels = channels.filter { _, channel in
             channel.isActive && channel.isWritable
         }
         logger.info("Channels: \(channels.count)")
 
-        let data = try log.protobufMessageInBatchData()
-        channels.values.forEach { channel in
-            guard channel.isActive && channel.isWritable else { return }
+        do {
+            let data = try message.protobufMessageInBatchData()
+            channels.values.forEach { channel in
+                guard channel.isActive && channel.isWritable else { return }
 
-            let buffer = channel.allocator.buffer(bytes: data)
-            let frame = WebSocketFrame(fin: true, opcode: .text, data: buffer)
-            channel
-                .writeAndFlush(NIOAny(frame))
-                .whenFailure { error in
-                    self.logger.error(error)
-                    channel.close(promise: nil)
-                }
+                let buffer = channel.allocator.buffer(bytes: data)
+                let frame = WebSocketFrame(fin: true, opcode: .text, data: buffer)
+                channel
+                    .writeAndFlush(NIOAny(frame))
+                    .whenFailure { error in
+                        self.logger.error(error)
+                        channel.close(promise: nil)
+                    }
+            }
+        } catch {
+            logger.error(error)
         }
     }
 

@@ -10,48 +10,12 @@ import Foundation
 import Robologs
 
 public class RemoteLogger: Logger {
-    public enum LiveMode {
-        case disabled
-        case enabled(allowAutoConnectViaBonjour: Bool, bufferSize: Int = 1000)
-    }
-    public enum ArchiveMode {
-        case disabled
-        case enabled(cacheDirectoryUrl: URL, maxBatchSize: Int, maxBatchesCount: Int)
-    }
-
-    private var liveLogger: LiveRemoteLogger?
-    private var archiveLogger: ArchiveRemoteLogger?
     private var isSensitive: Bool
+    private var senders: [LogSender] = []
 
-    public init(applicationInfo: ApplicationInfo, isSensitive: Bool, live: LiveMode, archive: ArchiveMode, logger: Logger) {
+    public init(isSensitive: Bool, senders: [LogSender]) {
         self.isSensitive = isSensitive
-
-        switch live {
-            case .disabled:
-                liveLogger = nil
-            case .enabled(let allowAutoConnectViaBonjour, let bufferSize):
-                liveLogger = LiveRemoteLogger(
-                    applicationInfo: applicationInfo,
-                    isSensitive: isSensitive,
-                    publishServerInLocalWeb: allowAutoConnectViaBonjour,
-                    bufferSize: bufferSize,
-                    logger: logger
-                )
-        }
-
-        switch archive {
-            case .disabled:
-                archiveLogger = nil
-            case .enabled(let cacheDirectoryUrl, let maxBatchSize, let maxBatchesCount):
-                archiveLogger = ArchiveRemoteLogger(
-                    applicationInfo: applicationInfo,
-                    isSensitive: isSensitive,
-                    cacheDirectoryUrl: cacheDirectoryUrl,
-                    maxBatchSize: maxBatchSize,
-                    maxBatchesCount: maxBatchesCount,
-                    logger: logger
-                )
-        }
+        self.senders = senders
     }
 
     public func log(
@@ -63,7 +27,7 @@ public class RemoteLogger: Logger {
     ) {
         let timestamp = Date().timeIntervalSince1970
         let position = nextPosition
-        let cachedMessage = SerializedLogMessage(
+        let message = SerializedLogMessage(
             position: position,
             timestamp: timestamp,
             level: level,
@@ -75,30 +39,7 @@ public class RemoteLogger: Logger {
             line: isSensitive ? 0 : line
         )
 
-        liveLogger?.log(message: cachedMessage)
-        archiveLogger?.log(message: cachedMessage)
-    }
-
-    public func configure(
-        endpoint: URL,
-        secret: String,
-        challengePolicy: AuthenticationChallengePolicy = ValidateSSLChallengePolicy(),
-        completion: @escaping () -> Void
-    ) {
-        liveLogger?.configure(endpoint: endpoint, secret: secret, challengePolicy: challengePolicy, completion: completion)
-        archiveLogger?.configure(endpoint: endpoint, secret: secret, challengePolicy: challengePolicy)
-    }
-
-    public func startLive(completion: @escaping (_ resultWithCode: Result<String, RemoteLoggerError>) -> Void) {
-        liveLogger?.startLive(completion: completion)
-    }
-
-    public func stopLive(completion: @escaping (Result<Void, RemoteLoggerError>) -> Void) {
-        liveLogger?.stopLive(completion: completion)
-    }
-
-    public func getCode(completion: @escaping (_ resultWithCode: Result<String, RemoteLoggerError>) -> Void) {
-        liveLogger?.getCode(completion: completion)
+        senders.forEach { $0.send(message: message) }
     }
 
     // MARK: - Log Position (part of identifier)

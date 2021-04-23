@@ -11,17 +11,17 @@ import Robologs
 import RobologsRemote
 import RobologsServer
 
-var server: WebSocketServer = WebSocketServer(port: 9999, logger: PrintLogger(onlyTime: true, shortSource: true))
+var logSender: WebSocketLogSender = WebSocketLogSender(port: 9999, logger: PrintLogger(onlyTime: true, shortSource: true))
 
 DispatchQueue.global().async {
     do {
-        try server.start()
+        try logSender.start()
     } catch {
         print("\(error)")
     }
 }
 
-let logger = LocalWebSocketLogger(server: server, isSensitive: false)
+let logger = RemoteLogger(isSensitive: false, senders: [ logSender ])
 
 while true {
     Thread.sleep(forTimeInterval: 3)

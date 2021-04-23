@@ -1,5 +1,5 @@
 //
-// WebSocketEchoLogsHandler
+// WebSocketSendingLogsHandler
 // Robologs.Server
 //
 // Created by Alex Babaev on 19 April 2021.

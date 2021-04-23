@@ -9,7 +9,7 @@
 import Foundation
 import Robologs
 
-class ArchiveRemoteLogger: Logger {
+public class ArchiveRemoteLogger: LogSender {
     public let isSensitive: Bool
 
     private let loggerToInject: Logger
@@ -34,27 +34,27 @@ class ArchiveRemoteLogger: Logger {
             logger: logger
         )
 
+        loggerToInject = logger
         self.applicationInfo = applicationInfo
-        self.loggerToInject = logger
         self.isSensitive = isSensitive
         self.logger = LabeledLogger(object: self, logger: logger)
     }
 
-    func configure(endpoint: URL, secret: String, challengePolicy: AuthenticationChallengePolicy) {
-        self.transport = ProtoHttpRemoteLoggerTransport(
-            endpoint: endpoint,
-            secret: secret,
-            challengePolicy: challengePolicy,
-            applicationInfo: self.applicationInfo,
-            logger: self.loggerToInject
-        )
-    }
-
-    func log(message: SerializedLogMessage) {
+    public func send(message: SerializedLogMessage) {
         workingQueue.async {
             self.sendBuffer.add(message: message)
             self.sendLogMessages()
         }
+    }
+
+    func configure(endpoint: URL, secret: String, challengePolicy: AuthenticationChallengePolicy) {
+        transport = ProtoHttpRemoteLoggerTransport(
+            endpoint: endpoint,
+            secret: secret,
+            challengePolicy: challengePolicy,
+            applicationInfo: applicationInfo,
+            logger: loggerToInject
+        )
     }
 
     // MARK: - Sending logs from buffers to the backend
@@ -62,7 +62,7 @@ class ArchiveRemoteLogger: Logger {
     private var sendingInProgress: Bool = false
 
     private func sendLogMessages() {
-        guard !sendingInProgress, let transport = self.transport, transport.isConnected else { return }
+        guard !sendingInProgress, let transport = transport, transport.isConnected else { return }
 
         sendingInProgress = true
 

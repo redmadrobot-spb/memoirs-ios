@@ -9,7 +9,7 @@
 import Foundation
 import Robologs
 
-class LiveRemoteLogger: Logger {
+public class LiveLogSender: LogSender {
     public let isSensitive: Bool
 
     private let loggerToInject: Logger
@@ -19,23 +19,18 @@ class LiveRemoteLogger: Logger {
     private var transport: RemoteLoggerTransport?
     private var logger: LabeledLogger!
 
-    private var bonjourServer: BonjourServer?
-
-    init(
-        applicationInfo: ApplicationInfo,
-        isSensitive: Bool,
-        publishServerInLocalWeb: Bool,
-        bufferSize: Int = 1000,
-        logger: Logger = NullLogger()
-    ) {
+    init(applicationInfo: ApplicationInfo, isSensitive: Bool, bufferSize: Int = 1000, logger: Logger = NullLogger()) {
         sendBuffer = InMemoryRemoteLoggerBuffer(maxRecordsCount: bufferSize)
+        loggerToInject = logger
         self.applicationInfo = applicationInfo
-        self.loggerToInject = logger
         self.isSensitive = isSensitive
         self.logger = LabeledLogger(object: self, logger: logger)
+    }
 
-        if publishServerInLocalWeb {
-            bonjourServer = BonjourServer(logger: logger)
+    public func send(message: SerializedLogMessage) {
+        workingQueue.async {
+            self.sendBuffer.add(message: message)
+            self.sendLogMessages()
         }
     }
 
@@ -46,10 +41,6 @@ class LiveRemoteLogger: Logger {
         completion: @escaping () -> Void
     ) {
         let updateTransport = {
-            if let bonjourServer = self.bonjourServer {
-                bonjourServer.stopPublishing()
-                bonjourServer.publish(endpoint: endpoint.absoluteString, senderId: self.applicationInfo.deviceId)
-            }
             self.transport = ProtoHttpRemoteLoggerTransport(
                 endpoint: endpoint,
                 secret: secret,
@@ -66,13 +57,6 @@ class LiveRemoteLogger: Logger {
             }
         } else {
             updateTransport()
-        }
-    }
-
-    func log(message: SerializedLogMessage) {
-        workingQueue.async {
-            self.sendBuffer.add(message: message)
-            self.sendLogMessages()
         }
     }
 
@@ -97,10 +81,6 @@ class LiveRemoteLogger: Logger {
     }
 
     func stopLive(completion: @escaping (Result<Void, RemoteLoggerError>) -> Void) {
-        if let bonjourServer = bonjourServer {
-            bonjourServer.stopPublishing()
-        }
-
         guard let transport = transport else { return completion(.failure(.transportIsNotConfigured)) }
 
         transport.invalidateConnectionCode { _ in
@@ -128,7 +108,7 @@ class LiveRemoteLogger: Logger {
     private var sendingInProgress: Bool = false
 
     private func sendLogMessages() {
-        guard !sendingInProgress, let transport = self.transport, transport.isConnected else { return }
+        guard !sendingInProgress, let transport = transport, transport.isConnected else { return }
 
         sendingInProgress = true
 
@@ -142,7 +122,7 @@ class LiveRemoteLogger: Logger {
             return
         }
 
-        self.logger.debug("Sending live \(batch.count) log messages")
+        logger.debug("Sending live \(batch.count) log messages")
         transport.sendLive(records: batch) { result in
             switch result {
                 case nil:
