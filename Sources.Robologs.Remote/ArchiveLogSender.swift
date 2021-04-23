@@ -47,7 +47,7 @@ public class ArchiveLogSender: LogSender {
         }
     }
 
-    func configure(endpoint: URL, secret: String, challengePolicy: AuthenticationChallengePolicy) {
+    public func configure(endpoint: URL, secret: String, challengePolicy: AuthenticationChallengePolicy) {
         transport = ProtoHttpRemoteLoggerTransport(
             endpoint: endpoint,
             secret: secret,

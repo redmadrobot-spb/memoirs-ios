@@ -34,7 +34,7 @@ public class LiveLogSender: LogSender {
         }
     }
 
-    func configure(
+    public func configure(
         endpoint: URL,
         secret: String,
         challengePolicy: AuthenticationChallengePolicy = ValidateSSLChallengePolicy(),
