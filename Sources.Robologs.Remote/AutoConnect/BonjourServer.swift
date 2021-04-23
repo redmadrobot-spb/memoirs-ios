@@ -32,6 +32,8 @@ public class BonjourServer: NSObject, NetServiceDelegate {
     private var netService: NetService?
     private var logger: LabeledLogger!
 
+    public var port: Int? { netService?.port }
+
     public init(logger: Logger) {
         super.init()
 
