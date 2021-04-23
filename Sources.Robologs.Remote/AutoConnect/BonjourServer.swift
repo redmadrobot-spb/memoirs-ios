@@ -47,7 +47,7 @@ public class BonjourServer: NSObject, NetServiceDelegate {
             let deviceUDID = ProcessInfo.processInfo.environment["SIMULATOR_UDID"]
             // TODO: Add fallback for manual udid setup
             if let deviceUDID = deviceUDID, let hash = sha256(string: deviceUDID) {
-                self.logger.debug("Found device UDID: \(deviceUDID)")
+                logger.debug("Found device UDID: \(deviceUDID)")
                 return hash
             } else {
                 return nil
@@ -62,10 +62,12 @@ public class BonjourServer: NSObject, NetServiceDelegate {
     static let recordSenderId: String = "senderId"
     static let recordIOSSimulator: String = "iOSSimulator"
     static let recordAndroidId: String = "androidId"
+    static let recordLocalServerStarted: String = "localServerStarted"
+    static let recordLiveStarted: String = "liveStarted"
 
     let generatedPort: Int32 = (Int32(48000) ..< 65536).randomElement() ?? 32128
 
-    public func publish(endpoint: String, senderId: String) {
+    public func publish(live: (endpoint: String, senderId: String)?, localServerStarted: Bool) {
         if netService != nil {
             stopPublishing()
         }
@@ -81,32 +83,30 @@ public class BonjourServer: NSObject, NetServiceDelegate {
         netService.delegate = self
         self.netService = netService
 
-        var txtRecord: [String: Data] = [:]
-        if let data = senderId.data(using: String.Encoding.utf8) {
-            txtRecord[BonjourServer.recordSenderId] = data
+        var txtRecord: [String: String] = [:]
+        if let live = live {
+            txtRecord[BonjourServer.recordSenderId] = live.senderId
+            txtRecord[BonjourServer.recordEndpoint] = live.endpoint
         }
-        if let data = endpoint.data(using: String.Encoding.utf8) {
-            txtRecord[BonjourServer.recordEndpoint] = data
-        }
+        txtRecord[BonjourServer.recordLocalServerStarted] = "\(localServerStarted)"
+
         #if canImport(UIKit)
         let deviceName = ProcessInfo.processInfo.environment["SIMULATOR_DEVICE_NAME"].map { "Simulator: \($0)" } ?? UIDevice.current.name
         #else
         let deviceName = (Bundle.main.infoDictionary?["CFBundleName"] as? String).map { "Bundle Name: \($0)" } ?? "—"
         #endif
-        if let data = deviceName.data(using: .utf8) {
-            txtRecord[BonjourServer.recordName] = data
-        }
-        if let deviceIdHash = self.deviceIdHash, let data = deviceIdHash.data(using: .utf8) {
-            txtRecord[BonjourServer.recordIOSSimulator] = data
+        txtRecord[BonjourServer.recordName] = deviceName
+        if let deviceIdHash = deviceIdHash {
+            txtRecord[BonjourServer.recordIOSSimulator] = deviceIdHash
         }
         guard !txtRecord.isEmpty else {
-            self.logger.error("Can't publish empty txt record :(")
+            logger.error("Can't publish empty txt record :(")
             return
         }
 
-        let result = netService.setTXTRecord(NetService.data(fromTXTRecord: txtRecord))
+        let result = netService.setTXTRecord(NetService.data(fromTXTRecord: txtRecord.compactMapValues { $0.data(using: .utf8) }))
         netService.publish(options: .listenForConnections)
-        self.logger.debug("Published senderId: \(senderId) (result: \(result))")
+        logger.debug("Published to bonjour (\(result ? "success" : "fail")): \(txtRecord)")
     }
 
     public func stopPublishing() {
@@ -120,18 +120,18 @@ public class BonjourServer: NSObject, NetServiceDelegate {
     // MARK: - NetService Delegate
 
     public func netServiceWillPublish(_ sender: NetService) {
-        self.logger.debug("")
+        logger.debug("")
     }
 
     public func netServiceDidPublish(_ sender: NetService) {
-        self.logger.debug("")
+        logger.debug("")
     }
 
     public func netService(_ sender: NetService, didNotPublish errorDict: [String: NSNumber]) {
-        self.logger.debug("\(errorDict)")
+        logger.debug("\(errorDict)")
     }
 
     public func netService(_ sender: NetService, didUpdateTXTRecord data: Data) {
-        self.logger.debug("")
+        logger.debug("")
     }
 }
