@@ -60,7 +60,7 @@ public class LiveLogSender: LogSender {
         }
     }
 
-    func startLive(completion: @escaping (_ resultWithCode: Result<String, RemoteLoggerError>) -> Void) {
+    public func startLive(completion: @escaping (_ resultWithCode: Result<String, RemoteLoggerError>) -> Void) {
         guard let transport = transport else { return completion(.failure(.transportIsNotConfigured)) }
 
         transport.startLive { liveResult in
@@ -80,7 +80,7 @@ public class LiveLogSender: LogSender {
         }
     }
 
-    func stopLive(completion: @escaping (Result<Void, RemoteLoggerError>) -> Void) {
+    public func stopLive(completion: @escaping (Result<Void, RemoteLoggerError>) -> Void) {
         guard let transport = transport else { return completion(.failure(.transportIsNotConfigured)) }
 
         transport.invalidateConnectionCode { _ in
@@ -90,7 +90,7 @@ public class LiveLogSender: LogSender {
         }
     }
 
-    func getCode(completion: @escaping (_ resultWithCode: Result<String, RemoteLoggerError>) -> Void) {
+    public func getCode(completion: @escaping (_ resultWithCode: Result<String, RemoteLoggerError>) -> Void) {
         guard let transport = transport else { return completion(.failure(.transportIsNotConfigured)) }
 
         transport.liveConnectionCode { result in
