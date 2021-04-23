@@ -9,7 +9,7 @@
 import Foundation
 import Robologs
 
-public class ArchiveRemoteLogger: LogSender {
+public class ArchiveLogSender: LogSender {
     public let isSensitive: Bool
 
     private let loggerToInject: Logger
@@ -19,7 +19,7 @@ public class ArchiveRemoteLogger: LogSender {
     private var transport: RemoteLoggerTransport?
     private var logger: LabeledLogger!
 
-    init(
+    public init(
         applicationInfo: ApplicationInfo,
         isSensitive: Bool,
         cacheDirectoryUrl: URL,

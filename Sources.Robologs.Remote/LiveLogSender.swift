@@ -19,7 +19,7 @@ public class LiveLogSender: LogSender {
     private var transport: RemoteLoggerTransport?
     private var logger: LabeledLogger!
 
-    init(applicationInfo: ApplicationInfo, isSensitive: Bool, bufferSize: Int = 1000, logger: Logger = NullLogger()) {
+    public init(applicationInfo: ApplicationInfo, isSensitive: Bool, bufferSize: Int = 1000, logger: Logger = NullLogger()) {
         sendBuffer = InMemoryRemoteLoggerBuffer(maxRecordsCount: bufferSize)
         loggerToInject = logger
         self.applicationInfo = applicationInfo
