@@ -35,13 +35,23 @@ public class WebSocketLogSender: LogSender {
 
     private let encoder: JSONEncoder = { JSONEncoder() }()
 
+    private struct WSMessage: Encodable {
+        struct Payload: Encodable {
+            let senderId: String
+            let messages: [WSLogMessage]
+        }
+
+        let type: String = "v0/logMessageBatch"
+        let payload: Payload
+    }
+
     public func send(message: SerializedLogMessage) {
         do {
             channels = channels.filter { _, channel in
                 channel.isActive && channel.isWritable
             }
             logger.info("Channels: \(channels.count)")
-            let data = try encoder.encode(message.wsMessage)
+            let data = try encoder.encode(WSMessage(payload: .init(senderId: senderId, messages: [ message.wsMessage ])))
             channels.values.forEach { channel in
                 guard channel.isActive && channel.isWritable else { return }
 
