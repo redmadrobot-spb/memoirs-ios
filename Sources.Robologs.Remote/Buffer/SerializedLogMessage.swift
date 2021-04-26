@@ -47,8 +47,21 @@ public struct SerializedLogMessage: Codable {
 }
 
 public extension SerializedLogMessage {
-    func jsonMessage() throws -> String {
-        try protobufMessage.jsonString()
+    func jsonMessage() -> String {
+        let message = protobufMessage
+        let result =
+            """
+            {
+              "position": \(message.position),
+              "priority": \(message.priority.rawValue),
+              "label": \(message.label),
+              "body": \(message.body),
+              "source": \(message.source),
+              "timestampMillis": \(message.timestampMillis),
+              "meta": \(message.meta)
+            }
+            """
+        return result.replacingOccurrences(of: "\n", with: "")
     }
 }
 
