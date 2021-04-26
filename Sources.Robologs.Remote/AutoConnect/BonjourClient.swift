@@ -14,11 +14,13 @@ public struct RobologsRemoteSDK {
     public var name: String
     public var id: String
     public var apiEndpoint: URL
+    public var isLocalBroadcast: Bool
 
-    public init(name: String, id: String, apiEndpoint: URL) {
+    public init(name: String, id: String, apiEndpoint: URL, isLocalBroadcast: Bool) {
         self.name = name
         self.id = id
         self.apiEndpoint = apiEndpoint
+        self.isLocalBroadcast = isLocalBroadcast
     }
 }
 
@@ -339,7 +341,7 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
         let live = txtData[BonjourServer.recordLocalServerStarted]
 
         if let endpoint = endpoint, let endpointUrl = URL(string: endpoint) {
-            let remoteSDK = RobologsRemoteSDK(name: name, id: senderId, apiEndpoint: endpointUrl)
+            let remoteSDK = RobologsRemoteSDK(name: name, id: senderId, apiEndpoint: endpointUrl, isLocalBroadcast: false)
             foundSDKsById[senderId] = remoteSDK
             notify()
 
@@ -355,7 +357,7 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
                 self.logger.debug("Robologs service appeared with senderId: \(senderId)")
             }
         } else if live == "true", !addresses.isEmpty, let endpointUrl = URL(string: "http://\(addresses[0]):\(service.port)") {
-            let remoteSDK = RobologsRemoteSDK(name: name, id: senderId, apiEndpoint: endpointUrl)
+            let remoteSDK = RobologsRemoteSDK(name: name, id: senderId, apiEndpoint: endpointUrl, isLocalBroadcast: true)
             foundSDKsById[senderId] = remoteSDK
             notify()
 

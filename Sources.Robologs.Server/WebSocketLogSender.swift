@@ -18,12 +18,12 @@ public class WebSocketLogSender: LogSender {
         case cantBind
     }
 
-    private let port: Int
+    private let port: Int32
 
     private let originalLogger: Logger
     private var logger: LabeledLogger!
 
-    public init(port: Int, logger: Logger) {
+    public init(port: Int32, logger: Logger) {
         self.port = port
         originalLogger = logger
         self.logger = LabeledLogger(object: self, logger: logger)
