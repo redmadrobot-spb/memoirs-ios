@@ -68,7 +68,7 @@ public extension SerializedLogMessage {
             "body": "\(message)",
             "source": "\(collectContext(file: file, function: function, line: line))",
             "timestampMillis": \(UInt64(timestamp * 1000)),
-            "meta": \(meta ?? [:])
+            "meta": {\(meta?.map { "\"\($0)\":\"\($1)\"" }.joined(separator: ",") ?? "")}
             }
             """
         return result.replacingOccurrences(of: "\n", with: "")
