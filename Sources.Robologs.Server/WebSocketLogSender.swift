@@ -38,7 +38,19 @@ public class WebSocketLogSender: LogSender {
         logger.info("Channels: \(channels.count)")
 
         do {
-            let data = try message.protobufMessageInBatchData()
+            let message = try message.jsonMessage()
+            let data =
+                """
+                {
+                    "type": "v0/logMessageBatch",
+                    "payload": {
+                        "senderId": "",
+                        "messages": [
+                            \(message)
+                        ]
+                    }
+                }
+                """.data(using: .utf8) ?? Data() // TODO: Catch nil
             channels.values.forEach { channel in
                 guard channel.isActive && channel.isWritable else { return }
 

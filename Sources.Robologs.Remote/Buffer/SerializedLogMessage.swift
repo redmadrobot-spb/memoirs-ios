@@ -47,14 +47,8 @@ public struct SerializedLogMessage: Codable {
 }
 
 public extension SerializedLogMessage {
-    func protobufMessageData() throws -> Data {
-        try protobufMessage.jsonUTF8Data()
-    }
-
-    func protobufMessageInBatchData() throws -> Data {
-        try LogMessageBatch
-            .with { $0.messages = [ protobufMessage ] }
-            .jsonUTF8Data()
+    func jsonMessage() throws -> String {
+        try protobufMessage.jsonString()
     }
 }
 
