@@ -19,11 +19,13 @@ public class WebSocketLogSender: LogSender {
     }
 
     private let port: Int32
+    private let senderId: String
 
     private let originalLogger: Logger
     private var logger: LabeledLogger!
 
-    public init(port: Int32, logger: Logger) {
+    public init(port: Int32, senderId: String, logger: Logger) {
+        self.senderId = senderId
         self.port = port
         originalLogger = logger
         self.logger = LabeledLogger(object: self, logger: logger)
@@ -31,7 +33,7 @@ public class WebSocketLogSender: LogSender {
         prepare()
     }
 
-    public func send(senderId: String, message: SerializedLogMessage) {
+    public func send(message: SerializedLogMessage) {
         func json(level: Level) -> String {
             switch level {
                 case .verbose: return "VERBOSE"
