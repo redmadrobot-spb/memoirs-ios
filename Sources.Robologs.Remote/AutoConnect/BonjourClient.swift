@@ -40,7 +40,9 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
     private let adbDirectoryUrl: URL?
 
     public init(adbRunDirectory: String?, logger: Logger) {
-        adbDirectoryUrl = adbRunDirectory.map { URL(fileURLWithPath: $0) }
+        adbDirectoryUrl = adbRunDirectory.flatMap { path in
+            FileManager.default.fileExists(atPath: path) ? URL(fileURLWithPath: path) : nil
+        }
         super.init()
 
         adbTimer = Timer(timeInterval: 5, target: self, selector: #selector(adbTimerFired), userInfo: nil, repeats: true)
@@ -353,7 +355,7 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
                 self.logger.debug("Robologs service appeared with senderId: \(senderId)")
             }
         } else if live == "true", !addresses.isEmpty {
-            let remoteSDK = RobologsRemoteSDK(name: name, id: senderId, apiEndpoint: addresses[0])
+            let remoteSDK = RobologsRemoteSDK(name: name, id: senderId, apiEndpoint: "http://\(addresses[0])")
             foundSDKsById[senderId] = remoteSDK
             notify()
 
