@@ -13,9 +13,9 @@ import Darwin
 public struct RobologsRemoteSDK {
     public var name: String
     public var id: String
-    public var apiEndpoint: String
+    public var apiEndpoint: URL
 
-    public init(name: String, id: String, apiEndpoint: String) {
+    public init(name: String, id: String, apiEndpoint: URL) {
         self.name = name
         self.id = id
         self.apiEndpoint = apiEndpoint
@@ -338,8 +338,8 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
         let endpoint = txtData[BonjourServer.recordEndpoint]
         let live = txtData[BonjourServer.recordLocalServerStarted]
 
-        if let endpoint = endpoint {
-            let remoteSDK = RobologsRemoteSDK(name: name, id: senderId, apiEndpoint: endpoint)
+        if let endpoint = endpoint, let endpointUrl = URL(string: endpoint) {
+            let remoteSDK = RobologsRemoteSDK(name: name, id: senderId, apiEndpoint: endpointUrl)
             foundSDKsById[senderId] = remoteSDK
             notify()
 
@@ -354,8 +354,8 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
                 }
                 self.logger.debug("Robologs service appeared with senderId: \(senderId)")
             }
-        } else if live == "true", !addresses.isEmpty {
-            let remoteSDK = RobologsRemoteSDK(name: name, id: senderId, apiEndpoint: "http://\(addresses[0])")
+        } else if live == "true", !addresses.isEmpty, let endpointUrl = URL(string: "http://\(addresses[0]):\(service.port)") {
+            let remoteSDK = RobologsRemoteSDK(name: name, id: senderId, apiEndpoint: endpointUrl)
             foundSDKsById[senderId] = remoteSDK
             notify()
 

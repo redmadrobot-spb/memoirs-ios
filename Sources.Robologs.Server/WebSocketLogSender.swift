@@ -78,7 +78,7 @@ public class WebSocketLogSender: LogSender {
             .serverChannelOption(ChannelOptions.backlog, value: 256) // Specify backlog for the server itself
             .serverChannelOption(ChannelOptions.socketOption(.so_reuseaddr), value: 1) // Enable SO_REUSEADDR for the server itself
             .childChannelInitializer { channel in // Set the handlers that are applied to the accepted Channels
-                let httpHandler = UpgradingHTTPHandler(logger: self.originalLogger)
+                let httpHandler = WebSocketHTTPHandler(logger: self.originalLogger)
                 let config: NIOHTTPServerUpgradeConfiguration = (
                     upgraders: [ upgrader ],
                     completionHandler: { _ in

@@ -32,7 +32,7 @@ public class BonjourServer: NSObject, NetServiceDelegate {
     private var netService: NetService?
     private var logger: LabeledLogger!
 
-    public var port: Int? { netService?.port }
+    public let generatedPort: Int32 = (Int32(48000) ..< 65536).randomElement() ?? 32128
 
     public init(logger: Logger) {
         super.init()
@@ -63,8 +63,6 @@ public class BonjourServer: NSObject, NetServiceDelegate {
     static let recordIOSSimulator: String = "iOSSimulator"
     static let recordAndroidId: String = "androidId"
     static let recordLocalServerStarted: String = "localServerStarted"
-
-    let generatedPort: Int32 = (Int32(48000) ..< 65536).randomElement() ?? 32128
 
     public func publish(senderId: String, remoteEndpoint: String?, localStarted: Bool) {
         if netService != nil {
