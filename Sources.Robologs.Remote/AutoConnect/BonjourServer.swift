@@ -63,11 +63,10 @@ public class BonjourServer: NSObject, NetServiceDelegate {
     static let recordIOSSimulator: String = "iOSSimulator"
     static let recordAndroidId: String = "androidId"
     static let recordLocalServerStarted: String = "localServerStarted"
-    static let recordLiveStarted: String = "liveStarted"
 
     let generatedPort: Int32 = (Int32(48000) ..< 65536).randomElement() ?? 32128
 
-    public func publish(live: (endpoint: String, senderId: String)?, localServerStarted: Bool) {
+    public func publish(senderId: String, remoteEndpoint: String?, localStarted: Bool) {
         if netService != nil {
             stopPublishing()
         }
@@ -84,11 +83,12 @@ public class BonjourServer: NSObject, NetServiceDelegate {
         self.netService = netService
 
         var txtRecord: [String: String] = [:]
-        if let live = live {
-            txtRecord[BonjourServer.recordSenderId] = live.senderId
-            txtRecord[BonjourServer.recordEndpoint] = live.endpoint
+        txtRecord[BonjourServer.recordSenderId] = senderId
+
+        if let remoteEndpoint = remoteEndpoint {
+            txtRecord[BonjourServer.recordEndpoint] = remoteEndpoint
         }
-        txtRecord[BonjourServer.recordLocalServerStarted] = "\(localServerStarted)"
+        txtRecord[BonjourServer.recordLocalServerStarted] = "\(localStarted)"
 
         #if canImport(UIKit)
         let deviceName = ProcessInfo.processInfo.environment["SIMULATOR_DEVICE_NAME"].map { "Simulator: \($0)" } ?? UIDevice.current.name

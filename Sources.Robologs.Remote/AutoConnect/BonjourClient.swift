@@ -316,24 +316,32 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
             logger.warning("Can't connect to \(service.domain)/\(service.type)/\(service.name)")
             return
         }
+
+        let txtData = txtRecord.compactMapValues { String(data: $0, encoding: .utf8) }
+
         guard
-            let nameData = txtRecord[BonjourServer.recordName],
-            let name = String(data: nameData, encoding: .utf8),
-            let senderIdData = txtRecord[BonjourServer.recordSenderId],
-            let senderId = String(data: senderIdData, encoding: .utf8)
+            let name = txtData[BonjourServer.recordName],
+            let senderId = txtData[BonjourServer.recordSenderId]
         else {
             logger.warning("Service does not have sender info: \(service.domain)/\(service.type)/\(service.name)")
             return
         }
 
+        // Now we've either "regular server" and its address here, or "local server", that should be connected directly.
+        // It's IP is service IP in this case.
+
         foundRobologSDKsByNetServiceName[service.name] = senderId
-        if let endpointData = txtRecord[BonjourServer.recordEndpoint], let endpoint = String(data: endpointData, encoding: .utf8) {
+        let addresses = resolveIPv4(addresses: service.addresses ?? [])
+
+        let endpoint = txtData[BonjourServer.recordEndpoint]
+        let live = txtData[BonjourServer.recordLocalServerStarted]
+
+        if let endpoint = endpoint {
             let remoteSDK = RobologsRemoteSDK(name: name, id: senderId, apiEndpoint: endpoint)
             foundSDKsById[senderId] = remoteSDK
             notify()
 
-            let addresses = resolveIPv4(addresses: service.addresses ?? [])
-            isRobologsServiceLocal(addresses: addresses, txtRecord: txtRecord) { isLocal in
+            isRobologsServiceLocal(addresses: addresses, txtData: txtData) { isLocal in
                 guard isLocal else {
                     return self.logger.debug("Not local service: \(service.domain)/\(service.type)/\(service.name)")
                 }
@@ -344,15 +352,13 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
                 }
                 self.logger.debug("Robologs service appeared with senderId: \(senderId)")
             }
-        }
-
-        if let liveData = txtRecord[BonjourServer.recordLiveStarted], let live = String(data: liveData, encoding: .utf8), live == "true" {
-            let remoteSDK = RobologsRemoteSDK(name: name, id: senderId, apiEndpoint: service.)
+        } else if live == "true", !addresses.isEmpty {
+            let remoteSDK = RobologsRemoteSDK(name: name, id: senderId, apiEndpoint: addresses[0])
             foundSDKsById[senderId] = remoteSDK
             notify()
 
             let addresses = resolveIPv4(addresses: service.addresses ?? [])
-            isRobologsServiceLocal(addresses: addresses, txtRecord: txtRecord) { isLocal in
+            isRobologsServiceLocal(addresses: addresses, txtData: txtData) { isLocal in
                 guard isLocal else {
                     return self.logger.debug("Not local service: \(service.domain)/\(service.type)/\(service.name)")
                 }
@@ -409,7 +415,7 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
 
     // MARK: - Helper Methods
 
-    private func isRobologsServiceLocal(addresses: [String], txtRecord: [String: Data], completion: @escaping (Bool) -> Void) {
+    private func isRobologsServiceLocal(addresses: [String], txtData: [String: String], completion: @escaping (Bool) -> Void) {
         guard !addresses.contains("127.0.0.1") else {
             logger.debug("Robologs service is on localhost. Good!")
             return completion(true)
@@ -419,8 +425,8 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
             return completion(true)
         }
 
-        let simulatorId = txtRecord[BonjourServer.recordIOSSimulator].flatMap { String(data: $0, encoding: .utf8) }
-        let androidId = txtRecord[BonjourServer.recordAndroidId].flatMap { String(data: $0, encoding: .utf8) }
+        let simulatorId = txtData[BonjourServer.recordIOSSimulator]
+        let androidId = txtData[BonjourServer.recordAndroidId]
         if let simulatorId = simulatorId {
             let command = Shell.ZSHCommandLine(command: "instruments -s devices", directory: Shell.userHomeDirectory, logger: logger)
             command.execute { _, _, output, _ in
