@@ -95,6 +95,8 @@ public class WebSocketLogSender: LogSender {
             .childChannelOption(ChannelOptions.socketOption(.so_reuseaddr), value: 1) // Enable SO_REUSEADDR for the accepted Channels
     }
 
+    private var boundChannel: Channel?
+
     public func start() throws {
         defer {
             logger.info("Shutting down")
@@ -106,7 +108,7 @@ public class WebSocketLogSender: LogSender {
             }
         }
 
-        let channel: Channel = try bootstrap.bind(host: "0.0.0.0", port: port).wait()
+        let channel: Channel = try bootstrap.bind(host: "0.0.0.0", port: Int(port)).wait()
         guard let localAddress = channel.localAddress else {
             logger.error("Could not bind on 0.0.0.0:\(port)")
             throw Problem.cantBind
@@ -114,7 +116,12 @@ public class WebSocketLogSender: LogSender {
 
         logger.info("Server started and listening on \(localAddress)")
 
+        boundChannel = channel
         try channel.closeFuture.wait()
         logger.info("Server closed")
+    }
+
+    public func stop() {
+        boundChannel?.close(mode: .all, promise: nil)
     }
 }
