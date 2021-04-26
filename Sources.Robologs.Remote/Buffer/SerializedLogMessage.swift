@@ -46,35 +46,6 @@ public struct SerializedLogMessage: Codable {
     }
 }
 
-public extension SerializedLogMessage {
-    private var jsonPriority: String {
-        switch level {
-            case .verbose: return "VERBOSE"
-            case .debug: return "DEBUG"
-            case .info: return "INFO"
-            case .warning: return "WARN"
-            case .error: return "ERROR"
-            case .critical: return "CRITICAL"
-        }
-    }
-
-    func jsonMessage() -> String {
-        let result =
-            """
-            {
-            "position": \(position),
-            "priority": "\(jsonPriority)",
-            "label": "\(label)",
-            "body": "\(message)",
-            "source": "\(collectContext(file: file, function: function, line: line))",
-            "timestampMillis": \(UInt64(timestamp * 1000)),
-            "meta": {\(meta?.map { "\"\($0)\":\"\($1)\"" }.joined(separator: ",") ?? "")}
-            }
-            """
-        return result.replacingOccurrences(of: "\n", with: "")
-    }
-}
-
 extension Level: Codable {
     public init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()
