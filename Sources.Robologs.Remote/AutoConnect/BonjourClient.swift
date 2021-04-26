@@ -338,7 +338,7 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
         let addresses = resolveIPv4(addresses: service.addresses ?? [])
 
         let endpoint = txtData[BonjourServer.recordEndpoint]
-        let live = txtData[BonjourServer.recordLocalServerStarted]
+        let localBroadcastPort = txtData[BonjourServer.recordLocalServerPort]
 
         if let endpoint = endpoint, let endpointUrl = URL(string: endpoint) {
             let remoteSDK = RobologsRemoteSDK(name: name, id: senderId, apiEndpoint: endpointUrl, isLocalBroadcast: false)
@@ -356,7 +356,7 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
                 }
                 self.logger.debug("Robologs service appeared with senderId: \(senderId)")
             }
-        } else if live == "true", !addresses.isEmpty, let endpointUrl = URL(string: "http://\(addresses[0]):\(service.port)") {
+        } else if let port = localBroadcastPort, !addresses.isEmpty, let endpointUrl = URL(string: "http://\(addresses[0]):\(port)") {
             let remoteSDK = RobologsRemoteSDK(name: name, id: senderId, apiEndpoint: endpointUrl, isLocalBroadcast: true)
             foundSDKsById[senderId] = remoteSDK
             notify()
