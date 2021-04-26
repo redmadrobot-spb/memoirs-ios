@@ -47,18 +47,28 @@ public struct SerializedLogMessage: Codable {
 }
 
 public extension SerializedLogMessage {
+    private var jsonPriority: String {
+        switch level {
+            case .verbose: return "VERBOSE"
+            case .debug: return "DEBUG"
+            case .info: return "INFO"
+            case .warning: return "WARN"
+            case .error: return "ERROR"
+            case .critical: return "CRITICAL"
+        }
+    }
+
     func jsonMessage() -> String {
-        let message = protobufMessage
         let result =
             """
             {
-            "position": \(message.position),
-            "priority": \(message.priority.rawValue),
-            "label": "\(message.label)",
-            "body": "\(message.body)",
-            "source": "\(message.source)",
-            "timestampMillis": \(message.timestampMillis),
-            "meta": \(message.meta)
+            "position": \(position),
+            "priority": "\(jsonPriority)",
+            "label": "\(label)",
+            "body": "\(message)",
+            "source": "\(collectContext(file: file, function: function, line: line))",
+            "timestampMillis": \(UInt64(timestamp * 1000)),
+            "meta": \(meta ?? [:])
             }
             """
         return result.replacingOccurrences(of: "\n", with: "")
