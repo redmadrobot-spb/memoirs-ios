@@ -44,6 +44,18 @@ public struct SerializedLogMessage: Codable {
             logMessage.meta = meta ?? [:]
         }
     }
+
+    public var wsMessage: WSLogMessage {
+        WSLogMessage(
+            timestamp: Date(timeIntervalSince1970: timestamp),
+            level: level,
+            source: collectContext(file: file, function: function, line: line),
+            label: label,
+            body: message,
+            meta: meta ?? [:],
+            position: position
+        )
+    }
 }
 
 extension Level: Codable {

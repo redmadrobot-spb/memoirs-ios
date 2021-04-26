@@ -33,54 +33,29 @@ public class WebSocketLogSender: LogSender {
         prepare()
     }
 
+    private let encoder: JSONEncoder = { JSONEncoder() }()
+
     public func send(message: SerializedLogMessage) {
-        func json(level: Level) -> String {
-            switch level {
-                case .verbose: return "VERBOSE"
-                case .debug: return "DEBUG"
-                case .info: return "INFO"
-                case .warning: return "WARN"
-                case .error: return "ERROR"
-                case .critical: return "CRITICAL"
+        do {
+            channels = channels.filter { _, channel in
+                channel.isActive && channel.isWritable
             }
-        }
-        func json(message: SerializedLogMessage) -> String {
-            let result =
-                """
-                {
-                "position": \(message.position),
-                "priority": "\(json(level: message.level))",
-                "label": "\(message.label)",
-                "body": "\(message.message)",
-                "source": "\(collectContext(file: message.file, function: message.function, line: message.line))",
-                "timestampMillis": \(UInt64(message.timestamp * 1000)),
-                "meta": {\(message.meta?.map { "\"\($0)\":\"\($1)\"" }.joined(separator: ",") ?? "")}
-                }
-                """
-            return result.replacingOccurrences(of: "\n", with: "")
-        }
-        let message = json(message: message)
+            logger.info("Channels: \(channels.count)")
+            let data = try encoder.encode(message.wsMessage)
+            channels.values.forEach { channel in
+                guard channel.isActive && channel.isWritable else { return }
 
-        channels = channels.filter { _, channel in
-            channel.isActive && channel.isWritable
-        }
-        logger.info("Channels: \(channels.count)")
-
-        let data =
-            """
-            { "type": "v0/logMessageBatch", "payload": { "senderId": "\(senderId)", "messages": [ \(message) ] } }
-            """.data(using: .utf8) ?? Data() // TODO: Catch nil
-        channels.values.forEach { channel in
-            guard channel.isActive && channel.isWritable else { return }
-
-            let buffer = channel.allocator.buffer(bytes: data)
-            let frame = WebSocketFrame(fin: true, opcode: .text, data: buffer)
-            channel
-                .writeAndFlush(NIOAny(frame))
-                .whenFailure { error in
-                    self.logger.error(error)
-                    channel.close(promise: nil)
-                }
+                let buffer = channel.allocator.buffer(bytes: data)
+                let frame = WebSocketFrame(fin: true, opcode: .text, data: buffer)
+                channel
+                    .writeAndFlush(NIOAny(frame))
+                    .whenFailure { error in
+                        self.logger.error(error)
+                        channel.close(promise: nil)
+                    }
+            }
+        } catch {
+            logger.error(error)
         }
     }
 

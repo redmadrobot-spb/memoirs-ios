@@ -11,7 +11,11 @@ import Robologs
 import RobologsRemote
 import RobologsServer
 
-var logSender: WebSocketLogSender = WebSocketLogSender(port: 9999, logger: PrintLogger(onlyTime: true, shortSource: true))
+var logSender: WebSocketLogSender = WebSocketLogSender(
+    port: 9999,
+    senderId: "SOME_SENDER",
+    logger: PrintLogger(onlyTime: true, shortSource: true)
+)
 
 DispatchQueue.global().async {
     do {
