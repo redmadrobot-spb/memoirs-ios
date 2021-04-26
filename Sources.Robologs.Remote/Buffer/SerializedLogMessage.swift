@@ -52,13 +52,13 @@ public extension SerializedLogMessage {
         let result =
             """
             {
-              "position": \(message.position),
-              "priority": \(message.priority.rawValue),
-              "label": \(message.label),
-              "body": \(message.body),
-              "source": \(message.source),
-              "timestampMillis": \(message.timestampMillis),
-              "meta": \(message.meta)
+            "position": \(message.position),
+            "priority": \(message.priority.rawValue),
+            "label": "\(message.label)",
+            "body": "\(message.body)",
+            "source": "\(message.source)",
+            "timestampMillis": \(message.timestampMillis),
+            "meta": \(message.meta)
             }
             """
         return result.replacingOccurrences(of: "\n", with: "")

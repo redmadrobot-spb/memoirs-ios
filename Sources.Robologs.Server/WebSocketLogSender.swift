@@ -38,7 +38,7 @@ public class WebSocketLogSender: LogSender {
         logger.info("Channels: \(channels.count)")
 
         do {
-            let message = try message.jsonMessage()
+            let message = message.jsonMessage()
             let data =
                 """
                 {
