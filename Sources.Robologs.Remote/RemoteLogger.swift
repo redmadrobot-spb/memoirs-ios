@@ -10,11 +10,13 @@ import Foundation
 import Robologs
 
 public class RemoteLogger: Logger {
-    private var isSensitive: Bool
-    private var senders: [LogSender] = []
+    private let isSensitive: Bool
+    private let senderId: String
+    private let senders: [LogSender]
 
-    public init(isSensitive: Bool, senders: [LogSender]) {
+    public init(isSensitive: Bool, senderId: String, senders: [LogSender]) {
         self.isSensitive = isSensitive
+        self.senderId = senderId
         self.senders = senders
     }
 
@@ -39,7 +41,7 @@ public class RemoteLogger: Logger {
             line: isSensitive ? 0 : line
         )
 
-        senders.forEach { $0.send(message: message) }
+        senders.forEach { $0.send(senderId: senderId, message: message) }
     }
 
     // MARK: - Log Position (part of identifier)

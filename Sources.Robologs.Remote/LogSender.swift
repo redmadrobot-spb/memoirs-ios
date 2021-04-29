@@ -5,5 +5,5 @@
 import Foundation
 
 public protocol LogSender {
-    func send(message: SerializedLogMessage)
+    func send(senderId: String, message: SerializedLogMessage)
 }

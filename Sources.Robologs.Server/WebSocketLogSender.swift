@@ -19,15 +19,16 @@ public class WebSocketLogSender: LogSender {
     }
 
     private let port: Int32
-    private let senderId: String
 
     private let originalLogger: Logger
     private var logger: LabeledLogger!
 
-    public init(port: Int32, senderId: String, logger: Logger) {
-        self.senderId = senderId
-        self.port = port
+    private let actionsHandler: ActionsHandler
+
+    public init(port: Int32, actionsHandler: ActionsHandler, logger: Logger) {
         originalLogger = logger
+        self.actionsHandler = actionsHandler
+        self.port = port
         self.logger = LabeledLogger(object: self, logger: logger)
 
         prepare()
@@ -45,7 +46,7 @@ public class WebSocketLogSender: LogSender {
         let payload: Payload
     }
 
-    public func send(message: SerializedLogMessage) {
+    public func send(senderId: String, message: SerializedLogMessage) {
         do {
             channels = channels.filter { _, channel in
                 channel.isActive && channel.isWritable
@@ -91,7 +92,7 @@ public class WebSocketLogSender: LogSender {
             .serverChannelOption(ChannelOptions.backlog, value: 256) // Specify backlog for the server itself
             .serverChannelOption(ChannelOptions.socketOption(.so_reuseaddr), value: 1) // Enable SO_REUSEADDR for the server itself
             .childChannelInitializer { channel in // Set the handlers that are applied to the accepted Channels
-                let httpHandler = WebSocketHTTPHandler(senderId: self.senderId, logger: self.originalLogger)
+                let httpHandler = WebSocketHTTPHandler(actionsHandler: self.actionsHandler, logger: self.originalLogger)
                 let config: NIOHTTPServerUpgradeConfiguration = (
                     upgraders: [ upgrader ],
                     completionHandler: { _ in

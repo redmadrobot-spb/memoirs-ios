@@ -27,7 +27,7 @@ public class LiveLogSender: LogSender {
         self.logger = LabeledLogger(object: self, logger: logger)
     }
 
-    public func send(message: SerializedLogMessage) {
+    public func send(senderId: String, message: SerializedLogMessage) {
         workingQueue.async {
             self.sendBuffer.add(message: message)
             self.sendLogMessages()
