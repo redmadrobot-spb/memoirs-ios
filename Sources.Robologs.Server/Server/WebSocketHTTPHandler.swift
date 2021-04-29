@@ -16,9 +16,11 @@ final class WebSocketHTTPHandler: ChannelInboundHandler, RemovableChannelHandler
     typealias InboundIn = HTTPServerRequestPart
     typealias OutboundOut = HTTPServerResponsePart
 
+    private let senderId: String
     private var logger: LabeledLogger!
 
-    init(logger: Logger) {
+    init(senderId: String, logger: Logger) {
+        self.senderId = senderId
         self.logger = LabeledLogger(object: self, logger: logger)
     }
 
@@ -46,7 +48,9 @@ final class WebSocketHTTPHandler: ChannelInboundHandler, RemovableChannelHandler
             case (.GET, _):
                 respondEmpty(context: context, status: .ok)
             case (.POST, let uri) where uri.hasSuffix("/auth/sign-in"):
-                respondWithFakeToken(context: context)
+                respondWithText(context: context, response: "{ \"token\": \"fake_token_hello_guys\" }")
+            case (.POST, let uri) where uri.hasSuffix("/v0/sender/get-by-code"):
+                respondWithText(context: context, response: "{ \"sender\": { \"id\": \"\(senderId)\" } }")
             default:
                 return respondEmpty(context: context, status: .badRequest)
         }
@@ -65,13 +69,15 @@ final class WebSocketHTTPHandler: ChannelInboundHandler, RemovableChannelHandler
         context.flush()
     }
 
-    private func respondWithFakeToken(context: ChannelHandlerContext) {
+    private func respondWithText(context: ChannelHandlerContext, response: String) {
         logger.info("Responding with fake token...")
 
-        let tokenResponse = ByteBuffer(string: "{ \"token\"=\"fake_token_hello_guys\" }")
+        let data = response.data(using: .utf8) ?? Data()
+        let tokenResponse: ByteBuffer = ByteBuffer(bytes: data)
         let headers: HTTPHeaders = [
             "Connection": "close",
-            "Content-Length": "\(tokenResponse.writableBytes)",
+            "Content-Type": "application/json",
+            "Content-Length": "\(data.count)",
         ]
 
         let head = OutboundOut.head(HTTPResponseHead(version: .http1_1, status: .ok, headers: headers))
