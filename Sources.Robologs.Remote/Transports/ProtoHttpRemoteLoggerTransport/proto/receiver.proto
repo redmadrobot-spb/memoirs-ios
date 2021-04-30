@@ -1,0 +1,58 @@
+syntax = "proto3";
+
+option java_package = "com.redmadrobot.robologs.protobuf.messages";
+option java_multiple_files = true;
+option swift_prefix = "Proto";
+
+import "common.proto";
+
+// auth may be done with some standard things like OAuth2, so no connect here,
+// WebSocket is considered to be authenticated already
+message Receiver {
+  message Subscribe {
+    Identifier senderId = 1;
+  }
+
+  message Unsubscribe {
+    Identifier senderId = 1;
+  }
+
+  message Scopes {
+    message Response {
+      message Scope {
+        Identifier id = 1;
+        string name = 2;
+        optional Identifier parent = 3;
+      }
+
+      repeated Scope scopes = 1;
+    }
+  }
+
+  message Logs {
+    repeated Log logs = 1;
+  }
+
+  message Error {
+    string code = 1;
+    string message = 2;
+
+    // TODO enum with codes
+  }
+
+  message NetworkMessage {
+    Identifier id = 1;
+
+    oneof content {
+      Error error = 2;
+
+      Logs logs = 3;
+
+      Scopes scopesRequest = 4;
+      Scopes.Response scopesResponse = 5;
+
+      Subscribe subscribe = 6;
+      Unsubscribe unsubscribe = 7;
+    }
+  }
+}

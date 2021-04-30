@@ -1,0 +1,73 @@
+syntax = "proto3";
+
+option java_package = "com.redmadrobot.robologs.protobuf.messages";
+option java_multiple_files = true;
+option swift_prefix = "Proto";
+
+import "common.proto";
+
+message Sender {
+  message Connect {
+    message Information {
+      message NameAndVersion {
+        string name = 1;
+        optional string version = 2;
+      }
+
+      string applicationId = 1;
+      NameAndVersion application = 2;
+      NameAndVersion system = 3;
+      NameAndVersion device = 4;
+    }
+
+    string apiKey = 1;
+    Identifier id = 2;
+    optional Information information = 3;
+
+    message Response {
+      string token = 1;
+    }
+  }
+
+  message Scope {
+    message Push {
+      string name = 1;
+
+      message Response {
+        Identifier id = 1;
+      }
+    }
+
+    message Pop {
+      Identifier id = 1;
+    }
+  }
+
+  message AddLogs {
+    repeated Log logs = 1;
+  }
+
+  message Error {
+    string code = 1;
+    string message = 2;
+
+    // TODO enum with codes
+  }
+
+  message NetworkMessage {
+    Identifier id = 1;
+
+    oneof content {
+      Connect connectRequest = 2;
+      Connect.Response connectResponse = 3;
+
+      Scope.Push scopePushRequest = 4;
+      Scope.Push.Response scopePushResponse = 5;
+      Scope.Pop scopePop = 6;
+
+      AddLogs addLogs = 7;
+
+      Error error = 8;
+    }
+  }
+}

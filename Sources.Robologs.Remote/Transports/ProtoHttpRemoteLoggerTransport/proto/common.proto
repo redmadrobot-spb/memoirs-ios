@@ -1,0 +1,32 @@
+syntax = "proto3";
+
+option java_package = "com.redmadrobot.robologs.protobuf.messages";
+option java_multiple_files = true;
+option swift_prefix = "Proto";
+
+message Identifier { // uuid
+  uint64 low = 1;
+  uint64 high = 2;
+}
+
+message Log {
+  enum Level {
+    UNKNOWN = 0;
+    VERBOSE = 1;
+    DEBUG = 2;
+    INFO = 3;
+    WARNING = 4;
+    ERROR = 5;
+    CRITICAL = 6;
+  }
+
+  repeated Identifier scope = 1;
+  string token = 2;
+  uint64 position = 3;
+  Level level = 4;
+  uint64 timestampMillis = 5;
+  string label = 6;
+  string message = 7;
+  string codeReference = 8; // file:line function
+  map<string, string> meta = 9;
+}
