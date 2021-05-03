@@ -6,7 +6,7 @@ import Foundation
 import NIO
 import NIOHTTP1
 
-public class ActionsHandler {
+public class HttpActions {
     public struct Request {
         public let method: HTTPMethod
         public let version: Int?
@@ -39,14 +39,13 @@ public class ActionsHandler {
         }
     }
 
-    // TODO: Extract
-    private var actions: [(Request) -> Response?] = []
+    var actions: [(Request) -> Response?] = []
 
     public init(actions: [(Request) -> Response?]) {
         self.actions = actions
     }
 
     func response(for request: Request) -> Response? {
-        actions.lazy.compactMap({ $0(request) }).first
+        actions.lazy.compactMap { $0(request) }.first
     }
 }

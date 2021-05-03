@@ -40,19 +40,25 @@ message Receiver {
     // TODO enum with codes
   }
 
+  message Ping {}
+  message Pong {}
+
   message NetworkMessage {
     Identifier id = 1;
 
     oneof content {
       Error error = 2;
 
-      Logs logs = 3;
+      Ping ping = 3;
+      Pong pong = 4;
 
-      Scopes scopesRequest = 4;
-      Scopes.Response scopesResponse = 5;
+      Logs logs = 5;
 
-      Subscribe subscribe = 6;
-      Unsubscribe unsubscribe = 7;
+      Scopes scopesRequest = 6;
+      Scopes.Response scopesResponse = 7;
+
+      Subscribe subscribe = 8;
+      Unsubscribe unsubscribe = 9;
     }
   }
 }

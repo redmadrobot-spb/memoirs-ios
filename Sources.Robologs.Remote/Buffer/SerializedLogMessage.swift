@@ -39,7 +39,7 @@ public struct SerializedLogMessage: Codable {
             logMessage.priority = level.protoBufLevel
             logMessage.label = label
             logMessage.body = message
-            logMessage.source = collectContext(file: file, function: function, line: line)
+            logMessage.source = Output.codePosition(file, function, line)
             logMessage.timestampMillis = UInt64(timestamp * 1000)
             logMessage.meta = meta ?? [:]
         }
@@ -49,7 +49,7 @@ public struct SerializedLogMessage: Codable {
         WSLogMessage(
             timestamp: Date(timeIntervalSince1970: timestamp),
             level: level,
-            source: collectContext(file: file, function: function, line: line),
+            source: Output.codePosition(file, function, line),
             label: label,
             body: message,
             meta: meta ?? [:],

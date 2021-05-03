@@ -62,6 +62,7 @@ public class FilteringLogger: Logger {
         level: Level,
         _ message: @autoclosure () -> LogString,
         label: String,
+        scopes: [Scope] = [],
         meta: @autoclosure () -> [String: LogString]? = nil,
         file: String = #file, function: String = #function, line: UInt = #line
     ) {
@@ -69,5 +70,7 @@ public class FilteringLogger: Logger {
         guard level >= labelLevel else { return }
 
         logger.log(level: level, message(), label: label, meta: meta(), file: file, function: function, line: line)
+
+        Output.logInterceptor?(self, nil, level, message, label, scopes, meta, nil, file, function, line)
     }
 }

@@ -54,20 +54,26 @@ message Sender {
     // TODO enum with codes
   }
 
+  message Ping {}
+  message Pong {}
+
   message NetworkMessage {
     Identifier id = 1;
 
     oneof content {
-      Connect connectRequest = 2;
-      Connect.Response connectResponse = 3;
+      Error error = 2;
 
-      Scope.Push scopePushRequest = 4;
-      Scope.Push.Response scopePushResponse = 5;
-      Scope.Pop scopePop = 6;
+      Ping ping = 3;
+      Pong pong = 4;
 
-      AddLogs addLogs = 7;
+      Connect connectRequest = 5;
+      Connect.Response connectResponse = 6;
 
-      Error error = 8;
+      Scope.Push scopePushRequest = 7;
+      Scope.Push.Response scopePushResponse = 8;
+      Scope.Pop scopePop = 9;
+
+      AddLogs addLogs = 10;
     }
   }
 }

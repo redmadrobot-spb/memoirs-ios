@@ -30,14 +30,15 @@ public class OSLogLogger: Logger {
         level: Level,
         _ message: @autoclosure () -> LogString,
         label: String,
+        scopes: [Scope] = [],
         meta: @autoclosure () -> [String: LogString]? = nil,
         file: String = #file, function: String = #function, line: UInt = #line
     ) {
-        let context = collectContext(file: file, function: function, line: line)
-        let description = concatenateData(
-            time: "", level: nil, message: message, label: "", meta: meta, context: context, isSensitive: isSensitive
-        )
+        let context = Output.codePosition(file, function, line)
+        let description = Output.logString("", nil, message, "", scopes, meta, context, isSensitive)
         os_log(logType(from: level), log: logger(with: label), "%{public}@", description)
+
+        Output.logInterceptor?(self, nil, level, message, label, scopes, meta, isSensitive, file, function, line)
     }
 
     private func logType(from level: Level) -> OSLogType {

@@ -21,6 +21,7 @@ public class MultiplexingLogger: Logger {
         level: Level,
         _ message: @autoclosure () -> LogString,
         label: String,
+        scopes: [Scope] = [],
         meta: @autoclosure () -> [String: LogString]? = nil,
         file: String = #file, function: String = #function, line: UInt = #line
     ) {
@@ -28,5 +29,7 @@ public class MultiplexingLogger: Logger {
         loggers.forEach {
             $0.log(level: level, message(), label: label, meta: meta(), file: file, function: function, line: line)
         }
+
+        Output.logInterceptor?(self, nil, level, message, label, scopes, meta, nil, file, function, line)
     }
 }

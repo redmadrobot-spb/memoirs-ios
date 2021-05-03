@@ -23,9 +23,9 @@ public class WebSocketLogSender: LogSender {
     private let originalLogger: Logger
     private var logger: LabeledLogger!
 
-    private let actionsHandler: ActionsHandler
+    private let actionsHandler: HttpActions
 
-    public init(port: Int32, actionsHandler: ActionsHandler, logger: Logger) {
+    public init(port: Int32, actionsHandler: HttpActions, logger: Logger) {
         originalLogger = logger
         self.actionsHandler = actionsHandler
         self.port = port

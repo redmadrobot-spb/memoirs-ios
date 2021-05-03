@@ -16,10 +16,10 @@ final class WebSocketHTTPHandler: ChannelInboundHandler, RemovableChannelHandler
     typealias InboundIn = HTTPServerRequestPart
     typealias OutboundOut = HTTPServerResponsePart
 
-    private let actionsHandler: ActionsHandler
+    private let actionsHandler: HttpActions
     private var logger: LabeledLogger!
 
-    init(actionsHandler: ActionsHandler, logger: Logger) {
+    init(actionsHandler: HttpActions, logger: Logger) {
         self.actionsHandler = actionsHandler
         self.logger = LabeledLogger(object: self, logger: logger)
     }
@@ -39,14 +39,14 @@ final class WebSocketHTTPHandler: ChannelInboundHandler, RemovableChannelHandler
         "Connection": "close",
         "Content-Length": "0",
     ]
-    private lazy var badRequestResponse: ActionsHandler.Response = .init(status: .badRequest, headers: emptyResponseHeaders, body: Data())
+    private lazy var badRequestResponse: HttpActions.Response = .init(status: .badRequest, headers: emptyResponseHeaders, body: Data())
 
     func channelRead(context: ChannelHandlerContext, data: NIOAny) {
         if case .head(let header) = unwrapInboundIn(data) {
             self.header = header
         } else if case .body(let body) = unwrapInboundIn(data), let header = header {
-            let request = ActionsHandler.Request(header: header, body: body)
-            let response: ActionsHandler.Response = actionsHandler.response(for: request) ?? badRequestResponse
+            let request = HttpActions.Request(header: header, body: body)
+            let response: HttpActions.Response = actionsHandler.response(for: request) ?? badRequestResponse
 
             write(context: context, response: response)
         }
@@ -67,7 +67,7 @@ final class WebSocketHTTPHandler: ChannelInboundHandler, RemovableChannelHandler
 //        }
     }
 
-    private func write(context: ChannelHandlerContext, response: ActionsHandler.Response) {
+    private func write(context: ChannelHandlerContext, response: HttpActions.Response) {
         var headers = response.headers
         headers.replaceOrAdd(name: "Connection", value: "close")
         headers.replaceOrAdd(name: "Content-Length", value: "\(response.body.count)")

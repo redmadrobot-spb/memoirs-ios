@@ -21,13 +21,14 @@ public class NSLogLogger: Logger {
         level: Level,
         _ message: @autoclosure () -> LogString,
         label: String,
+        scopes: [Scope] = [],
         meta: @autoclosure () -> [String: LogString]? = nil,
         file: String = #file, function: String = #function, line: UInt = #line
     ) {
-        let context = collectContext(file: file, function: function, line: line)
-        let description = concatenateData(
-            time: "", level: level, message: message, label: label, meta: meta, context: context, isSensitive: isSensitive
-        )
+        let context = Output.codePosition(file, function, line)
+        let description = Output.logString("", level, message, label, scopes, meta, context, isSensitive)
         NSLog("%@", description)
+
+        Output.logInterceptor?(self, nil, level, message, label, scopes, meta, isSensitive, file, function, line)
     }
 }

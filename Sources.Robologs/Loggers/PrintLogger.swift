@@ -28,19 +28,21 @@ public class PrintLogger: Logger {
         level: Level,
         _ message: @autoclosure () -> LogString,
         label: String,
+        scopes: [Scope] = [],
         meta: @autoclosure () -> [String: LogString]?,
         file: String = #file, function: String = #function, line: UInt = #line
     ) {
         let context: String
         if shortSource {
-            context = collectContext(file: file, function: "", line: line)
+            context = Output.codePosition(file, "", line)
         } else {
-            context = collectContext(file: file, function: function, line: line)
+            context = Output.codePosition(file, function, line)
         }
-        let time = formatter.string(from: Date())
-        let description = concatenateData(
-            time: time, level: level, message: message, label: label, meta: meta, context: context, isSensitive: false
-        )
+        let date = Date()
+        let time = formatter.string(from: date)
+        let description = Output.logString(time, level, message, label, scopes, meta, context, false)
         print(description)
+
+        Output.logInterceptor?(self, date.timeIntervalSince1970, level, message, label, scopes, meta, false, file, function, line)
     }
 }

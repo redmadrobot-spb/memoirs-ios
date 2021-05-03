@@ -21,6 +21,8 @@ let package = Package(
         .target(name: "ExampleServer", dependencies: [ "RobologsServer" ], path: "Sources.Example.Server"),
 
         .target(name: "Robologs", dependencies: [], path: "Sources.Robologs"),
+        .testTarget(name: "Test.Robologs", dependencies: [ "Robologs" ], path: "Tests.Robologs"),
+
         .target(
             name: "RobologsRemote",
             dependencies: [ "Robologs", "SwiftProtobuf" ],
