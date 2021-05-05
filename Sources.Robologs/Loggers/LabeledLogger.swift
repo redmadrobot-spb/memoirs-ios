@@ -6,6 +6,8 @@
 // Copyright © 2020 Redmadrobot SPb. All rights reserved.
 //
 
+import Foundation
+
 public class LabeledLogger: Logger {
     @usableFromInline
     let label: String
@@ -28,9 +30,12 @@ public class LabeledLogger: Logger {
         label: String,
         scopes: [Scope] = [],
         meta: @autoclosure () -> [String: LogString]? = nil,
+        date: Date = Date(),
         file: String = #file, function: String = #function, line: UInt = #line
     ) {
-        logger.log(level: level, message(), label: label, scopes: scopes, meta: meta(), file: file, function: function, line: line)
+        logger.log(
+            level: level, message(), label: label, scopes: scopes, meta: meta(), date: date, file: file, function: function, line: line
+        )
     }
 
     @inlinable
@@ -39,9 +44,12 @@ public class LabeledLogger: Logger {
         _ message: @autoclosure () -> LogString,
         scopes: [Scope] = [],
         meta: @autoclosure () -> [String: LogString]?,
+        date: Date = Date(),
         file: String = #file, function: String = #function, line: UInt = #line
     ) {
-        logger.log(level: level, message(), label: label, scopes: scopes, meta: meta(), file: file, function: function, line: line)
+        logger.log(
+            level: level, message(), label: label, scopes: scopes, meta: meta(), date: date, file: file, function: function, line: line
+        )
     }
 
     /// Method that reports the log event with `verbose` logging level.
@@ -50,9 +58,10 @@ public class LabeledLogger: Logger {
         _ message: @autoclosure () -> LogString,
         scopes: [Scope] = [],
         meta: @autoclosure () -> [String: LogString]? = nil,
+        date: Date = Date(),
         file: String = #file, function: String = #function, line: UInt = #line
     ) {
-        logger.verbose(message(), label: label, scopes: scopes, meta: meta(), file: file, function: function, line: line)
+        logger.verbose(message(), label: label, scopes: scopes, meta: meta(), date: date, file: file, function: function, line: line)
     }
 
     /// Method that reports the log event with `debug` logging level.
@@ -61,9 +70,10 @@ public class LabeledLogger: Logger {
         _ message: @autoclosure () -> LogString,
         scopes: [Scope] = [],
         meta: @autoclosure () -> [String: LogString]? = nil,
+        date: Date = Date(),
         file: String = #file, function: String = #function, line: UInt = #line
     ) {
-        logger.debug(message(), label: label, scopes: scopes, meta: meta(), file: file, function: function, line: line)
+        logger.debug(message(), label: label, scopes: scopes, meta: meta(), date: date, file: file, function: function, line: line)
     }
 
     /// Method that reports the log event with `info` logging level.
@@ -72,9 +82,10 @@ public class LabeledLogger: Logger {
         _ message: @autoclosure () -> LogString,
         scopes: [Scope] = [],
         meta: @autoclosure () -> [String: LogString]? = nil,
+        date: Date = Date(),
         file: String = #file, function: String = #function, line: UInt = #line
     ) {
-        logger.info(message(), label: label, scopes: scopes, meta: meta(), file: file, function: function, line: line)
+        logger.info(message(), label: label, scopes: scopes, meta: meta(), date: date, file: file, function: function, line: line)
     }
 
     /// Method that reports the log event with `warning` logging level.
@@ -83,9 +94,10 @@ public class LabeledLogger: Logger {
         _ message: @autoclosure () -> LogString,
         scopes: [Scope] = [],
         meta: @autoclosure () -> [String: LogString]? = nil,
+        date: Date = Date(),
         file: String = #file, function: String = #function, line: UInt = #line
     ) {
-        logger.warning(message(), label: label, scopes: scopes, meta: meta(), file: file, function: function, line: line)
+        logger.warning(message(), label: label, scopes: scopes, meta: meta(), date: date, file: file, function: function, line: line)
     }
 
     /// Method that reports the log event with `error` logging level.
@@ -94,9 +106,10 @@ public class LabeledLogger: Logger {
         _ message: @autoclosure () -> LogString,
         scopes: [Scope] = [],
         meta: @autoclosure () -> [String: LogString]? = nil,
+        date: Date = Date(),
         file: String = #file, function: String = #function, line: UInt = #line
     ) {
-        logger.error(message(), label: label, scopes: scopes, meta: meta(), file: file, function: function, line: line)
+        logger.error(message(), label: label, scopes: scopes, meta: meta(), date: date, file: file, function: function, line: line)
     }
 
     @inlinable
@@ -105,9 +118,12 @@ public class LabeledLogger: Logger {
         message: LogString? = nil,
         scopes: [Scope] = [],
         meta: @autoclosure () -> [String: LogString]? = nil,
+        date: Date = Date(),
         file: String = #file, function: String = #function, line: UInt = #line
     ) {
-        logger.error(error, message: message, label: label, scopes: scopes, meta: meta(), file: file, function: function, line: line)
+        logger.error(
+            error, message: message, label: label, scopes: scopes, meta: meta(), date: date, file: file, function: function, line: line
+        )
     }
 
     /// Method that reports the log event with `assert` logging level.
@@ -116,8 +132,9 @@ public class LabeledLogger: Logger {
         _ message: @autoclosure () -> LogString,
         scopes: [Scope] = [],
         meta: @autoclosure () -> [String: LogString]? = nil,
+        date: Date = Date(),
         file: String = #file, function: String = #function, line: UInt = #line
     ) {
-        logger.critical(message(), label: label, scopes: scopes, meta: meta(), file: file, function: function, line: line)
+        logger.critical(message(), label: label, scopes: scopes, meta: meta(), date: date, file: file, function: function, line: line)
     }
 }

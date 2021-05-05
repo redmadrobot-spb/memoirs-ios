@@ -30,6 +30,7 @@ public class PrintLogger: Logger {
         label: String,
         scopes: [Scope] = [],
         meta: @autoclosure () -> [String: LogString]?,
+        date: Date = Date(),
         file: String = #file, function: String = #function, line: UInt = #line
     ) {
         let context: String
@@ -38,11 +39,10 @@ public class PrintLogger: Logger {
         } else {
             context = Output.codePosition(file, function, line)
         }
-        let date = Date()
         let time = formatter.string(from: date)
         let description = Output.logString(time, level, message, label, scopes, meta, context, false)
         print(description)
 
-        Output.logInterceptor?(self, date.timeIntervalSince1970, level, message, label, scopes, meta, false, file, function, line)
+        Output.logInterceptor?(self, description)
     }
 }

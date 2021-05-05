@@ -35,8 +35,10 @@ public class InfoGatheringLogger: Logger {
         label: String,
         scopes: [Scope] = [],
         meta: @autoclosure () -> [String: LogString]? = nil,
+        date: Date = Date(),
         file: String = #file, function: String = #function, line: UInt = #line
     ) {
+        // TODO: Replace these with scopes
         var updatedMeta = self.meta
         if let threadName = currentThreadName, !threadName.isEmpty {
             updatedMeta["_thread"] = LogString(threadName)
@@ -48,6 +50,8 @@ public class InfoGatheringLogger: Logger {
             updatedMeta[key] = value
         }
 
-        logger.log(level: level, message(), label: label, meta: updatedMeta, file: file, function: function, line: line)
+        logger.log(
+            level: level, message(), label: label, scopes: scopes, meta: updatedMeta, date: date, file: file, function: function, line: line
+        )
     }
 }

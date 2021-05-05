@@ -19,6 +19,7 @@ public class NullLogger: Logger {
         label: String,
         scopes: [Scope] = [],
         meta: @autoclosure () -> [String: LogString]? = nil,
+        date: Date = Date(),
         file: String = #file, function: String = #function, line: UInt = #line
     ) {
     }

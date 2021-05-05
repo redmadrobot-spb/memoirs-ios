@@ -21,13 +21,19 @@ let package = Package(
         .target(name: "ExampleServer", dependencies: [ "RobologsServer" ], path: "Sources.Example.Server"),
 
         .target(name: "Robologs", dependencies: [], path: "Sources.Robologs"),
-        .testTarget(name: "Test.Robologs", dependencies: [ "Robologs" ], path: "Tests.Robologs"),
+        .testTarget(name: "TestRobologs", dependencies: [ "Robologs" ]),
 
         .target(
             name: "RobologsRemote",
             dependencies: [ "Robologs", "SwiftProtobuf" ],
             path: "Sources.Robologs.Remote",
-            exclude: [ "Transports/ProtoHttpRemoteLoggerTransport/proto/backend.proto" ]
+            exclude: [
+                "Transports/ProtoHttpRemoteLoggerTransport/proto/backend.proto",
+
+                "Transports/ProtoHttpRemoteLoggerTransport/proto/common.proto",
+                "Transports/ProtoHttpRemoteLoggerTransport/proto/sender.proto",
+                "Transports/ProtoHttpRemoteLoggerTransport/proto/receiver.proto",
+            ]
         ),
         .target(
             name: "RobologsServer",

@@ -26,6 +26,7 @@ public class RemoteLogger: Logger {
         label: String,
         scopes: [Scope] = [],
         meta: @autoclosure () -> [String: LogString]?,
+        date: Date = Date(),
         file: String = #file, function: String = #function, line: UInt = #line
     ) {
         let timestamp = Date().timeIntervalSince1970

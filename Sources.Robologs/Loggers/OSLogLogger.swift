@@ -6,6 +6,7 @@
 // Copyright © 2020 Redmadrobot SPb. All rights reserved.
 //
 
+import Foundation
 import os.log
 
 /// `(Logger)` - implementation which use `os.log` logging system.
@@ -32,13 +33,14 @@ public class OSLogLogger: Logger {
         label: String,
         scopes: [Scope] = [],
         meta: @autoclosure () -> [String: LogString]? = nil,
+        date: Date = Date(),
         file: String = #file, function: String = #function, line: UInt = #line
     ) {
         let context = Output.codePosition(file, function, line)
-        let description = Output.logString("", nil, message, "", scopes, meta, context, isSensitive)
+        let description = Output.logString("", level, message, "", scopes, meta, context, isSensitive)
         os_log(logType(from: level), log: logger(with: label), "%{public}@", description)
 
-        Output.logInterceptor?(self, nil, level, message, label, scopes, meta, isSensitive, file, function, line)
+        Output.logInterceptor?(self, "\(description) | \(label)")
     }
 
     private func logType(from level: Level) -> OSLogType {

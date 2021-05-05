@@ -37,9 +37,10 @@ public extension Level {
 
 public final class Output {
     public static var codePosition: (_ file: String, _ function: String, _ line: UInt) -> String = defaultCodePosition
+    public static var censuredString: (_ string: LogString, _ isSensitive: Bool) -> String = defaultCensureString
     public static var logString: (
         _ time: String,
-        _ level: Level?,
+        _ level: Level,
         _ message: () -> LogString,
         _ label: String,
         _ scopes: [Scope],
@@ -50,15 +51,13 @@ public final class Output {
     /// Should be called in every "basic" logger. Intended for test usage and, maybe, intercepting all the logs
     public static var logInterceptor: ((
         _ logger: Logger, // Logger that called interceptor
-        _ timeIntervalSince1970: TimeInterval?, // Can be nil, if Logger does not create time itself
-        _ level: Level?,
-        _ message: () -> LogString,
-        _ label: String,
-        _ scopes: [Scope],
-        _ meta: () -> [String: LogString]?,
-        _ isSensitive: Bool?, // Can be nil, if Logger does not know about sensitivity
-        _ file: String, _ function: String, _ line: UInt
+        _ logString: String // String, containing parts that were sent to output
     ) -> Void)?
+
+    @inlinable
+    public static func defaultCensureString(string: LogString, isSensitive: Bool) -> String {
+        string.string(isSensitive: isSensitive)
+    }
 
     @inlinable
     public static func defaultCodePosition(file: String, function: String, line: UInt) -> String {
@@ -85,17 +84,17 @@ public final class Output {
     ) -> String {
         let meta = meta()?
             .sorted { $0.key < $1.key }
-            .map { "\($0): \($1.string(isSensitive: isSensitive))" }
+            .map { "\($0): \(censuredString($1, isSensitive))" }
             .joined(separator: ", ")
-
-        return [
+        let parts = [
             time,
             "\(level.map { "\($0.printString)" } ?? "")",
             "\(label)",
             codePosition,
             meta.map { "[ \($0) ]" } ?? "",
-            message().string(isSensitive: isSensitive),
+            censuredString(message(), isSensitive),
         ]
+        return parts
             .compactMap { $0 }
             .filter { !$0.isEmpty }
             .joined(separator: " ")

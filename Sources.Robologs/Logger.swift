@@ -15,7 +15,9 @@ public protocol Logger {
     ///  - level: Logging level.
     ///  - label: Specifies in what part log event was recorded.
     ///  - message: Message describing log event.
+    ///  - scopes: Scopes that the log is a part of.
     ///  - meta: Additional log information in key-value format.
+    ///  - date: date of the log emitting.
     ///  - file: The path to the file from which the method was called. Usually you should use the #file literal for this.
     ///  - function: The function name from which the method was called. Usually you should use the #function literal for this.
     ///  - line: The line of code from which the method was called. Usually you should use the #line literal for this.
@@ -25,6 +27,7 @@ public protocol Logger {
         label: String,
         scopes: [Scope],
         meta: @autoclosure () -> [String: LogString]?,
+        date: Date,
         file: String,
         function: String,
         line: UInt
@@ -41,9 +44,10 @@ extension Logger {
         label: String,
         scopes: [Scope] = [],
         meta: @autoclosure () -> [String: LogString]? = nil,
+        date: Date = Date(),
         file: String = #file, function: String = #function, line: UInt = #line
     ) {
-        log(level: level, message(), label: label, scopes: scopes, meta: meta(), file: file, function: function, line: line)
+        log(level: level, message(), label: label, scopes: scopes, meta: meta(), date: date, file: file, function: function, line: line)
     }
 
     /// Method that reports the log event with `verbose` logging level.
@@ -53,9 +57,10 @@ extension Logger {
         label: String,
         scopes: [Scope] = [],
         meta: @autoclosure () -> [String: LogString]? = nil,
+        date: Date = Date(),
         file: String = #file, function: String = #function, line: UInt = #line
     ) {
-        log(level: .verbose, message(), label: label, scopes: scopes, meta: meta(), file: file, function: function, line: line)
+        log(level: .verbose, message(), label: label, scopes: scopes, meta: meta(), date: date, file: file, function: function, line: line)
     }
 
     /// Method that reports the log event with `debug` logging level.
@@ -65,9 +70,10 @@ extension Logger {
         label: String,
         scopes: [Scope] = [],
         meta: @autoclosure () -> [String: LogString]? = nil,
+        date: Date = Date(),
         file: String = #file, function: String = #function, line: UInt = #line
     ) {
-        log(level: .debug, message(), label: label, scopes: scopes, meta: meta(), file: file, function: function, line: line)
+        log(level: .debug, message(), label: label, scopes: scopes, meta: meta(), date: date, file: file, function: function, line: line)
     }
 
     /// Method that reports the log event with `info` logging level.
@@ -77,9 +83,10 @@ extension Logger {
         label: String,
         scopes: [Scope] = [],
         meta: @autoclosure () -> [String: LogString]? = nil,
+        date: Date = Date(),
         file: String = #file, function: String = #function, line: UInt = #line
     ) {
-        log(level: .info, message(), label: label, scopes: scopes, meta: meta(), file: file, function: function, line: line)
+        log(level: .info, message(), label: label, scopes: scopes, meta: meta(), date: date, file: file, function: function, line: line)
     }
 
     /// Method that reports the log event with `warning` logging level.
@@ -89,9 +96,10 @@ extension Logger {
         label: String,
         scopes: [Scope] = [],
         meta: @autoclosure () -> [String: LogString]? = nil,
+        date: Date = Date(),
         file: String = #file, function: String = #function, line: UInt = #line
     ) {
-        log(level: .warning, message(), label: label, meta: meta(), file: file, function: function, line: line)
+        log(level: .warning, message(), label: label, meta: meta(), date: date, file: file, function: function, line: line)
     }
 
     /// Method that reports the log event with `error` logging level.
@@ -101,9 +109,10 @@ extension Logger {
         label: String,
         scopes: [Scope] = [],
         meta: @autoclosure () -> [String: LogString]? = nil,
+        date: Date = Date(),
         file: String = #file, function: String = #function, line: UInt = #line
     ) {
-        log(level: .error, message(), label: label, scopes: scopes, meta: meta(), file: file, function: function, line: line)
+        log(level: .error, message(), label: label, scopes: scopes, meta: meta(), date: date, file: file, function: function, line: line)
     }
 
     @inlinable
@@ -113,6 +122,7 @@ extension Logger {
         label: String,
         scopes: [Scope] = [],
         meta: @autoclosure () -> [String: LogString]? = nil,
+        date: Date = Date(),
         file: String = #file, function: String = #function, line: UInt = #line
     ) {
         log(
@@ -120,7 +130,7 @@ extension Logger {
             message.map { "\($0): \(error)" } ?? "\(error)",
             label: label,
             scopes: scopes,
-            meta: meta(), file: file, function: function, line: line
+            meta: meta(), date: date, file: file, function: function, line: line
         )
     }
 
@@ -131,8 +141,9 @@ extension Logger {
         label: String,
         scopes: [Scope] = [],
         meta: @autoclosure () -> [String: LogString]? = nil,
+        date: Date = Date(),
         file: String = #file, function: String = #function, line: UInt = #line
     ) {
-        log(level: .critical, message(), label: label, scopes: scopes, meta: meta(), file: file, function: function, line: line)
+        log(level: .critical, message(), label: label, scopes: scopes, meta: meta(), date: date, file: file, function: function, line: line)
     }
 }

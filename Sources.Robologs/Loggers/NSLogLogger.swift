@@ -23,12 +23,13 @@ public class NSLogLogger: Logger {
         label: String,
         scopes: [Scope] = [],
         meta: @autoclosure () -> [String: LogString]? = nil,
+        date: Date = Date(),
         file: String = #file, function: String = #function, line: UInt = #line
     ) {
         let context = Output.codePosition(file, function, line)
         let description = Output.logString("", level, message, label, scopes, meta, context, isSensitive)
         NSLog("%@", description)
 
-        Output.logInterceptor?(self, nil, level, message, label, scopes, meta, isSensitive, file, function, line)
+        Output.logInterceptor?(self, description)
     }
 }

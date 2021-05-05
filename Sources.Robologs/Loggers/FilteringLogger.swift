@@ -6,6 +6,8 @@
 // Copyright © 2020 Redmadrobot SPb. All rights reserved.
 //
 
+import Foundation
+
 @frozen
 public enum ConfigurationLevel {
     case verbose
@@ -15,10 +17,12 @@ public enum ConfigurationLevel {
     case error
     case critical
 
+    case all
     case disabled
 
     var integralValue: Int {
         switch self {
+            case .all: return -1
             case .verbose: return 0
             case .debug: return 1
             case .info: return 2
@@ -64,13 +68,14 @@ public class FilteringLogger: Logger {
         label: String,
         scopes: [Scope] = [],
         meta: @autoclosure () -> [String: LogString]? = nil,
+        date: Date = Date(),
         file: String = #file, function: String = #function, line: UInt = #line
     ) {
         let labelLevel = loggingLevelForLabels[label] ?? defaultLevel
         guard level >= labelLevel else { return }
 
-        logger.log(level: level, message(), label: label, meta: meta(), file: file, function: function, line: line)
-
-        Output.logInterceptor?(self, nil, level, message, label, scopes, meta, nil, file, function, line)
+        logger.log(
+            level: level, message(), label: label, scopes: scopes, meta: meta(), date: date, file: file, function: function, line: line
+        )
     }
 }
