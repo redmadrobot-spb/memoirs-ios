@@ -8,40 +8,38 @@
 
 import Foundation
 
-@frozen
-public enum ConfigurationLevel {
-    case verbose
-    case debug
-    case info
-    case warning
-    case error
-    case critical
-
-    case all
-    case disabled
-
-    var integralValue: Int {
-        switch self {
-            case .all: return -1
-            case .verbose: return 0
-            case .debug: return 1
-            case .info: return 2
-            case .warning: return 3
-            case .error: return 4
-            case .critical: return 5
-            case .disabled: return 6
-        }
-    }
-}
-
-extension Level {
-    public static func >= (lhs: Level, rhs: ConfigurationLevel) -> Bool {
-        lhs.integralValue >= rhs.integralValue
-    }
-}
-
 /// Logger that filter log events by level and redirects them to the target logger.
 public class FilteringLogger: Logger {
+    @frozen
+    public enum ConfigurationLevel {
+        case verbose
+        case debug
+        case info
+        case warning
+        case error
+        case critical
+
+        case all
+        case disabled
+
+        var integralValue: Int {
+            switch self {
+                case .all: return -1
+                case .verbose: return 0
+                case .debug: return 1
+                case .info: return 2
+                case .warning: return 3
+                case .error: return 4
+                case .critical: return 5
+                case .disabled: return Int.max
+            }
+        }
+
+        public static func < (rhs: FilteringLogger.ConfigurationLevel, lhs: Level) -> Bool {
+            lhs.integralValue >= rhs.integralValue
+        }
+    }
+
     @usableFromInline
     let logger: Logger
     /// Logging levels associated with registered label.
@@ -72,7 +70,7 @@ public class FilteringLogger: Logger {
         file: String = #file, function: String = #function, line: UInt = #line
     ) {
         let labelLevel = loggingLevelForLabels[label] ?? defaultLevel
-        guard level >= labelLevel else { return }
+        guard labelLevel < level else { return }
 
         logger.log(
             level: level, message(), label: label, scopes: scopes, meta: meta(), date: date, file: file, function: function, line: line

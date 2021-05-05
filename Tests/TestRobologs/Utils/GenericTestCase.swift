@@ -10,36 +10,49 @@ import XCTest
 @testable import Robologs
 
 class GenericTestCase: XCTestCase {
-    enum Problem: Error {
+    enum Problem: Error, CustomDebugStringConvertible {
         case noLogFromLogger(Logger)
         case unexpectedLogFromLogger(Logger)
         case noLabelInLog(Logger)
         case noMessageInLog(Logger)
+
+        var debugDescription: String {
+            switch self {
+                case .noLogFromLogger(let logger):
+                    return "No log found, but has to be (logger: \(logger))"
+                case .unexpectedLogFromLogger(let logger):
+                    return "Log found, but not expected (logger: \(logger))"
+                case .noLabelInLog(let logger):
+                    return "No label in log (logger: \(logger))"
+                case .noMessageInLog(let logger):
+                    return "No message in log (logger: \(logger))"
+            }
+        }
     }
 
-    struct LogProbeAndResult {
+    struct LogProbe {
         let logger: Logger
 
-        let date: Date
-        let level: Level
-        let label: String
-        let scopes: [Scope]
+        var date: Date
+        var level: Level
+        var label: String
+        var scopes: [Scope]
 
-        let message: LogString
-        let censoredMessage: String
-        let meta: [String: LogString]
-        let censoredMeta: [String: String]
+        var message: LogString
+        var censoredMessage: String
+        var meta: [String: LogString]
+        var censoredMeta: [String: String]
 
         var result: String?
     }
 
-    private var lastLogResult: (logger: Logger, result: String)?
+    private var logResults: [(logger: Logger, result: String)] = []
 
     override func setUp() {
         super.setUp()
 
         Output.logInterceptor = { logger, log in
-            self.lastLogResult = (logger: logger, result: log)
+            self.logResults.append((logger: logger, result: log))
         }
     }
 
@@ -50,46 +63,40 @@ class GenericTestCase: XCTestCase {
         Output.logString = Output.defaultLogString
     }
 
-    func expectLog(probe: LogProbeAndResult) throws -> String {
+    func expectLog(probe: LogProbe) throws -> String {
         probe.logger.log(
             level: probe.level,
-            "\(probe.message)",
+            probe.message,
             label: probe.label,
             scopes: probe.scopes,
-            meta: probe.meta.mapValues { "\($0)" }
+            meta: probe.meta
         )
-        let probe = try updatedResult(in: probe)
-        guard let result = probe.result else { throw Problem.noLogFromLogger(probe.logger) }
-
-        return result
+        if let probe = try updatedResult(in: probe), let result = probe.result {
+            return result
+        } else {
+            throw Problem.noLogFromLogger(probe.logger)
+        }
     }
 
-    func expectNoLog(probe: LogProbeAndResult) throws {
+    func expectNoLog(probe: LogProbe, file: String = #file, line: UInt = #line) throws {
         probe.logger.log(
             level: probe.level,
-            "\(probe.message)",
+            probe.message,
             label: probe.label,
             scopes: probe.scopes,
-            meta: probe.meta.mapValues { "\($0)" }
+            meta: probe.meta
         )
-        let probe = try updatedResult(in: probe)
-        if probe.result != nil {
+        if let probe = try updatedResult(in: probe), probe.result != nil {
+            fputs("\nProblem at \(file):\(line)\n", stderr)
             throw Problem.unexpectedLogFromLogger(probe.logger)
         }
     }
 
-    func failIfThrows(_ description: String? = nil, _ testClosure: () throws -> Void) {
-        do {
-            try testClosure()
-        } catch {
-            XCTFail("\(description ?? "Failed"): \(error)")
-        }
-    }
+    private func updatedResult(in probe: LogProbe) throws -> LogProbe? {
+        guard !logResults.isEmpty else { return nil }
 
-    private func updatedResult(in probe: LogProbeAndResult) throws -> LogProbeAndResult {
         var probe = probe
-        probe.result = lastLogResult?.result
-        lastLogResult = nil
+        probe.result = logResults.remove(at: 0).result
         return probe
     }
 }

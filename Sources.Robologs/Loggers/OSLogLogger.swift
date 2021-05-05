@@ -40,7 +40,7 @@ public class OSLogLogger: Logger {
         let description = Output.logString("", level, message, "", scopes, meta, context, isSensitive)
         os_log(logType(from: level), log: logger(with: label), "%{public}@", description)
 
-        Output.logInterceptor?(self, "\(description) | \(label)")
+        Output.logInterceptor?(self, "\(label) | \(description)")
     }
 
     private func logType(from level: Level) -> OSLogType {
