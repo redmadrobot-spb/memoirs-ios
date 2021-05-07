@@ -9,19 +9,20 @@
 import Foundation
 
 public struct Scope {
-    public enum Kind {
-        case application
-        case installation
-        case run
-        case user
-        case flow
-        case presentation
-        case custom(String)
-    }
-
     public let id: UUID
     public let parentId: UUID?
+
     public let name: String
-    public let kind: String
-    public var meta: [String: String] = [:]
+    public var meta: [String: LogString]
+
+    public init(parentId: UUID? = nil, name: String, meta: [String: LogString] = [:]) {
+        id = UUID()
+        self.parentId = parentId
+        self.name = name
+        self.meta = meta
+    }
+
+    public func subScope(name: String, meta: [String: LogString] = [:]) -> Scope {
+        Scope(parentId: self.id, name: name, meta: meta)
+    }
 }

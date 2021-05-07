@@ -8,28 +8,27 @@
 
 import Foundation
 
-public class SimpleTiming: Timing {
-    private var timers: [UUID: PerformanceMonitor] = [:]
+public class SimpleStopwatch: Stopwatch {
+    private var monitorsByLabel: [String: PerformanceMonitor] = [:]
 
-    public func start(label: String) -> PerformanceMonitor {
+    public init() {
+    }
+
+    @discardableResult
+    public func tick(_ label: String) -> PerformanceMonitor {
         let timer = PerformanceMonitor(label: label)
-        timers[timer.id] = timer
+        monitorsByLabel[label] = timer
         return timer
     }
 
     @discardableResult
-    public func lap(_ monitor: PerformanceMonitor) -> PerformanceMonitor {
-        var timer = timers[monitor.id] ?? monitor
-        timer.lap()
-        timers[timer.id] = timer
-        return timer
-    }
+    public func tock(_ label: String) throws -> PerformanceMonitor {
+        guard var timer = monitorsByLabel[label] else {
+            throw StopwatchError.cantFindMonitor(label: label)
+        }
 
-    @discardableResult
-    public func finish(_ monitor: PerformanceMonitor) -> PerformanceMonitor {
-        var timer = timers[monitor.id] ?? monitor
-        timer.finish()
-        timers[timer.id] = timer
+        timer.tock()
+        monitorsByLabel[label] = timer
         return timer
     }
 }

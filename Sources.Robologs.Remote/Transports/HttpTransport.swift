@@ -1,8 +1,9 @@
 //
 // HttpTransport
-// sdk-apple
+// Robologs
 //
 // Created by Alex Babaev on 19 April 2021.
+// Copyright © 2021 Redmadrobot SPb. All rights reserved.
 //
 
 import Foundation

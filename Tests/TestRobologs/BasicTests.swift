@@ -1,8 +1,9 @@
 //
-// TestLabelMessage
-// sdk-apple
+// BasicTests
+// Robologs
 //
 // Created by Alex Babaev on 05 May 2021.
+// Copyright © 2021 Redmadrobot SPb. All rights reserved.
 //
 
 import XCTest
@@ -83,19 +84,19 @@ class BasicTests: GenericTestCase {
         }
     }
 
-    private let label: String = "label"
     private let level: Level = .info
 
     private func simpleProbe(logger: Logger) -> LogProbe {
-        let random = Int.random(in: Int.min ... Int.max)
+        let randomOne = Int.random(in: Int.min ... Int.max)
+        let randomTwo = Int.random(in: Int.min ... Int.max)
         return LogProbe(
             logger: logger,
             date: Date(),
             level: level,
-            label: label,
+            label: "label \(randomOne)",
             scopes: [],
-            message: "log message \(random)",
-            censoredMessage: "log message \(random)",
+            message: "log message \(randomTwo)",
+            censoredMessage: "log message \(randomTwo)",
             meta: [:],
             censoredMeta: [:]
         )
@@ -119,6 +120,10 @@ class BasicTests: GenericTestCase {
             if !log.contains(probe.censoredMessage) {
                 fputs("\nProblem at \(file):\(line)\n", stderr)
                 throw Problem.noMessageInLog(logger)
+            }
+            if !log.contains(probe.level.testValue) {
+                fputs("\nProblem at \(file):\(line)\n", stderr)
+                throw Problem.wrongLevelInLog(logger)
             }
         } else {
             try expectNoLog(probe: probe, file: file, line: line)

@@ -9,6 +9,8 @@ let package = Package(
         .library(name: "Robologs", type: .static, targets: [ "Robologs" ]),
         .library(name: "RobologsRemote", type: .static, targets: [ "RobologsRemote" ]),
         .library(name: "RobologsServer", type: .static, targets: [ "RobologsServer" ]),
+
+        .executable(name: "ExampleRobologs", targets: [ "ExampleRobologs" ]),
         .executable(name: "ExampleBonjourClient", targets: [ "ExampleBonjourClient" ]),
         .executable(name: "ExampleServer", targets: [ "ExampleServer" ]),
     ],
@@ -17,6 +19,7 @@ let package = Package(
         .package(url: "https://github.com/apple/swift-nio.git", from: "2.0.0"),
     ],
     targets: [
+        .target(name: "ExampleRobologs", dependencies: [ "Robologs" ], path: "Sources.Example.Robologs"),
         .target(name: "ExampleBonjourClient", dependencies: [ "RobologsRemote" ], path: "Sources.Example.BonjourClient"),
         .target(name: "ExampleServer", dependencies: [ "RobologsServer" ], path: "Sources.Example.Server"),
 

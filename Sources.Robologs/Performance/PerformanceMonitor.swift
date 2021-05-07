@@ -8,27 +8,40 @@
 
 import Foundation
 
+/// Tocks here are using `ProcessInfo.processInfo.systemUptime`. They will be wrong in absolute time if computer is asleep because of that.
 public struct PerformanceMonitor {
     public let id: UUID
     public let label: String
-    public let startTimestamp: TimeInterval
-    public var lapTimestamps: [TimeInterval] = []
+    public var uptimes: [TimeInterval] = []
 
-    init(label: String) {
+    public init(label: String) {
         id = UUID()
-        startTimestamp = PerformanceMonitor.currentTimestamp()
+        uptimes.append(ProcessInfo.processInfo.systemUptime)
         self.label = label
     }
 
-    private static func currentTimestamp() -> TimeInterval {
-        Date.timeIntervalBetween1970AndReferenceDate + Date.timeIntervalSinceReferenceDate
+    @discardableResult
+    mutating func tock() -> TimeInterval {
+        let timestamp = Date.timeIntervalSinceReferenceDate
+        uptimes.append(ProcessInfo.processInfo.systemUptime)
+        return timestamp
     }
 
-    mutating func lap() {
-        lapTimestamps.append(PerformanceMonitor.currentTimestamp())
+    // MARK: - Aggregating functions
+
+    // Yup, must crash if no values present. Can't be used in init.
+    public var firstTick: TimeInterval {
+        uptimes[0]
+    }
+    // Yup, must crash if no values present. Can't be used in init.
+    public var lastTick: TimeInterval {
+        uptimes[uptimes.count - 1] + Date.timeIntervalBetween1970AndReferenceDate
     }
 
-    mutating func finish() {
-        lap()
+    public var tickTocks: [TimeInterval] {
+        zip(uptimes.dropLast(), uptimes.dropFirst()).map { $0.1 - $0.0 }
     }
+    public var minTickTock: TimeInterval { tickTocks.min() ?? 0 }
+    public var maxTickTock: TimeInterval { tickTocks.max() ?? 0 }
+    public var averageTickTock: TimeInterval { tickTocks.isEmpty ? 0.0 : tickTocks.reduce(0.0, +) / TimeInterval(tickTocks.count) }
 }

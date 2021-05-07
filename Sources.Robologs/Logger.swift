@@ -8,7 +8,9 @@
 
 import Foundation
 
-/// Logger is an interface to log events sending. Usually you don't use the base method (with "level" parameter), but specific ones.
+/// Logger is an interface to log events sending. Usually you don't use the base method
+/// (with "level" parameter), but specific ones.
+/// TODO: Add an example.
 public protocol Logger {
     /// Required method that reports the log event.
     /// - Parameters:
@@ -32,8 +34,6 @@ public protocol Logger {
         function: String,
         line: UInt
     )
-
-//    func time(id: UUID, label: String, timestamp: TimeInterval)
 }
 
 extension Logger {

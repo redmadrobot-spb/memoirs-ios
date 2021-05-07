@@ -1,13 +1,27 @@
 //
 // TestGenericOutput
-// sdk-apple
+// Robologs
 //
 // Created by Alex Babaev on 03 May 2021.
+// Copyright © 2021 Redmadrobot SPb. All rights reserved.
 //
 
 import Foundation
 import XCTest
 @testable import Robologs
+
+extension Level {
+    var testValue: String {
+        switch self {
+            case .verbose: return "[{verbose}]"
+            case .debug: return "[{debug}]"
+            case .info: return "[{info}]"
+            case .warning: return "[{warning}]"
+            case .error: return "[{error}]"
+            case .critical: return "[{critical}]"
+        }
+    }
+}
 
 class GenericTestCase: XCTestCase {
     enum Problem: Error, CustomDebugStringConvertible {
@@ -15,6 +29,7 @@ class GenericTestCase: XCTestCase {
         case unexpectedLogFromLogger(Logger)
         case noLabelInLog(Logger)
         case noMessageInLog(Logger)
+        case wrongLevelInLog(Logger)
 
         var debugDescription: String {
             switch self {
@@ -26,6 +41,8 @@ class GenericTestCase: XCTestCase {
                     return "No label in log (logger: \(logger))"
                 case .noMessageInLog(let logger):
                     return "No message in log (logger: \(logger))"
+                case .wrongLevelInLog(let logger):
+                    return "Wrong level in log (logger: \(logger))"
             }
         }
     }
@@ -51,6 +68,9 @@ class GenericTestCase: XCTestCase {
     override func setUp() {
         super.setUp()
 
+        Output.logString = { _, level, message, label, _, _, _, isSensitive in
+            "\(level.testValue) | \(label) | \(message().string(isSensitive: isSensitive))"
+        }
         Output.logInterceptor = { logger, log in
             self.logResults.append((logger: logger, result: log))
         }
