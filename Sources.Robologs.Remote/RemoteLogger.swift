@@ -9,7 +9,7 @@
 import Foundation
 import Robologs
 
-public class RemoteLogger: Logger {
+public class RemoteLogger: Loggable {
     private let isSensitive: Bool
     private let senderId: String
     private let senders: [LogSender]

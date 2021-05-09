@@ -9,7 +9,7 @@
 import Foundation
 
 /// Marker protocol
-public protocol Loggable {}
+public protocol LogStringConvertible {}
 
 public enum LoggingSafetyLevel {
     case safe
@@ -17,12 +17,12 @@ public enum LoggingSafetyLevel {
     case never
 }
 
-public protocol LoggableProperty {
+public protocol LogStringConvertibleProperty {
     var safetyLevel: LoggingSafetyLevel { get }
 }
 
 @propertyWrapper
-public struct NeverLog<T>: LoggableProperty, CustomStringConvertible {
+public struct NeverLog<T>: LogStringConvertibleProperty, CustomStringConvertible {
     public var wrappedValue: T
     public let safetyLevel: LoggingSafetyLevel = .never
 
@@ -36,7 +36,7 @@ public struct NeverLog<T>: LoggableProperty, CustomStringConvertible {
 }
 
 @propertyWrapper
-public struct Sensitive<T>: LoggableProperty, CustomStringConvertible {
+public struct Sensitive<T>: LogStringConvertibleProperty, CustomStringConvertible {
     public var wrappedValue: T
     public let safetyLevel: LoggingSafetyLevel = .sensitive
 
@@ -50,7 +50,7 @@ public struct Sensitive<T>: LoggableProperty, CustomStringConvertible {
 }
 
 @propertyWrapper
-public struct SafeToLog<T>: LoggableProperty, CustomStringConvertible {
+public struct SafeToLog<T>: LogStringConvertibleProperty, CustomStringConvertible {
     public var wrappedValue: T
     public let safetyLevel: LoggingSafetyLevel = .safe
 
@@ -63,7 +63,7 @@ public struct SafeToLog<T>: LoggableProperty, CustomStringConvertible {
     }
 }
 
-extension Loggable {
+extension LogStringConvertible {
     func logDescription(isSensitive: Bool) -> String {
         let mirror = Mirror(reflecting: self)
         let children = mirror.children
@@ -71,7 +71,7 @@ extension Loggable {
                 guard let label = child.label else { return "" }
 
                 switch child.value {
-                    case let property as LoggableProperty:
+                    case let property as LogStringConvertibleProperty:
                         switch property.safetyLevel {
                             case .safe:
                                 return "\(label.dropFirst()): \(property)"
@@ -80,7 +80,7 @@ extension Loggable {
                             case .never:
                                 return "\(label.dropFirst()): <private>"
                         }
-                    case let loggable as Loggable:
+                    case let loggable as LogStringConvertible:
                         return "\(label): \(loggable.logDescription(isSensitive: isSensitive))"
                     default:
                         return isSensitive ? "\(label): <private>" : "\(label): \(child.value)"

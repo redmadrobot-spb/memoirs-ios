@@ -19,7 +19,7 @@ final class WebSocketHTTPHandler: ChannelInboundHandler, RemovableChannelHandler
     private let actionsHandler: HttpActions
     private var logger: LabeledLogger!
 
-    init(actionsHandler: HttpActions, logger: Logger) {
+    init(actionsHandler: HttpActions, logger: Loggable) {
         self.actionsHandler = actionsHandler
         self.logger = LabeledLogger(object: self, logger: logger)
     }

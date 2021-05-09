@@ -14,13 +14,13 @@ let stopwatch = SimpleStopwatch()
 
 let applicationScope = Scope(name: "Application")
 
-let logger = ScopedLabeledLogger(label: "ExampleLabel", scopes: [ applicationScope ], logger: printLogger)
+let logger = Logger(label: "ExampleLabel", scopes: [ applicationScope ], logger: printLogger)
 
 logger.debug("Application debug string one")
 
 let measurement = stopwatch.measure(label: "ExampleMeasurement") {
     let measurementScope = applicationScope.subScope(name: "Measurement")
-    let logger = ScopedLabeledLogger(label: "ExampleLabel", scopes: [ measurementScope ], logger: printLogger)
+    let logger = Logger(label: "ExampleLabel", scopes: [ measurementScope ], logger: printLogger)
 
     logger.debug("Debug string one")
     logger.info("Info string two")

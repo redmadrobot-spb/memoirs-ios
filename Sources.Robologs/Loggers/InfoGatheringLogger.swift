@@ -8,11 +8,11 @@
 
 import Foundation
 
-public class InfoGatheringLogger: Logger {
-    public let logger: Logger
+public class InfoGatheringLogger: Loggable {
+    public let logger: Loggable
     public let meta: [String: LogString]
 
-    public init(meta: [String: LogString], logger: Logger) {
+    public init(meta: [String: LogString], logger: Loggable) {
         self.meta = meta
         self.logger = logger
     }

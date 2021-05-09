@@ -34,7 +34,7 @@ public class BonjourServer: NSObject, NetServiceDelegate {
 
     public let generatedPort: Int32 = (Int32(48000) ..< 65536).randomElement() ?? 32128
 
-    public init(logger: Logger) {
+    public init(logger: Loggable) {
         super.init()
 
         self.logger = LabeledLogger(object: self, logger: logger)

@@ -11,7 +11,7 @@ import os.log
 
 /// `(Logger)` - implementation which use `os.log` logging system.
 @available(iOS 12.0, *)
-public class OSLogLogger: Logger {
+public class OSLogLogger: Loggable {
     public let isSensitive: Bool
 
     /// An identifier string, in reverse DNS notation, representing the subsystem that’s performing logging.

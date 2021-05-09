@@ -25,9 +25,9 @@ enum Shell {
         let command: String
 
         private let handlersQueue: DispatchQueue
-        private let logger: LabeledLogger
+        private let logger: Logger
 
-        init(command: String, directory: URL, handlersQueue: DispatchQueue = DispatchQueue.main, logger: LabeledLogger) {
+        init(command: String, directory: URL, handlersQueue: DispatchQueue = DispatchQueue.main, logger: Logger) {
             self.directory = directory
             self.command = command
             self.handlersQueue = handlersQueue
@@ -77,7 +77,6 @@ enum Shell {
                             }
                         } catch {
                             self.logger.error(error)
-                            break
                         }
                     }
 

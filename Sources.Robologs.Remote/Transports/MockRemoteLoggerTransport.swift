@@ -16,7 +16,7 @@ public class MockRemoteLoggerTransport: RemoteLoggerTransport {
 
     /// Create instance of MockRemoteLoggerTransport.
     /// - Parameter logger: Logger used to log events in mock logger.
-    public init(logger: Logger) {
+    public init(logger: Loggable) {
         self.logger = LabeledLogger(label: "Robologs.MockRemoteLogger", logger: logger)
     }
 

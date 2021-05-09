@@ -30,7 +30,7 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
 
     private let robologsServiceBrowser = NetServiceBrowser()
     private let rdLinkServiceBrowser = NetServiceBrowser()
-    private var logger: LabeledLogger!
+    private var logger: Logger!
 
     private let typeRobologs = "_robologs._tcp."
     private let typeRemoteDebugLink = "_rdlink._tcp."
@@ -41,14 +41,14 @@ public class BonjourClient: NSObject, NetServiceBrowserDelegate, NetServiceDeleg
     private var adbTimer: Timer!
     private let adbDirectoryUrl: URL?
 
-    public init(adbRunDirectory: String?, logger: Logger) {
+    public init(adbRunDirectory: String?, logger: Loggable) {
         adbDirectoryUrl = adbRunDirectory.flatMap { path in
             FileManager.default.fileExists(atPath: path) ? URL(fileURLWithPath: path) : nil
         }
         super.init()
 
         adbTimer = Timer(timeInterval: 5, target: self, selector: #selector(adbTimerFired), userInfo: nil, repeats: true)
-        self.logger = LabeledLogger(object: self, logger: InfoGatheringLogger(meta: [:], logger: logger))
+        self.logger = Logger(object: self, logger: InfoGatheringLogger(meta: [:], logger: logger))
 
         start()
     }

@@ -9,7 +9,7 @@
 import Foundation
 
 /// Logger which encapsulate NSLog logging system.
-public class NSLogLogger: Logger {
+public class NSLogLogger: Loggable {
     public let isSensitive: Bool
 
     public init(isSensitive: Bool) {

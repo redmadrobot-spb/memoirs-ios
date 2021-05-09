@@ -1,37 +1,71 @@
 # Robologs
 
-Robologs is a logging framework for Swift.
+Robologs is a logging framework for Swift, that can:
+ - log stuff locally (to the console, to system logs or else),
+ - log stuff remotely (from the iPhone to your Mac via WiFi for example or to QA Mac via server, if you have one),
+ - measure performance of code blocks in a uniform way,
+ - capture analytics events.
+
+It provides default implementation of all these things, but your project may require something else. Feel free to implement your 
+own loggers and Stopwatches, to do whatever stuff you need.
+
+Please refer to [Logging](#Logging) or [Performance Monitoring](#Performance Monitoring) sections for more information.
+
+## Installation
+
+Only [Swift Package Manager](https://swift.org/package-manager/) is supported.
+
+#### Requirements
+
+- iOS 9.0+
+- Swift 5.0+
+- Xcode 10.2+
+
+#### Swift Package Manager
+
+To install Robologs with SwiftPM using XCode 12+, add package in project settings "Swift Packages" tab using url:
+```swift
+"https://git.redmadrobot.com/RedMadRobot/SPb/Robologs/sdk-apple.git"
+```
+or add the following package to your Package.swift file:
+```swift
+.package(url: "https://git.redmadrobot.com/RedMadRobot/SPb/Robologs/sdk-apple.git")
+```
+
+**Warning**: _If the dependency is in the final project or if another dependency depends on [swift-protobuf](https://github.com/apple/swift-protobuf), problems may occur if the versions do not match. To solve this problem, install Robologs manually._
+
+# Logging
 
 ## The core concepts
 
-There is a protocol `Logger` - that requires only one function to be implemented:
+There is a protocol `Logger` - that has only one method:
 ```swift
 @inlinable
 func log(
     level: Level,
+    _ message: @autoclosure () -> LogString,
     label: String,
-    message: () -> String,
-    meta: () -> [String: String]?,
+    scopes: [Scope],
+    meta: @autoclosure () -> [String: LogString]?,
+    date: Date,
     file: String,
     function: String,
     line: UInt
 )
 ```
-### Log levels (Level)
+
+#### Log levels (Level)
 
 The following log levels are supported:
 
-- `verbose` - Describes the same events as in the debug level but in more detail.
-- `debug` - Describes messages that contain information typically used only when debugging a program.
-- `info` - Describes informational messages.
-- `warning` - Describes conditions that are not erroneous, but may require special processing.
-- `error` - Describes a non-critical application error.
 - `critical` - Describes a critical error, after which the application will be terminated.
+- `error` - Describes a non-critical application error.
+- `warning` - Describes conditions that are not erroneous, but may require special processing.
+- `info` - Describes informational messages.
+- `debug` - Describes messages that contain information typically used only when debugging a program.
+- `verbose` - Describes the same events as in the debug level but in more detail.
 
-Log levels implement the `Comparable` protocol and their priority is in ascending order from `verbose` to `critical`.
-If your custom logger needs to handle a certain log level, just compare it with `level` parameter in  `log` - function.
-
-### Convenience interface
+#### Convenience interface
 
 As default implementation `Logger` has list of functions each of which corresponds to specific log level. For convenience, it is recommended to use them when logging.
 ```swift
@@ -43,30 +77,58 @@ func error(label:message:meta:file:function:line:)
 func critical(label:message:meta:file:function:line:)
 ```
 
+#### Labels
+
+Every log has a label as an easy way of grouping. Usually label is derived from the type that emits logs or from the file, or from the subsystem.
+Robologs has specific logger (`LabeledLogger`) that will add label for you automatically.
+
+#### Scopes
+
+Each log message can be a part of one or several Scopes. Scopes are another things to group log messages, 
+and they can do it hierarchically. For example, hierarchies (and corresponding scopes) can be:
+ - Application
+    - → Installation
+        - → Foreground run (session)
+            - → Specific Flow
+                - → Specific Screen
+    - → Main thread/queue
+        - → My queue targeted to the main queue
+    - → Global queue / specific background thread
+    - → User session
+
+Each log can be a part of any number of scopes, for example: `[ "Auth Flow", "Main queue" ]`. If log is a part of some Scope, 
+it is a part of parent scopes as well. In our example full list of Scopes that log is in: 
+`[ "Application", "Installation", "Session", "Auth Flow", "Main queue" ].`
+
+#### Message and Meta
+
+Meta parameter can be used for structural log information, and message is non-structural kind-of-string thing that has same purpose.
+
 ## Usage
 
 Create your custom `Logger` implementation or take out of the box and use it like this:
 ```swift
-let logger = MultiplexingLogger(loggers: [
+let genericLogger = MultiplexingLogger(loggers: [
     PrintLogger(),
-    RemoteLogger(
-        endpoint: URL(string: "https://robologs-instance")!,
-        secret: "XXXX-XXXX-XXXX-XXXX"
-    )
+    AnotherCustomLogger(...)
 ])
 
-logger.debug(label: "Network", message: "User data request",
-             meta: [ "RequestId": UUID().uuidString ])
+let logger = LabeledLogger(label: "Network", logger: genericLogger)
+logger.debug("User data request")
 ```
-Several implementations are available out of the box (the list will be updated):
-- [SensetiveLogger](Documentation/SensetiveLogger.md), which incapsulate some logger, and the logic of erasing sensitive fields.
-- `FilteringLogger`, which incapsulate some logger and filters incoming log-events by labels with levels or minimal default level.
-- `MultiplexingLogger`, which stores several loggers and redirects all log events to them.
-- `LabeledLoggerAdapter`, which adapts any implementation of  `Logger` to `LabeledLogger` - protocol that allows you to bind logger to only one label.
-- `PrintLogger`, which just prints log message in LLDB-console.
-- `OSLogLogger`, which incapsulates `os.log` logging system.
-- `NSLogLogger`, which incapsulates `NSLog` logging system.
-- `RemoteLogger`, which is sends logs to remote Robologs server. 
+
+Several log implementations to use:
+ - `PrintLogger` which prints log message to the console.
+ - `OSLogLogger` which uses `os.log` logging system.
+ - `NSLogLogger` which uses `NSLog` logging system.
+
+There are some structural loggers, that do not do logging themselves but instead redirect logs to others: 
+ - `FilteringLogger` which filters incoming logs by levels (different ones for each label).
+ - `MultiplexingLogger` which redirects logs to several other loggers.
+ - `LabeledLogger` which adds specific label to all logs.
+ - `ScopedLogger` which adds specific scopes to all logs.
+
+### Remote Logging
 
 ## Self-signed certificate.
 If you are using `RemoteLogger` and server where you sending logs is using self signed certificate, use AllowSelfSignedChallengePolicy().
@@ -79,43 +141,3 @@ let remoteLogger = RemoteLogger(
                     challengePolicy: AllowSelfSignedChallengePolicy()
 )
 ```
-
-
-## Requirements
-
-- iOS 9.0+
-- Swift 5.0+
-- Xcode 10.2+
-  
-## Installation
-The library is externally dependent on  [swift-protobuf](https://github.com/apple/swift-protobuf).
-
-These are currently supported installation options:
-
-### Manual
-To install Robologs manually open `Robologs.xcodeproj`, and hit run. This method will build everything. After that, you can move the compiled framework from the build folder to where you need it.
-  
-### [Carthage](https://github.com/Carthage/Carthage)
-
-To install Robologs with Carthage, add the following line to your `Cartfile`.
-```swift
-git "https://git.redmadrobot.com/RedMadRobot/SPb/robologs-ios.git"
-```
-Then run `carthage update --no-use-binaries` command or just `carthage update`.
-  
-### [SwiftPM](https://swift.org/package-manager/)
-
-To install Robologs with SwiftPM using XCode 11+, add package in project settings "Swift Packages" tab using url:
-```swift
-"https://git.redmadrobot.com/RedMadRobot/SPb/robologs-ios.git"
-```
-or add the following package to your Package.swift file: 
-```swift
-.package(url: "https://git.redmadrobot.com/RedMadRobot/SPb/robologs-ios.git")
-```
-
-**Warning**: _If the dependency is in the final project or if another dependency depends on [swift-protobuf](https://github.com/apple/swift-protobuf), problems may occur if the versions do not match. To solve this problem, install Robologs manually._
-
-## Fastlane
-For more convenient release procees there is configured fastlane.
-Documentation for all configured lanes you can see in generated [Fastfile readme](Fastlane/README.md) 

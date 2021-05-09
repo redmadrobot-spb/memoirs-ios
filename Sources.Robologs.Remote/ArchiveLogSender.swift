@@ -12,12 +12,12 @@ import Robologs
 public class ArchiveLogSender: LogSender {
     public let isSensitive: Bool
 
-    private let loggerToInject: Logger
+    private let loggerToInject: Loggable
     private let applicationInfo: ApplicationInfo
     private let workingQueue = DispatchQueue(label: "com.redmadrobot.robologs.RemoteLogger")
     private var sendBuffer: RemoteLoggerBuffer
     private var transport: RemoteLoggerTransport?
-    private var logger: LabeledLogger!
+    private var logger: Logger!
 
     public init(
         applicationInfo: ApplicationInfo,
@@ -25,7 +25,7 @@ public class ArchiveLogSender: LogSender {
         cacheDirectoryUrl: URL,
         maxBatchSize: Int,
         maxBatchesCount: Int,
-        logger: Logger = NullLogger()
+        logger: Loggable = NullLogger()
     ) {
         sendBuffer = PersistingLoggingBuffer(
             cachePath: cacheDirectoryUrl,
@@ -37,7 +37,7 @@ public class ArchiveLogSender: LogSender {
         loggerToInject = logger
         self.applicationInfo = applicationInfo
         self.isSensitive = isSensitive
-        self.logger = LabeledLogger(object: self, logger: logger)
+        self.logger = Logger(object: self, logger: logger)
     }
 
     public func send(senderId: String, message: SerializedLogMessage) {

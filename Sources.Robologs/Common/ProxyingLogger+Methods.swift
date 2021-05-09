@@ -1,19 +1,16 @@
 //
-// NullLogger
+// Logger.Convenience
 // Robologs
 //
-// Created by Alex Babaev on 27 April 2020.
-// Copyright © 2020 Redmadrobot SPb. All rights reserved.
+// Created by Alex Babaev on 09.05.2021.
+// Copyright © 2021 Redmadrobot SPb. All rights reserved.
 //
 
 import Foundation
 
-public class NullLogger: Loggable {
-    public init() {
-    }
-
+public extension LoggableProxy {
     @inlinable
-    public func log(
+    func log(
         level: Level,
         _ message: @autoclosure () -> LogString,
         label: String,
@@ -22,5 +19,8 @@ public class NullLogger: Loggable {
         date: Date = Date(),
         file: String = #file, function: String = #function, line: UInt = #line
     ) {
+        logger.log(
+            level: level, message(), label: label, scopes: scopes, meta: meta(), date: date, file: file, function: function, line: line
+        )
     }
 }

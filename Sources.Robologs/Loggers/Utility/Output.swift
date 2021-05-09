@@ -50,7 +50,7 @@ public final class Output {
     ) -> String = defaultLogString
     /// Should be called in every "basic" logger. Intended for test usage and, maybe, intercepting all the logs
     public static var logInterceptor: ((
-        _ logger: Logger, // Logger that called interceptor
+        _ logger: Loggable, // Logger that called interceptor
         _ logString: String // String, containing parts that were sent to output
     ) -> Void)?
 

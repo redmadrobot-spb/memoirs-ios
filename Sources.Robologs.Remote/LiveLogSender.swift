@@ -12,19 +12,19 @@ import Robologs
 public class LiveLogSender: LogSender {
     public let isSensitive: Bool
 
-    private let loggerToInject: Logger
+    private let loggerToInject: Loggable
     private let applicationInfo: ApplicationInfo
     private let workingQueue = DispatchQueue(label: "com.redmadrobot.robologs.RemoteLogger")
     private var sendBuffer: RemoteLoggerBuffer
     private var transport: RemoteLoggerTransport?
-    private var logger: LabeledLogger!
+    private var logger: Logger!
 
-    public init(applicationInfo: ApplicationInfo, isSensitive: Bool, bufferSize: Int = 1000, logger: Logger = NullLogger()) {
+    public init(applicationInfo: ApplicationInfo, isSensitive: Bool, bufferSize: Int = 1000, logger: Loggable = NullLogger()) {
         sendBuffer = InMemoryRemoteLoggerBuffer(maxRecordsCount: bufferSize)
         loggerToInject = logger
         self.applicationInfo = applicationInfo
         self.isSensitive = isSensitive
-        self.logger = LabeledLogger(object: self, logger: logger)
+        self.logger = Logger(object: self, logger: logger)
     }
 
     public func send(senderId: String, message: SerializedLogMessage) {

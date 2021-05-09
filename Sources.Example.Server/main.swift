@@ -35,5 +35,5 @@ let logger = RemoteLogger(isSensitive: false, senderId: senderId, senders: [ log
 while true {
     Thread.sleep(forTimeInterval: 3)
     print("...")
-    logger.debug("Test Message", label: "TestLabel")
+    logger.debug("Test Message", label: "TestLabel", scopes: [])
 }

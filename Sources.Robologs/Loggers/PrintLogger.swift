@@ -9,7 +9,7 @@
 import Foundation
 
 /// Default `(Logger)` implementation which uses `print()` to output logs.
-public class PrintLogger: Logger {
+public class PrintLogger: Loggable {
     @usableFromInline
     let shortSource: Bool
     @usableFromInline

@@ -14,7 +14,7 @@ class HttpTransport {
     private let endpoint: URL
     private let session: URLSession
     private let httpLogger: HttpLogger
-    private var logger: LabeledLogger!
+    private var logger: Logger!
 
     private let delegateObject: URLSessionDelegateObject
 
@@ -35,7 +35,7 @@ class HttpTransport {
     init(
         endpoint: URL,
         challengePolicy: AuthenticationChallengePolicy = ValidateSSLChallengePolicy(),
-        logger: Logger
+        logger: Loggable
     ) {
         let configuration = URLSessionConfiguration.default
         self.endpoint = endpoint
@@ -44,7 +44,7 @@ class HttpTransport {
         session = URLSession(configuration: configuration, delegate: delegateObject, delegateQueue: nil)
 
         httpLogger = HttpLogger(logger: logger, label: "RobologsHttp")
-        self.logger = LabeledLogger(object: self, logger: logger)
+        self.logger = Logger(object: self, logger: logger)
     }
 
     func request(
@@ -138,11 +138,11 @@ class HttpTransport {
     }
 
     private class HttpLogger {
-        private let logger: Logger
+        private let logger: Loggable
         private let label: String
         var maxBodySize: Int = 8192
 
-        init(logger: Logger, label: String) {
+        init(logger: Loggable, label: String) {
             self.logger = logger
             self.label = label
         }
@@ -165,7 +165,7 @@ class HttpTransport {
                 ‾‾
                 """
 
-            logger.log(level: .info, "\(string)", label: label, function: "")
+            logger.log(level: .info, "\(string)", label: label, scopes: [], function: "")
         }
 
         func log(
@@ -190,7 +190,7 @@ class HttpTransport {
                 \(tag) Error: \(nils(error))
                 ‾‾
                 """
-            logger.log(level: loggingLevel, "\(string)", label: label, function: "")
+            logger.log(level: loggingLevel, "\(string)", label: label, scopes: [], function: "")
         }
 
         func log(_ data: Data?, _ response: URLResponse?) -> String {

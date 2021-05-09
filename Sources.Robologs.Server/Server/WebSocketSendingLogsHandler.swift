@@ -22,7 +22,7 @@ final class WebSocketSendingLogsHandler: ChannelInboundHandler {
 
     private var logger: LabeledLogger!
 
-    init(logger: Logger) {
+    init(logger: Loggable) {
         self.logger = LabeledLogger(object: self, logger: logger)
     }
 

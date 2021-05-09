@@ -25,11 +25,11 @@ extension Level {
 
 class GenericTestCase: XCTestCase {
     enum Problem: Error, CustomDebugStringConvertible {
-        case noLogFromLogger(Logger)
-        case unexpectedLogFromLogger(Logger)
-        case noLabelInLog(Logger)
-        case noMessageInLog(Logger)
-        case wrongLevelInLog(Logger)
+        case noLogFromLogger(Loggable)
+        case unexpectedLogFromLogger(Loggable)
+        case noLabelInLog(Loggable)
+        case noMessageInLog(Loggable)
+        case wrongLevelInLog(Loggable)
 
         var debugDescription: String {
             switch self {
@@ -48,7 +48,7 @@ class GenericTestCase: XCTestCase {
     }
 
     struct LogProbe {
-        let logger: Logger
+        let logger: Loggable
 
         var date: Date
         var level: Level
@@ -63,7 +63,7 @@ class GenericTestCase: XCTestCase {
         var result: String?
     }
 
-    private var logResults: [(logger: Logger, result: String)] = []
+    private var logResults: [(logger: Loggable, result: String)] = []
 
     override func setUp() {
         super.setUp()

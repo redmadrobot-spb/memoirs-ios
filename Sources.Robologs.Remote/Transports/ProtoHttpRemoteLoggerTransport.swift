@@ -49,7 +49,7 @@ class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
         secret: String,
         challengePolicy: AuthenticationChallengePolicy = ValidateSSLChallengePolicy(),
         applicationInfo: ApplicationInfo,
-        logger: Logger
+        logger: Loggable
     ) {
         self.applicationInfo = applicationInfo
         self.secret = secret

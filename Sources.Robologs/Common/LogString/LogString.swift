@@ -41,11 +41,11 @@ public struct LogString: CustomStringConvertible, ExpressibleByStringLiteral, Ex
     public func string(isSensitive: Bool) -> String {
         interpolations.map { interpolation in
             switch interpolation {
-                case .open(let value as Loggable):
+                case .open(let value as LogStringConvertible):
                     return "\(value.logDescription(isSensitive: false))"
                 case .open(let value):
                     return "\(value)"
-                case .sensitive(let value as Loggable):
+                case .sensitive(let value as LogStringConvertible):
                     return "\(value.logDescription(isSensitive: isSensitive))"
                 case .sensitive(let value):
                     return isSensitive ? "<private>" : "\(value)"

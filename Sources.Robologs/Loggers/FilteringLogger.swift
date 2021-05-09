@@ -9,7 +9,7 @@
 import Foundation
 
 /// Logger that filter log events by level and redirects them to the target logger.
-public class FilteringLogger: Logger {
+public class FilteringLogger: Loggable {
     @frozen
     public enum ConfigurationLevel {
         case verbose
@@ -41,7 +41,7 @@ public class FilteringLogger: Logger {
     }
 
     @usableFromInline
-    let logger: Logger
+    let logger: Loggable
     /// Logging levels associated with registered label.
     /// If your label is not registered here, then the default log level will be used.
     public let loggingLevelForLabels: [String: ConfigurationLevel]
@@ -53,7 +53,7 @@ public class FilteringLogger: Logger {
     ///  - logger: The logger for which log events will be filtered.
     ///  - loggingLevelForLabels: Logging levels associated with registered label.
     ///  - defaultLevel: Default minimal log level.
-    public init(logger: Logger, loggingLevelForLabels: [String: ConfigurationLevel], defaultLevel: ConfigurationLevel) {
+    public init(logger: Loggable, loggingLevelForLabels: [String: ConfigurationLevel], defaultLevel: ConfigurationLevel) {
         self.logger = logger
         self.loggingLevelForLabels = loggingLevelForLabels
         self.defaultLevel = defaultLevel

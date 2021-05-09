@@ -9,12 +9,12 @@
 import Foundation
 
 /// A logger that stores several loggers in itself and redirects all log events to them. It has no side effects.
-public class MultiplexingLogger: Logger {
-    public var loggers: [Logger]
+public class MultiplexingLogger: Loggable {
+    public var loggers: [Loggable]
 
     /// Creates a new instance of `MultiplexingLogger`.
     /// - Parameter loggers: An array of loggers to which all log events will be redirected.
-    public init(loggers: [Logger]) {
+    public init(loggers: [Loggable]) {
         self.loggers = loggers
     }
 

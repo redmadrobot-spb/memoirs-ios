@@ -1,9 +1,9 @@
 //
-// Logger
+// Loggable
 // Robologs
 //
 // Created by Dmitry Shadrin on 26.11.2019.
-// Copyright © 2020 Redmadrobot SPb. All rights reserved.
+// Copyright © 2021 Redmadrobot SPb. All rights reserved.
 //
 
 import Foundation
@@ -11,7 +11,7 @@ import Foundation
 /// Logger is an interface to log events sending. Usually you don't use the base method
 /// (with "level" parameter), but specific ones.
 /// TODO: Add an example.
-public protocol Logger {
+public protocol Loggable {
     /// Required method that reports the log event.
     /// - Parameters:
     ///  - level: Logging level.
@@ -36,114 +36,30 @@ public protocol Logger {
     )
 }
 
-extension Logger {
-    @inlinable
-    public func log(
-        level: Level,
-        _ message: @autoclosure () -> LogString,
-        label: String,
-        scopes: [Scope] = [],
-        meta: @autoclosure () -> [String: LogString]? = nil,
-        date: Date = Date(),
-        file: String = #file, function: String = #function, line: UInt = #line
-    ) {
-        log(level: level, message(), label: label, scopes: scopes, meta: meta(), date: date, file: file, function: function, line: line)
+public protocol LabeledLoggable: Loggable {
+    var label: String { get }
+}
+
+public protocol ScopedLoggable: Loggable {
+    var scopes: [Scope] { get }
+}
+
+public protocol LoggableProxy: Loggable {
+    var logger: Loggable { get }
+}
+
+public class Logger: LoggableProxy, ScopedLoggable, LabeledLoggable {
+    public let label: String
+    public let scopes: [Scope]
+    public let logger: Loggable
+
+    public init(label: String, scopes: [Scope] = [], logger: Loggable) {
+        self.label = label
+        self.scopes = scopes
+        self.logger = logger
     }
 
-    /// Method that reports the log event with `verbose` logging level.
-    @inlinable
-    public func verbose(
-        _ message: @autoclosure () -> LogString,
-        label: String,
-        scopes: [Scope] = [],
-        meta: @autoclosure () -> [String: LogString]? = nil,
-        date: Date = Date(),
-        file: String = #file, function: String = #function, line: UInt = #line
-    ) {
-        log(level: .verbose, message(), label: label, scopes: scopes, meta: meta(), date: date, file: file, function: function, line: line)
-    }
-
-    /// Method that reports the log event with `debug` logging level.
-    @inlinable
-    public func debug(
-        _ message: @autoclosure () -> LogString,
-        label: String,
-        scopes: [Scope] = [],
-        meta: @autoclosure () -> [String: LogString]? = nil,
-        date: Date = Date(),
-        file: String = #file, function: String = #function, line: UInt = #line
-    ) {
-        log(level: .debug, message(), label: label, scopes: scopes, meta: meta(), date: date, file: file, function: function, line: line)
-    }
-
-    /// Method that reports the log event with `info` logging level.
-    @inlinable
-    public func info(
-        _ message: @autoclosure () -> LogString,
-        label: String,
-        scopes: [Scope] = [],
-        meta: @autoclosure () -> [String: LogString]? = nil,
-        date: Date = Date(),
-        file: String = #file, function: String = #function, line: UInt = #line
-    ) {
-        log(level: .info, message(), label: label, scopes: scopes, meta: meta(), date: date, file: file, function: function, line: line)
-    }
-
-    /// Method that reports the log event with `warning` logging level.
-    @inlinable
-    public func warning(
-        _ message: @autoclosure () -> LogString,
-        label: String,
-        scopes: [Scope] = [],
-        meta: @autoclosure () -> [String: LogString]? = nil,
-        date: Date = Date(),
-        file: String = #file, function: String = #function, line: UInt = #line
-    ) {
-        log(level: .warning, message(), label: label, meta: meta(), date: date, file: file, function: function, line: line)
-    }
-
-    /// Method that reports the log event with `error` logging level.
-    @inlinable
-    public func error(
-        _ message: @autoclosure () -> LogString,
-        label: String,
-        scopes: [Scope] = [],
-        meta: @autoclosure () -> [String: LogString]? = nil,
-        date: Date = Date(),
-        file: String = #file, function: String = #function, line: UInt = #line
-    ) {
-        log(level: .error, message(), label: label, scopes: scopes, meta: meta(), date: date, file: file, function: function, line: line)
-    }
-
-    @inlinable
-    public func error(
-        _ error: Error,
-        message: LogString? = nil,
-        label: String,
-        scopes: [Scope] = [],
-        meta: @autoclosure () -> [String: LogString]? = nil,
-        date: Date = Date(),
-        file: String = #file, function: String = #function, line: UInt = #line
-    ) {
-        log(
-            level: .error,
-            message.map { "\($0): \(error)" } ?? "\(error)",
-            label: label,
-            scopes: scopes,
-            meta: meta(), date: date, file: file, function: function, line: line
-        )
-    }
-
-    /// Method that reports the log event with `assert` logging level.
-    @inlinable
-    public func critical(
-        _ message: @autoclosure () -> LogString,
-        label: String,
-        scopes: [Scope] = [],
-        meta: @autoclosure () -> [String: LogString]? = nil,
-        date: Date = Date(),
-        file: String = #file, function: String = #function, line: UInt = #line
-    ) {
-        log(level: .critical, message(), label: label, scopes: scopes, meta: meta(), date: date, file: file, function: function, line: line)
+    convenience public init(object: Any, scopes: [Scope] = [], logger: Loggable) {
+        self.init(label: String(describing: type(of: object)), scopes: scopes, logger: logger)
     }
 }

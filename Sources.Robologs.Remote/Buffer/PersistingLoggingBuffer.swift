@@ -15,13 +15,13 @@ class PersistingLoggingBuffer: RemoteLoggerBuffer {
     private let maxBatchesCount: Int
     private let maxBatchSize: Int
 
-    private var logger: LabeledLogger!
+    private var logger: Logger!
 
-    init(cachePath: URL, maxBatchSize: Int, maxBatchesCount: Int, logger: Logger) {
+    init(cachePath: URL, maxBatchSize: Int, maxBatchesCount: Int, logger: Loggable) {
         self.cachePath = cachePath
         self.maxBatchesCount = maxBatchesCount
         self.maxBatchSize = maxBatchSize
-        self.logger = LabeledLogger(object: self, logger: logger)
+        self.logger = Logger(object: self, logger: logger)
         if !FileManager.default.fileExists(atPath: cachePath.path) {
             do {
                 try FileManager.default.createDirectory(at: cachePath, withIntermediateDirectories: true)
