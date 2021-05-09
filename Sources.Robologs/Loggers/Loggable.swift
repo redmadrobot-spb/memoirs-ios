@@ -1,14 +1,14 @@
 //
 // Loggable
-// Robologs
+// sdk-apple
 //
-// Created by Dmitry Shadrin on 26.11.2019.
+// Created by Alex Babaev on 09 May 2021.
 // Copyright © 2021 Redmadrobot SPb. All rights reserved.
 //
 
 import Foundation
 
-/// Logger is an interface to log events sending. Usually you don't use the base method
+/// Loggable is an interface to log events sending. Usually you don't use the base method
 /// (with "level" parameter), but specific ones.
 /// TODO: Add an example.
 public protocol Loggable {
@@ -36,30 +36,17 @@ public protocol Loggable {
     )
 }
 
+/// Protocol that adds specified label to every log.
 public protocol LabeledLoggable: Loggable {
     var label: String { get }
 }
 
+/// Protocol that adds specified scopes to every log.
 public protocol ScopedLoggable: Loggable {
     var scopes: [Scope] { get }
 }
 
+/// Protocol that passes log to contained Loggable.
 public protocol LoggableProxy: Loggable {
     var logger: Loggable { get }
-}
-
-public class Logger: LoggableProxy, ScopedLoggable, LabeledLoggable {
-    public let label: String
-    public let scopes: [Scope]
-    public let logger: Loggable
-
-    public init(label: String, scopes: [Scope] = [], logger: Loggable) {
-        self.label = label
-        self.scopes = scopes
-        self.logger = logger
-    }
-
-    convenience public init(object: Any, scopes: [Scope] = [], logger: Loggable) {
-        self.init(label: String(describing: type(of: object)), scopes: scopes, logger: logger)
-    }
 }
