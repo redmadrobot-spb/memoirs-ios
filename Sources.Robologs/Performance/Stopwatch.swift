@@ -11,10 +11,7 @@ import Foundation
 public class Stopwatch: Stopwatchable {
     private var monitorsByLabel: [String: PerformanceMonitor] = [:]
 
-    private var logger: Logger?
-
-    public init(logger: Loggable? = nil) {
-        self.logger = logger.map { Logger(object: self, logger: $0) }
+    public init() {
     }
 
     @discardableResult
