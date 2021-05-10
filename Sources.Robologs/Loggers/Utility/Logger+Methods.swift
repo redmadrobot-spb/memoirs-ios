@@ -8,109 +8,85 @@
 
 import Foundation
 
-public extension Loggable {
+public extension Logger {
     @inlinable
     func log(
         level: Level,
         _ message: @autoclosure () -> LogString,
-        label: String,
-        scopes: [Scope],
         meta: @autoclosure () -> [String: LogString]? = nil,
         date: Date = Date(),
         file: String = #file, function: String = #function, line: UInt = #line
     ) {
-        log(level: level, message(), label: label, scopes: scopes, meta: meta(), date: date, file: file, function: function, line: line)
+        proxyLog(level, message(), meta(), date, file, function, line)
     }
 
-    /// Method that reports the log event with `verbose` logging level.
     @inlinable
     func verbose(
         _ message: @autoclosure () -> LogString,
-        label: String,
-        scopes: [Scope],
         meta: @autoclosure () -> [String: LogString]? = nil,
         date: Date = Date(),
         file: String = #file, function: String = #function, line: UInt = #line
     ) {
-        log(level: .verbose, message(), label: label, scopes: scopes, meta: meta(), date: date, file: file, function: function, line: line)
+        proxyLog(.verbose, message(), meta(), date, file, function, line)
     }
 
-    /// Method that reports the log event with `debug` logging level.
     @inlinable
     func debug(
         _ message: @autoclosure () -> LogString,
-        label: String,
-        scopes: [Scope],
         meta: @autoclosure () -> [String: LogString]? = nil,
         date: Date = Date(),
         file: String = #file, function: String = #function, line: UInt = #line
     ) {
-        log(level: .debug, message(), label: label, scopes: scopes, meta: meta(), date: date, file: file, function: function, line: line)
+        proxyLog(.debug, message(), meta(), date, file, function, line)
     }
 
-    /// Method that reports the log event with `info` logging level.
     @inlinable
     func info(
         _ message: @autoclosure () -> LogString,
-        label: String,
-        scopes: [Scope],
         meta: @autoclosure () -> [String: LogString]? = nil,
         date: Date = Date(),
         file: String = #file, function: String = #function, line: UInt = #line
     ) {
-        log(level: .info, message(), label: label, scopes: scopes, meta: meta(), date: date, file: file, function: function, line: line)
+        proxyLog(.info, message(), meta(), date, file, function, line)
     }
 
-    /// Method that reports the log event with `warning` logging level.
     @inlinable
     func warning(
         _ message: @autoclosure () -> LogString,
-        label: String,
-        scopes: [Scope],
         meta: @autoclosure () -> [String: LogString]? = nil,
         date: Date = Date(),
         file: String = #file, function: String = #function, line: UInt = #line
     ) {
-        log(level: .warning, message(), label: label, scopes: scopes, meta: meta(), date: date, file: file, function: function, line: line)
+        proxyLog(.warning, message(), meta(), date, file, function, line)
     }
 
-    /// Method that reports the log event with `error` logging level.
-    @inlinable
     func error(
         _ message: @autoclosure () -> LogString,
-        label: String,
-        scopes: [Scope],
         meta: @autoclosure () -> [String: LogString]? = nil,
         date: Date = Date(),
         file: String = #file, function: String = #function, line: UInt = #line
     ) {
-        log(level: .error, message(), label: label, scopes: scopes, meta: meta(), date: date, file: file, function: function, line: line)
+        proxyLog(.error, message(), meta(), date, file, function, line)
     }
 
     @inlinable
     func error(
         _ error: Error,
         message: LogString? = nil,
-        label: String,
-        scopes: [Scope],
         meta: @autoclosure () -> [String: LogString]? = nil,
         date: Date = Date(),
         file: String = #file, function: String = #function, line: UInt = #line
     ) {
-        let message: LogString = message.map { "\($0): \(error)" } ?? "\(error)"
-        log(level: .error, message, label: label, scopes: scopes, meta: meta(), date: date, file: file, function: function, line: line)
+        proxyLog(.error, message.map { "\($0): \(error)" } ?? "\(error)", meta(), date, file, function, line)
     }
 
-    /// Method that reports the log event with `assert` logging level.
     @inlinable
     func critical(
         _ message: @autoclosure () -> LogString,
-        label: String,
-        scopes: [Scope],
         meta: @autoclosure () -> [String: LogString]? = nil,
         date: Date = Date(),
         file: String = #file, function: String = #function, line: UInt = #line
     ) {
-        log(level: .critical, message(), label: label, scopes: scopes, meta: meta(), date: date, file: file, function: function, line: line)
+        proxyLog(.critical, message(), meta(), date, file, function, line)
     }
 }

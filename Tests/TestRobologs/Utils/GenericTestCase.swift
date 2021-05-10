@@ -72,8 +72,8 @@ class GenericTestCase: XCTestCase {
     override func setUp() {
         super.setUp()
 
-        Output.logString = { _, level, message, label, _, _, _, isSensitive in
-            "\(level.testValue) | \(label) | \(message().string(isSensitive: isSensitive))"
+        Output.logString = { time, level, message, label, scopes, meta, codePosition, isSensitive in
+            "\(time) | \(level.testValue) | \(label) | \(message().string(isSensitive: isSensitive)) | \(scopes.map { $0.name }.joined(separator: " ")) | \((meta() ?? [:]).map { "\($0)=\($1)" }.joined(separator: " ")) | \(codePosition)"
         }
         Output.logInterceptor = { logger, log in
             self.logResults.append((logger: logger, result: log))

@@ -45,8 +45,3 @@ public protocol LabeledLoggable: Loggable {
 public protocol ScopedLoggable: Loggable {
     var scopes: [Scope] { get }
 }
-
-/// Protocol that passes log to contained Loggable.
-public protocol LoggableProxy: Loggable {
-    var logger: Loggable { get }
-}

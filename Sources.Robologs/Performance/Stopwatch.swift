@@ -13,7 +13,7 @@ public class Stopwatch: Stopwatchable {
 
     private var logger: Logger?
 
-    public init(logger: ScopedLoggable? = nil) {
+    public init(logger: Loggable? = nil) {
         self.logger = logger.map { Logger(object: self, logger: $0) }
     }
 

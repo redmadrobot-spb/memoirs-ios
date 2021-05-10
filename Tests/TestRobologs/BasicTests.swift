@@ -7,6 +7,7 @@
 //
 
 import XCTest
+import Foundation
 @testable import Robologs
 
 class BasicTests: GenericTestCase {
@@ -15,6 +16,41 @@ class BasicTests: GenericTestCase {
         NSLogLogger(isSensitive: false),
         OSLogLogger(subsystem: "Test", isSensitive: false),
     ]
+
+    public func testAllLogOverloads() {
+        let logger: Loggable = PrintLogger()
+        let scope = Scope(name: "Test Scope")
+
+        logger.log(level: .info, "Test log 1", label: "Test Label", scopes: [ scope ], meta: [ "Test Key": "Test Value" ], date: Date(timeIntervalSince1970: 239), file: "file", function: "function", line: 239)
+        guard let result = logResult(), result.contains("1970-01-01 03:03:59.000"), result.contains("Test Scope"), result.contains("Test Key=Test Value"), result.contains("Test log 1"), result.contains("Test Label") else {
+            return XCTFail("Can't call log(level:_:label:scopes:meta:date:file:function:line:)")
+        }
+
+        logger.log(level: .info, "Test log 2", label: "Test Label", scopes: [ scope ], meta: [ "Test Key": "Test Value" ], date: Date(timeIntervalSince1970: 239), file: "file", function: "function")
+        guard let result = logResult(), result.contains("1970-01-01 03:03:59.000"), result.contains("Test Scope"), result.contains("Test Key=Test Value"), result.contains("Test log 2"), result.contains("Test Label") else { // TODO: Check date and meta
+            return XCTFail("Can't call log(level:_:label:scopes:meta:date:file:function:)")
+        }
+
+        logger.log(level: .info, "Test log 3", label: "Test Label", scopes: [ scope ], meta: [ "Test Key": "Test Value" ], date: Date(timeIntervalSince1970: 239), file: "file")
+        guard let result = logResult(), result.contains("1970-01-01 03:03:59.000"), result.contains("Test Scope"), result.contains("Test Key=Test Value"), result.contains("Test log 3"), result.contains("Test Label") else { // TODO: Check date and meta
+            return XCTFail("Can't call log(level:_:label:scopes:meta:date:file:)")
+        }
+
+        logger.log(level: .info, "Test log 4", label: "Test Label", scopes: [ scope ], meta: [ "Test Key": "Test Value" ], date: Date(timeIntervalSince1970: 239))
+        guard let result = logResult(), result.contains("1970-01-01 03:03:59.000"), result.contains("Test Scope"), result.contains("Test Key=Test Value"), result.contains("Test log 4"), result.contains("Test Label") else { // TODO: Check date and meta
+            return XCTFail("Can't call log(level:_:label:scopes:meta:date:)")
+        }
+
+        logger.log(level: .info, "Test log 5", label: "Test Label", scopes: [ scope ], meta: [ "Test Key": "Test Value" ])
+        guard let result = logResult(), result.contains("Test Scope"), result.contains("Test Key=Test Value"), result.contains("Test log 5"), result.contains("Test Label") else { // TODO: Check date and meta
+            return XCTFail("Can't call log(level:_:label:scopes:meta:)")
+        }
+
+        logger.log(level: .info, "Test log 6", label: "Test Label", scopes: [ scope ])
+        guard let result = logResult(), result.contains("Test Scope"), result.contains("Test log 6"), result.contains("Test Label") else { // TODO: Check date and meta
+            return XCTFail("Can't call log(level:_:label:scopes:meta:)")
+        }
+    }
 
     func testConfigureOutput() throws {
         let levelStrings: [Level: String] = [
