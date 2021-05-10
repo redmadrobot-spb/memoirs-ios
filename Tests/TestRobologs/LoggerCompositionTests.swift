@@ -14,10 +14,10 @@ class LoggerCompositionTests: GenericTestCase {
     func testLoggerLabel() throws {
         let logger = Logger(label: "[Logger]", logger: printLogger)
 
-        logger.debug("Test log 1", label: "[LogLabel]")
+        logger.debug("Test log 1", label: "[LogLabel]", scopes: [])
         guard let result1 = logResult() else { throw Problem.noLogFromLogger(logger) }
 
-        if !result1.contains("[LogLabel]") || !(result1.contains("Test log 1")) {
+        if !result1.contains("[Logger]") || !(result1.contains("Test log 1")) {
             throw Problem.wrongLabelInLog(logger)
         }
 
@@ -32,27 +32,12 @@ class LoggerCompositionTests: GenericTestCase {
     func testLoggerInLoggerLabel() throws {
         let innerLogger = Logger(label: "[Inner]", logger: printLogger)
         let logger = Logger(label: "[Outer]", logger: innerLogger)
+
         logger.debug("Test log")
-        let result = logResult()
-        if result?.contains("[Inner]") ?? true {
+        guard let result = logResult() else { throw Problem.noLogFromLogger(logger) }
+
+        if result.contains("[Outer]") {
             throw Problem.wrongLabelInLog(logger)
         }
-
-        XCTAssertTrue(logger.logger as AnyObject === printLogger)
-    }
-
-    func testLoggerWithLabeledLogger() throws {
-        let innerLogger = LabeledLogger(label: "[Labeled]", logger: printLogger)
-        let logger = Logger(scopes: [], logger: innerLogger)
-        XCTAssertTrue(logger.label == "[Labeled]")
-        XCTAssertTrue(logger.logger as AnyObject === printLogger)
-    }
-
-    func testLoggerWithScopedLogger() throws {
-        let scope = Scope(name: "[Scope]")
-        let innerLogger = ScopedLogger(scopes: [ scope ], logger: printLogger)
-        let logger = Logger(label: "[Label]", logger: innerLogger)
-        XCTAssertTrue(logger.scopes.elementsEqual([ scope ]) { left, right in left.equalKey(with: right) })
-        XCTAssertTrue(logger.logger as AnyObject === printLogger)
     }
 }

@@ -8,7 +8,7 @@
 
 import Foundation
 
-public extension Loggable where Self: ScopedLoggable, Self: LabeledLoggable {
+public extension Logger {
     @inlinable
     func log(
         level: Level,
@@ -17,7 +17,7 @@ public extension Loggable where Self: ScopedLoggable, Self: LabeledLoggable {
         date: Date = Date(),
         file: String = #file, function: String = #function, line: UInt = #line
     ) {
-        log(level: level, message(), label: label, scopes: scopes, meta: meta(), date: date, file: file, function: function, line: line)
+        proxyLog(level, message(), meta(), date, file, function, line)
     }
 
     @inlinable
@@ -27,7 +27,7 @@ public extension Loggable where Self: ScopedLoggable, Self: LabeledLoggable {
         date: Date = Date(),
         file: String = #file, function: String = #function, line: UInt = #line
     ) {
-        log(level: .verbose, message(), label: label, scopes: scopes, meta: meta(), date: date, file: file, function: function, line: line)
+        proxyLog(.verbose, message(), meta(), date, file, function, line)
     }
 
     @inlinable
@@ -37,7 +37,7 @@ public extension Loggable where Self: ScopedLoggable, Self: LabeledLoggable {
         date: Date = Date(),
         file: String = #file, function: String = #function, line: UInt = #line
     ) {
-        log(level: .debug, message(), label: label, scopes: scopes, meta: meta(), date: date, file: file, function: function, line: line)
+        proxyLog(.debug, message(), meta(), date, file, function, line)
     }
 
     @inlinable
@@ -47,7 +47,7 @@ public extension Loggable where Self: ScopedLoggable, Self: LabeledLoggable {
         date: Date = Date(),
         file: String = #file, function: String = #function, line: UInt = #line
     ) {
-        log(level: .info, message(), label: label, scopes: scopes, meta: meta(), date: date, file: file, function: function, line: line)
+        proxyLog(.info, message(), meta(), date, file, function, line)
     }
 
     @inlinable
@@ -57,7 +57,7 @@ public extension Loggable where Self: ScopedLoggable, Self: LabeledLoggable {
         date: Date = Date(),
         file: String = #file, function: String = #function, line: UInt = #line
     ) {
-        log(level: .warning, message(), label: label, meta: meta(), date: date, file: file, function: function, line: line)
+        proxyLog(.warning, message(), meta(), date, file, function, line)
     }
 
     func error(
@@ -66,7 +66,7 @@ public extension Loggable where Self: ScopedLoggable, Self: LabeledLoggable {
         date: Date = Date(),
         file: String = #file, function: String = #function, line: UInt = #line
     ) {
-        log(level: .error, message(), label: label, scopes: scopes, meta: meta(), date: date, file: file, function: function, line: line)
+        proxyLog(.error, message(), meta(), date, file, function, line)
     }
 
     @inlinable
@@ -77,13 +77,7 @@ public extension Loggable where Self: ScopedLoggable, Self: LabeledLoggable {
         date: Date = Date(),
         file: String = #file, function: String = #function, line: UInt = #line
     ) {
-        log(
-            level: .error,
-            message.map { "\($0): \(error)" } ?? "\(error)",
-            label: label,
-            scopes: scopes,
-            meta: meta(), date: date, file: file, function: function, line: line
-        )
+        proxyLog(.error, message.map { "\($0): \(error)" } ?? "\(error)", meta(), date, file, function, line)
     }
 
     @inlinable
@@ -93,6 +87,6 @@ public extension Loggable where Self: ScopedLoggable, Self: LabeledLoggable {
         date: Date = Date(),
         file: String = #file, function: String = #function, line: UInt = #line
     ) {
-        log(level: .critical, message(), label: label, scopes: scopes, meta: meta(), date: date, file: file, function: function, line: line)
+        proxyLog(.critical, message(), meta(), date, file, function, line)
     }
 }

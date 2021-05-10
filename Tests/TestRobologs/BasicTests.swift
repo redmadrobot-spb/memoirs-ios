@@ -87,6 +87,8 @@ class BasicTests: GenericTestCase {
         let logger = Logger(label: label, scopes: [ scope ], logger: printLogger)
         for level in allLevels {
             var probe = simpleProbe(logger: logger)
+            probe.label = label
+            probe.scopes = [ scope ]
             probe.level = level
             try logShouldPresent(probe: probe, logger: logger)
         }
