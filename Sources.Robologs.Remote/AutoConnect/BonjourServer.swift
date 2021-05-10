@@ -30,14 +30,14 @@ public class BonjourServer: NSObject, NetServiceDelegate {
 
     private let netServiceNamePrefix: String = "Robologs-"
     private var netService: NetService?
-    private var logger: LabeledLogger!
+    private var logger: Logger!
 
     public let generatedPort: Int32 = (Int32(48000) ..< 65536).randomElement() ?? 32128
 
     public init(logger: Loggable) {
         super.init()
 
-        self.logger = LabeledLogger(object: self, logger: logger)
+        self.logger = Logger(object: self, logger: logger)
         self.logger.debug("\(ProcessInfo.processInfo.environment)")
         self.logger.warning("Created. WARNING!!! This must be done only in debug mode")
     }

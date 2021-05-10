@@ -25,4 +25,8 @@ public struct Scope {
     public func subScope(name: String, meta: [String: LogString] = [:]) -> Scope {
         Scope(parentId: self.id, name: name, meta: meta)
     }
+
+    public func equalKey(with scope: Scope) -> Bool {
+        id == scope.id && parentId == scope.parentId && name == scope.name
+    }
 }

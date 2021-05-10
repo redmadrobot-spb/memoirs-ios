@@ -17,11 +17,11 @@ final class WebSocketHTTPHandler: ChannelInboundHandler, RemovableChannelHandler
     typealias OutboundOut = HTTPServerResponsePart
 
     private let actionsHandler: HttpActions
-    private var logger: LabeledLogger!
+    private var logger: Logger!
 
     init(actionsHandler: HttpActions, logger: Loggable) {
         self.actionsHandler = actionsHandler
-        self.logger = LabeledLogger(object: self, logger: logger)
+        self.logger = Logger(object: self, logger: logger)
     }
 
     func handlerAdded(context: ChannelHandlerContext) {

@@ -10,7 +10,7 @@ import Foundation
 import Robologs
 
 let printLogger = PrintLogger(onlyTime: true, shortSource: true)
-let stopwatch = SimpleStopwatch()
+let stopwatch = Stopwatch()
 
 let applicationScope = Scope(name: "Application")
 

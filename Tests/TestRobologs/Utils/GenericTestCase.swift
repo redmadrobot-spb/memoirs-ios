@@ -31,6 +31,7 @@ class GenericTestCase: XCTestCase {
         case noLabelInLog(Loggable)
         case noMessageInLog(Loggable)
         case wrongLevelInLog(Loggable)
+        case wrongLabelInLog(Loggable)
 
         var debugDescription: String {
             switch self {
@@ -46,6 +47,8 @@ class GenericTestCase: XCTestCase {
                     return "No message in log (logger: \(logger))"
                 case .wrongLevelInLog(let logger):
                     return "Wrong level in log (logger: \(logger))"
+                case .wrongLabelInLog(let logger):
+                    return "Wrong label in log (logger: \(logger))"
             }
         }
     }
@@ -62,8 +65,6 @@ class GenericTestCase: XCTestCase {
         var censoredMessage: String
         var meta: [String: LogString]
         var censoredMeta: [String: String]
-
-        var result: String?
     }
 
     private var logResults: [(logger: Loggable, result: String)] = []
@@ -94,7 +95,7 @@ class GenericTestCase: XCTestCase {
             scopes: probe.scopes,
             meta: probe.meta
         )
-        if let probe = try updatedResult(in: probe), let result = probe.result {
+        if let result = logResult() {
             return result
         } else {
             throw Problem.noLogFromLogger(probe.logger)
@@ -109,17 +110,34 @@ class GenericTestCase: XCTestCase {
             scopes: probe.scopes,
             meta: probe.meta
         )
-        if let probe = try updatedResult(in: probe), probe.result != nil {
+        let result = logResult()
+        if result != nil {
             fputs("\nProblem at \(file):\(line)\n", stderr)
             throw Problem.unexpectedLogFromLogger(probe.logger)
         }
     }
 
-    private func updatedResult(in probe: LogProbe) throws -> LogProbe? {
+    func logResult() -> String? {
         guard !logResults.isEmpty else { return nil }
 
-        var probe = probe
-        probe.result = logResults.remove(at: 0).result
-        return probe
+        return logResults.remove(at: 0).result
+    }
+
+    let defaultLevel: Level = .info
+
+    func simpleProbe(logger: Loggable) -> LogProbe {
+        let randomOne = Int.random(in: Int.min ... Int.max)
+        let randomTwo = Int.random(in: Int.min ... Int.max)
+        return LogProbe(
+            logger: logger,
+            date: Date(),
+            level: defaultLevel,
+            label: "label \(randomOne)",
+            scopes: [],
+            message: "log message \(randomTwo)",
+            censoredMessage: "log message \(randomTwo)",
+            meta: [:],
+            censoredMeta: [:]
+        )
     }
 }

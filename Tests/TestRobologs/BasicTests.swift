@@ -151,24 +151,6 @@ class BasicTests: GenericTestCase {
         }
     }
 
-    private let level: Level = .info
-
-    private func simpleProbe(logger: Loggable) -> LogProbe {
-        let randomOne = Int.random(in: Int.min ... Int.max)
-        let randomTwo = Int.random(in: Int.min ... Int.max)
-        return LogProbe(
-            logger: logger,
-            date: Date(),
-            level: level,
-            label: "label \(randomOne)",
-            scopes: [],
-            message: "log message \(randomTwo)",
-            censoredMessage: "log message \(randomTwo)",
-            meta: [:],
-            censoredMeta: [:]
-        )
-    }
-
     private func checkLog(
         logger: Loggable,
         logShouldPresent: Bool,

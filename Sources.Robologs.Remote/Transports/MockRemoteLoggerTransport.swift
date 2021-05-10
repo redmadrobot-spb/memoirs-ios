@@ -12,12 +12,12 @@ import Robologs
 /// Mock remote logger transport. Emulate behaviour of transport for offline testing.
 public class MockRemoteLoggerTransport: RemoteLoggerTransport {
     let isConnected: Bool = true
-    private let logger: LabeledLogger
+    private let logger: Logger
 
     /// Create instance of MockRemoteLoggerTransport.
     /// - Parameter logger: Logger used to log events in mock logger.
     public init(logger: Loggable) {
-        self.logger = LabeledLogger(label: "Robologs.MockRemoteLogger", logger: logger)
+        self.logger = Logger(label: "Robologs.MockRemoteLogger", logger: logger)
     }
 
     func liveConnectionCode(_ completion: @escaping (Result<String, RemoteLoggerTransportError>) -> Void) {

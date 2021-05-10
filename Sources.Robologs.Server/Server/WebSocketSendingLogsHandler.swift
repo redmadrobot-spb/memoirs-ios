@@ -20,10 +20,10 @@ final class WebSocketSendingLogsHandler: ChannelInboundHandler {
 
     private var awaitingClose: Bool = false
 
-    private var logger: LabeledLogger!
+    private var logger: Logger!
 
     init(logger: Loggable) {
-        self.logger = LabeledLogger(object: self, logger: logger)
+        self.logger = Logger(object: self, logger: logger)
     }
 
     public func handlerAdded(context: ChannelHandlerContext) {

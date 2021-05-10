@@ -1,5 +1,5 @@
 //
-// SimpleTiming
+// Stopwatch
 // Robologs
 //
 // Created by Alex Babaev on 30.05.2021.
@@ -8,10 +8,13 @@
 
 import Foundation
 
-public class SimpleStopwatch: Stopwatch {
+public class Stopwatch: Stopwatchable {
     private var monitorsByLabel: [String: PerformanceMonitor] = [:]
 
-    public init() {
+    private var logger: Logger?
+
+    public init(logger: ScopedLoggable? = nil) {
+        self.logger = logger.map { Logger(object: self, logger: $0) }
     }
 
     @discardableResult
@@ -24,7 +27,7 @@ public class SimpleStopwatch: Stopwatch {
     @discardableResult
     public func tock(_ label: String) throws -> PerformanceMonitor {
         guard var timer = monitorsByLabel[label] else {
-            throw StopwatchError.cantFindMonitor(label: label)
+            throw StopwatchableError.cantFindMonitor(label: label)
         }
 
         timer.tock()

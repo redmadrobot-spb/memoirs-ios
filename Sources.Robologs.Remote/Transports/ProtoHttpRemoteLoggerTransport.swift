@@ -34,7 +34,7 @@ class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
     private let secret: String
     private var isLoading = false
     private let applicationInfo: ApplicationInfo
-    private var logger: LabeledLogger!
+    private var logger: Logger!
     private let httpTransport: HttpTransport
 
     var isConnected: Bool { httpTransport.isAuthorized }
@@ -55,7 +55,7 @@ class ProtoHttpRemoteLoggerTransport: RemoteLoggerTransport {
         self.secret = secret
         httpTransport = HttpTransport(endpoint: endpoint, challengePolicy: challengePolicy, logger: logger)
         httpTransport.authorizeHandler = authorize
-        self.logger = LabeledLogger(object: self, logger: logger)
+        self.logger = Logger(object: self, logger: logger)
     }
 
     private var liveConnectionCode: String?

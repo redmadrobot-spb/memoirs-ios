@@ -1,5 +1,5 @@
 //
-// Stopwatch
+// Stopwatchable
 // Robologs
 //
 // Created by Alex Babaev on 30 April 2021.
@@ -8,13 +8,13 @@
 
 import Foundation
 
-enum StopwatchError: Error {
+enum StopwatchableError: Error {
     case cantFindMonitor(label: String)
 }
 
 /// Performance timing of code blocks.
 /// TODO: Add an example.
-public protocol Stopwatch {
+public protocol Stopwatchable {
     /// Marks start of timing period for the label.
     @discardableResult
     func tick(_ label: String) -> PerformanceMonitor
@@ -24,7 +24,7 @@ public protocol Stopwatch {
     func tock(_ label: String) throws -> PerformanceMonitor
 }
 
-public extension Stopwatch {
+public extension Stopwatchable {
     func measure(label: String, _ closure: () -> Void) -> PerformanceMonitor {
         var monitor = tick(label)
         closure()
