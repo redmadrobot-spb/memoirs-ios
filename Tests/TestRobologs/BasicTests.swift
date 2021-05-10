@@ -16,6 +16,36 @@ class BasicTests: GenericTestCase {
         OSLogLogger(subsystem: "Test", isSensitive: false),
     ]
 
+    func testConfigureOutput() throws {
+        let levelStrings: [Level: String] = [
+            .verbose: "[VVV]",
+            .debug: "[DDD]",
+            .info: "[III]",
+            .warning: "[WWW]",
+            .error: "[EEE]",
+            .critical: "[CCC]",
+        ]
+        Output.logString = Output.defaultLogString
+        Level.configure(
+            stringForVerbose: levelStrings[.verbose]!,
+            stringForDebug: levelStrings[.debug]!,
+            stringForInfo: levelStrings[.info]!,
+            stringForWarning: levelStrings[.warning]!,
+            stringForError: levelStrings[.error]!,
+            stringForCritical: levelStrings[.critical]!
+        )
+
+        let logger = PrintLogger()
+        for (level, string) in levelStrings {
+            var probe = simpleProbe(logger: logger)
+            probe.level = level
+            let log = try expectLog(probe: probe)
+            if !log.contains(string) {
+                throw Problem.noLabelInLog(logger)
+            }
+        }
+    }
+
     func testLabelAndMessageInLoggers() throws {
         for logger: Loggable in basicLoggersWithoutCensoring {
             let probe = simpleProbe(logger: logger)

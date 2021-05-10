@@ -27,6 +27,7 @@ class GenericTestCase: XCTestCase {
     enum Problem: Error, CustomDebugStringConvertible {
         case noLogFromLogger(Loggable)
         case unexpectedLogFromLogger(Loggable)
+        case noLevelInLog(Loggable)
         case noLabelInLog(Loggable)
         case noMessageInLog(Loggable)
         case wrongLevelInLog(Loggable)
@@ -37,6 +38,8 @@ class GenericTestCase: XCTestCase {
                     return "No log found, but has to be (logger: \(logger))"
                 case .unexpectedLogFromLogger(let logger):
                     return "Log found, but not expected (logger: \(logger))"
+                case .noLevelInLog(let logger):
+                    return "No level in log (logger: \(logger))"
                 case .noLabelInLog(let logger):
                     return "No label in log (logger: \(logger))"
                 case .noMessageInLog(let logger):

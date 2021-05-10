@@ -8,39 +8,32 @@
 
 import Foundation
 
-// TODO: This is a wrong place for this kind of customization.
-public extension Level {
-    /// You can redefine these to display other symbols in PrintLogger
-    static var stringVerbose: String = "VERBOSE"
-    /// You can redefine these to display other symbols in PrintLogger
-    static var stringDebug: String = "DEBUG"
-    /// You can redefine these to display other symbols in PrintLogger
-    static var stringInfo: String = "INFO"
-    /// You can redefine these to display other symbols in PrintLogger
-    static var stringWarning: String = "WARNING"
-    /// You can redefine these to display other symbols in PrintLogger
-    static var stringError: String = "ERROR"
-    /// You can redefine these to display other symbols in PrintLogger
-    static var stringCritical: String = "CRITICAL"
+public enum Output {
+    public enum Level {
+        static var verbose: String = "👻"
+        static var debug: String = "👣"
+        static var info: String = "🌵"
+        static var warning: String = "🖖"
+        static var error: String = "⛑"
+        static var critical: String = "👿"
 
-    var printString: String {
-        switch self {
-            case .verbose: return Self.stringVerbose
-            case .debug: return Self.stringDebug
-            case .info: return Self.stringInfo
-            case .warning: return Self.stringWarning
-            case .error: return Self.stringError
-            case .critical: return Self.stringCritical
+        public static func printString(for level: Robologs.Level) -> String {
+            switch level {
+                case .verbose: return Self.verbose
+                case .debug: return Self.debug
+                case .info: return Self.info
+                case .warning: return Self.warning
+                case .error: return Self.error
+                case .critical: return Self.critical
+            }
         }
     }
-}
 
-public final class Output {
     public static var codePosition: (_ file: String, _ function: String, _ line: UInt) -> String = defaultCodePosition
     public static var censuredString: (_ string: LogString, _ isSensitive: Bool) -> String = defaultCensureString
     public static var logString: (
         _ time: String,
-        _ level: Level,
+        _ level: Robologs.Level,
         _ message: () -> LogString,
         _ label: String,
         _ scopes: [Scope],
@@ -74,7 +67,7 @@ public final class Output {
     @inlinable
     public static func defaultLogString(
         time: String,
-        level: Level?,
+        level: Robologs.Level?,
         message: () -> LogString,
         label: String,
         scopes: [Scope],
@@ -88,7 +81,7 @@ public final class Output {
             .joined(separator: ", ")
         let parts = [
             time,
-            "\(level.map { "\($0.printString)" } ?? "")",
+            "\(level.map { "\(Level.printString(for: $0))" } ?? "")",
             "\(label)",
             codePosition,
             meta.map { "[ \($0) ]" } ?? "",

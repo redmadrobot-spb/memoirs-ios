@@ -8,7 +8,7 @@
 
 /// Logging level.
 @frozen
-public enum Level: Comparable {
+public enum Level: Hashable, Comparable {
     /// Extremely detailed log events. This is the only level that can spam output instantly.
     case verbose
     /// Events that can be useful for understanding steps that program does. Makes it easier to debug.
@@ -35,5 +35,22 @@ public enum Level: Comparable {
 
     public static func < (lhs: Level, rhs: Level) -> Bool {
         lhs.integralValue < rhs.integralValue
+    }
+
+    /// You can redefine these to display other symbols in PrintLogger.
+    public static func configure(
+        stringForVerbose: String = "👻",
+        stringForDebug: String = "👣",
+        stringForInfo: String = "🌵",
+        stringForWarning: String = "🖖",
+        stringForError: String = "⛑",
+        stringForCritical: String = "👿"
+    ) {
+        Output.Level.verbose = stringForVerbose
+        Output.Level.debug = stringForDebug
+        Output.Level.info = stringForInfo
+        Output.Level.warning = stringForWarning
+        Output.Level.error = stringForError
+        Output.Level.critical = stringForCritical
     }
 }
