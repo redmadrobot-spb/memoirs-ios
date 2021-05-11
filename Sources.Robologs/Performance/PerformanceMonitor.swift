@@ -10,12 +10,10 @@ import Foundation
 
 /// Tocks here are using `ProcessInfo.processInfo.systemUptime`. They will be wrong in absolute time if computer is asleep because of that.
 public struct PerformanceMonitor {
-    public let id: UUID
     public let label: String
     public var uptimes: [TimeInterval] = []
 
     public init(label: String) {
-        id = UUID()
         uptimes.append(ProcessInfo.processInfo.systemUptime)
         self.label = label
     }

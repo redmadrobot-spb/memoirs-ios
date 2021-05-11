@@ -9,24 +9,21 @@
 import Foundation
 
 public struct Scope {
-    public let id: UUID
-    public let parentId: UUID?
-
     public let name: String
+    public let parentName: String?
     public var meta: [String: LogString]
 
-    public init(parentId: UUID? = nil, name: String, meta: [String: LogString] = [:]) {
-        id = UUID()
-        self.parentId = parentId
+    public init(name: String, parentName: String? = nil, meta: [String: LogString] = [:]) {
+        self.parentName = parentName
         self.name = name
         self.meta = meta
     }
 
     public func subScope(name: String, meta: [String: LogString] = [:]) -> Scope {
-        Scope(parentId: self.id, name: name, meta: meta)
+        Scope(name: name, parentName: name, meta: meta)
     }
 
     public func equalKey(with scope: Scope) -> Bool {
-        id == scope.id && parentId == scope.parentId && name == scope.name
+        name == scope.name && parentName == scope.parentName
     }
 }
