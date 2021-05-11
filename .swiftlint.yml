@@ -41,7 +41,7 @@ excluded:
   - Scripts
   - Generated
   - Example-iOS
-  - Sources.Robologs.Remote/Transports/ProtoHttpRemoteLoggerTransport/proto/backend.pb.swift
+  - Sources.Robologs.Remote/Transports/ProtobufTransport/proto
   - .build
   - build
 

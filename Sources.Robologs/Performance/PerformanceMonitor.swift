@@ -21,7 +21,7 @@ public struct PerformanceMonitor {
     }
 
     @discardableResult
-    mutating func tock() -> TimeInterval {
+    public mutating func tock() -> TimeInterval {
         let timestamp = Date.timeIntervalSinceReferenceDate
         uptimes.append(ProcessInfo.processInfo.systemUptime)
         return timestamp
@@ -41,6 +41,8 @@ public struct PerformanceMonitor {
     public var tickTocks: [TimeInterval] {
         zip(uptimes.dropLast(), uptimes.dropFirst()).map { $0.1 - $0.0 }
     }
+    public var firstTickTock: TimeInterval { tickTocks.first ?? 0 }
+    public var lastTickTock: TimeInterval { tickTocks.last ?? 0 }
     public var minTickTock: TimeInterval { tickTocks.min() ?? 0 }
     public var maxTickTock: TimeInterval { tickTocks.max() ?? 0 }
     public var averageTickTock: TimeInterval { tickTocks.isEmpty ? 0.0 : tickTocks.reduce(0.0, +) / TimeInterval(tickTocks.count) }
