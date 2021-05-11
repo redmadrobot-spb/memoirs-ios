@@ -16,7 +16,7 @@ public class Stopwatch: Stopwatchable {
 
     @discardableResult
     public func tick(_ label: String) -> PerformanceMonitor {
-        let timer = PerformanceMonitor(label: label)
+        let timer = PerformanceMonitor(name: label)
         monitorsByLabel[label] = timer
         return timer
     }

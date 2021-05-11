@@ -10,18 +10,18 @@ import Foundation
 
 /// Tocks here are using `ProcessInfo.processInfo.systemUptime`. They will be wrong in absolute time if computer is asleep because of that.
 public struct PerformanceMonitor {
-    public let label: String
-    public var uptimes: [TimeInterval] = []
+    public let name: String
+    public var measurements: [TimeInterval] = []
 
-    public init(label: String) {
-        uptimes.append(ProcessInfo.processInfo.systemUptime)
-        self.label = label
+    public init(name: String) {
+        measurements.append(ProcessInfo.processInfo.systemUptime)
+        self.name = name
     }
 
     @discardableResult
     public mutating func tock() -> TimeInterval {
         let timestamp = Date.timeIntervalSinceReferenceDate
-        uptimes.append(ProcessInfo.processInfo.systemUptime)
+        measurements.append(ProcessInfo.processInfo.systemUptime)
         return timestamp
     }
 
@@ -29,15 +29,15 @@ public struct PerformanceMonitor {
 
     // Yup, must crash if no values present. Can't be used in init.
     public var firstTick: TimeInterval {
-        uptimes[0]
+        measurements[0]
     }
     // Yup, must crash if no values present. Can't be used in init.
     public var lastTick: TimeInterval {
-        uptimes[uptimes.count - 1] + Date.timeIntervalBetween1970AndReferenceDate
+        measurements[measurements.count - 1] + Date.timeIntervalBetween1970AndReferenceDate
     }
 
     public var tickTocks: [TimeInterval] {
-        zip(uptimes.dropLast(), uptimes.dropFirst()).map { $0.1 - $0.0 }
+        zip(measurements.dropLast(), measurements.dropFirst()).map { $0.1 - $0.0 }
     }
     public var firstTickTock: TimeInterval { tickTocks.first ?? 0 }
     public var lastTickTock: TimeInterval { tickTocks.last ?? 0 }
