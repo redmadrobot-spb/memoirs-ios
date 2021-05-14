@@ -14,7 +14,7 @@ class MeasurementTests: GenericTestCase {
         let label = "test_\(Int.random(in: 0 ... 239))"
         let randomInterval = TimeInterval.random(in: 0 ... 0.5)
 
-        var monitor = PerformanceMonitor(name: label)
+        var monitor = PerfMonitor(name: label)
         Thread.sleep(forTimeInterval: randomInterval)
         monitor.tock()
 //        fputs(
@@ -42,7 +42,7 @@ class MeasurementTests: GenericTestCase {
         let iterations = 10000
 
         let startTime = ProcessInfo.processInfo.systemUptime
-        var monitor = PerformanceMonitor(name: label)
+        var monitor = PerfMonitor(name: label)
         for _ in 0 ..< iterations {
             monitor.tock()
         }

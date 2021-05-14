@@ -9,20 +9,20 @@
 import Foundation
 
 public class Stopwatch: Stopwatchable {
-    private var monitorsByLabel: [String: PerformanceMonitor] = [:]
+    private var monitorsByLabel: [String: PerfMonitor] = [:]
 
     public init() {
     }
 
     @discardableResult
-    public func tick(_ label: String) -> PerformanceMonitor {
-        let timer = PerformanceMonitor(name: label)
+    public func tick(_ label: String) -> PerfMonitor {
+        let timer = PerfMonitor(name: label)
         monitorsByLabel[label] = timer
         return timer
     }
 
     @discardableResult
-    public func tock(_ label: String) throws -> PerformanceMonitor {
+    public func tock(_ label: String) throws -> PerfMonitor {
         guard var timer = monitorsByLabel[label] else {
             throw StopwatchableError.cantFindMonitor(label: label)
         }

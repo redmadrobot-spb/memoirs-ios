@@ -1,5 +1,5 @@
 //
-// PerformanceMonitor
+// PerfMonitor
 // Robologs
 //
 // Created by Alex Babaev on 30.05.2021.
@@ -9,7 +9,7 @@
 import Foundation
 
 /// Tocks here are using `ProcessInfo.processInfo.systemUptime`. They will be wrong in absolute time if computer is asleep because of that.
-public struct PerformanceMonitor {
+public struct PerfMonitor {
     public let name: String
     public var measurements: [TimeInterval] = []
 

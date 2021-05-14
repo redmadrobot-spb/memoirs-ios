@@ -17,15 +17,15 @@ enum StopwatchableError: Error {
 public protocol Stopwatchable {
     /// Marks start of timing period for the label.
     @discardableResult
-    func tick(_ label: String) -> PerformanceMonitor
+    func tick(_ label: String) -> PerfMonitor
     /// Marks end of the measurement period. Simultaneously it marks start of the next period.
     /// So it is not needed to call `tick` after `tock`.
     @discardableResult
-    func tock(_ label: String) throws -> PerformanceMonitor
+    func tock(_ label: String) throws -> PerfMonitor
 }
 
 public extension Stopwatchable {
-    func measure(label: String, _ closure: () -> Void) -> PerformanceMonitor {
+    func measure(label: String, _ closure: () -> Void) -> PerfMonitor {
         var monitor = tick(label)
         closure()
         monitor.tock()
