@@ -10,10 +10,10 @@ let package = Package(
         .executable(name: "ExampleRobologs", targets: [ "ExampleRobologs" ]),
     ],
     targets: [
-        .target(name: "ExampleRobologs", dependencies: [ "Robologs" ], path: "Sources.Example.Robologs"),
+        .target(name: "ExampleRobologs", dependencies: [ "Robologs" ], path: "Sources.Example"),
 
-        .target(name: "Robologs", dependencies: [], path: "Sources.Robologs"),
-        .testTarget(name: "TestRobologs", dependencies: [ "Robologs" ]),
+        .target(name: "Robologs", dependencies: [], path: "Sources"),
+        .testTarget(name: "RobologsTests", dependencies: [ "Robologs" ]),
     ],
     swiftLanguageVersions: [.v5]
 )
