@@ -77,11 +77,7 @@ public class FilteringLogger: Loggable {
         )
     }
 
-    public func begin(scopes: [Scope]) {
-        logger.begin(scopes: scopes)
-    }
-
-    public func end(scopes: [Scope]) {
-        logger.end(scopes: scopes)
+    public func update(scope: Scope, file: String = #file, function: String = #function, line: UInt = #line) {
+        logger.update(scope: scope, file: file, function: function, line: line)
     }
 }

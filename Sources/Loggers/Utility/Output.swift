@@ -41,8 +41,7 @@ public enum Output {
         _ codePosition: String,
         _ isSensitive: Bool
     ) -> String = defaultLogString
-    public static var scopeBeginString: (_ scope: Scope, _ isSensitive: Bool) -> String = defaultScopeBeginString
-    public static var scopeEndString: (_ scope: Scope, _ isSensitive: Bool) -> String = defaultScopeEndString
+    public static var scopeString: (_ scope: Scope, _ isSensitive: Bool) -> String = defaultScopeString
     /// Should be called in every "basic" logger. Intended for test usage and, maybe, intercepting all the logs
     public static var logInterceptor: ((
         _ logger: Loggable, // Logger that called interceptor
@@ -84,11 +83,11 @@ public enum Output {
         let parts = [
             time,
             "\(level.map { "\(Level.printString(for: $0))" } ?? "")",
-            "\(isSensitive ? "???" : label)",
-            "{\(scopes.map { isSensitive ? "???" : $0.name }.joined(separator: ", "))}",
             codePosition,
-            meta.map { "[ \($0) ]" } ?? "",
+            "\(isSensitive ? "???" : label)",
             censuredString(message(), isSensitive),
+            scopes.isEmpty ? "" : "{\(scopes.map { isSensitive ? "???" : $0.name }.joined(separator: ", "))}",
+            meta.map { "[ \($0) ]" } ?? "",
         ]
         return parts
             .compactMap { $0 }
@@ -97,12 +96,11 @@ public enum Output {
     }
 
     @inlinable
-    public static func defaultScopeBeginString(scope: Scope, isSensitive: Bool) -> String {
-        "Scope began: \"\(isSensitive ? "???" : scope.name)\""
-    }
-
-    @inlinable
-    public static func defaultScopeEndString(scope: Scope, isSensitive: Bool) -> String {
-        "Scope end: \"\(isSensitive ? "???" : scope.name)\""
+    public static func defaultScopeString(scope: Scope, isSensitive: Bool) -> String {
+        let meta = scope.meta
+            .sorted { $0.key < $1.key }
+            .map { "\($0): \(censuredString($1, isSensitive))" }
+            .joined(separator: ", ")
+        return "🕶 \(isSensitive ? "???" : scope.name)\(meta.isEmpty ? "" : " [ \(meta) ]")"
     }
 }

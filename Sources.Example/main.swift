@@ -9,46 +9,38 @@
 import Foundation
 import Robologs
 
-let printLogger = PrintLogger(onlyTime: true, shortSource: true)
-let stopwatch = Stopwatch()
-
-let applicationScope = Scope(name: "Application")
-
-let logger = Logger(label: "ExampleLabel", scopes: [ applicationScope ], logger: printLogger)
-
-logger.debug("Application debug string one")
-
-let measurement = stopwatch.measure(label: "ExampleMeasurement") {
-    let measurementScope = applicationScope.subScope(name: "Measurement")
-    let logger = Logger(label: "ExampleLabel", scopes: [ measurementScope ], logger: printLogger)
-
-    logger.debug("Debug string one")
-    logger.info("Info string two")
-}
+let lowLevelLogger = PrintLogger(onlyTime: true, shortSource: true) // Usually its Filtering/Multiplexing logger
+//    let stopwatch = Stopwatch()
+//
+//    let applicationScope = Scope(name: "Application")
+//
+//    let logger = Logger(label: "ExampleLabel", scopes: [ applicationScope ], logger: lowLevelLogger)
+//
+//    logger.debug("Application debug string one")
+//
+//    let measurement = stopwatch.measure(label: "ExampleMeasurement") {
+//        let measurementScope = applicationScope.subScope(name: "Measurement")
+//        let logger = Logger(label: "ExampleLabel", scopes: [ measurementScope ], logger: lowLevelLogger)
+//
+//        logger.debug("Debug string one")
+//        logger.info("Info string two")
+//    }
 
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-let lowLevelLogger = PrintLogger() // Usually its Filtering/Multiplexing logger
-
-let appScope = Scope(name: "Application", meta: [ "bundleId": "com.smth.myGreatApp" ])
-let appLogger = ScopedLogger(scopes: [ appScope ], logger: lowLevelLogger)
-
-let installationScope = Scope(name: "Installation", parentName: "Application", meta: [
-    "deviceId": "\(safe: UUID().uuidString)",
-    "appVersion": "1.239",
-    "os": "iOS",
-    "osVersion": "14.4 beta 3",
-])
-var installLogger: ScopedLogger = ScopedLogger(scopes: [ installationScope ], logger: appLogger)
+let appLogger = ThreadQueueLogger(logger: AppLogger(bundleId: "com.smth.myGreatApp", version: "0.1", logger: lowLevelLogger))
+var installLogger = InstallLogger(deviceInfo: .init(os: .macOS(version: "11.something")), logger: appLogger)
 
 func session() {
-    let sessionScope = Scope(name: "Session", parentName: "Installation", meta: [
-        "startTimestamp": "\(safe: Int(Date().timeIntervalSince1970))"
-    ])
-    let sessionLogger = ScopedLogger(scopes: [ sessionScope ], logger: installLogger)
-    sessionLogger.debug("Session level log", label: "session")
+    let sessionLogger = SessionLogger(userId: UUID().uuidString, isGuest: true, logger: installLogger)
+    sessionLogger.debug("Session level log", label: "SessionLabel")
 }
 
 session()
-appLogger.debug("Application level log", label: "main")
+session()
+session()
+installLogger.debug("Install level log", label: "MainLabel")
+
+installLogger = InstallLogger(deviceInfo: .init(os: .macOS(version: "11.something")), logger: appLogger)
+installLogger.debug("Another install level log", label: "MainLabel")

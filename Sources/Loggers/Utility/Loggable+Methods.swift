@@ -113,4 +113,9 @@ public extension Loggable {
     ) {
         log(level: .critical, message(), label: label, scopes: scopes, meta: meta(), date: date, file: file, function: function, line: line)
     }
+
+    @inlinable
+    func update(scope: Scope, file: String = #file, function: String = #function, line: UInt = #line) {
+        update(scope: scope, file: file, function: function, line: line)
+    }
 }

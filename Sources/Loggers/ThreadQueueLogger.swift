@@ -1,5 +1,5 @@
 //
-// SystemInfoGatheringLogger
+// ThreadQueueLogger
 // Robologs
 //
 // Created by Alex Babaev on 25 April 2020.
@@ -8,13 +8,10 @@
 
 import Foundation
 
-// TODO: This should be replaced with scoped logger
-public class InfoGatheringLogger: Loggable {
+public class ThreadQueueLogger: Loggable {
     public let logger: Loggable
-    public let meta: [String: LogString]
 
-    public init(meta: [String: LogString], logger: Loggable) {
-        self.meta = meta
+    public init(logger: Loggable) {
         self.logger = logger
     }
 
@@ -39,28 +36,22 @@ public class InfoGatheringLogger: Loggable {
         date: Date = Date(),
         file: String = #file, function: String = #function, line: UInt = #line
     ) {
-        // TODO: Replace these with scopes
-        var updatedMeta = self.meta
+        var scopes = scopes
         if let threadName = currentThreadName, !threadName.isEmpty {
-            updatedMeta["_thread"] = LogString(threadName)
+            let scope = Scope(.thread(name: threadName), parent: .app)
+            scopes.append(scope)
         }
         if let queueName = currentQueueName, !queueName.isEmpty {
-            updatedMeta["_queue"] = LogString(queueName)
-        }
-        meta()?.forEach { key, value in
-            updatedMeta[key] = value
+            let scope = Scope(.queue(name: queueName), parent: .app)
+            scopes.append(scope)
         }
 
         logger.log(
-            level: level, message(), label: label, scopes: scopes, meta: updatedMeta, date: date, file: file, function: function, line: line
+            level: level, message(), label: label, scopes: scopes, meta: meta(), date: date, file: file, function: function, line: line
         )
     }
 
-    public func begin(scopes: [Scope]) {
-        // TODO:
-    }
-
-    public func end(scopes: [Scope]) {
-        // TODO:
+    public func update(scope: Scope, file: String = #file, function: String = #function, line: UInt = #line) {
+        logger.update(scope: scope, file: file, function: function, line: line)
     }
 }

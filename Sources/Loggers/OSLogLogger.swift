@@ -64,15 +64,7 @@ public class OSLogLogger: Loggable {
         }
     }
 
-    public func begin(scopes: [Scope]) {
-        scopes.forEach { scope in
-            os_log(logType(from: .info), log: logger(with: "__scopes"), "%{public}@", Output.scopeBeginString(scope, isSensitive))
-        }
-    }
-
-    public func end(scopes: [Scope]) {
-        scopes.forEach { scope in
-            os_log(logType(from: .info), log: logger(with: "__scopes"), "%{public}@", Output.scopeEndString(scope, isSensitive))
-        }
+    public func update(scope: Scope, file: String = #file, function: String = #function, line: UInt = #line) {
+        os_log(logType(from: .info), log: logger(with: "__scopes"), "%{public}@", Output.scopeString(scope, isSensitive))
     }
 }
