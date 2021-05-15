@@ -8,6 +8,7 @@
 
 import Foundation
 
+// TODO: This should be replaced with scoped logger
 public class InfoGatheringLogger: Loggable {
     public let logger: Loggable
     public let meta: [String: LogString]
@@ -53,5 +54,13 @@ public class InfoGatheringLogger: Loggable {
         logger.log(
             level: level, message(), label: label, scopes: scopes, meta: updatedMeta, date: date, file: file, function: function, line: line
         )
+    }
+
+    public func begin(scopes: [Scope]) {
+        // TODO:
+    }
+
+    public func end(scopes: [Scope]) {
+        // TODO:
     }
 }

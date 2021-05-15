@@ -41,4 +41,38 @@ class LoggerCompositionTests: GenericTestCase {
             throw Problem.wrongLabelInLog(logger)
         }
     }
+
+    func testScopedScopedLogger() throws {
+        let scope1 = Scope(name: "Scope 1")
+        let scope2 = Scope(name: "Scope 2")
+
+        let printLogger = PrintLogger()
+
+        let scopedLogger1 = ScopedLogger(scopes: [ scope1 ], logger: printLogger)
+        let scopedLogger2 = ScopedLogger(scopes: [ scope2 ], logger: scopedLogger1)
+
+        scopedLogger2.debug("Test log", label: "Label")
+        guard let result = logResult() else { throw Problem.noLogFromLogger(scopedLogger2) }
+
+        if !result.contains("{Scope 1}") || !result.contains("{Scope 2}") {
+            throw Problem.wrongScopeInLog(scopedLogger2)
+        }
+    }
+
+    func testLoggerScopedLogger() throws {
+        let scope1 = Scope(name: "Scope 1")
+        let scope2 = Scope(name: "Scope 2")
+
+        let printLogger = PrintLogger()
+
+        let scopedLogger1 = ScopedLogger(scopes: [ scope1 ], logger: printLogger)
+        let logger2 = Logger(scopes: [ scope2 ], logger: scopedLogger1)
+
+        logger2.debug("Test log")
+        guard let result = logResult() else { throw Problem.noLogFromLogger(logger2) }
+
+        if !result.contains("{Scope 1}") || !result.contains("{Scope 2}") {
+            throw Problem.wrongScopeInLog(logger2)
+        }
+    }
 }

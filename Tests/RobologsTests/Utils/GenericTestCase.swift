@@ -32,6 +32,7 @@ class GenericTestCase: XCTestCase {
         case noMessageInLog(Loggable)
         case wrongLevelInLog(Loggable)
         case wrongLabelInLog(Loggable)
+        case wrongScopeInLog(Loggable)
 
         var debugDescription: String {
             switch self {
@@ -49,6 +50,8 @@ class GenericTestCase: XCTestCase {
                     return "Wrong level in log (logger: \(logger))"
                 case .wrongLabelInLog(let logger):
                     return "Wrong label in log (logger: \(logger))"
+                case .wrongScopeInLog(let logger):
+                    return "Wrong scope in log (logger: \(logger))"
             }
         }
     }
@@ -73,7 +76,7 @@ class GenericTestCase: XCTestCase {
         super.setUp()
 
         Output.logString = { time, level, message, label, scopes, meta, codePosition, isSensitive in
-            "\(time) | \(level.testValue) | \(label) | \(message().string(isSensitive: isSensitive)) | \(scopes.map { $0.name }.joined(separator: " ")) | \((meta() ?? [:]).map { "\($0)=\($1)" }.joined(separator: " ")) | \(codePosition)"
+            "\(time) | \(level.testValue) | \(label) | \(message().string(isSensitive: isSensitive)) | \(scopes.map { "{\($0.name)}" }.joined(separator: " ")) | \((meta() ?? [:]).map { "\($0)=\($1)" }.joined(separator: " ")) | \(codePosition)"
         }
         Output.logInterceptor = { logger, log in
             self.logResults.append((logger: logger, result: log))

@@ -34,6 +34,9 @@ public protocol Loggable {
         function: String,
         line: UInt
     )
+
+    func begin(scopes: [Scope])
+    func end(scopes: [Scope])
 }
 
 /// Protocol that adds specified label to every log.

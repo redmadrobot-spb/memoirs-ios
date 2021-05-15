@@ -23,4 +23,10 @@ public class NullLogger: Loggable {
         file: String = #file, function: String = #function, line: UInt = #line
     ) {
     }
+
+    public func begin(scopes: [Scope]) {
+    }
+
+    public func end(scopes: [Scope]) {
+    }
 }

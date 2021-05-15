@@ -45,4 +45,16 @@ public class PrintLogger: Loggable {
 
         Output.logInterceptor?(self, description)
     }
+
+    public func begin(scopes: [Scope]) {
+        scopes.forEach { scope in
+            print(Output.scopeBeginString(scope, false))
+        }
+    }
+
+    public func end(scopes: [Scope]) {
+        scopes.forEach { scope in
+            print(Output.scopeEndString(scope, false))
+        }
+    }
 }

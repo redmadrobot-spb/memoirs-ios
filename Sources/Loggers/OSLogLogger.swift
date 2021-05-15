@@ -63,4 +63,16 @@ public class OSLogLogger: Loggable {
             return logger
         }
     }
+
+    public func begin(scopes: [Scope]) {
+        scopes.forEach { scope in
+            os_log(logType(from: .info), log: logger(with: "__scopes"), "%{public}@", Output.scopeBeginString(scope, isSensitive))
+        }
+    }
+
+    public func end(scopes: [Scope]) {
+        scopes.forEach { scope in
+            os_log(logType(from: .info), log: logger(with: "__scopes"), "%{public}@", Output.scopeEndString(scope, isSensitive))
+        }
+    }
 }

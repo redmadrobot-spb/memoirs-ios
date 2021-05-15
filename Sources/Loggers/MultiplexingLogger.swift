@@ -35,4 +35,12 @@ public class MultiplexingLogger: Loggable {
             )
         }
     }
+
+    public func begin(scopes: [Scope]) {
+        loggers.forEach { $0.begin(scopes: scopes) }
+    }
+
+    public func end(scopes: [Scope]) {
+        loggers.forEach { $0.end(scopes: scopes) }
+    }
 }

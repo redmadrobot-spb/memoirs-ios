@@ -35,4 +35,12 @@ public class LabeledLogger: LabeledLoggable {
             level: level, message(), label: label, scopes: scopes, meta: meta(), date: date, file: file, function: function, line: line
         )
     }
+
+    public func begin(scopes: [Scope]) {
+        logger.begin(scopes: scopes)
+    }
+
+    public func end(scopes: [Scope]) {
+        logger.end(scopes: scopes)
+    }
 }

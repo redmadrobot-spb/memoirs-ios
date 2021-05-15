@@ -32,4 +32,16 @@ public class NSLogLogger: Loggable {
 
         Output.logInterceptor?(self, description)
     }
+
+    public func begin(scopes: [Scope]) {
+        scopes.forEach { scope in
+            NSLog("%@", Output.scopeBeginString(scope, isSensitive))
+        }
+    }
+
+    public func end(scopes: [Scope]) {
+        scopes.forEach { scope in
+            NSLog("%@", Output.scopeEndString(scope, isSensitive))
+        }
+    }
 }

@@ -2,7 +2,7 @@
 // Scope
 // Robologs
 //
-// Created by Alex Babaev on 30.05.2021.
+// Created by Alex Babaev on 30 April 2021.
 // Copyright © 2021 Redmadrobot SPb. All rights reserved.
 //
 
@@ -11,7 +11,7 @@ import Foundation
 public struct Scope {
     public let name: String
     public let parentName: String?
-    public var meta: [String: LogString]
+    public let meta: [String: LogString]
 
     public init(name: String, parentName: String? = nil, meta: [String: LogString] = [:]) {
         self.parentName = parentName

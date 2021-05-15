@@ -25,3 +25,30 @@ let measurement = stopwatch.measure(label: "ExampleMeasurement") {
     logger.debug("Debug string one")
     logger.info("Info string two")
 }
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+let lowLevelLogger = PrintLogger() // Usually its Filtering/Multiplexing logger
+
+let appScope = Scope(name: "Application", meta: [ "bundleId": "com.smth.myGreatApp" ])
+let appLogger = ScopedLogger(scopes: [ appScope ], logger: lowLevelLogger)
+
+let installationScope = Scope(name: "Installation", parentName: "Application", meta: [
+    "deviceId": "\(safe: UUID().uuidString)",
+    "appVersion": "1.239",
+    "os": "iOS",
+    "osVersion": "14.4 beta 3",
+])
+var installLogger: ScopedLogger = ScopedLogger(scopes: [ installationScope ], logger: appLogger)
+
+func session() {
+    let sessionScope = Scope(name: "Session", parentName: "Installation", meta: [
+        "startTimestamp": "\(safe: Int(Date().timeIntervalSince1970))"
+    ])
+    let sessionLogger = ScopedLogger(scopes: [ sessionScope ], logger: installLogger)
+    sessionLogger.debug("Session level log", label: "session")
+}
+
+session()
+appLogger.debug("Application level log", label: "main")

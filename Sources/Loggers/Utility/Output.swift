@@ -41,6 +41,8 @@ public enum Output {
         _ codePosition: String,
         _ isSensitive: Bool
     ) -> String = defaultLogString
+    public static var scopeBeginString: (_ scope: Scope, _ isSensitive: Bool) -> String = defaultScopeBeginString
+    public static var scopeEndString: (_ scope: Scope, _ isSensitive: Bool) -> String = defaultScopeEndString
     /// Should be called in every "basic" logger. Intended for test usage and, maybe, intercepting all the logs
     public static var logInterceptor: ((
         _ logger: Loggable, // Logger that called interceptor
@@ -82,7 +84,8 @@ public enum Output {
         let parts = [
             time,
             "\(level.map { "\(Level.printString(for: $0))" } ?? "")",
-            "\(label)",
+            "\(isSensitive ? "???" : label)",
+            "{\(scopes.map { isSensitive ? "???" : $0.name }.joined(separator: ", "))}",
             codePosition,
             meta.map { "[ \($0) ]" } ?? "",
             censuredString(message(), isSensitive),
@@ -91,5 +94,15 @@ public enum Output {
             .compactMap { $0 }
             .filter { !$0.isEmpty }
             .joined(separator: " ")
+    }
+
+    @inlinable
+    public static func defaultScopeBeginString(scope: Scope, isSensitive: Bool) -> String {
+        "Scope began: \"\(isSensitive ? "???" : scope.name)\""
+    }
+
+    @inlinable
+    public static func defaultScopeEndString(scope: Scope, isSensitive: Bool) -> String {
+        "Scope end: \"\(isSensitive ? "???" : scope.name)\""
     }
 }
