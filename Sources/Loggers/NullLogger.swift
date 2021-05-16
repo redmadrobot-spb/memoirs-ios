@@ -24,6 +24,9 @@ public class NullLogger: Loggable {
     ) {
     }
 
-    public func update(scope: Scope, file: String = #file, function: String = #function, line: UInt = #line) {
+    public func updateScope(_ scope: Scope, file: String, function: String, line: UInt) {
+    }
+
+    public func endScope(name: String, file: String, function: String, line: UInt) {
     }
 }

@@ -34,7 +34,12 @@ public class NSLogLogger: Loggable {
     }
 
     @inlinable
-    public func update(scope: Scope, file: String = #file, function: String = #function, line: UInt = #line) {
-        NSLog("%@", Output.scopeString(scope, isSensitive))
+    public func updateScope(_ scope: Scope, file: String, function: String, line: UInt) {
+        info("\(Output.scopeString(scope, isSensitive))", label: "", scopes: [], file: file, function: function, line: line)
+    }
+
+    @inlinable
+    public func endScope(name: String, file: String, function: String, line: UInt) {
+        info("\(Output.scopeEndString(name, isSensitive))", label: "", scopes: [], file: file, function: function, line: line)
     }
 }

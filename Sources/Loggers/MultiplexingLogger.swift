@@ -36,7 +36,11 @@ public class MultiplexingLogger: Loggable {
         }
     }
 
-    public func update(scope: Scope, file: String = #file, function: String = #function, line: UInt = #line) {
-        loggers.forEach { $0.update(scope: scope, file: file, function: function, line: line) }
+    public func updateScope(_ scope: Scope, file: String, function: String, line: UInt) {
+        loggers.forEach { $0.updateScope(scope, file: file, function: function, line: line) }
+    }
+
+    public func endScope(name: String, file: String, function: String, line: UInt) {
+        loggers.forEach { $0.endScope(name: name, file: file, function: function, line: line) }
     }
 }

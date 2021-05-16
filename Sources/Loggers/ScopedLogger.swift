@@ -20,14 +20,13 @@ public class ScopedLogger: ScopedLoggable {
         newScopes
             .filter { $0.parentName != nil || !$0.meta.isEmpty }
             .forEach {
-                update(scope: $0, file: file, function: function, line: line)
+                updateScope($0, file: file, function: function, line: line)
             }
     }
 
-// TODO: Is it needed?
-//    deinit {
-//        end(scopes: newScopes)
-//    }
+    deinit {
+        newScopes.forEach { endScope(name: $0.name) }
+    }
 
     @inlinable
     public func log(
@@ -44,7 +43,11 @@ public class ScopedLogger: ScopedLoggable {
         )
     }
 
-    public func update(scope: Scope, file: String = #file, function: String = #function, line: UInt = #line) {
-        logger.update(scope: scope, file: file, function: function, line: line)
+    public func updateScope(_ scope: Scope, file: String, function: String, line: UInt) {
+        logger.updateScope(scope, file: file, function: function, line: line)
+    }
+
+    public func endScope(name: String, file: String, function: String, line: UInt) {
+        logger.endScope(name: name, file: file, function: function, line: line)
     }
 }

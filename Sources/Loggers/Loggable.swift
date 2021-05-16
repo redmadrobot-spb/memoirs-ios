@@ -35,7 +35,8 @@ public protocol Loggable {
         line: UInt
     )
 
-    func update(scope: Scope, file: String, function: String, line: UInt)
+    func updateScope(_ scope: Scope, file: String, function: String, line: UInt)
+    func endScope(name: String, file: String, function: String, line: UInt)
 }
 
 /// Protocol that adds specified label to every log.

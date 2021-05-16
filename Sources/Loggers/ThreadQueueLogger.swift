@@ -51,7 +51,11 @@ public class ThreadQueueLogger: Loggable {
         )
     }
 
-    public func update(scope: Scope, file: String = #file, function: String = #function, line: UInt = #line) {
-        logger.update(scope: scope, file: file, function: function, line: line)
+    public func updateScope(_ scope: Scope, file: String, function: String, line: UInt) {
+        logger.updateScope(scope, file: file, function: function, line: line)
+    }
+
+    public func endScope(name: String, file: String, function: String, line: UInt) {
+        logger.endScope(name: name, file: file, function: function, line: line)
     }
 }

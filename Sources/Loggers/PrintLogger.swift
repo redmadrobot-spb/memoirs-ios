@@ -41,8 +41,14 @@ public class PrintLogger: Loggable {
         Output.logInterceptor?(self, description)
     }
 
-    public func update(scope: Scope, file: String = #file, function: String = #function, line: UInt = #line) {
+    @inlinable
+    public func updateScope(_ scope: Scope, file: String, function: String, line: UInt) {
         info("\(Output.scopeString(scope, false))", label: "", scopes: [], file: file, function: function, line: line)
+    }
+
+    @inlinable
+    public func endScope(name: String, file: String, function: String, line: UInt) {
+        info("\(Output.scopeEndString(name, false))", label: "", scopes: [], file: file, function: function, line: line)
     }
 
     @usableFromInline

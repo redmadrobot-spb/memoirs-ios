@@ -64,10 +64,10 @@ public class FilteringLogger: Loggable {
         level: Level,
         _ message: @autoclosure () -> LogString,
         label: String,
-        scopes: [Scope] = [],
-        meta: @autoclosure () -> [String: LogString]? = nil,
-        date: Date = Date(),
-        file: String = #file, function: String = #function, line: UInt = #line
+        scopes: [Scope],
+        meta: @autoclosure () -> [String: LogString]?,
+        date: Date,
+        file: String, function: String, line: UInt
     ) {
         let labelLevel = loggingLevelForLabels[label] ?? defaultLevel
         guard labelLevel < level else { return }
@@ -77,7 +77,11 @@ public class FilteringLogger: Loggable {
         )
     }
 
-    public func update(scope: Scope, file: String = #file, function: String = #function, line: UInt = #line) {
-        logger.update(scope: scope, file: file, function: function, line: line)
+    public func updateScope(_ scope: Scope, file: String, function: String, line: UInt) {
+        logger.updateScope(scope, file: file, function: function, line: line)
+    }
+
+    public func endScope(name: String, file: String, function: String, line: UInt) {
+        logger.endScope(name: name, file: file, function: function, line: line)
     }
 }

@@ -115,7 +115,12 @@ public extension Loggable {
     }
 
     @inlinable
-    func update(scope: Scope, file: String = #file, function: String = #function, line: UInt = #line) {
-        update(scope: scope, file: file, function: function, line: line)
+    func updateScope(_ scope: Scope, file: String = #file, function: String = #function, line: UInt = #line) {
+        updateScope(scope, file: file, function: function, line: line)
+    }
+
+    @inlinable
+    func endScope(name: String, file: String = #file, function: String = #function, line: UInt = #line) {
+        endScope(name: name, file: file, function: function, line: line)
     }
 }

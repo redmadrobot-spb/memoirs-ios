@@ -20,13 +20,15 @@ public class Logger: Loggable {
     ) -> Void
     @usableFromInline
     let proxyUpdateScope: (_ scope: Scope, _ file: String, _ function: String, _ line: UInt) -> Void
+    let proxyEndScope: (_ scopeName: String, _ file: String, _ function: String, _ line: UInt) -> Void
 
     public init(label: String, scopes: [Scope], logger: Loggable) {
         proxyLog = { level, message, meta, date, file, function, line in
             let scopes = ((logger as? ScopedLogger).map { $0.scopes } ?? []) + scopes
             logger.log(level: level, message(), label: label, scopes: scopes, meta: meta(), date: date, file: file, function: function, line: line)
         }
-        proxyUpdateScope = { logger.update(scope: $0, file: $1, function: $2, line: $3) }
+        proxyUpdateScope = { logger.updateScope($0, file: $1, function: $2, line: $3) }
+        proxyEndScope = { logger.endScope(name: $0, file: $1, function: $2, line: $3) }
     }
 
     convenience public init(object: Any, scopes: [Scope], logger: Loggable) {
@@ -45,7 +47,8 @@ public class Logger: Loggable {
                 logger.log(level: level, message(), label: label, scopes: [], meta: meta(), date: date, file: file, function: function, line: line)
             }
         }
-        proxyUpdateScope = { logger.update(scope: $0, file: $1, function: $2, line: $3) }
+        proxyUpdateScope = { logger.updateScope($0, file: $1, function: $2, line: $3) }
+        proxyEndScope = { logger.endScope(name: $0, file: $1, function: $2, line: $3) }
     }
 
     public init(scopes: [Scope], logger: Loggable) {
@@ -59,7 +62,8 @@ public class Logger: Loggable {
                 logger.log(level: level, message(), label: "???", scopes: scopes, meta: meta(), date: date, file: file, function: function, line: line)
             }
         }
-        proxyUpdateScope = { logger.update(scope: $0, file: $1, function: $2, line: $3) }
+        proxyUpdateScope = { logger.updateScope($0, file: $1, function: $2, line: $3) }
+        proxyEndScope = { logger.endScope(name: $0, file: $1, function: $2, line: $3) }
     }
 
     convenience public init(object: Any, logger: Loggable) {
@@ -79,7 +83,11 @@ public class Logger: Loggable {
         proxyLog(level, message(), meta(), date, file, function, line)
     }
 
-    public func update(scope: Scope, file: String = #file, function: String = #function, line: UInt = #line) {
+    public func updateScope(_ scope: Scope, file: String, function: String, line: UInt) {
         proxyUpdateScope(scope, file, function, line)
+    }
+
+    public func endScope(name: String, file: String, function: String, line: UInt) {
+        proxyEndScope(name, file, function, line)
     }
 }
