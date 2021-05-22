@@ -8,29 +8,24 @@
 
 import Foundation
 
-public protocol SingleScopeLogger: Loggable {
-    var scope: Scope { get }
-}
-
 /// Logger that defines root scope for the application. It will be the same for all installations of the specific application version.
-public class AppLogger: ScopedLogger, SingleScopeLogger {
-    public let scope: Scope
-
-    public init(bundleId: String, version: String, logger: Loggable, file: String = #file, function: String = #function, line: UInt = #line) {
-        let meta: [String: LogString] = [
+public class AppLogger: TracedLogger {
+    public init(
+        bundleId: String, version: String, logger: Loggable, file: String = #file, function: String = #function, line: UInt = #line
+    ) {
+        let meta: [String: Log.String] = [
             "bundleId": "\(safe: bundleId)",
             "version": "\(version)"
         ]
-        scope = Scope(.app, meta: meta)
-        super.init(scopes: [ scope ], logger: logger, file: file, function: function, line: line)
+        super.init(tracer: .app, meta: meta, logger: logger, file: file, function: function, line: line)
     }
 }
 
 /// Logger defines installation scope of the app. ID will stay the same for the duration of app installation on a single device.
 /// meta-properties of the scope include OS type/version.
-public class InstallLogger: ScopedLogger, SingleScopeLogger {
+public class InstallLogger: TracedLogger {
     public struct DeviceInfo {
-        public enum OS {
+        public enum OSInfo {
             case iOS(version: String)
             case iPadOS(version: String)
             case macOS(version: String)
@@ -48,14 +43,12 @@ public class InstallLogger: ScopedLogger, SingleScopeLogger {
             }
         }
 
-        let os: OS
+        let osInfo: OSInfo
 
-        public init(os: OS) {
-            self.os = os
+        public init(osInfo: OSInfo) {
+            self.osInfo = osInfo
         }
     }
-
-    public let scope: Scope
 
     private let keyInstallId: String = "__robologs.__internal.installId"
 
@@ -69,34 +62,22 @@ public class InstallLogger: ScopedLogger, SingleScopeLogger {
             userDefaults.set(installId, forKey: keyInstallId)
         }
 
-        let meta: [String: LogString] = [
-            "os": "\(deviceInfo.os.string)"
+        let meta: [String: Log.String] = [
+            "os": "\(deviceInfo.osInfo.string)"
         ]
-        scope = Scope(.install(id: installId), parent: .app, meta: meta)
-        super.init(scopes: [ scope ], logger: logger, file: file, function: function, line: line)
+        super.init(tracer: .install(id: installId), meta: meta, logger: logger, file: file, function: function, line: line)
     }
 }
 
-public class SessionLogger: ScopedLogger, SingleScopeLogger {
-    public let scope: Scope
-
-    public init(userId: String, isGuest: Bool, logger: InstallLogger, file: String = #file, function: String = #function, line: UInt = #line) {
-        var meta: [String: LogString] = [:]
-        meta["userId"] = "\(userId)"
-        meta["isGuest"] = "\(isGuest)"
-        scope = Scope(.session(userId: userId, isGuest: isGuest), parentName: logger.scope.name, meta: meta)
-        super.init(scopes: [ scope ], logger: logger, file: file, function: function, line: line)
-    }
-}
-
-public class ScopeLogger: ScopedLogger, SingleScopeLogger {
-    public let scope: Scope
-
+public class SessionLogger: TracedLogger {
     public init(
-        name: String, meta: [String: LogString] = [:], logger: SingleScopeLogger,
-        file: String = #file, function: String = #function, line: UInt = #line
+        userId: String, isGuest: Bool, logger: Loggable, file: String = #file, function: String = #function, line: UInt = #line
     ) {
-        scope = Scope(name: name, parentName: logger.scope.name, meta: meta)
-        super.init(scopes: [ scope ], logger: logger, file: file, function: function, line: line)
+        let meta: [String: Log.String] = [
+            "userId": "\(userId)",
+            "isGuest": "\(isGuest)",
+        ]
+        let tracer: Log.Tracer = .session(userId: userId, isGuest: isGuest)
+        super.init(tracer: tracer, meta: meta, logger: logger, file: file, function: function, line: line)
     }
 }

@@ -24,35 +24,44 @@ public class PrintLogger: Loggable {
     }
 
     @inlinable
-    public func log(
-        level: Level,
-        _ message: @autoclosure () -> LogString,
-        label: String,
-        scopes: [Scope] = [],
-        meta: @autoclosure () -> [String: LogString]?,
-        date: Date = Date(),
-        file: String = #file, function: String = #function, line: UInt = #line
+    public func add(
+        _ item: Log.Item,
+        meta: @autoclosure () -> [String: Log.String]?,
+        tracers: [Log.Tracer],
+        date: Date,
+        file: String, function: String, line: UInt
     ) {
-        let context = codePosition(file: file, line: line, function: function)
         let time = formatter.string(from: date)
-        let description = Output.logString(time, level, message, label, scopes, meta, context, false)
+        let codePosition = codePosition(file: file, function: function, line: line)
+        let description: String
+        switch item {
+            case .log(let level, let message):
+                description = Output.logString(
+                    time: time, level: level, message: message, tracers: tracers, meta: meta, codePosition: codePosition, isSensitive: false
+                )
+            case .event(let name):
+                description = Output.eventString(
+                    time: time, name: name, tracers: tracers, meta: meta, codePosition: codePosition, isSensitive: false
+                )
+            case .tracer(let tracer, false):
+                description = Output.tracerString(
+                    time: time, name: tracer.string, tracers: tracers, meta: meta, codePosition: codePosition, isSensitive: false
+                )
+            case .tracer(let tracer, true):
+                description = Output.tracerEndString(
+                    time: time, name: tracer.string, tracers: tracers, meta: meta, codePosition: codePosition, isSensitive: false
+                )
+            case .measurement(let name, let value):
+                description = Output.measurementString(
+                    time: time, name: name, value: value, tracers: tracers, meta: meta, codePosition: codePosition, isSensitive: false
+                )
+        }
         print(description)
-
         Output.logInterceptor?(self, description)
     }
 
-    @inlinable
-    public func updateScope(_ scope: Scope, file: String, function: String, line: UInt) {
-        info("\(Output.scopeString(scope, false))", label: "", scopes: [], file: file, function: function, line: line)
-    }
-
-    @inlinable
-    public func endScope(name: String, file: String, function: String, line: UInt) {
-        info("\(Output.scopeEndString(name, false))", label: "", scopes: [], file: file, function: function, line: line)
-    }
-
     @usableFromInline
-    func codePosition(file: String, line: UInt, function: String) -> String {
-        Output.codePosition(file, shortSource ? "" : function, line)
+    func codePosition(file: String, function: String, line: UInt) -> String {
+        Output.codePosition(file: file, function: shortSource ? "" : function, line: line)
     }
 }

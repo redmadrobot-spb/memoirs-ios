@@ -13,20 +13,12 @@ public class NullLogger: Loggable {
     }
 
     @inlinable
-    public func log(
-        level: Level,
-        _ message: @autoclosure () -> LogString,
-        label: String,
-        scopes: [Scope] = [],
-        meta: @autoclosure () -> [String: LogString]? = nil,
-        date: Date = Date(),
-        file: String = #file, function: String = #function, line: UInt = #line
+    public func add(
+        _ item: Log.Item,
+        meta: @autoclosure () -> [String: Log.String]?,
+        tracers: [Log.Tracer],
+        date: Date,
+        file: String, function: String, line: UInt
     ) {
-    }
-
-    public func updateScope(_ scope: Scope, file: String, function: String, line: UInt) {
-    }
-
-    public func endScope(name: String, file: String, function: String, line: UInt) {
     }
 }

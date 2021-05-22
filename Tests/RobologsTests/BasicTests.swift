@@ -95,7 +95,7 @@ class BasicTests: GenericTestCase {
         let allLevels: [Level] = [ .verbose, .debug, .info, .warning, .error, .critical ]
         let printLogger = PrintLogger()
         let label = "label_\(Int.random(in: Int.min ... Int.max))"
-        let logger = LabeledLogger(label: label, logger: printLogger)
+        let logger = Logger(label: label, logger: printLogger)
         for level in allLevels {
             var probe = simpleProbe(logger: logger)
             probe.level = level
@@ -152,7 +152,7 @@ class BasicTests: GenericTestCase {
                 (.critical, 5),
             ]
         for (configurationLevel, configurationIndex) in allConfigurationLevels {
-            let logger = FilteringLogger(logger: PrintLogger(), loggingLevelForLabels: [:], defaultLevel: configurationLevel)
+            let logger = FilteringLogger(logger: PrintLogger(), labelConfigurations: [:], defaultConfiguration: configurationLevel)
             for (level, levelIndex) in allLevels {
                 try checkLog(logger: logger, logShouldPresent: levelIndex >= configurationIndex) { $0.level = level }
             }
@@ -160,22 +160,22 @@ class BasicTests: GenericTestCase {
     }
 
     func testFilteringLoggerOnAll() throws {
-        let logger = FilteringLogger(logger: PrintLogger(), loggingLevelForLabels: [:], defaultLevel: .all)
+        let logger = FilteringLogger(logger: PrintLogger(), labelConfigurations: [:], defaultConfiguration: .all)
         try checkLog(logger: logger, logShouldPresent: true)
     }
 
     func testFilteringLoggerOffAll() throws {
-        let logger = FilteringLogger(logger: PrintLogger(), loggingLevelForLabels: [:], defaultLevel: .disabled)
+        let logger = FilteringLogger(logger: PrintLogger(), labelConfigurations: [:], defaultConfiguration: .disabled)
         try checkLog(logger: logger, logShouldPresent: false)
     }
 
     func testFilteringLoggerOnInfo() throws {
-        let logger = FilteringLogger(logger: PrintLogger(), loggingLevelForLabels: [:], defaultLevel: .info)
+        let logger = FilteringLogger(logger: PrintLogger(), labelConfigurations: [:], defaultConfiguration: .info)
         try checkLog(logger: logger, logShouldPresent: true)
     }
 
     func testFilteringLoggerOffInfo()throws {
-        let logger = FilteringLogger(logger: PrintLogger(), loggingLevelForLabels: [:], defaultLevel: .warning)
+        let logger = FilteringLogger(logger: PrintLogger(), labelConfigurations: [:], defaultConfiguration: .warning)
         try checkLog(logger: logger, logShouldPresent: false)
     }
 

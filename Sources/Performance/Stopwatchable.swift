@@ -8,27 +8,36 @@
 
 import Foundation
 
-enum StopwatchableError: Error {
-    case cantFindMonitor(label: String)
-}
+public typealias Mark = TimeInterval
+public typealias Measurement = TimeInterval
 
 /// Performance timing of code blocks.
 /// TODO: Add an example.
 public protocol Stopwatchable {
-    /// Marks start of timing period for the label.
-    @discardableResult
-    func tick(_ label: String) -> PerfMonitor
-    /// Marks end of the measurement period. Simultaneously it marks start of the next period.
-    /// So it is not needed to call `tick` after `tock`.
-    @discardableResult
-    func tock(_ label: String) throws -> PerfMonitor
+    /// Returns current time (abstract value, not directly connected with Date time intervals).
+    var mark: Mark { get }
+
+    /// Returns values stored for the label.
+    func values(for label: String) -> [Measurement]
+
+    /// Logs value for the label.
+    func logValue(_ value: Double, label: String, file: String, function: String, line: UInt)
 }
 
 public extension Stopwatchable {
-    func measure(label: String, _ closure: () -> Void) -> PerfMonitor {
-        var monitor = tick(label)
+    @discardableResult
+    func logInterval(
+        from mark: TimeInterval, label: String, file: String = #file, function: String = #function, line: UInt = #line
+    ) -> Mark {
+        let newMark = self.mark
+        logValue(newMark - mark, label: label, file: file, function: function, line: line)
+        return newMark
+    }
+
+    @discardableResult
+    func measure(label: String, file: String = #file, function: String = #function, line: UInt = #line, _ closure: () -> Void) -> Mark {
+        let mark = mark
         closure()
-        monitor.tock()
-        return monitor
+        return logInterval(from: mark, label: label)
     }
 }

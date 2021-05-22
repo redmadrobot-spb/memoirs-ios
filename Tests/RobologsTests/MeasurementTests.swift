@@ -14,7 +14,7 @@ class MeasurementTests: GenericTestCase {
         let label = "test_\(Int.random(in: 0 ... 239))"
         let randomInterval = TimeInterval.random(in: 0 ... 0.5)
 
-        var monitor = PerfMonitor(name: label)
+        var monitor = PerfMonitor(label: label)
         Thread.sleep(forTimeInterval: randomInterval)
         monitor.tock()
 //        fputs(
@@ -27,7 +27,7 @@ class MeasurementTests: GenericTestCase {
 //            stdout
 //        )
 
-        XCTAssertEqual(label, monitor.name)
+        XCTAssertEqual(label, monitor.label)
         XCTAssertEqual(monitor.measurements.count, 2)
         XCTAssertTrue(monitor.firstTick < monitor.lastTick)
         XCTAssertTrue(monitor.tickTocks.count == 1)
@@ -42,7 +42,7 @@ class MeasurementTests: GenericTestCase {
         let iterations = 10000
 
         let startTime = ProcessInfo.processInfo.systemUptime
-        var monitor = PerfMonitor(name: label)
+        var monitor = PerfMonitor(label: label)
         for _ in 0 ..< iterations {
             monitor.tock()
         }

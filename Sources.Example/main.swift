@@ -26,21 +26,33 @@ let lowLevelLogger = PrintLogger(onlyTime: true, shortSource: true) // Usually i
 //        logger.info("Info string two")
 //    }
 
-
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-let appLogger = ThreadQueueLogger(logger: AppLogger(bundleId: "com.smth.myGreatApp", version: "0.1", logger: lowLevelLogger))
-var installLogger = InstallLogger(deviceInfo: .init(os: .macOS(version: "11.something")), logger: appLogger)
+let appLogger = AppLogger(bundleId: "com.smth.myGreatApp", version: "0.1", logger: lowLevelLogger)
+appLogger.info("AppLog")
+let threadInfoLogger = ThreadQueueLogger(logger: appLogger)
+threadInfoLogger.warning("ThreadInfoLog")
+
+let stopwatch = Stopwatch()
+
+var mark = stopwatch.mark
+var installLogger = InstallLogger(deviceInfo: .init(osInfo: .macOS(version: "11.something")), logger: threadInfoLogger)
+installLogger.error(message: "InstallLog")
+var addedLabelLogger = Logger(label: "SomeLabelALittleLonger", logger: installLogger)
+addedLabelLogger.error(message: "Install+LabelLog")
+mark = stopwatch.logInterval(from: mark, label: "Initialization")
 
 func session() {
-    let sessionLogger = SessionLogger(userId: UUID().uuidString, isGuest: true, logger: installLogger)
-    sessionLogger.debug("Session level log", label: "SessionLabel")
+    stopwatch.measure(label: "Session") {
+        let sessionLogger = SessionLogger(userId: UUID().uuidString, isGuest: true, logger: addedLabelLogger)
+        sessionLogger.debug("SessionLog")
+    }
 }
 
 session()
-session()
-session()
-installLogger.debug("Install level log", label: "MainLabel")
+addedLabelLogger.debug("AnotherInstallLog")
 
-installLogger = InstallLogger(deviceInfo: .init(os: .macOS(version: "11.something")), logger: appLogger)
-installLogger.debug("Another install level log", label: "MainLabel")
+addedLabelLogger.event(name: "EventLog", meta: [:])
+
+installLogger = InstallLogger(deviceInfo: .init(osInfo: .macOS(version: "11.something")), logger: appLogger)
+installLogger.debug("Another install level log")

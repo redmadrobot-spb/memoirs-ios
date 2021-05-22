@@ -1,0 +1,56 @@
+//
+// Log.Tracer
+// Robologs
+//
+// Created by Alex Babaev on 21 May 2021.
+// Copyright © 2021 Redmadrobot SPb. All rights reserved.
+//
+
+public extension Log {
+    enum Tracer {
+        case app
+        case install(id: Swift.String)
+        case session(userId: Swift.String, isGuest: Bool)
+
+        case thread(name: Swift.String)
+        case queue(name: Swift.String)
+
+        case request(id: Swift.String)
+
+        case label(Swift.String)
+
+        @usableFromInline
+        var string: Swift.String {
+            switch self {
+                case .app: return "app"
+                case .install(let id): return "install.\(id)"
+                case .session(let userId, let isGuest): return "session.\(userId).\(isGuest ? "g" : "u")"
+                case .thread(let name): return "thread.\(name)"
+                case .queue(let name): return "queue.\(name)"
+                case .request(let id): return "request.\(id)"
+                case .label(let label): return label
+            }
+        }
+
+        @usableFromInline
+        var label: Swift.String? {
+            switch self {
+                case .label(let label): return label
+                default: return nil
+            }
+        }
+    }
+}
+
+extension Array where Element == Log.Tracer {
+    @usableFromInline
+    var label: String? {
+        last {
+            switch $0 {
+                case .label: return true
+                default: return false
+            }
+        }
+        .map { $0.string }
+    }
+}

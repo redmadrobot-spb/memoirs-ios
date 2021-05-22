@@ -17,7 +17,7 @@ public enum Output {
         static var error: String = "⛑"
         static var critical: String = "👿"
 
-        public static func printString(for level: Robologs.Level) -> String {
+        public static func printString(for level: Log.Level) -> String {
             switch level {
                 case .verbose: return Self.verbose
                 case .debug: return Self.debug
@@ -29,33 +29,13 @@ public enum Output {
         }
     }
 
-    public static var codePosition: (_ file: String, _ function: String, _ line: UInt) -> String = defaultCodePosition
-    public static var censuredString: (_ string: LogString, _ isSensitive: Bool) -> String = defaultCensureString
-    public static var logString: (
-        _ time: String,
-        _ level: Robologs.Level,
-        _ message: () -> LogString,
-        _ label: String,
-        _ scopes: [Scope],
-        _ meta: () -> [String: LogString]?,
-        _ codePosition: String,
-        _ isSensitive: Bool
-    ) -> String = defaultLogString
-    public static var scopeString: (_ scope: Scope, _ isSensitive: Bool) -> String = defaultScopeString
-    public static var scopeEndString: (_ scopeName: String, _ isSensitive: Bool) -> String = defaultScopeEndString
-    /// Should be called in every "basic" logger. Intended for test usage and, maybe, intercepting all the logs
     public static var logInterceptor: ((
         _ logger: Loggable, // Logger that called interceptor
         _ logString: String // String, containing parts that were sent to output
     ) -> Void)?
 
     @inlinable
-    public static func defaultCensureString(string: LogString, isSensitive: Bool) -> String {
-        string.string(isSensitive: isSensitive)
-    }
-
-    @inlinable
-    public static func defaultCodePosition(file: String, function: String, line: UInt) -> String {
+    public static func codePosition(file: String, function: String, line: UInt) -> String {
         // TODO: Remove this hack after Swift Evolution #0274 will be implemented
         let file = file.components(separatedBy: "/").last ?? "?"
         let context = [ file, line == 0 ? "" : "\(line)", function ]
@@ -67,46 +47,126 @@ public enum Output {
     }
 
     @inlinable
-    public static func defaultLogString(
+    public static func logString(
         time: String,
-        level: Robologs.Level?,
-        message: () -> LogString,
-        label: String,
-        scopes: [Scope],
-        meta: () -> [String: LogString]?,
+        level: Log.Level?,
+        message: () -> Log.String,
+        tracers: [Log.Tracer],
+        meta: () -> [String: Log.String]?,
         codePosition: String,
         isSensitive: Bool
     ) -> String {
-        let meta = meta()?
-            .sorted { $0.key < $1.key }
-            .map { "\($0): \(censuredString($1, isSensitive))" }
-            .joined(separator: ", ")
-        let parts = [
+        [
             time,
-            "\(level.map { "\(Level.printString(for: $0))" } ?? "")",
             codePosition,
-            "\(isSensitive ? "???" : label)",
-            censuredString(message(), isSensitive),
-            scopes.isEmpty ? "" : "{\(scopes.map { isSensitive ? "???" : $0.name }.joined(separator: ", "))}",
-            meta.map { "[ \($0) ]" } ?? "",
-        ]
-        return parts
-            .compactMap { $0 }
-            .filter { !$0.isEmpty }
-            .joined(separator: " ")
+            "\(level.map { "\(Level.printString(for: $0))" } ?? "")",
+            tracers.label(isSensitive: isSensitive),
+            message().string(isSensitive: isSensitive),
+            tracers.nonLabelJoined(isSensitive: isSensitive),
+            meta()?.commaJoined(isSensitive: isSensitive),
+        ].spaceMerged
     }
 
     @inlinable
-    public static func defaultScopeString(scope: Scope, isSensitive: Bool) -> String {
-        let meta = scope.meta
-            .sorted { $0.key < $1.key }
-            .map { "\($0): \(censuredString($1, isSensitive))" }
-            .joined(separator: ", ")
-        return "🕶 \(isSensitive ? "???" : scope.name)\(meta.isEmpty ? "" : " [ \(meta) ]")"
+    public static func eventString(
+        time: String, name: String, tracers: [Log.Tracer], meta: () -> [String: Log.String]?, codePosition: String, isSensitive: Bool
+    ) -> String {
+        [
+            time,
+            codePosition,
+            "💥",
+            tracers.label(isSensitive: isSensitive),
+            isSensitive ? "???" : name,
+            tracers.nonLabelJoined(isSensitive: isSensitive),
+            meta()?.commaJoined(isSensitive: isSensitive),
+        ].spaceMerged
     }
 
     @inlinable
-    public static func defaultScopeEndString(scopeName: String, isSensitive: Bool) -> String {
-        "🕶.end \(isSensitive ? "???" : scopeName)"
+    public static func measurementString(
+        time: String, name: String, value: Double, tracers: [Log.Tracer], meta: () -> [String: Log.String]?,
+        codePosition: String, isSensitive: Bool
+    ) -> String {
+        [
+            time,
+            codePosition,
+            "📈",
+            isSensitive ? "???" : "\(name)->\(value)",
+            tracers.label(isSensitive: isSensitive),
+            tracers.nonLabelJoined(isSensitive: isSensitive),
+            meta()?.commaJoined(isSensitive: isSensitive),
+        ].spaceMerged
+    }
+
+    @inlinable
+    public static func tracerString(
+        time: String, name: String, tracers: [Log.Tracer], meta: () -> [String: Log.String]?, codePosition: String, isSensitive: Bool
+    ) -> String {
+        [
+            time,
+            codePosition,
+            "🕶",
+            tracers.label(isSensitive: isSensitive),
+            "Updated: \(isSensitive ? "???" : name)",
+            tracers.nonLabelJoined(isSensitive: isSensitive),
+            meta()?.commaJoined(isSensitive: isSensitive),
+        ].spaceMerged
+    }
+
+    @inlinable
+    public static func tracerEndString(
+        time: String, name: String, tracers: [Log.Tracer], meta: () -> [String: Log.String]?, codePosition: String, isSensitive: Bool
+    ) -> String {
+        [
+            time,
+            codePosition,
+            "🕶",
+            tracers.label(isSensitive: isSensitive),
+            "Ended: \(isSensitive ? "???" : name)",
+            tracers.nonLabelJoined(isSensitive: isSensitive),
+            meta()?.commaJoined(isSensitive: isSensitive),
+        ].spaceMerged
+    }
+}
+
+extension Array where Element == String? {
+    @usableFromInline
+    var spaceMerged: String {
+        compactMap { $0 }.spaceMerged
+    }
+}
+
+extension Array where Element == String {
+    @usableFromInline
+    var spaceMerged: String {
+        filter { !$0.isEmpty }.joined(separator: " ")
+    }
+}
+
+extension Array where Element == Log.Tracer {
+    @usableFromInline
+    func label(isSensitive: Bool) -> String? {
+        compactMap { $0.label }.last.map { isSensitive ? "???" : $0 }
+    }
+
+    @usableFromInline
+    func nonLabelJoined(isSensitive: Bool) -> String {
+        let tracers = filter {
+            if case .label = $0 {
+                return false
+            } else {
+                return true
+            }
+        }
+        return tracers.isEmpty ? "" : isSensitive ? "???" : "{\(tracers.map { $0.string }.joined(separator: ", "))}"
+    }
+}
+
+extension Dictionary where Key == String, Value == Log.String {
+    @usableFromInline
+    func commaJoined(isSensitive: Bool) -> String {
+        isEmpty
+            ? ""
+            : "[\(sorted { $0.key < $1.key }.map { "\($0): \($1.string(isSensitive: isSensitive))" }.joined(separator: ", "))]"
     }
 }

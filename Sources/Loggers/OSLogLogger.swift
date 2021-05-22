@@ -27,23 +27,47 @@ public class OSLogLogger: Loggable {
         self.subsystem = subsystem
     }
 
-    public func log(
-        level: Level,
-        _ message: @autoclosure () -> LogString,
-        label: String,
-        scopes: [Scope] = [],
-        meta: @autoclosure () -> [String: LogString]? = nil,
-        date: Date = Date(),
-        file: String = #file, function: String = #function, line: UInt = #line
+    @inlinable
+    public func add(
+        _ item: Log.Item,
+        meta: @autoclosure () -> [String: Log.String]?,
+        tracers: [Log.Tracer],
+        date: Date,
+        file: String, function: String, line: UInt
     ) {
-        let context = Output.codePosition(file, function, line)
-        let description = Output.logString("", level, message, "", scopes, meta, context, isSensitive)
-        os_log(logType(from: level), log: logger(with: label), "%{public}@", description)
-
-        Output.logInterceptor?(self, "\(label) | \(description)")
+        let codePosition = Output.codePosition(file: file, function: function, line: line)
+        let description: String
+        var osLogType: OSLogType = .debug
+        let label: OSLog = logger(with: tracers.label ?? "NoLabel")
+        switch item {
+            case .log(let level, let message):
+                description = Output.logString(
+                    time: "", level: level, message: message, tracers: tracers, meta: meta, codePosition: codePosition, isSensitive: false
+                )
+                osLogType = logType(from: level)
+            case .event(let name):
+                description = Output.eventString(
+                    time: "", name: name, tracers: tracers, meta: meta, codePosition: codePosition, isSensitive: false
+                )
+            case .tracer(let tracer, false):
+                description = Output.tracerString(
+                    time: "", name: tracer.string, tracers: tracers, meta: meta, codePosition: codePosition, isSensitive: false
+                )
+            case .tracer(let tracer, true):
+                description = Output.tracerEndString(
+                    time: "", name: tracer.string, tracers: tracers, meta: meta, codePosition: codePosition, isSensitive: false
+                )
+            case .measurement(let name, let value):
+                description = Output.measurementString(
+                    time: "", name: name, value: value, tracers: tracers, meta: meta, codePosition: codePosition, isSensitive: false
+                )
+        }
+        os_log(osLogType, log: label, "%{public}@", description)
+        Output.logInterceptor?(self, description)
     }
 
-    private func logType(from level: Level) -> OSLogType {
+    @usableFromInline
+    func logType(from level: Log.Level) -> OSLogType {
         switch level {
             case .verbose: return .debug
             case .debug: return .debug
@@ -54,7 +78,8 @@ public class OSLogLogger: Loggable {
         }
     }
 
-    private func logger(with label: String) -> OSLog {
+    @usableFromInline
+    func logger(with label: String) -> OSLog {
         if let logger = loggers[label] {
             return logger
         } else {
@@ -62,15 +87,5 @@ public class OSLogLogger: Loggable {
             loggers[label] = logger
             return logger
         }
-    }
-
-    @inlinable
-    public func updateScope(_ scope: Scope, file: String, function: String, line: UInt) {
-        info("\(Output.scopeString(scope, isSensitive))", label: "", scopes: [], file: file, function: function, line: line)
-    }
-
-    @inlinable
-    public func endScope(name: String, file: String, function: String, line: UInt) {
-        info("\(Output.scopeEndString(name, isSensitive))", label: "", scopes: [], file: file, function: function, line: line)
     }
 }

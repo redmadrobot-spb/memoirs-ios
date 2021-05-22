@@ -10,7 +10,7 @@ import Foundation
 
 /// A logger that stores several loggers in itself and redirects all log events to them. It has no side effects.
 public class MultiplexingLogger: Loggable {
-    public var loggers: [Loggable]
+    public let loggers: [Loggable]
 
     /// Creates a new instance of `MultiplexingLogger`.
     /// - Parameter loggers: An array of loggers to which all log events will be redirected.
@@ -19,28 +19,13 @@ public class MultiplexingLogger: Loggable {
     }
 
     @inlinable
-    public func log(
-        level: Level,
-        _ message: @autoclosure () -> LogString,
-        label: String,
-        scopes: [Scope] = [],
-        meta: @autoclosure () -> [String: LogString]? = nil,
-        date: Date = Date(),
-        file: String = #file, function: String = #function, line: UInt = #line
+    public func add(
+        _ item: Log.Item,
+        meta: @autoclosure () -> [String: Log.String]?,
+        tracers: [Log.Tracer],
+        date: Date,
+        file: String, function: String, line: UInt
     ) {
-        let loggers = self.loggers
-        loggers.forEach {
-            $0.log(
-                level: level, message(), label: label, scopes: scopes, meta: meta(), date: date, file: file, function: function, line: line
-            )
-        }
-    }
-
-    public func updateScope(_ scope: Scope, file: String, function: String, line: UInt) {
-        loggers.forEach { $0.updateScope(scope, file: file, function: function, line: line) }
-    }
-
-    public func endScope(name: String, file: String, function: String, line: UInt) {
-        loggers.forEach { $0.endScope(name: name, file: file, function: function, line: line) }
+        loggers.forEach { $0.add(item, meta: meta(), tracers: tracers, date: date, file: file, function: function, line: line) }
     }
 }

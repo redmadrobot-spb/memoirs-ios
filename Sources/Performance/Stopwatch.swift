@@ -9,26 +9,21 @@
 import Foundation
 
 public class Stopwatch: Stopwatchable {
-    private var monitorsByLabel: [String: PerfMonitor] = [:]
+    private var values: [String: [TimeInterval]] = [:]
+
+    @inlinable
+    public var mark: TimeInterval {
+        ProcessInfo.processInfo.systemUptime
+    }
 
     public init() {
     }
 
-    @discardableResult
-    public func tick(_ label: String) -> PerfMonitor {
-        let timer = PerfMonitor(name: label)
-        monitorsByLabel[label] = timer
-        return timer
+    public func values(for label: String) -> [Measurement] {
+        values[label] ?? []
     }
 
-    @discardableResult
-    public func tock(_ label: String) throws -> PerfMonitor {
-        guard var timer = monitorsByLabel[label] else {
-            throw StopwatchableError.cantFindMonitor(label: label)
-        }
-
-        timer.tock()
-        monitorsByLabel[label] = timer
-        return timer
+    public func logValue(_ value: Double, label: String, file: String = #file, function: String = #function, line: UInt = #line) {
+        values[label, default: []].append(value)
     }
 }

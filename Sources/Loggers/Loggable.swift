@@ -8,6 +8,8 @@
 
 import Foundation
 
+public enum Log {}
+
 /// Loggable is an interface to log events sending. Usually you don't use the base method
 /// (with "level" parameter), but specific ones.
 /// TODO: Add an example.
@@ -23,28 +25,16 @@ public protocol Loggable {
     ///  - file: The path to the file from which the method was called. Usually you should use the #file literal for this.
     ///  - function: The function name from which the method was called. Usually you should use the #function literal for this.
     ///  - line: The line of code from which the method was called. Usually you should use the #line literal for this.
-    func log(
-        level: Level,
-        _ message: @autoclosure () -> LogString,
-        label: String,
-        scopes: [Scope],
-        meta: @autoclosure () -> [String: LogString]?,
+    func add(
+        _ item: Log.Item,
+        meta: @autoclosure () -> [String: Log.String]?,
+        tracers: [Log.Tracer],
         date: Date,
-        file: String,
-        function: String,
-        line: UInt
+        file: String, function: String, line: UInt
     )
-
-    func updateScope(_ scope: Scope, file: String, function: String, line: UInt)
-    func endScope(name: String, file: String, function: String, line: UInt)
 }
 
-/// Protocol that adds specified label to every log.
-public protocol LabeledLoggable: Loggable {
-    var label: String { get }
-}
-
-/// Protocol that adds specified scopes to every log.
-public protocol ScopedLoggable: Loggable {
-    var scopes: [Scope] { get }
+/// Protocol that adds a tracer to every log.
+public protocol Traceable {
+    var tracer: Log.Tracer { get }
 }
