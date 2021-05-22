@@ -58,8 +58,8 @@ public enum Output {
     ) -> String {
         [
             time,
-            codePosition,
             "\(level.map { "\(Level.printString(for: $0))" } ?? "")",
+            codePosition,
             tracers.label(isSensitive: isSensitive),
             message().string(isSensitive: isSensitive),
             tracers.nonLabelJoined(isSensitive: isSensitive),
@@ -73,8 +73,8 @@ public enum Output {
     ) -> String {
         [
             time,
-            codePosition,
             "💥",
+            codePosition,
             tracers.label(isSensitive: isSensitive),
             isSensitive ? "???" : name,
             tracers.nonLabelJoined(isSensitive: isSensitive),
@@ -89,8 +89,8 @@ public enum Output {
     ) -> String {
         [
             time,
-            codePosition,
             "📈",
+            codePosition,
             isSensitive ? "???" : "\(name)->\(value)",
             tracers.label(isSensitive: isSensitive),
             tracers.nonLabelJoined(isSensitive: isSensitive),
@@ -104,8 +104,8 @@ public enum Output {
     ) -> String {
         [
             time,
-            codePosition,
             "🕶",
+            codePosition,
             tracers.label(isSensitive: isSensitive),
             "Updated: \(isSensitive ? "???" : tracer.output)",
             tracers.nonLabelJoined(isSensitive: isSensitive),
@@ -119,8 +119,8 @@ public enum Output {
     ) -> String {
         [
             time,
-            codePosition,
             "🕶",
+            codePosition,
             tracers.label(isSensitive: isSensitive),
             "Ended: \(isSensitive ? "???" : tracer.output)",
             tracers.nonLabelJoined(isSensitive: isSensitive),
