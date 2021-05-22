@@ -48,6 +48,12 @@ public extension Loggable {
         add(.log(level: .error, message: message), meta: meta, tracers: tracers, date: date, file: file, function: function, line: line)
     }
 
+    /// Method that reports the log event with `error` logging level.
+    @inlinable
+    func error(_ error: Error? = nil, message: Log.String? = nil, meta: [String: Log.String]? = nil, tracers: [Log.Tracer] = [], date: Date = Date(), file: String = #file, function: String = #function, line: UInt = #line) {
+        self.error(message, error: error, meta: meta, tracers: tracers, date: date, file: file, function: function, line: line)
+    }
+
     /// Method that reports the log event with `assert` logging level.
     @inlinable
     func critical(_ message: Log.String, meta: [String: Log.String]? = nil, tracers: [Log.Tracer] = [], date: Date = Date(), file: String = #file, function: String = #function, line: UInt = #line) {
