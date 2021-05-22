@@ -3,7 +3,7 @@
 //  BonjourClientTest
 //
 //  Created by Alex Babaev on 28.04.2020.
-//  Copyright © 2020 Redmadrobot. All rights reserved.
+//  Copyright © 2020 Redmadrobot SPb. All rights reserved.
 //
 
 import Foundation
@@ -37,9 +37,9 @@ let stopwatch = Stopwatch()
 
 var mark = stopwatch.mark
 var installLogger = InstallLogger(deviceInfo: .init(osInfo: .macOS(version: "11.something")), logger: threadInfoLogger)
-installLogger.error(message: "InstallLog")
+installLogger.error("InstallLog")
 var addedLabelLogger = Logger(label: "SomeLabelALittleLonger", logger: installLogger)
-addedLabelLogger.error(message: "Install+LabelLog")
+addedLabelLogger.error("Install+LabelLog")
 mark = stopwatch.logInterval(from: mark, label: "Initialization")
 
 func session() {

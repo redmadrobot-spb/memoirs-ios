@@ -43,7 +43,7 @@ public extension Loggable {
 
     /// Method that reports the log event with `error` logging level.
     @inlinable
-    func error(_ error: Error? = nil, message: Log.String? = nil, meta: [String: Log.String]? = nil, tracers: [Log.Tracer] = [], date: Date = Date(), file: String = #file, function: String = #function, line: UInt = #line) {
+    func error(_ message: Log.String? = nil, error: Error? = nil, meta: [String: Log.String]? = nil, tracers: [Log.Tracer] = [], date: Date = Date(), file: String = #file, function: String = #function, line: UInt = #line) {
         let message: Log.String = error.map { error in message.map { message in "\(message): \(error)" } ?? "\(error)" } ?? message.map { "\($0)" } ?? "Unknown Error"
         add(.log(level: .error, message: message), meta: meta, tracers: tracers, date: date, file: file, function: function, line: line)
     }

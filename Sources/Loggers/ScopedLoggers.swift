@@ -1,6 +1,6 @@
 //
 // ScopedLoggers
-// sdk-apple
+// Robologs
 //
 // Created by Alex Babaev on 15 May 2021.
 // Copyright © 2021 Alex Babaev. All rights reserved.
