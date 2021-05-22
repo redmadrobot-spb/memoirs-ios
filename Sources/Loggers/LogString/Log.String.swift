@@ -18,7 +18,11 @@
 ///
 public extension Log {
     struct String: CustomStringConvertible, ExpressibleByStringLiteral, ExpressibleByStringInterpolation {
+        #if DEBUG
+        public static var isSensitive: Bool = false
+        #else
         public static var isSensitive: Bool = true
+        #endif
 
         private let interpolations: [LogStringInterpolation.Kind]
         private let isSensitive: Bool = String.isSensitive
