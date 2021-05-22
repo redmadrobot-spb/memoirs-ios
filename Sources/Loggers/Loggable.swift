@@ -17,9 +17,8 @@ public protocol Loggable {
     /// Required method that reports the log event.
     /// - Parameters:
     ///  - level: Logging level.
-    ///  - label: Specifies in what part log event was recorded.
     ///  - message: Message describing log event.
-    ///  - scopes: Scopes that the log is a part of.
+    ///  - tracers: Scopes that the log is a part of.
     ///  - meta: Additional log information in key-value format.
     ///  - date: date of the log emitting.
     ///  - file: The path to the file from which the method was called. Usually you should use the #file literal for this.

@@ -22,7 +22,7 @@ public class TracedLogger: Loggable {
         self.tracer = tracer
 
         if let tracedParentLogger = logger as? TracedLogger {
-            compactedTracers = [ tracedParentLogger.tracer, tracer ]
+            compactedTracers = [ tracer ] + tracedParentLogger.compactedTracers
             self.logger = tracedParentLogger.logger
         } else {
             compactedTracers = [ tracer ]

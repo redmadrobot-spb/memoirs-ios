@@ -27,10 +27,10 @@ public class ThreadQueueLogger: Loggable {
     ) {
         var tracers = tracers
         if let threadName = currentThreadName, !threadName.isEmpty {
-            tracers.append(.thread(name: threadName))
+            tracers.insert(.thread(name: threadName), at: 0)
         }
         if let queueName = currentQueueName, !queueName.isEmpty {
-            tracers.append(.queue(name: queueName))
+            tracers.insert(.queue(name: queueName), at: 0)
         }
         logger.add(item, meta: meta(), tracers: tracers, date: date, file: file, function: function, line: line)
     }

@@ -36,7 +36,7 @@ public extension Log {
 extension Array where Element == Log.Tracer {
     @usableFromInline
     var label: String? {
-        last {
+        first {
             switch $0 {
                 case .label: return true
                 default: return false
