@@ -146,7 +146,7 @@ extension Array where Element == String {
 extension Array where Element == Log.Tracer {
     @usableFromInline
     func label(isSensitive: Bool) -> String? {
-        last {
+        first {
             if case .label = $0 {
                 return true
             } else {
