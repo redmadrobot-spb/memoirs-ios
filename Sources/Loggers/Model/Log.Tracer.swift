@@ -19,8 +19,7 @@ public extension Log {
 
         case label(Swift.String)
 
-        @usableFromInline
-        var string: Swift.String {
+        public var string: Swift.String {
             switch self {
                 case .app: return "app"
                 case .install(let id): return "install.\(id)"
@@ -29,14 +28,6 @@ public extension Log {
                 case .queue(let name): return "queue.\(name)"
                 case .request(let id): return "request.\(id)"
                 case .label(let label): return label
-            }
-        }
-
-        @usableFromInline
-        var label: Swift.String? {
-            switch self {
-                case .label(let label): return label
-                default: return nil
             }
         }
     }

@@ -100,14 +100,14 @@ public enum Output {
 
     @inlinable
     public static func tracerString(
-        time: String, name: String, tracers: [Log.Tracer], meta: () -> [String: Log.String]?, codePosition: String, isSensitive: Bool
+        time: String, tracer: Log.Tracer, tracers: [Log.Tracer], meta: () -> [String: Log.String]?, codePosition: String, isSensitive: Bool
     ) -> String {
         [
             time,
             codePosition,
             "🕶",
             tracers.label(isSensitive: isSensitive),
-            "Updated: \(isSensitive ? "???" : name)",
+            "Updated: \(isSensitive ? "???" : tracer.output)",
             tracers.nonLabelJoined(isSensitive: isSensitive),
             meta()?.commaJoined(isSensitive: isSensitive),
         ].spaceMerged
@@ -115,14 +115,14 @@ public enum Output {
 
     @inlinable
     public static func tracerEndString(
-        time: String, name: String, tracers: [Log.Tracer], meta: () -> [String: Log.String]?, codePosition: String, isSensitive: Bool
+        time: String, tracer: Log.Tracer, tracers: [Log.Tracer], meta: () -> [String: Log.String]?, codePosition: String, isSensitive: Bool
     ) -> String {
         [
             time,
             codePosition,
             "🕶",
             tracers.label(isSensitive: isSensitive),
-            "Ended: \(isSensitive ? "???" : name)",
+            "Ended: \(isSensitive ? "???" : tracer.output)",
             tracers.nonLabelJoined(isSensitive: isSensitive),
             meta()?.commaJoined(isSensitive: isSensitive),
         ].spaceMerged
@@ -146,7 +146,13 @@ extension Array where Element == String {
 extension Array where Element == Log.Tracer {
     @usableFromInline
     func label(isSensitive: Bool) -> String? {
-        compactMap { $0.label }.last.map { isSensitive ? "???" : $0 }
+        last {
+            if case .label = $0 {
+                return true
+            } else {
+                return false
+            }
+        }.map { isSensitive ? "???" : $0.string }
     }
 
     @usableFromInline
@@ -169,4 +175,9 @@ extension Dictionary where Key == String, Value == Log.String {
             ? ""
             : "[\(sorted { $0.key < $1.key }.map { "\($0): \($1.string(isSensitive: isSensitive))" }.joined(separator: ", "))]"
     }
+}
+
+extension Log.Tracer {
+    @usableFromInline
+    var output: Swift.String { string }
 }

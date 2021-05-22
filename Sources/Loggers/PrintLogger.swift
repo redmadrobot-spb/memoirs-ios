@@ -45,11 +45,11 @@ public class PrintLogger: Loggable {
                 )
             case .tracer(let tracer, false):
                 description = Output.tracerString(
-                    time: time, name: tracer.string, tracers: tracers, meta: meta, codePosition: codePosition, isSensitive: false
+                    time: time, tracer: tracer, tracers: tracers, meta: meta, codePosition: codePosition, isSensitive: false
                 )
             case .tracer(let tracer, true):
                 description = Output.tracerEndString(
-                    time: time, name: tracer.string, tracers: tracers, meta: meta, codePosition: codePosition, isSensitive: false
+                    time: time, tracer: tracer, tracers: tracers, meta: meta, codePosition: codePosition, isSensitive: false
                 )
             case .measurement(let name, let value):
                 description = Output.measurementString(
