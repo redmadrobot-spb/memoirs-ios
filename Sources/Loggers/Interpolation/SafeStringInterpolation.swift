@@ -1,12 +1,12 @@
 //
-// LogStringInterpolation
+// SafeStringInterpolation
 // Robologs
 //
-// Created by Dmitry Shadrin on 23.01.2020.
+// Created by Dmitry Shadrin on 23 January 2020.
 // Copyright © 2020 Redmadrobot SPb. All rights reserved.
 //
 
-public struct LogStringInterpolation: StringInterpolationProtocol {
+public struct SafeStringInterpolation: StringInterpolationProtocol {
     enum Kind {
         case open(Any)
         case sensitive(Any)

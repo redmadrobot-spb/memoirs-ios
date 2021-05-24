@@ -1,5 +1,5 @@
 //
-// Loggable
+// SafeStringConvertible
 // Robologs
 //
 // Created by Alex Babaev on 25 April 2020.
@@ -9,22 +9,22 @@
 import Foundation
 
 /// Marker protocol
-public protocol LogStringConvertible {}
+public protocol SafeStringConvertible {}
 
-public enum LoggingSafetyLevel {
-    case safe
+public enum SafetyLevel {
+    case safeToShow
     case sensitive
     case never
 }
 
-public protocol LogStringConvertibleProperty {
-    var safetyLevel: LoggingSafetyLevel { get }
+public protocol MemoirStringConvertibleProperty {
+    var safetyLevel: SafetyLevel { get }
 }
 
 @propertyWrapper
-public struct NeverLog<T>: LogStringConvertibleProperty, CustomStringConvertible {
+public struct TopSecret<T>: MemoirStringConvertibleProperty, CustomStringConvertible {
     public var wrappedValue: T
-    public let safetyLevel: LoggingSafetyLevel = .never
+    public let safetyLevel: SafetyLevel = .never
 
     public init(wrappedValue: T) {
         self.wrappedValue = wrappedValue
@@ -36,9 +36,9 @@ public struct NeverLog<T>: LogStringConvertibleProperty, CustomStringConvertible
 }
 
 @propertyWrapper
-public struct Sensitive<T>: LogStringConvertibleProperty, CustomStringConvertible {
+public struct Sensitive<T>: MemoirStringConvertibleProperty, CustomStringConvertible {
     public var wrappedValue: T
-    public let safetyLevel: LoggingSafetyLevel = .sensitive
+    public let safetyLevel: SafetyLevel = .sensitive
 
     public init(wrappedValue: T) {
         self.wrappedValue = wrappedValue
@@ -50,9 +50,9 @@ public struct Sensitive<T>: LogStringConvertibleProperty, CustomStringConvertibl
 }
 
 @propertyWrapper
-public struct SafeToLog<T>: LogStringConvertibleProperty, CustomStringConvertible {
+public struct SafeToShow<T>: MemoirStringConvertibleProperty, CustomStringConvertible {
     public var wrappedValue: T
-    public let safetyLevel: LoggingSafetyLevel = .safe
+    public let safetyLevel: SafetyLevel = .safeToShow
 
     public init(wrappedValue: T) {
         self.wrappedValue = wrappedValue
@@ -63,7 +63,7 @@ public struct SafeToLog<T>: LogStringConvertibleProperty, CustomStringConvertibl
     }
 }
 
-extension LogStringConvertible {
+extension SafeStringConvertible {
     func logDescription(isSensitive: Bool) -> String {
         let mirror = Mirror(reflecting: self)
         let children = mirror.children
@@ -71,19 +71,21 @@ extension LogStringConvertible {
                 guard let label = child.label else { return "" }
 
                 switch child.value {
-                    case let property as LogStringConvertibleProperty:
+                    case let property as MemoirStringConvertibleProperty:
                         switch property.safetyLevel {
-                            case .safe:
+                            case .safeToShow:
                                 return "\(label.dropFirst()): \(property)"
                             case .sensitive:
-                                return isSensitive ? "\(label.dropFirst()): <private>" : "\(label.dropFirst()): \(property)"
+                                return isSensitive
+                                    ? "\(label.dropFirst()): \(SafeString.secretReplacement)"
+                                    : "\(label.dropFirst()): \(property)"
                             case .never:
-                                return "\(label.dropFirst()): <private>"
+                                return "\(label.dropFirst()): \(SafeString.secretReplacement))"
                         }
-                    case let loggable as LogStringConvertible:
+                    case let loggable as SafeStringConvertible:
                         return "\(label): \(loggable.logDescription(isSensitive: isSensitive))"
                     default:
-                        return isSensitive ? "\(label): <private>" : "\(label): \(child.value)"
+                        return isSensitive ? "\(label): \(SafeString.secretReplacement)" : "\(label): \(child.value)"
                 }
             }
             .joined(separator: ", ")

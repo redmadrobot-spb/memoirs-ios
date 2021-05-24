@@ -1,5 +1,5 @@
 //
-// NullLogger
+// NullMemoir
 // Robologs
 //
 // Created by Alex Babaev on 27 April 2020.
@@ -8,15 +8,15 @@
 
 import Foundation
 
-public class NullLogger: Loggable {
+public class VoidMemoir: Memoir {
     public init() {
     }
 
     @inlinable
-    public func add(
-        _ item: Log.Item,
-        meta: @autoclosure () -> [String: Log.String]?,
-        tracers: [Log.Tracer],
+    public func append(
+        _ item: MemoirItem,
+        meta: @autoclosure () -> [String: SafeString]?,
+        tracers: [Tracer],
         date: Date,
         file: String, function: String, line: UInt
     ) {

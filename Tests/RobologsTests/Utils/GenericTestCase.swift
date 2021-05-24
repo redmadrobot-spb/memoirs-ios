@@ -10,7 +10,7 @@ import Foundation
 import XCTest
 @testable import Robologs
 
-extension Level {
+extension LogLevel {
     var testValue: String {
         switch self {
             case .verbose: return "[{verbose}]"
@@ -25,98 +25,96 @@ extension Level {
 
 class GenericTestCase: XCTestCase {
     enum Problem: Error, CustomDebugStringConvertible {
-        case noLogFromLogger(Loggable)
-        case unexpectedLogFromLogger(Loggable)
-        case noLevelInLog(Loggable)
-        case noLabelInLog(Loggable)
-        case noMessageInLog(Loggable)
-        case wrongLevelInLog(Loggable)
-        case wrongLabelInLog(Loggable)
-        case wrongScopeInLog(Loggable)
+        case noLogFromMemoir(Memoir)
+        case unexpectedLogFromMemoir(Memoir)
+        case noLevelInLog(Memoir)
+        case noLabelInLog(Memoir)
+        case noMessageInLog(Memoir)
+        case wrongLevelInLog(Memoir)
+        case wrongLabelInLog(Memoir)
+        case wrongScopeInLog(Memoir)
 
         var debugDescription: String {
             switch self {
-                case .noLogFromLogger(let logger):
-                    return "No log found, but has to be (logger: \(logger))"
-                case .unexpectedLogFromLogger(let logger):
-                    return "Log found, but not expected (logger: \(logger))"
-                case .noLevelInLog(let logger):
-                    return "No level in log (logger: \(logger))"
-                case .noLabelInLog(let logger):
-                    return "No label in log (logger: \(logger))"
-                case .noMessageInLog(let logger):
-                    return "No message in log (logger: \(logger))"
-                case .wrongLevelInLog(let logger):
-                    return "Wrong level in log (logger: \(logger))"
-                case .wrongLabelInLog(let logger):
-                    return "Wrong label in log (logger: \(logger))"
-                case .wrongScopeInLog(let logger):
-                    return "Wrong scope in log (logger: \(logger))"
+                case .noLogFromMemoir(let memoir):
+                    return "No log found, but has to be (memoir: \(memoir))"
+                case .unexpectedLogFromMemoir(let memoir):
+                    return "Log found, but not expected (memoir: \(memoir))"
+                case .noLevelInLog(let memoir):
+                    return "No level in log (memoir: \(memoir))"
+                case .noLabelInLog(let memoir):
+                    return "No label in log (memoir: \(memoir))"
+                case .noMessageInLog(let memoir):
+                    return "No message in log (memoir: \(memoir))"
+                case .wrongLevelInLog(let memoir):
+                    return "Wrong level in log (memoir: \(memoir))"
+                case .wrongLabelInLog(let memoir):
+                    return "Wrong label in log (memoir: \(memoir))"
+                case .wrongScopeInLog(let memoir):
+                    return "Wrong scope in log (memoir: \(memoir))"
             }
         }
     }
 
     struct LogProbe {
-        let logger: Loggable
+        let memoir: Memoir
 
         var date: Date
-        var level: Level
-        var label: String
-        var scopes: [Scope]
+        var level: LogLevel
+        var tracers: [Tracer]
 
-        var message: LogString
+        var message: SafeString
         var censoredMessage: String
-        var meta: [String: LogString]
+        var meta: [String: SafeString]
         var censoredMeta: [String: String]
+
+        var label: String { tracers.first?.string ?? "NO_LABEL_FOUND:(" }
     }
 
-    private var logResults: [(logger: Loggable, result: String)] = []
+    private var logResults: [(memoir: Memoir, result: String)] = []
 
     override func setUp() {
         super.setUp()
 
-        Output.logString = { time, level, message, label, scopes, meta, codePosition, isSensitive in
-            "\(time) | \(level.testValue) | \(label) | \(message().string(isSensitive: isSensitive)) | \(scopes.map { "{\($0.name)}" }.joined(separator: " ")) | \((meta() ?? [:]).map { "\($0)=\($1)" }.joined(separator: " ")) | \(codePosition)"
+        Output.logInterceptor = { memoir, item, log in
+            switch item {
+                case .log:
+                    self.logResults.append((memoir: memoir, result: log))
+                case .event:
+                    break
+                case .tracer:
+                    break
+                case .measurement:
+                    break
+            }
         }
-        Output.logInterceptor = { logger, log in
-            self.logResults.append((logger: logger, result: log))
-        }
-    }
-
-    override func tearDown() {
-        super.tearDown()
-
-        Output.codePosition = Output.defaultCodePosition
-        Output.logString = Output.defaultLogString
     }
 
     func expectLog(probe: LogProbe) throws -> String {
-        probe.logger.log(
+        probe.memoir.log(
             level: probe.level,
             probe.message,
-            label: probe.label,
-            scopes: probe.scopes,
-            meta: probe.meta
+            meta: probe.meta,
+            tracers: probe.tracers
         )
         if let result = logResult() {
             return result
         } else {
-            throw Problem.noLogFromLogger(probe.logger)
+            throw Problem.noLogFromMemoir(probe.memoir)
         }
     }
 
     func expectNoLog(probe: LogProbe, file: String = #file, line: UInt = #line) throws {
-        probe.logger.log(
+        probe.memoir.log(
             level: probe.level,
             probe.message,
-            label: probe.label,
-            scopes: probe.scopes,
-            meta: probe.meta
+            meta: probe.meta,
+            tracers: probe.tracers
         )
         let result = logResult()
         if result != nil {
             fputs("\nProblem at \(file):\(line)\n", stderr)
-            throw Problem.unexpectedLogFromLogger(probe.logger)
+            throw Problem.unexpectedLogFromMemoir(probe.memoir)
         }
     }
 
@@ -126,17 +124,16 @@ class GenericTestCase: XCTestCase {
         return logResults.remove(at: 0).result
     }
 
-    let defaultLevel: Level = .info
+    let defaultLevel: LogLevel = .info
 
-    func simpleProbe(logger: Loggable) -> LogProbe {
+    func simpleProbe(memoir: Memoir) -> LogProbe {
         let randomOne = Int.random(in: Int.min ... Int.max)
         let randomTwo = Int.random(in: Int.min ... Int.max)
         return LogProbe(
-            logger: logger,
+            memoir: memoir,
             date: Date(),
             level: defaultLevel,
-            label: "label \(randomOne)",
-            scopes: [],
+            tracers: [ .label("label \(randomOne)") ],
             message: "log message \(randomTwo)",
             censoredMessage: "log message \(randomTwo)",
             meta: [:],

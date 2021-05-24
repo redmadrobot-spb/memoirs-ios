@@ -1,5 +1,5 @@
 //
-// ScopedLoggers
+// ScopedMemoirs
 // Robologs
 //
 // Created by Alex Babaev on 15 May 2021.
@@ -8,22 +8,22 @@
 
 import Foundation
 
-/// Logger that defines root scope for the application. It will be the same for all installations of the specific application version.
-public class AppLogger: TracedLogger {
+/// Memoir that defines root scope for the application. It will be the same for all installations of the specific application version.
+public class AppMemoir: TracedMemoir {
     public init(
-        bundleId: String, version: String, logger: Loggable, file: String = #file, function: String = #function, line: UInt = #line
+        bundleId: String, version: String, memoir: Memoir, file: String = #file, function: String = #function, line: UInt = #line
     ) {
-        let meta: [String: Log.String] = [
+        let meta: [String: SafeString] = [
             "bundleId": "\(safe: bundleId)",
             "version": "\(version)"
         ]
-        super.init(tracer: .app, meta: meta, logger: logger, file: file, function: function, line: line)
+        super.init(tracer: .app, meta: meta, memoir: memoir, file: file, function: function, line: line)
     }
 }
 
-/// Logger defines installation scope of the app. ID will stay the same for the duration of app installation on a single device.
+/// Memoir defines installation instance scope of the app. ID will stay the same for the duration of app installation on a single device.
 /// meta-properties of the scope include OS type/version.
-public class InstallLogger: TracedLogger {
+public class InstanceMemoir: TracedMemoir {
     public struct DeviceInfo {
         public enum OSInfo {
             case iOS(version: String)
@@ -52,7 +52,7 @@ public class InstallLogger: TracedLogger {
 
     private let keyInstallId: String = "__robologs.__internal.installId"
 
-    public init(deviceInfo: DeviceInfo, logger: Loggable, file: String = #file, function: String = #function, line: UInt = #line) {
+    public init(deviceInfo: DeviceInfo, memoir: Memoir, file: String = #file, function: String = #function, line: UInt = #line) {
         let userDefaults = UserDefaults.standard
         let installId: String
         if let id = userDefaults.string(forKey: keyInstallId) {
@@ -62,22 +62,22 @@ public class InstallLogger: TracedLogger {
             userDefaults.set(installId, forKey: keyInstallId)
         }
 
-        let meta: [String: Log.String] = [
+        let meta: [String: SafeString] = [
             "os": "\(deviceInfo.osInfo.string)"
         ]
-        super.init(tracer: .install(id: installId), meta: meta, logger: logger, file: file, function: function, line: line)
+        super.init(tracer: .install(id: installId), meta: meta, memoir: memoir, file: file, function: function, line: line)
     }
 }
 
-public class SessionLogger: TracedLogger {
+public class SessionMemoir: TracedMemoir {
     public init(
-        userId: String, isGuest: Bool, logger: Loggable, file: String = #file, function: String = #function, line: UInt = #line
+        userId: String, isGuest: Bool, memoir: Memoir, file: String = #file, function: String = #function, line: UInt = #line
     ) {
-        let meta: [String: Log.String] = [
+        let meta: [String: SafeString] = [
             "userId": "\(userId)",
             "isGuest": "\(isGuest)",
         ]
-        let tracer: Log.Tracer = .session(userId: userId, isGuest: isGuest)
-        super.init(tracer: tracer, meta: meta, logger: logger, file: file, function: function, line: line)
+        let tracer: Tracer = .session(userId: userId, isGuest: isGuest)
+        super.init(tracer: tracer, meta: meta, memoir: memoir, file: file, function: function, line: line)
     }
 }

@@ -9,7 +9,7 @@
 import Foundation
 
 public enum Output {
-    public enum Level {
+    public enum Marker {
         static var verbose: String = "👻"
         static var debug: String = "👣"
         static var info: String = "🌵"
@@ -17,7 +17,14 @@ public enum Output {
         static var error: String = "⛑"
         static var critical: String = "👿"
 
-        public static func printString(for level: Log.Level) -> String {
+        @usableFromInline
+        static var event: String = "💥"
+        @usableFromInline
+        static var tracer: String = "🕶"
+        @usableFromInline
+        static var measurement: String = "📈"
+
+        public static func printString(for level: LogLevel) -> String {
             switch level {
                 case .verbose: return Self.verbose
                 case .debug: return Self.debug
@@ -30,7 +37,8 @@ public enum Output {
     }
 
     public static var logInterceptor: ((
-        _ logger: Loggable, // Logger that called interceptor
+        _ memoir: Memoir, // Memoir that called interceptor
+        _ item: MemoirItem, // Item that is being appended
         _ logString: String // String, containing parts that were sent to output
     ) -> Void)?
 
@@ -49,81 +57,81 @@ public enum Output {
     @inlinable
     public static func logString(
         time: String,
-        level: Log.Level?,
-        message: () -> Log.String,
-        tracers: [Log.Tracer],
-        meta: () -> [String: Log.String]?,
+        level: LogLevel?,
+        message: () -> SafeString,
+        tracers: [Tracer],
+        meta: () -> [String: SafeString]?,
         codePosition: String,
         isSensitive: Bool
     ) -> String {
         [
             time,
-            "\(level.map { "\(Level.printString(for: $0))" } ?? "")",
+            "\(level.map { "\(Marker.printString(for: $0))" } ?? "")",
             codePosition,
             tracers.label(isSensitive: isSensitive),
             message().string(isSensitive: isSensitive),
-            tracers.nonLabelJoined(isSensitive: isSensitive),
+            tracers.allJoined(isSensitive: isSensitive),
             meta()?.commaJoined(isSensitive: isSensitive),
         ].spaceMerged
     }
 
     @inlinable
     public static func eventString(
-        time: String, name: String, tracers: [Log.Tracer], meta: () -> [String: Log.String]?, codePosition: String, isSensitive: Bool
+        time: String, name: String, tracers: [Tracer], meta: () -> [String: SafeString]?, codePosition: String, isSensitive: Bool
     ) -> String {
         [
             time,
-            "💥",
+            Marker.event,
             codePosition,
             tracers.label(isSensitive: isSensitive),
             isSensitive ? "???" : name,
-            tracers.nonLabelJoined(isSensitive: isSensitive),
+            tracers.allJoined(isSensitive: isSensitive),
             meta()?.commaJoined(isSensitive: isSensitive),
         ].spaceMerged
     }
 
     @inlinable
     public static func measurementString(
-        time: String, name: String, value: Double, tracers: [Log.Tracer], meta: () -> [String: Log.String]?,
+        time: String, name: String, value: Double, tracers: [Tracer], meta: () -> [String: SafeString]?,
         codePosition: String, isSensitive: Bool
     ) -> String {
         [
             time,
-            "📈",
+            Marker.measurement,
             codePosition,
             isSensitive ? "???" : "\(name)->\(value)",
             tracers.label(isSensitive: isSensitive),
-            tracers.nonLabelJoined(isSensitive: isSensitive),
+            tracers.allJoined(isSensitive: isSensitive),
             meta()?.commaJoined(isSensitive: isSensitive),
         ].spaceMerged
     }
 
     @inlinable
     public static func tracerString(
-        time: String, tracer: Log.Tracer, tracers: [Log.Tracer], meta: () -> [String: Log.String]?, codePosition: String, isSensitive: Bool
+        time: String, tracer: Tracer, tracers: [Tracer], meta: () -> [String: SafeString]?, codePosition: String, isSensitive: Bool
     ) -> String {
         [
             time,
-            "🕶",
+            Marker.tracer,
             codePosition,
             tracers.label(isSensitive: isSensitive),
             "Updated: \(isSensitive ? "???" : tracer.output)",
-            tracers.nonLabelJoined(isSensitive: isSensitive),
+            tracers.allJoined(isSensitive: isSensitive),
             meta()?.commaJoined(isSensitive: isSensitive),
         ].spaceMerged
     }
 
     @inlinable
     public static func tracerEndString(
-        time: String, tracer: Log.Tracer, tracers: [Log.Tracer], meta: () -> [String: Log.String]?, codePosition: String, isSensitive: Bool
+        time: String, tracer: Tracer, tracers: [Tracer], meta: () -> [String: SafeString]?, codePosition: String, isSensitive: Bool
     ) -> String {
         [
             time,
-            "🕶",
+            Marker.tracer,
             codePosition,
             tracers.label(isSensitive: isSensitive),
             "Ended: \(isSensitive ? "???" : tracer.output)",
-            tracers.nonLabelJoined(isSensitive: isSensitive),
+            tracers.allJoined(isSensitive: isSensitive),
             meta()?.commaJoined(isSensitive: isSensitive),
         ].spaceMerged
     }
@@ -143,7 +151,7 @@ extension Array where Element == String {
     }
 }
 
-extension Array where Element == Log.Tracer {
+extension Array where Element == Tracer {
     @usableFromInline
     func label(isSensitive: Bool) -> String? {
         first {
@@ -156,19 +164,12 @@ extension Array where Element == Log.Tracer {
     }
 
     @usableFromInline
-    func nonLabelJoined(isSensitive: Bool) -> String {
-        let tracers = filter {
-            if case .label = $0 {
-                return false
-            } else {
-                return true
-            }
-        }
-        return tracers.isEmpty ? "" : isSensitive ? "???" : "{\(tracers.map { $0.string }.joined(separator: ", "))}"
+    func allJoined(isSensitive: Bool) -> String {
+        isEmpty ? "" : isSensitive ? "???" : "{\(map { $0.string }.joined(separator: ", "))}"
     }
 }
 
-extension Dictionary where Key == String, Value == Log.String {
+extension Dictionary where Key == String, Value == SafeString {
     @usableFromInline
     func commaJoined(isSensitive: Bool) -> String {
         isEmpty
@@ -177,7 +178,7 @@ extension Dictionary where Key == String, Value == Log.String {
     }
 }
 
-extension Log.Tracer {
+extension Tracer {
     @usableFromInline
     var output: Swift.String { string }
 }

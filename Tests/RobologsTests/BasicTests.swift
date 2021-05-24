@@ -11,58 +11,57 @@ import Foundation
 @testable import Robologs
 
 class BasicTests: GenericTestCase {
-    private let basicLoggersWithoutCensoring: [Loggable] = [
-        PrintLogger(),
-        NSLogLogger(isSensitive: false),
-        OSLogLogger(subsystem: "Test", isSensitive: false),
+    private let basicMemoirsWithoutCensoring: [Memoir] = [
+        PrintMemoir(),
+        NSLogMemoir(isSensitive: false),
+        OSLogMemoir(subsystem: "Test", isSensitive: false),
     ]
 
     public func testAllLogOverloads() {
-        let logger: Loggable = PrintLogger()
-        let scope = Scope(name: "Test Scope")
+        let memoir: Memoir = PrintMemoir()
+        let tracer: Tracer = .label("TestTracer")
 
-        logger.log(level: .info, "Test log 1", label: "Test Label", scopes: [ scope ], meta: [ "Test Key": "Test Value" ], date: Date(timeIntervalSince1970: 239), file: "file", function: "function", line: 239)
-        guard let result = logResult(), result.contains("1970-01-01 03:03:59.000"), result.contains("Test Scope"), result.contains("Test Key=Test Value"), result.contains("Test log 1"), result.contains("Test Label") else {
+        memoir.log(level: .info, "Test log 1", meta: [ "Test Key": "Test Value" ], tracers: [ tracer ], date: Date(timeIntervalSince1970: 239), file: "file", function: "function", line: 239)
+        guard let result = logResult(), result.contains("1970-01-01 03:03:59.000"), result.contains("TestTracer"), result.contains("Test Key: Test Value"), result.contains("Test log 1") else {
             return XCTFail("Can't call log(level:_:label:scopes:meta:date:file:function:line:)")
         }
 
-        logger.log(level: .info, "Test log 2", label: "Test Label", scopes: [ scope ], meta: [ "Test Key": "Test Value" ], date: Date(timeIntervalSince1970: 239), file: "file", function: "function")
-        guard let result = logResult(), result.contains("1970-01-01 03:03:59.000"), result.contains("Test Scope"), result.contains("Test Key=Test Value"), result.contains("Test log 2"), result.contains("Test Label") else { // TODO: Check date and meta
+        memoir.log(level: .info, "Test log 2", meta: [ "Test Key": "Test Value" ], tracers: [ tracer ], date: Date(timeIntervalSince1970: 239), file: "file", function: "function")
+        guard let result = logResult(), result.contains("1970-01-01 03:03:59.000"), result.contains("TestTracer"), result.contains("Test Key: Test Value"), result.contains("Test log 2") else { // TODO: Check date and meta
             return XCTFail("Can't call log(level:_:label:scopes:meta:date:file:function:)")
         }
 
-        logger.log(level: .info, "Test log 3", label: "Test Label", scopes: [ scope ], meta: [ "Test Key": "Test Value" ], date: Date(timeIntervalSince1970: 239), file: "file")
-        guard let result = logResult(), result.contains("1970-01-01 03:03:59.000"), result.contains("Test Scope"), result.contains("Test Key=Test Value"), result.contains("Test log 3"), result.contains("Test Label") else { // TODO: Check date and meta
+        memoir.log(level: .info, "Test log 3", meta: [ "Test Key": "Test Value" ], tracers: [ tracer ], date: Date(timeIntervalSince1970: 239), file: "file")
+        guard let result = logResult(), result.contains("1970-01-01 03:03:59.000"), result.contains("TestTracer"), result.contains("Test Key: Test Value"), result.contains("Test log 3") else { // TODO: Check date and meta
             return XCTFail("Can't call log(level:_:label:scopes:meta:date:file:)")
         }
 
-        logger.log(level: .info, "Test log 4", label: "Test Label", scopes: [ scope ], meta: [ "Test Key": "Test Value" ], date: Date(timeIntervalSince1970: 239))
-        guard let result = logResult(), result.contains("1970-01-01 03:03:59.000"), result.contains("Test Scope"), result.contains("Test Key=Test Value"), result.contains("Test log 4"), result.contains("Test Label") else { // TODO: Check date and meta
+        memoir.log(level: .info, "Test log 4", meta: [ "Test Key": "Test Value" ], tracers: [ tracer ], date: Date(timeIntervalSince1970: 239))
+        guard let result = logResult(), result.contains("1970-01-01 03:03:59.000"), result.contains("TestTracer"), result.contains("Test Key: Test Value"), result.contains("Test log 4") else { // TODO: Check date and meta
             return XCTFail("Can't call log(level:_:label:scopes:meta:date:)")
         }
 
-        logger.log(level: .info, "Test log 5", label: "Test Label", scopes: [ scope ], meta: [ "Test Key": "Test Value" ])
-        guard let result = logResult(), result.contains("Test Scope"), result.contains("Test Key=Test Value"), result.contains("Test log 5"), result.contains("Test Label") else { // TODO: Check date and meta
+        memoir.log(level: .info, "Test log 5", meta: [ "Test Key": "Test Value" ], tracers: [ tracer ])
+        guard let result = logResult(), result.contains("TestTracer"), result.contains("Test Key: Test Value"), result.contains("Test log 5") else { // TODO: Check date and meta
             return XCTFail("Can't call log(level:_:label:scopes:meta:)")
         }
 
-        logger.log(level: .info, "Test log 6", label: "Test Label", scopes: [ scope ])
-        guard let result = logResult(), result.contains("Test Scope"), result.contains("Test log 6"), result.contains("Test Label") else { // TODO: Check date and meta
+        memoir.log(level: .info, "Test log 6", tracers: [ tracer ])
+        guard let result = logResult(), result.contains("TestTracer"), result.contains("Test log 6") else { // TODO: Check date and meta
             return XCTFail("Can't call log(level:_:label:scopes:meta:)")
         }
     }
 
     func testConfigureOutput() throws {
-        let levelStrings: [Level: String] = [
-            .verbose: "[VVV]",
-            .debug: "[DDD]",
-            .info: "[III]",
-            .warning: "[WWW]",
-            .error: "[EEE]",
-            .critical: "[CCC]",
+        let levelStrings: [LogLevel: String] = [
+            .verbose: LogLevel.verbose.testValue,
+            .debug: LogLevel.debug.testValue,
+            .info: LogLevel.info.testValue,
+            .warning: LogLevel.warning.testValue,
+            .error: LogLevel.error.testValue,
+            .critical: LogLevel.critical.testValue,
         ]
-        Output.logString = Output.defaultLogString
-        Level.configure(
+        LogLevel.configure(
             stringForVerbose: levelStrings[.verbose]!,
             stringForDebug: levelStrings[.debug]!,
             stringForInfo: levelStrings[.info]!,
@@ -71,67 +70,67 @@ class BasicTests: GenericTestCase {
             stringForCritical: levelStrings[.critical]!
         )
 
-        let logger = PrintLogger()
+        let memoir = PrintMemoir()
         for (level, string) in levelStrings {
-            var probe = simpleProbe(logger: logger)
+            var probe = simpleProbe(memoir: memoir)
             probe.level = level
             let log = try expectLog(probe: probe)
             if !log.contains(string) {
-                throw Problem.noLabelInLog(logger)
+                throw Problem.noLabelInLog(memoir)
             }
         }
     }
 
     func testLabelAndMessageInLoggers() throws {
-        for logger: Loggable in basicLoggersWithoutCensoring {
-            let probe = simpleProbe(logger: logger)
+        for memoir: Memoir in basicMemoirsWithoutCensoring {
+            let probe = simpleProbe(memoir: memoir)
             let log = try expectLog(probe: probe)
-            if !log.contains(probe.label) { throw Problem.noLabelInLog(logger) }
-            if !log.contains(probe.censoredMessage) { throw Problem.noMessageInLog(logger) }
+            if !log.contains(probe.label) { throw Problem.noLabelInLog(memoir) }
+            if !log.contains(probe.censoredMessage) { throw Problem.noMessageInLog(memoir) }
         }
     }
 
     func testLabeledLogger() throws {
-        let allLevels: [Level] = [ .verbose, .debug, .info, .warning, .error, .critical ]
-        let printLogger = PrintLogger()
-        let label = "label_\(Int.random(in: Int.min ... Int.max))"
-        let logger = Logger(label: label, logger: printLogger)
+        let allLevels: [LogLevel] = [ .verbose, .debug, .info, .warning, .error, .critical ]
+        let printMemoir = PrintMemoir()
+        let memoir = TracedMemoir(label: "label_\(Int.random(in: Int.min ... Int.max))", memoir: printMemoir)
         for level in allLevels {
-            var probe = simpleProbe(logger: logger)
+            var probe = simpleProbe(memoir: memoir)
             probe.level = level
-            try logShouldPresent(probe: probe, logger: logger)
+            try logShouldPresent(probe: probe, memoir: memoir)
         }
     }
 
     func testScopedLogger() throws {
-        let allLevels: [Level] = [ .verbose, .debug, .info, .warning, .error, .critical ]
-        let printLogger = PrintLogger()
-        let scope = Scope(name: "scope_\(Int.random(in: Int.min ... Int.max))")
-        let logger = ScopedLogger(scopes: [ scope ], logger: printLogger)
+        let allLevels: [LogLevel] = [ .verbose, .debug, .info, .warning, .error, .critical ]
+        let printMemoir = PrintMemoir()
+        let tracer: Tracer = .label("tracer_\(Int.random(in: Int.min ... Int.max))")
+        let memoir = TracedMemoir(tracer: tracer, meta: [:], memoir: printMemoir)
         for level in allLevels {
-            var probe = simpleProbe(logger: logger)
+            var probe = simpleProbe(memoir: memoir)
             probe.level = level
-            try logShouldPresent(probe: probe, logger: logger)
+            try logShouldPresent(probe: probe, memoir: memoir)
         }
     }
 
     func testLabeledScopedLogger() throws {
-        let allLevels: [Level] = [ .verbose, .debug, .info, .warning, .error, .critical ]
-        let printLogger = PrintLogger()
-        let label = "label_\(Int.random(in: Int.min ... Int.max))"
-        let scope = Scope(name: "scope_\(Int.random(in: Int.min ... Int.max))")
-        let logger = Logger(label: label, scopes: [ scope ], logger: printLogger)
+        let allLevels: [LogLevel] = [ .verbose, .debug, .info, .warning, .error, .critical ]
+        let printMemoir = PrintMemoir()
+        let tracer: Tracer = .label("tracer_\(Int.random(in: Int.min ... Int.max))")
+        let memoir = TracedMemoir(
+            label: "label_\(Int.random(in: Int.min ... Int.max))",
+            memoir: TracedMemoir(tracer: tracer, meta: [:], memoir: printMemoir)
+        )
         for level in allLevels {
-            var probe = simpleProbe(logger: logger)
-            probe.label = label
-            probe.scopes = [ scope ]
+            var probe = simpleProbe(memoir: memoir)
+            probe.tracers = [ tracer ]
             probe.level = level
-            try logShouldPresent(probe: probe, logger: logger)
+            try logShouldPresent(probe: probe, memoir: memoir)
         }
     }
 
     func testFilteringLevels() throws {
-        let allConfigurationLevels: [(FilteringLogger.ConfigurationLevel, Int)] =
+        let allConfigurationLevels: [(FilteringMemoir.Configuration.Level, Int)] =
             [
                 (.all, -1),
                 (.verbose, 0),
@@ -142,7 +141,7 @@ class BasicTests: GenericTestCase {
                 (.critical, 5),
                 (.disabled, Int.max),
             ]
-        let allLevels: [(Level, Int)] =
+        let allLevels: [(LogLevel, Int)] =
             [
                 (.verbose, 0),
                 (.debug, 1),
@@ -152,72 +151,72 @@ class BasicTests: GenericTestCase {
                 (.critical, 5),
             ]
         for (configurationLevel, configurationIndex) in allConfigurationLevels {
-            let logger = FilteringLogger(logger: PrintLogger(), labelConfigurations: [:], defaultConfiguration: configurationLevel)
+            let memoir = FilteringMemoir(memoir: PrintMemoir(), defaultConfiguration: .init(level: configurationLevel), configurationsByLabel: [:])
             for (level, levelIndex) in allLevels {
-                try checkLog(logger: logger, logShouldPresent: levelIndex >= configurationIndex) { $0.level = level }
+                try checkLog(memoir: memoir, logShouldPresent: levelIndex >= configurationIndex) { $0.level = level }
             }
         }
     }
 
     func testFilteringLoggerOnAll() throws {
-        let logger = FilteringLogger(logger: PrintLogger(), labelConfigurations: [:], defaultConfiguration: .all)
-        try checkLog(logger: logger, logShouldPresent: true)
+        let memoir = FilteringMemoir(memoir: PrintMemoir(), defaultConfiguration: .init(level: .all), configurationsByLabel: [:])
+        try checkLog(memoir: memoir, logShouldPresent: true)
     }
 
     func testFilteringLoggerOffAll() throws {
-        let logger = FilteringLogger(logger: PrintLogger(), labelConfigurations: [:], defaultConfiguration: .disabled)
-        try checkLog(logger: logger, logShouldPresent: false)
+        let memoir = FilteringMemoir(memoir: PrintMemoir(), defaultConfiguration: .init(level: .disabled), configurationsByLabel: [:])
+        try checkLog(memoir: memoir, logShouldPresent: false)
     }
 
     func testFilteringLoggerOnInfo() throws {
-        let logger = FilteringLogger(logger: PrintLogger(), labelConfigurations: [:], defaultConfiguration: .info)
-        try checkLog(logger: logger, logShouldPresent: true)
+        let memoir = FilteringMemoir(memoir: PrintMemoir(), defaultConfiguration: .init(level: .info), configurationsByLabel: [:])
+        try checkLog(memoir: memoir, logShouldPresent: true)
     }
 
     func testFilteringLoggerOffInfo()throws {
-        let logger = FilteringLogger(logger: PrintLogger(), labelConfigurations: [:], defaultConfiguration: .warning)
-        try checkLog(logger: logger, logShouldPresent: false)
+        let memoir = FilteringMemoir(memoir: PrintMemoir(), defaultConfiguration: .init(level: .warning), configurationsByLabel: [:])
+        try checkLog(memoir: memoir, logShouldPresent: false)
     }
 
     func testMultiplexingLogger() throws {
-        let logger = MultiplexingLogger(loggers: [ PrintLogger(), PrintLogger() ])
-        let probe = simpleProbe(logger: logger)
+        let memoir = MultiplexingMemoir(memoirs: [ PrintMemoir(), PrintMemoir() ])
+        let probe = simpleProbe(memoir: memoir)
         for _ in 0 ..< 2 { // 2 same logs
             let log = try expectLog(probe: probe)
-            if !log.contains(probe.label) { throw Problem.noLabelInLog(logger) }
-            if !log.contains(probe.censoredMessage) { throw Problem.noMessageInLog(logger) }
+            if !log.contains(probe.label) { throw Problem.noLabelInLog(memoir) }
+            if !log.contains(probe.censoredMessage) { throw Problem.noMessageInLog(memoir) }
         }
     }
 
     private func checkLog(
-        logger: Loggable,
+        memoir: Memoir,
         logShouldPresent: Bool,
         _ updateProbe: (inout LogProbe) -> Void = { _ in },
         file: String = #file,
         line: UInt = #line
     ) throws {
-        var probe = simpleProbe(logger: logger)
+        var probe = simpleProbe(memoir: memoir)
         updateProbe(&probe)
         if logShouldPresent {
-            try self.logShouldPresent(probe: probe, logger: logger, file: file, line: line)
+            try self.logShouldPresent(probe: probe, memoir: memoir, file: file, line: line)
         } else {
             try expectNoLog(probe: probe, file: file, line: line)
         }
     }
 
-    private func logShouldPresent(probe: LogProbe, logger: Loggable, file: String = #file, line: UInt = #line) throws {
+    private func logShouldPresent(probe: LogProbe, memoir: Memoir, file: String = #file, line: UInt = #line) throws {
         let log = try expectLog(probe: probe)
         if !log.contains(probe.label) {
             fputs("\nProblem at \(file):\(line)\n", stderr)
-            throw Problem.noLabelInLog(logger)
+            throw Problem.noLabelInLog(memoir)
         }
         if !log.contains(probe.censoredMessage) {
             fputs("\nProblem at \(file):\(line)\n", stderr)
-            throw Problem.noMessageInLog(logger)
+            throw Problem.noMessageInLog(memoir)
         }
         if !log.contains(probe.level.testValue) {
             fputs("\nProblem at \(file):\(line)\n", stderr)
-            throw Problem.wrongLevelInLog(logger)
+            throw Problem.wrongLevelInLog(memoir)
         }
     }
 }

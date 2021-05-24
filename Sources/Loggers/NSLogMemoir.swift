@@ -1,5 +1,5 @@
 //
-// NSLogLogger
+// NSLogMemoir
 // Robologs
 //
 // Created by Dmitry Shadrin on 05.12.2019.
@@ -8,8 +8,8 @@
 
 import Foundation
 
-/// Logger which encapsulate NSLog logging system.
-public class NSLogLogger: Loggable {
+/// Memoir which encapsulate NSLog logging system.
+public class NSLogMemoir: Memoir {
     public let isSensitive: Bool
 
     public init(isSensitive: Bool) {
@@ -17,10 +17,10 @@ public class NSLogLogger: Loggable {
     }
 
     @inlinable
-    public func add(
-        _ item: Log.Item,
-        meta: @autoclosure () -> [String: Log.String]?,
-        tracers: [Log.Tracer],
+    public func append(
+        _ item: MemoirItem,
+        meta: @autoclosure () -> [String: SafeString]?,
+        tracers: [Tracer],
         date: Date,
         file: String, function: String, line: UInt
     ) {
@@ -49,6 +49,6 @@ public class NSLogLogger: Loggable {
                 )
         }
         NSLog("%@", description)
-        Output.logInterceptor?(self, description)
+        Output.logInterceptor?(self, item, description)
     }
 }

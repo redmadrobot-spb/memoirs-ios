@@ -1,5 +1,5 @@
 //
-// OSLogLogger
+// OSLogMemoir
 // Robologs
 //
 // Created by Dmitry Shadrin on 03.12.2019.
@@ -9,18 +9,17 @@
 import Foundation
 import os.log
 
-/// `(Logger)` - implementation which use `os.log` logging system.
+/// `(Memoir)` - implementation which use `os.log` logging system.
 @available(iOS 12.0, *)
-public class OSLogLogger: Loggable {
-    public let isSensitive: Bool
-
+public class OSLogMemoir: Memoir {
     /// An identifier string, in reverse DNS notation, representing the subsystem that’s performing logging.
     /// For example, `com.your_company.your_subsystem_name`.
     /// The subsystem is used for categorization and filtering of related log messages, as well as for grouping related logging settings.
-    public let subsystem: String
-    private var loggers: SynchronizedDictionary<String, OSLog> = [:]
+    private let subsystem: String
+    private let isSensitive: Bool
+    private var osLogs: SynchronizedDictionary<String, OSLog> = [:]
 
-    /// Creates a new instance of `OSLogLogger`.
+    /// Creates a new instance of `OSLogMemoir`.
     /// - Parameter subsystem: An identifier string, in reverse DNS notation, representing the subsystem that’s performing logging.
     public init(subsystem: String, isSensitive: Bool) {
         self.isSensitive = isSensitive
@@ -28,17 +27,17 @@ public class OSLogLogger: Loggable {
     }
 
     @inlinable
-    public func add(
-        _ item: Log.Item,
-        meta: @autoclosure () -> [String: Log.String]?,
-        tracers: [Log.Tracer],
+    public func append(
+        _ item: MemoirItem,
+        meta: @autoclosure () -> [String: SafeString]?,
+        tracers: [Tracer],
         date: Date,
         file: String, function: String, line: UInt
     ) {
         let codePosition = Output.codePosition(file: file, function: function, line: line)
         let description: String
         var osLogType: OSLogType = .debug
-        let label: OSLog = logger(with: tracers.label ?? "NoLabel")
+        let label: OSLog = osLog(with: tracers.label ?? "NoLabel")
         switch item {
             case .log(let level, let message):
                 description = Output.logString(
@@ -63,11 +62,11 @@ public class OSLogLogger: Loggable {
                 )
         }
         os_log(osLogType, log: label, "%{public}@", description)
-        Output.logInterceptor?(self, description)
+        Output.logInterceptor?(self, item, description)
     }
 
     @usableFromInline
-    func logType(from level: Log.Level) -> OSLogType {
+    func logType(from level: LogLevel) -> OSLogType {
         switch level {
             case .verbose: return .debug
             case .debug: return .debug
@@ -79,13 +78,35 @@ public class OSLogLogger: Loggable {
     }
 
     @usableFromInline
-    func logger(with label: String) -> OSLog {
-        if let logger = loggers[label] {
-            return logger
+    func osLog(with label: String) -> OSLog {
+        if let osLog = osLogs[label] {
+            return osLog
         } else {
-            let logger = OSLog(subsystem: subsystem, category: label)
-            loggers[label] = logger
-            return logger
+            let osLog = OSLog(subsystem: subsystem, category: label)
+            osLogs[label] = osLog
+            return osLog
+        }
+    }
+}
+
+private class SynchronizedDictionary<Key, Value>: ExpressibleByDictionaryLiteral where Key: Hashable {
+    private var dictionary: [Key: Value]
+    private let queue: DispatchQueue = DispatchQueue(label: "com.redmadrobot.robologs.synchronizedDictionary", attributes: .concurrent)
+
+    required init(dictionaryLiteral elements: (Key, Value)...) {
+        dictionary = Dictionary(uniqueKeysWithValues: elements)
+    }
+
+    subscript(key: Key) -> Value? {
+        get {
+            queue.sync {
+                dictionary[key]
+            }
+        }
+        set {
+            queue.async(flags: .barrier) { [weak self] in
+                self?.dictionary[key] = newValue
+            }
         }
     }
 }

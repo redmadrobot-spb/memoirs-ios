@@ -2,57 +2,44 @@
 //  main.swift
 //  BonjourClientTest
 //
-//  Created by Alex Babaev on 28.04.2020.
+//  Created by Alex Babaev on 28 April 2020.
 //  Copyright © 2020 Redmadrobot SPb. All rights reserved.
 //
 
 import Foundation
 import Robologs
 
-let lowLevelLogger = PrintLogger(onlyTime: true, shortSource: true) // Usually its Filtering/Multiplexing logger
-//    let stopwatch = Stopwatch()
-//
-//    let applicationScope = Scope(name: "Application")
-//
-//    let logger = Logger(label: "ExampleLabel", scopes: [ applicationScope ], logger: lowLevelLogger)
-//
-//    logger.debug("Application debug string one")
-//
-//    let measurement = stopwatch.measure(label: "ExampleMeasurement") {
-//        let measurementScope = applicationScope.subScope(name: "Measurement")
-//        let logger = Logger(label: "ExampleLabel", scopes: [ measurementScope ], logger: lowLevelLogger)
-//
-//        logger.debug("Debug string one")
-//        logger.info("Info string two")
-//    }
+let lowLevelMemoir = PrintMemoir(onlyTime: true, shortSource: true) // Usually its Filtering/Multiplexing memoir
 
-// -----------------------------------------------------------------------------------------------------------------------------------------
+let appMemoir = AppMemoir(bundleId: "com.smth.myGreatApp", version: "0.1", memoir: lowLevelMemoir)
+appMemoir.info("AppLog")
 
-let appLogger = AppLogger(bundleId: "com.smth.myGreatApp", version: "0.1", logger: lowLevelLogger)
-appLogger.info("AppLog")
-let threadInfoLogger = ThreadQueueLogger(logger: appLogger)
-threadInfoLogger.warning("ThreadInfoLog")
+let infoMemoir = ThreadQueueMemoir(memoir: appMemoir)
+infoMemoir.warning("ThreadInfoLog")
 
 let stopwatch = Stopwatch()
 
 var mark = stopwatch.mark
-var installLogger = InstallLogger(deviceInfo: .init(osInfo: .macOS(version: "11.something")), logger: threadInfoLogger)
-installLogger.error("InstallLog")
-var addedLabelLogger = Logger(label: "SomeLabelALittleLonger", logger: installLogger)
-addedLabelLogger.error("Install+LabelLog")
+
+var installMemoir = InstanceMemoir(deviceInfo: .init(osInfo: .macOS(version: "11.something")), memoir: infoMemoir)
+installMemoir.error("InstallLog")
+
+var addedLabelMemoir = TracedMemoir(label: "SomeLabelALittleLonger", memoir: installMemoir)
+addedLabelMemoir.error("Install+LabelLog")
+
 mark = stopwatch.logInterval(from: mark, label: "Initialization")
 
 func session() {
     stopwatch.measure(label: "Session") {
-        let sessionLogger = SessionLogger(userId: UUID().uuidString, isGuest: true, logger: addedLabelLogger)
-        sessionLogger.debug("SessionLog")
+        let sessionMemoir = SessionMemoir(userId: UUID().uuidString, isGuest: true, memoir: addedLabelMemoir)
+        sessionMemoir.debug("SessionLog")
     }
 }
 
 session()
-addedLabelLogger.debug("AnotherInstallLog")
+addedLabelMemoir.debug("AnotherInstallLog")
 
-addedLabelLogger.event(name: "EventLog", meta: [:])
+addedLabelMemoir.event(name: "EventLog", meta: [:])
 
-installLogger = InstallLogger(deviceInfo: .init(osInfo: .macOS(version: "11.something")), logger: appLogger)
-installLogger.debug("Another install level log")
+installMemoir = InstanceMemoir(deviceInfo: .init(osInfo: .macOS(version: "11.something")), memoir: appMemoir)
+installMemoir.debug("Another install level log")

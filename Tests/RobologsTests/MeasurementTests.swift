@@ -10,46 +10,19 @@ import XCTest
 @testable import Robologs
 
 class MeasurementTests: GenericTestCase {
-    func testPerformanceMonitor() {
-        let label = "test_\(Int.random(in: 0 ... 239))"
-        let randomInterval = TimeInterval.random(in: 0 ... 0.5)
-
-        var monitor = PerfMonitor(label: label)
-        Thread.sleep(forTimeInterval: randomInterval)
-        monitor.tock()
-//        fputs(
-//            """
-//            Monitor intervals: \(monitor.intervals);
-//            random time: \(randomInterval);
-//            difference: \(monitor.averageInterval - randomInterval)
+//    func testMeasurementPerformance() {
+//        let label = "test_\(Int.random(in: 0 ... 239))"
+//        let iterations = 10000
 //
-//            """,
-//            stdout
-//        )
-
-        XCTAssertEqual(label, monitor.label)
-        XCTAssertEqual(monitor.measurements.count, 2)
-        XCTAssertTrue(monitor.firstTick < monitor.lastTick)
-        XCTAssertTrue(monitor.tickTocks.count == 1)
-        XCTAssertTrue(abs(monitor.minTickTock - randomInterval) < 0.01)
-        XCTAssertTrue(abs(monitor.maxTickTock - randomInterval) < 0.01)
-        XCTAssertTrue(abs(monitor.averageTickTock - randomInterval) < 0.01)
-        XCTAssertTrue(abs(monitor.averageTickTock - randomInterval) < 0.01)
-    }
-
-    func testTockPerformance() {
-        let label = "test_\(Int.random(in: 0 ... 239))"
-        let iterations = 10000
-
-        let startTime = ProcessInfo.processInfo.systemUptime
-        var monitor = PerfMonitor(label: label)
-        for _ in 0 ..< iterations {
-            monitor.tock()
-        }
-        let endTime = ProcessInfo.processInfo.systemUptime
-
-        let overallTime = endTime - startTime
-        let averageIterationTime = overallTime/TimeInterval(iterations)
-        XCTAssertTrue(averageIterationTime < 1e-6)
-    }
+//        let startTime = ProcessInfo.processInfo.systemUptime
+//        var monitor = PerfMonitor(label: label)
+//        for _ in 0 ..< iterations {
+//            monitor.tock()
+//        }
+//        let endTime = ProcessInfo.processInfo.systemUptime
+//
+//        let overallTime = endTime - startTime
+//        let averageIterationTime = overallTime/TimeInterval(iterations)
+//        XCTAssertTrue(averageIterationTime < 1e-6)
+//    }
 }

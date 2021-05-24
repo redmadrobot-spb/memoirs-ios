@@ -1,5 +1,5 @@
 //
-// PrintLogger
+// PrintMemoir
 // Robologs
 //
 // Created by Dmitry Shadrin on 27.11.2019.
@@ -8,14 +8,14 @@
 
 import Foundation
 
-/// Default `(Logger)` implementation which uses `print()` to output logs.
-public class PrintLogger: Loggable {
+/// Default `(Memoir)` implementation which uses `print()` to output logs.
+public class PrintMemoir: Memoir {
     @usableFromInline
     let shortSource: Bool
     @usableFromInline
     let formatter: DateFormatter
 
-    /// Creates a new instance of `PrintLogger`.
+    /// Creates a new instance of `PrintMemoir`.
     public init(onlyTime: Bool = false, shortSource: Bool = false) {
         self.shortSource = shortSource
         formatter = DateFormatter()
@@ -24,10 +24,10 @@ public class PrintLogger: Loggable {
     }
 
     @inlinable
-    public func add(
-        _ item: Log.Item,
-        meta: @autoclosure () -> [String: Log.String]?,
-        tracers: [Log.Tracer],
+    public func append(
+        _ item: MemoirItem,
+        meta: @autoclosure () -> [String: SafeString]?,
+        tracers: [Tracer],
         date: Date,
         file: String, function: String, line: UInt
     ) {
@@ -57,7 +57,7 @@ public class PrintLogger: Loggable {
                 )
         }
         print(description)
-        Output.logInterceptor?(self, description)
+        Output.logInterceptor?(self, item, description)
     }
 
     @usableFromInline

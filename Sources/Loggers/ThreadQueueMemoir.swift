@@ -1,5 +1,5 @@
 //
-// ThreadQueueLogger
+// ThreadQueueMemoir
 // Robologs
 //
 // Created by Alex Babaev on 25 April 2020.
@@ -8,11 +8,11 @@
 
 import Foundation
 
-public class ThreadQueueLogger: Loggable {
-    public let logger: Loggable
+public class ThreadQueueMemoir: Memoir {
+    public let memoir: Memoir
 
-    public init(logger: Loggable) {
-        self.logger = logger
+    public init(memoir: Memoir) {
+        self.memoir = memoir
     }
 
     @usableFromInline
@@ -21,8 +21,8 @@ public class ThreadQueueLogger: Loggable {
     var currentThreadName: String? { Thread.current.name ?? String(describing: Thread.current) }
 
     @inlinable
-    public func add(
-        _ item: Log.Item, meta: @autoclosure () -> [String: Log.String]?, tracers: [Log.Tracer], date: Date,
+    public func append(
+        _ item: MemoirItem, meta: @autoclosure () -> [String: SafeString]?, tracers: [Tracer], date: Date,
         file: String, function: String, line: UInt
     ) {
         var tracers = tracers
@@ -32,6 +32,6 @@ public class ThreadQueueLogger: Loggable {
         if let queueName = currentQueueName, !queueName.isEmpty {
             tracers.insert(.queue(name: queueName), at: 0)
         }
-        logger.add(item, meta: meta(), tracers: tracers, date: date, file: file, function: function, line: line)
+        memoir.append(item, meta: meta(), tracers: tracers, date: date, file: file, function: function, line: line)
     }
 }
