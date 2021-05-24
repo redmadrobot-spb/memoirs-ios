@@ -28,8 +28,3 @@ public protocol Memoir {
         file: String, function: String, line: UInt
     )
 }
-
-/// Protocol that adds a tracer to every item that passes through.
-public protocol Traceable {
-    var tracer: Tracer { get }
-}

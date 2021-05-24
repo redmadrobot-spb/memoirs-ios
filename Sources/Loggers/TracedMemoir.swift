@@ -8,7 +8,12 @@
 
 import Foundation
 
-public class TracedMemoir: Memoir {
+/// Protocol that adds a tracer to every item that passes through.
+public protocol Traceable {
+    var tracer: Tracer { get }
+}
+
+public class TracedMemoir: Memoir, Traceable {
     public let tracer: Tracer
 
     @usableFromInline
