@@ -68,10 +68,10 @@ public enum Output {
             time,
             "\(level.map { "\(Marker.printString(for: $0))" } ?? "")",
             codePosition,
-            tracers.label(isSensitive: isSensitive),
+            tracers.labelTracer.map { isSensitive ? "???" : $0.string },
             message().string(isSensitive: isSensitive),
-            tracers.allJoined(isSensitive: isSensitive),
             meta()?.commaJoined(isSensitive: isSensitive),
+            tracers.allJoined(isSensitive: isSensitive),
         ].spaceMerged
     }
 
@@ -83,10 +83,10 @@ public enum Output {
             time,
             Marker.event,
             codePosition,
-            tracers.label(isSensitive: isSensitive),
+            tracers.labelTracer.map { isSensitive ? "???" : $0.string },
             isSensitive ? "???" : name,
-            tracers.allJoined(isSensitive: isSensitive),
             meta()?.commaJoined(isSensitive: isSensitive),
+            tracers.allJoined(isSensitive: isSensitive),
         ].spaceMerged
     }
 
@@ -100,9 +100,9 @@ public enum Output {
             Marker.measurement,
             codePosition,
             isSensitive ? "???" : "\(name)->\(value)",
-            tracers.label(isSensitive: isSensitive),
-            tracers.allJoined(isSensitive: isSensitive),
+            tracers.labelTracer.map { isSensitive ? "???" : $0.string },
             meta()?.commaJoined(isSensitive: isSensitive),
+            tracers.allJoined(isSensitive: isSensitive),
         ].spaceMerged
     }
 
@@ -114,10 +114,10 @@ public enum Output {
             time,
             Marker.tracer,
             codePosition,
-            tracers.label(isSensitive: isSensitive),
+            tracers.labelTracer.map { isSensitive ? "???" : $0.string },
             "Tracer: \(isSensitive ? "???" : tracer.output)",
-            tracers.allJoined(isSensitive: isSensitive),
             meta()?.commaJoined(isSensitive: isSensitive),
+            tracers.allJoined(isSensitive: isSensitive),
         ].spaceMerged
     }
 
@@ -129,10 +129,10 @@ public enum Output {
             time,
             Marker.tracer,
             codePosition,
-            tracers.label(isSensitive: isSensitive),
+            tracers.labelTracer.map { isSensitive ? "???" : $0.string },
             "End Tracer: \(isSensitive ? "???" : tracer.output)",
-            tracers.allJoined(isSensitive: isSensitive),
             meta()?.commaJoined(isSensitive: isSensitive),
+            tracers.allJoined(isSensitive: isSensitive),
         ].spaceMerged
     }
 }
@@ -152,17 +152,6 @@ extension Array where Element == String {
 }
 
 extension Array where Element == Tracer {
-    @usableFromInline
-    func label(isSensitive: Bool) -> String? {
-        first {
-            if case .label = $0 {
-                return true
-            } else {
-                return false
-            }
-        }.map { isSensitive ? "???" : $0.string }
-    }
-
     @usableFromInline
     func allJoined(isSensitive: Bool) -> String {
         isEmpty ? "" : isSensitive ? "???" : "{\(map { $0.string }.joined(separator: ", "))}"

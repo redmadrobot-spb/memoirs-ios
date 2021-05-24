@@ -16,8 +16,10 @@ public class OSLogMemoir: Memoir {
     /// For example, `com.your_company.your_subsystem_name`.
     /// The subsystem is used for categorization and filtering of related log messages, as well as for grouping related logging settings.
     private let subsystem: String
-    private let isSensitive: Bool
     private var osLogs: SynchronizedDictionary<String, OSLog> = [:]
+
+    @usableFromInline
+    let isSensitive: Bool
 
     /// Creates a new instance of `OSLogMemoir`.
     /// - Parameter subsystem: An identifier string, in reverse DNS notation, representing the subsystem that’s performing logging.
@@ -37,28 +39,29 @@ public class OSLogMemoir: Memoir {
         let codePosition = Output.codePosition(file: file, function: function, line: line)
         let description: String
         var osLogType: OSLogType = .debug
-        let label: OSLog = osLog(with: tracers.label ?? "NoLabel")
+        let label: OSLog = osLog(with: tracers.labelTracer.map { isSensitive ? "???" : $0.string } ?? "NoLabel")
         switch item {
             case .log(let level, let message):
                 description = Output.logString(
-                    time: "", level: level, message: message, tracers: tracers, meta: meta, codePosition: codePosition, isSensitive: false
+                    time: "", level: level, message: message, tracers: tracers, meta: meta, codePosition: codePosition,
+                    isSensitive: isSensitive
                 )
                 osLogType = logType(from: level)
             case .event(let name):
                 description = Output.eventString(
-                    time: "", name: name, tracers: tracers, meta: meta, codePosition: codePosition, isSensitive: false
+                    time: "", name: name, tracers: tracers, meta: meta, codePosition: codePosition, isSensitive: isSensitive
                 )
             case .tracer(let tracer, false):
                 description = Output.tracerString(
-                    time: "", tracer: tracer, tracers: tracers, meta: meta, codePosition: codePosition, isSensitive: false
+                    time: "", tracer: tracer, tracers: tracers, meta: meta, codePosition: codePosition, isSensitive: isSensitive
                 )
             case .tracer(let tracer, true):
                 description = Output.tracerEndString(
-                    time: "", tracer: tracer, tracers: tracers, meta: meta, codePosition: codePosition, isSensitive: false
+                    time: "", tracer: tracer, tracers: tracers, meta: meta, codePosition: codePosition, isSensitive: isSensitive
                 )
             case .measurement(let name, let value):
                 description = Output.measurementString(
-                    time: "", name: name, value: value, tracers: tracers, meta: meta, codePosition: codePosition, isSensitive: false
+                    time: "", name: name, value: value, tracers: tracers, meta: meta, codePosition: codePosition, isSensitive: isSensitive
                 )
         }
         os_log(osLogType, log: label, "%{public}@", description)

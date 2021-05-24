@@ -6,7 +6,7 @@
 // Copyright © 2021 Redmadrobot SPb. All rights reserved.
 //
 
-public enum Tracer {
+public enum Tracer: Equatable {
     case app(id: String)
     case instance(id: String)
     case session(userId: String) // Yes, even for guests
@@ -34,14 +34,16 @@ public enum Tracer {
 }
 
 extension Array where Element == Tracer {
+    public var label: Tracer? { labelTracer }
+
     @usableFromInline
-    var label: String? {
+    var labelTracer: Tracer? {
         first {
-            switch $0 {
-                case .label: return true
-                default: return false
+            if case .label = $0 {
+                return true
+            } else {
+                return false
             }
         }
-        .map { $0.string }
     }
 }

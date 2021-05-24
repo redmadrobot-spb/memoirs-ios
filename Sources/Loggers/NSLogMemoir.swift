@@ -10,7 +10,8 @@ import Foundation
 
 /// Memoir which encapsulate NSLog logging system.
 public class NSLogMemoir: Memoir {
-    public let isSensitive: Bool
+    @usableFromInline
+    let isSensitive: Bool
 
     public init(isSensitive: Bool) {
         self.isSensitive = isSensitive
@@ -29,23 +30,24 @@ public class NSLogMemoir: Memoir {
         switch item {
             case .log(let level, let message):
                 description = Output.logString(
-                    time: "", level: level, message: message, tracers: tracers, meta: meta, codePosition: codePosition, isSensitive: false
+                    time: "", level: level, message: message, tracers: tracers, meta: meta, codePosition: codePosition,
+                    isSensitive: isSensitive
                 )
             case .event(let name):
                 description = Output.eventString(
-                    time: "", name: name, tracers: tracers, meta: meta, codePosition: codePosition, isSensitive: false
+                    time: "", name: name, tracers: tracers, meta: meta, codePosition: codePosition, isSensitive: isSensitive
                 )
             case .tracer(let tracer, false):
                 description = Output.tracerString(
-                    time: "", tracer: tracer, tracers: tracers, meta: meta, codePosition: codePosition, isSensitive: false
+                    time: "", tracer: tracer, tracers: tracers, meta: meta, codePosition: codePosition, isSensitive: isSensitive
                 )
             case .tracer(let tracer, true):
                 description = Output.tracerEndString(
-                    time: "", tracer: tracer, tracers: tracers, meta: meta, codePosition: codePosition, isSensitive: false
+                    time: "", tracer: tracer, tracers: tracers, meta: meta, codePosition: codePosition, isSensitive: isSensitive
                 )
             case .measurement(let name, let value):
                 description = Output.measurementString(
-                    time: "", name: name, value: value, tracers: tracers, meta: meta, codePosition: codePosition, isSensitive: false
+                    time: "", name: name, value: value, tracers: tracers, meta: meta, codePosition: codePosition, isSensitive: isSensitive
                 )
         }
         NSLog("%@", description)

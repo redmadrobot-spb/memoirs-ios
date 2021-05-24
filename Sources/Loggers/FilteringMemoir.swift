@@ -84,8 +84,8 @@ public class FilteringMemoir: Memoir {
         date: Date,
         file: String, function: String, line: UInt
     ) {
-        let label = tracers.label ?? "—"
-        let configuration = configurationsByLabel[label] ?? defaultConfiguration
+        let label = tracers.labelTracer.map { $0.string }
+        let configuration = label.flatMap { configurationsByLabel[$0] } ?? defaultConfiguration
 
         var ok = false
         switch item {
