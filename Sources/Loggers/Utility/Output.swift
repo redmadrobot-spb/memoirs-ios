@@ -115,7 +115,7 @@ public enum Output {
             Marker.tracer,
             codePosition,
             tracers.label(isSensitive: isSensitive),
-            "Updated: \(isSensitive ? "???" : tracer.output)",
+            "Tracer: \(isSensitive ? "???" : tracer.output)",
             tracers.allJoined(isSensitive: isSensitive),
             meta()?.commaJoined(isSensitive: isSensitive),
         ].spaceMerged
@@ -130,7 +130,7 @@ public enum Output {
             Marker.tracer,
             codePosition,
             tracers.label(isSensitive: isSensitive),
-            "Ended: \(isSensitive ? "???" : tracer.output)",
+            "End Tracer: \(isSensitive ? "???" : tracer.output)",
             tracers.allJoined(isSensitive: isSensitive),
             meta()?.commaJoined(isSensitive: isSensitive),
         ].spaceMerged

@@ -21,12 +21,12 @@ public enum Tracer {
 
     public var string: String {
         switch self {
-            case .app: return "app"
-            case .instance(let id): return "instance.\(id)"
-            case .session(let userId): return "session.\(userId)"
-            case .thread(let name): return "thread.\(name)"
-            case .queue(let name): return "queue.\(name)"
-            case .request(let id): return "request.\(id)"
+            case .app(let id): return "app:\(id)"
+            case .instance(let id): return "instance:\(id)"
+            case .session(let userId): return "session:\(userId)"
+            case .thread(let name): return "thread:\(name)"
+            case .queue(let name): return "queue:\(name)"
+            case .request(let id): return "request:\(id)"
             case .label(let label): return label
             case .custom(let name): return name
         }
