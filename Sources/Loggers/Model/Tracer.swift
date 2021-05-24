@@ -8,7 +8,7 @@
 
 public enum Tracer {
     case app
-    case install(id: Swift.String)
+    case instance(id: Swift.String)
     case session(userId: Swift.String, isGuest: Bool)
 
     case thread(name: Swift.String)
@@ -17,16 +17,18 @@ public enum Tracer {
     case request(id: Swift.String)
 
     case label(Swift.String)
+    case custom(Swift.String)
 
     public var string: Swift.String {
         switch self {
             case .app: return "app"
-            case .install(let id): return "install.\(id)"
+            case .instance(let id): return "install.\(id)"
             case .session(let userId, let isGuest): return "session.\(userId).\(isGuest ? "g" : "u")"
             case .thread(let name): return "thread.\(name)"
             case .queue(let name): return "queue.\(name)"
             case .request(let id): return "request.\(id)"
             case .label(let label): return label
+            case .custom(let label): return label
         }
     }
 }

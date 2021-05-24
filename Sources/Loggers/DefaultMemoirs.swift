@@ -65,7 +65,7 @@ public class InstanceMemoir: TracedMemoir {
         let meta: [String: SafeString] = [
             "os": "\(deviceInfo.osInfo.string)"
         ]
-        super.init(tracer: .install(id: installId), meta: meta, memoir: memoir, file: file, function: function, line: line)
+        super.init(tracer: .instance(id: installId), meta: meta, memoir: memoir, file: file, function: function, line: line)
     }
 }
 
