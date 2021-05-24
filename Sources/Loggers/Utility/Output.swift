@@ -180,5 +180,5 @@ extension Dictionary where Key == String, Value == SafeString {
 
 extension Tracer {
     @usableFromInline
-    var output: Swift.String { string }
+    var output: String { string }
 }

@@ -39,15 +39,15 @@ public enum LogLevel: Hashable, Comparable {
 
     /// You can redefine these to display other symbols in PrintMemoir.
     public static func configure(
-        stringForVerbose: Swift.String = "👻",
-        stringForDebug: Swift.String = "👣",
-        stringForInfo: Swift.String = "🌵",
-        stringForWarning: Swift.String = "🖖",
-        stringForError: Swift.String = "⛑",
-        stringForCritical: Swift.String = "👿",
-        stringForEvent: Swift.String = "💥",
-        stringForTracer: Swift.String = "🕶",
-        stringForMeasurement: Swift.String = "📈"
+        stringForVerbose: String = "👻",
+        stringForDebug: String = "👣",
+        stringForInfo: String = "🌵",
+        stringForWarning: String = "🖖",
+        stringForError: String = "⛑",
+        stringForCritical: String = "👿",
+        stringForEvent: String = "💥",
+        stringForTracer: String = "🕶",
+        stringForMeasurement: String = "📈"
     ) {
         Output.Marker.verbose = stringForVerbose
         Output.Marker.debug = stringForDebug

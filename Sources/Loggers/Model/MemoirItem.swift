@@ -8,7 +8,7 @@
 
 public enum MemoirItem {
     case log(level: LogLevel, message: @autoclosure () -> SafeString)
-    case event(name: Swift.String)
-    case measurement(name: Swift.String, value: Double)
+    case event(name: String)
+    case measurement(name: String, value: Double)
     case tracer(Tracer, isFinished: Bool)
 }

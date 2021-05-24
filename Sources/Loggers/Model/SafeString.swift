@@ -28,7 +28,7 @@ public struct SafeString: CustomStringConvertible, ExpressibleByStringLiteral, E
     private let interpolations: [SafeStringInterpolation.Kind]
     private let isSensitive: Bool = SafeString.isSensitive
 
-    public init(stringLiteral value: Swift.String) {
+    public init(stringLiteral value: String) {
         interpolations = [ .open(value) ]
     }
 
@@ -40,11 +40,11 @@ public struct SafeString: CustomStringConvertible, ExpressibleByStringLiteral, E
         interpolations = [ isSensitive ? .sensitive(any) : .open(any) ]
     }
 
-    public var description: Swift.String {
+    public var description: String {
         string(isSensitive: isSensitive)
     }
 
-    public func string(isSensitive: Bool) -> Swift.String {
+    public func string(isSensitive: Bool) -> String {
         interpolations.map { interpolation in
             switch interpolation {
                 case .open(let value as SafeStringConvertible):

@@ -7,28 +7,28 @@
 //
 
 public enum Tracer {
-    case app
-    case instance(id: Swift.String)
-    case session(userId: Swift.String, isGuest: Bool)
+    case app(id: String)
+    case instance(id: String)
+    case session(userId: String) // Yes, even for guests
 
-    case thread(name: Swift.String)
-    case queue(name: Swift.String)
+    case thread(name: String)
+    case queue(name: String)
 
-    case request(id: Swift.String)
+    case request(id: String)
 
-    case label(Swift.String)
-    case custom(Swift.String)
+    case label(String)
+    case custom(String)
 
-    public var string: Swift.String {
+    public var string: String {
         switch self {
             case .app: return "app"
-            case .instance(let id): return "install.\(id)"
-            case .session(let userId, let isGuest): return "session.\(userId).\(isGuest ? "g" : "u")"
+            case .instance(let id): return "instance.\(id)"
+            case .session(let userId): return "session.\(userId)"
             case .thread(let name): return "thread.\(name)"
             case .queue(let name): return "queue.\(name)"
             case .request(let id): return "request.\(id)"
             case .label(let label): return label
-            case .custom(let label): return label
+            case .custom(let name): return name
         }
     }
 }

@@ -17,7 +17,7 @@ public class AppMemoir: TracedMemoir {
             "bundleId": "\(safe: bundleId)",
             "version": "\(version)"
         ]
-        super.init(tracer: .app, meta: meta, memoir: memoir, file: file, function: function, line: line)
+        super.init(tracer: .app(id: bundleId), meta: meta, memoir: memoir, file: file, function: function, line: line)
     }
 }
 
@@ -77,7 +77,7 @@ public class SessionMemoir: TracedMemoir {
             "userId": "\(userId)",
             "isGuest": "\(isGuest)",
         ]
-        let tracer: Tracer = .session(userId: userId, isGuest: isGuest)
+        let tracer: Tracer = .session(userId: "\(isGuest ? "guest." : "")\(userId)")
         super.init(tracer: tracer, meta: meta, memoir: memoir, file: file, function: function, line: line)
     }
 }
