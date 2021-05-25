@@ -21,10 +21,10 @@ let stopwatch = Stopwatch()
 
 var mark = stopwatch.mark
 
-var installMemoir = InstanceMemoir(deviceInfo: .init(osInfo: .macOS(version: "11.something")), memoir: infoMemoir)
-installMemoir.error("InstallLog")
+var instanceMemoir = InstanceMemoir(deviceInfo: .init(osInfo: .macOS(version: "11.something")), memoir: infoMemoir)
+instanceMemoir.error("instance level log")
 
-var addedLabelMemoir = TracedMemoir(label: "SomeLabelALittleLonger", memoir: installMemoir)
+var addedLabelMemoir = TracedMemoir(label: "SomeLabelALittleLonger", memoir: instanceMemoir)
 addedLabelMemoir.error("Install+LabelLog")
 
 mark = stopwatch.logInterval(from: mark, label: "Initialization")
@@ -41,5 +41,9 @@ addedLabelMemoir.debug("AnotherInstallLog")
 
 addedLabelMemoir.event(name: "EventLog", meta: [:])
 
-installMemoir = InstanceMemoir(deviceInfo: .init(osInfo: .macOS(version: "11.something")), memoir: appMemoir)
-installMemoir.debug("Another install level log")
+instanceMemoir = InstanceMemoir(deviceInfo: .init(osInfo: .macOS(version: "11.something")), memoir: appMemoir)
+instanceMemoir.debug("Another instance level log")
+
+RunLoop.main.run(until: Date(timeIntervalSinceNow: 1))
+
+instanceMemoir.debug("Another instance level log")

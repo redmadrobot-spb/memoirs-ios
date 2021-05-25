@@ -12,9 +12,12 @@ import Foundation
 public class NSLogMemoir: Memoir {
     @usableFromInline
     let isSensitive: Bool
+    @usableFromInline
+    let tracersFilter: (Tracer) -> Bool
 
-    public init(isSensitive: Bool) {
+    public init(isSensitive: Bool, tracersFilter: @escaping (Tracer) -> Bool = { _ in false }) {
         self.isSensitive = isSensitive
+        self.tracersFilter = tracersFilter
     }
 
     @inlinable
@@ -31,23 +34,27 @@ public class NSLogMemoir: Memoir {
             case .log(let level, let message):
                 description = Output.logString(
                     time: "", level: level, message: message, tracers: tracers, meta: meta, codePosition: codePosition,
-                    isSensitive: isSensitive
+                    isSensitive: isSensitive, tracersFilter: tracersFilter
                 )
             case .event(let name):
                 description = Output.eventString(
-                    time: "", name: name, tracers: tracers, meta: meta, codePosition: codePosition, isSensitive: isSensitive
+                    time: "", name: name, tracers: tracers, meta: meta, codePosition: codePosition,
+                    isSensitive: isSensitive, tracersFilter: tracersFilter
                 )
             case .tracer(let tracer, false):
                 description = Output.tracerString(
-                    time: "", tracer: tracer, tracers: tracers, meta: meta, codePosition: codePosition, isSensitive: isSensitive
+                    time: "", tracer: tracer, tracers: tracers, meta: meta, codePosition: codePosition,
+                    isSensitive: isSensitive, tracersFilter: tracersFilter
                 )
             case .tracer(let tracer, true):
                 description = Output.tracerEndString(
-                    time: "", tracer: tracer, tracers: tracers, meta: meta, codePosition: codePosition, isSensitive: isSensitive
+                    time: "", tracer: tracer, tracers: tracers, meta: meta, codePosition: codePosition,
+                    isSensitive: isSensitive, tracersFilter: tracersFilter
                 )
             case .measurement(let name, let value):
                 description = Output.measurementString(
-                    time: "", name: name, value: value, tracers: tracers, meta: meta, codePosition: codePosition, isSensitive: isSensitive
+                    time: "", name: name, value: value, tracers: tracers, meta: meta, codePosition: codePosition,
+                    isSensitive: isSensitive, tracersFilter: tracersFilter
                 )
         }
         NSLog("%@", description)

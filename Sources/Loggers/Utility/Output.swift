@@ -62,7 +62,8 @@ public enum Output {
         tracers: [Tracer],
         meta: () -> [String: SafeString]?,
         codePosition: String,
-        isSensitive: Bool
+        isSensitive: Bool,
+        tracersFilter: (Tracer) -> Bool
     ) -> String {
         [
             time,
@@ -71,13 +72,14 @@ public enum Output {
             tracers.labelTracer.map { isSensitive ? "???" : $0.string },
             message().string(isSensitive: isSensitive),
             meta()?.commaJoined(isSensitive: isSensitive),
-            tracers.allJoined(isSensitive: isSensitive),
+            tracers.filter(tracersFilter).allJoined(showLabel: false, isSensitive: isSensitive),
         ].spaceMerged
     }
 
     @inlinable
     public static func eventString(
-        time: String, name: String, tracers: [Tracer], meta: () -> [String: SafeString]?, codePosition: String, isSensitive: Bool
+        time: String, name: String, tracers: [Tracer], meta: () -> [String: SafeString]?, codePosition: String,
+        isSensitive: Bool, tracersFilter: (Tracer) -> Bool
     ) -> String {
         [
             time,
@@ -86,14 +88,14 @@ public enum Output {
             tracers.labelTracer.map { isSensitive ? "???" : $0.string },
             isSensitive ? "???" : name,
             meta()?.commaJoined(isSensitive: isSensitive),
-            tracers.allJoined(isSensitive: isSensitive),
+            tracers.filter(tracersFilter).allJoined(showLabel: false, isSensitive: isSensitive),
         ].spaceMerged
     }
 
     @inlinable
     public static func measurementString(
         time: String, name: String, value: Double, tracers: [Tracer], meta: () -> [String: SafeString]?,
-        codePosition: String, isSensitive: Bool
+        codePosition: String, isSensitive: Bool, tracersFilter: (Tracer) -> Bool
     ) -> String {
         [
             time,
@@ -102,13 +104,14 @@ public enum Output {
             isSensitive ? "???" : "\(name)->\(value)",
             tracers.labelTracer.map { isSensitive ? "???" : $0.string },
             meta()?.commaJoined(isSensitive: isSensitive),
-            tracers.allJoined(isSensitive: isSensitive),
+            tracers.filter(tracersFilter).allJoined(showLabel: false, isSensitive: isSensitive),
         ].spaceMerged
     }
 
     @inlinable
     public static func tracerString(
-        time: String, tracer: Tracer, tracers: [Tracer], meta: () -> [String: SafeString]?, codePosition: String, isSensitive: Bool
+        time: String, tracer: Tracer, tracers: [Tracer], meta: () -> [String: SafeString]?, codePosition: String,
+        isSensitive: Bool, tracersFilter: (Tracer) -> Bool
     ) -> String {
         [
             time,
@@ -117,13 +120,14 @@ public enum Output {
             tracers.labelTracer.map { isSensitive ? "???" : $0.string },
             "Tracer: \(isSensitive ? "???" : tracer.output)",
             meta()?.commaJoined(isSensitive: isSensitive),
-            tracers.allJoined(isSensitive: isSensitive),
+            tracers.filter(tracersFilter).allJoined(showLabel: false, isSensitive: isSensitive),
         ].spaceMerged
     }
 
     @inlinable
     public static func tracerEndString(
-        time: String, tracer: Tracer, tracers: [Tracer], meta: () -> [String: SafeString]?, codePosition: String, isSensitive: Bool
+        time: String, tracer: Tracer, tracers: [Tracer], meta: () -> [String: SafeString]?, codePosition: String,
+        isSensitive: Bool, tracersFilter: (Tracer) -> Bool
     ) -> String {
         [
             time,
@@ -132,7 +136,7 @@ public enum Output {
             tracers.labelTracer.map { isSensitive ? "???" : $0.string },
             "End Tracer: \(isSensitive ? "???" : tracer.output)",
             meta()?.commaJoined(isSensitive: isSensitive),
-            tracers.allJoined(isSensitive: isSensitive),
+            tracers.filter(tracersFilter).allJoined(showLabel: false, isSensitive: isSensitive),
         ].spaceMerged
     }
 }
@@ -153,8 +157,11 @@ extension Array where Element == String {
 
 extension Array where Element == Tracer {
     @usableFromInline
-    func allJoined(isSensitive: Bool) -> String {
-        isEmpty ? "" : isSensitive ? "???" : "{\(map { $0.string }.joined(separator: ", "))}"
+    func allJoined(showLabel: Bool, isSensitive: Bool) -> String {
+        let list = showLabel
+            ? self
+            : filter { $0 != label }
+        return list.isEmpty ? "" : isSensitive ? "???" : "{\(list.map { $0.string }.joined(separator: ", "))}"
     }
 }
 
@@ -171,3 +178,4 @@ extension Tracer {
     @usableFromInline
     var output: String { string }
 }
+

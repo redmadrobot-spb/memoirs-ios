@@ -13,11 +13,14 @@ public class PrintMemoir: Memoir {
     @usableFromInline
     let shortSource: Bool
     @usableFromInline
+    let tracersFilter: (Tracer) -> Bool
+    @usableFromInline
     let formatter: DateFormatter
 
     /// Creates a new instance of `PrintMemoir`.
-    public init(onlyTime: Bool = false, shortSource: Bool = false) {
+    public init(onlyTime: Bool = false, shortSource: Bool = false, tracersFilter: @escaping (Tracer) -> Bool = { _ in false }) {
         self.shortSource = shortSource
+        self.tracersFilter = tracersFilter
         formatter = DateFormatter()
         formatter.dateFormat = onlyTime ? "HH:mm:ss.SSS" : "yyyy-MM-dd HH:mm:ss.SSSZ"
         formatter.locale = Locale(identifier: "en_US_POSIX")
@@ -37,23 +40,28 @@ public class PrintMemoir: Memoir {
         switch item {
             case .log(let level, let message):
                 description = Output.logString(
-                    time: time, level: level, message: message, tracers: tracers, meta: meta, codePosition: codePosition, isSensitive: false
+                    time: time, level: level, message: message, tracers: tracers, meta: meta, codePosition: codePosition,
+                    isSensitive: false, tracersFilter: tracersFilter
                 )
             case .event(let name):
                 description = Output.eventString(
-                    time: time, name: name, tracers: tracers, meta: meta, codePosition: codePosition, isSensitive: false
+                    time: time, name: name, tracers: tracers, meta: meta, codePosition: codePosition,
+                    isSensitive: false, tracersFilter: tracersFilter
                 )
             case .tracer(let tracer, false):
                 description = Output.tracerString(
-                    time: time, tracer: tracer, tracers: tracers, meta: meta, codePosition: codePosition, isSensitive: false
+                    time: time, tracer: tracer, tracers: tracers, meta: meta, codePosition: codePosition,
+                    isSensitive: false, tracersFilter: tracersFilter
                 )
             case .tracer(let tracer, true):
                 description = Output.tracerEndString(
-                    time: time, tracer: tracer, tracers: tracers, meta: meta, codePosition: codePosition, isSensitive: false
+                    time: time, tracer: tracer, tracers: tracers, meta: meta, codePosition: codePosition,
+                    isSensitive: false, tracersFilter: tracersFilter
                 )
             case .measurement(let name, let value):
                 description = Output.measurementString(
-                    time: time, name: name, value: value, tracers: tracers, meta: meta, codePosition: codePosition, isSensitive: false
+                    time: time, name: name, value: value, tracers: tracers, meta: meta, codePosition: codePosition,
+                    isSensitive: false, tracersFilter: tracersFilter
                 )
         }
         print(description)

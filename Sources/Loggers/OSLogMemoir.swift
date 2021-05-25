@@ -20,12 +20,15 @@ public class OSLogMemoir: Memoir {
 
     @usableFromInline
     let isSensitive: Bool
+    @usableFromInline
+    let tracersFilter: (Tracer) -> Bool
 
     /// Creates a new instance of `OSLogMemoir`.
     /// - Parameter subsystem: An identifier string, in reverse DNS notation, representing the subsystem that’s performing logging.
-    public init(subsystem: String, isSensitive: Bool) {
+    public init(subsystem: String, isSensitive: Bool, tracersFilter: @escaping (Tracer) -> Bool = { _ in false }) {
         self.isSensitive = isSensitive
         self.subsystem = subsystem
+        self.tracersFilter = tracersFilter
     }
 
     @inlinable
@@ -44,24 +47,28 @@ public class OSLogMemoir: Memoir {
             case .log(let level, let message):
                 description = Output.logString(
                     time: "", level: level, message: message, tracers: tracers, meta: meta, codePosition: codePosition,
-                    isSensitive: isSensitive
+                    isSensitive: isSensitive, tracersFilter: tracersFilter
                 )
                 osLogType = logType(from: level)
             case .event(let name):
                 description = Output.eventString(
-                    time: "", name: name, tracers: tracers, meta: meta, codePosition: codePosition, isSensitive: isSensitive
+                    time: "", name: name, tracers: tracers, meta: meta, codePosition: codePosition,
+                    isSensitive: isSensitive, tracersFilter: tracersFilter
                 )
             case .tracer(let tracer, false):
                 description = Output.tracerString(
-                    time: "", tracer: tracer, tracers: tracers, meta: meta, codePosition: codePosition, isSensitive: isSensitive
+                    time: "", tracer: tracer, tracers: tracers, meta: meta, codePosition: codePosition,
+                    isSensitive: isSensitive, tracersFilter: tracersFilter
                 )
             case .tracer(let tracer, true):
                 description = Output.tracerEndString(
-                    time: "", tracer: tracer, tracers: tracers, meta: meta, codePosition: codePosition, isSensitive: isSensitive
+                    time: "", tracer: tracer, tracers: tracers, meta: meta, codePosition: codePosition,
+                    isSensitive: isSensitive, tracersFilter: tracersFilter
                 )
             case .measurement(let name, let value):
                 description = Output.measurementString(
-                    time: "", name: name, value: value, tracers: tracers, meta: meta, codePosition: codePosition, isSensitive: isSensitive
+                    time: "", name: name, value: value, tracers: tracers, meta: meta, codePosition: codePosition,
+                    isSensitive: isSensitive, tracersFilter: tracersFilter
                 )
         }
         os_log(osLogType, log: label, "%{public}@", description)
