@@ -41,9 +41,5 @@ addedLabelMemoir.debug("AnotherInstallLog")
 
 addedLabelMemoir.event(name: "EventLog", meta: [:])
 
-instanceMemoir = InstanceMemoir(deviceInfo: .init(osInfo: .macOS(version: "11.something")), memoir: appMemoir)
-instanceMemoir.debug("Another instance level log")
-
-RunLoop.main.run(until: Date(timeIntervalSinceNow: 1))
-
-instanceMemoir.debug("Another instance level log")
+addedLabelMemoir = TracedMemoir(label: "AnotherLabelALittleLonger", memoir: instanceMemoir)
+addedLabelMemoir.debug("Another instance level log")

@@ -14,28 +14,47 @@ public protocol Traceable {
 }
 
 public class TracedMemoir: Memoir, Traceable {
+    @usableFromInline
+    class TracerHolder {
+        @usableFromInline
+        var tracer: Tracer
+        var completionHandler: () -> Void
+
+        init(tracer: Tracer, completionHandler: @escaping () -> Void) {
+            self.tracer = tracer
+            self.completionHandler = completionHandler
+        }
+
+        deinit {
+            completionHandler()
+        }
+    }
+
     public let tracer: Tracer
+    private let tracerHolder: TracerHolder
 
     @usableFromInline
     let memoir: Memoir
     @usableFromInline
-    let compactedTracers: [Tracer]
+    let compactedTracerHolders: [TracerHolder]
 
     public init(
         tracer: Tracer, meta: [String: SafeString], memoir: Memoir,
         file: String = #file, function: String = #function, line: UInt = #line
     ) {
         self.tracer = tracer
-
-        if let tracedParentMemoir = memoir as? TracedMemoir {
-            compactedTracers = [ tracer ] + tracedParentMemoir.compactedTracers
-            self.memoir = tracedParentMemoir.memoir
-        } else {
-            compactedTracers = [ tracer ]
-            self.memoir = memoir
+        memoir.update(tracer: tracer, meta: meta, file: file, function: function, line: line)
+        tracerHolder = TracerHolder(tracer: tracer) {
+            memoir.finish(tracer: tracer)
         }
 
-        memoir.update(tracer: tracer, meta: meta, file: file, function: function, line: line)
+        if let tracedParentMemoir = memoir as? TracedMemoir {
+            compactedTracerHolders = [ tracerHolder ] + tracedParentMemoir.compactedTracerHolders
+            self.memoir = tracedParentMemoir.memoir
+        } else {
+            compactedTracerHolders = [ tracerHolder ]
+            self.memoir = memoir
+        }
     }
 
     public convenience init(label: String, memoir: Memoir, file: String = #file, function: String = #function, line: UInt = #line) {
@@ -46,15 +65,14 @@ public class TracedMemoir: Memoir, Traceable {
         self.init(label: String(describing: type(of: object)), memoir: memoir, file: file, function: function, line: line)
     }
 
-    deinit {
-        memoir.finish(tracer: tracer)
-    }
-
     @inlinable
     public func append(
         _ item: MemoirItem, meta: @autoclosure () -> [String: SafeString]?, tracers: [Tracer], date: Date,
         file: String, function: String, line: UInt
     ) {
-        memoir.append(item, meta: meta(), tracers: tracers + compactedTracers, date: date, file: file, function: function, line: line)
+        memoir.append(
+            item, meta: meta(), tracers: tracers + compactedTracerHolders.map { $0.tracer }, date: date,
+            file: file, function: function, line: line
+        )
     }
 }
