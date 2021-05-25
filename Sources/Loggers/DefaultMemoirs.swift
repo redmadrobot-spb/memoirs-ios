@@ -58,38 +58,42 @@ public class InstanceMemoir: TracedMemoir {
                     case .tvOS(let version): return "tvOS v.\(version)"
                 }
             }
-        }
 
-        let osInfo: OSInfo
+            public static var detected: OSInfo {
+                let version = ProcessInfo.processInfo.operatingSystemVersionString
 
-        public init(osInfo: OSInfo) {
-            self.osInfo = osInfo
-        }
-
-        public static var detected: OSInfo {
-            let version = ProcessInfo.processInfo.operatingSystemVersionString
-
-            #if os(tvOS)
-            return .tvOS(version: version)
-            #elseif os(iOS)
+                #if os(tvOS)
+                return .tvOS(version: version)
+                #elseif os(iOS)
                 #if targetEnvironment(macCatalyst)
                 return .catalyst(version: version)
                 #else
                 return .iOS(version: version)
                 #endif
-            #elseif os(watchOS)
-            return .watchOS(version: version)
-            #elseif os(macOS)
-            return .macOS(version: version)
-            #else
-            fatalError("Can't detect OS")
-            #endif
+                #elseif os(watchOS)
+                return .watchOS(version: version)
+                #elseif os(macOS)
+                return .macOS(version: version)
+                #else
+                fatalError("Can't detect OS")
+                #endif
+            }
+        }
+
+        let osInfo: OSInfo
+        // TODO: Add Device Info
+
+        public init(osInfo: OSInfo) {
+            self.osInfo = osInfo
         }
     }
 
     private let keyInstallId: String = "__robologs.__internal.installId"
 
-    public init(deviceInfo: DeviceInfo, memoir: Memoir, file: String = #file, function: String = #function, line: UInt = #line) {
+    public init(
+        deviceInfo: DeviceInfo = .init(osInfo: .detected), memoir: Memoir,
+        file: String = #file, function: String = #function, line: UInt = #line
+    ) {
         let userDefaults = UserDefaults.standard
         let installId: String
         if let id = userDefaults.string(forKey: keyInstallId) {
