@@ -11,13 +11,30 @@ import Foundation
 /// Memoir that defines root scope for the application. It will be the same for all installations of the specific application version.
 public class AppMemoir: TracedMemoir {
     public init(
-        bundleId: String, version: String, memoir: Memoir, file: String = #file, function: String = #function, line: UInt = #line
+        bundleId: String? = nil, version: String? = nil,
+        memoir: Memoir,
+        file: String = #file, function: String = #function, line: UInt = #line
     ) {
-        let meta: [String: SafeString] = [
-            "bundleId": "\(safe: bundleId)",
-            "version": "\(version)"
-        ]
-        super.init(tracer: .app(id: bundleId), meta: meta, memoir: memoir, file: file, function: function, line: line)
+        let meta: [String: SafeString]
+        let foundBundleId: String
+        if let bundleId = bundleId, let version = version {
+            foundBundleId = bundleId
+            meta = [
+                "bundleId": "\(safe: bundleId)",
+                "version": "\(version)"
+            ]
+        } else if let infoPlist = Bundle.main.infoDictionary, let bundleId = infoPlist["CFBundleIdentifier"] as? String,
+               let version = infoPlist["CFBundleShortVersionString"] as? String, let build = infoPlist["CFBundleVersion"] as? String {
+            foundBundleId = bundleId
+            meta = [
+                "bundleId": "\(safe: bundleId)",
+                "version": "\(version):\(build)"
+            ]
+        } else {
+            fatalError("Please specify bundleId and version. Automatic bundleId and version detection works only if Info.plist is present")
+        }
+
+        super.init(tracer: .app(id: foundBundleId), meta: meta, memoir: memoir, file: file, function: function, line: line)
     }
 }
 
@@ -27,7 +44,7 @@ public class InstanceMemoir: TracedMemoir {
     public struct DeviceInfo {
         public enum OSInfo {
             case iOS(version: String)
-            case iPadOS(version: String)
+            case catalyst(version: String)
             case macOS(version: String)
             case watchOS(version: String)
             case tvOS(version: String)
@@ -35,7 +52,7 @@ public class InstanceMemoir: TracedMemoir {
             var string: String {
                 switch self {
                     case .iOS(let version): return "iOS v.\(version)"
-                    case .iPadOS(let version): return "iPadOS v.\(version)"
+                    case .catalyst(let version): return "macOS/Catalyst v.\(version)"
                     case .macOS(let version): return "macOS v.\(version)"
                     case .watchOS(let version): return "watchOS v.\(version)"
                     case .tvOS(let version): return "tvOS v.\(version)"
@@ -47,6 +64,26 @@ public class InstanceMemoir: TracedMemoir {
 
         public init(osInfo: OSInfo) {
             self.osInfo = osInfo
+        }
+
+        public static var detected: OSInfo {
+            let version = ProcessInfo.processInfo.operatingSystemVersionString
+
+            #if os(tvOS)
+            return .tvOS(version: version)
+            #elseif os(iOS)
+                #if targetEnvironment(macCatalyst)
+                return .catalyst(version: version)
+                #else
+                return .iOS(version: version)
+                #endif
+            #elseif os(watchOS)
+            return .watchOS(version: version)
+            #elseif os(macOS)
+            return .macOS(version: version)
+            #else
+            fatalError("Can't detect OS")
+            #endif
         }
     }
 

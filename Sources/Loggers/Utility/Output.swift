@@ -69,7 +69,7 @@ public enum Output {
             time,
             "\(level.map { "\(Marker.printString(for: $0))" } ?? "")",
             codePosition,
-            tracers.labelTracer.map { isSensitive ? "???" : $0.string },
+            tracers.labelString(isSensitive: isSensitive),
             message().string(isSensitive: isSensitive),
             meta()?.commaJoined(isSensitive: isSensitive),
             tracers.filter(tracersFilter).allJoined(showLabel: false, isSensitive: isSensitive),
@@ -85,7 +85,7 @@ public enum Output {
             time,
             Marker.event,
             codePosition,
-            tracers.labelTracer.map { isSensitive ? "???" : $0.string },
+            tracers.labelString(isSensitive: isSensitive),
             isSensitive ? "???" : name,
             meta()?.commaJoined(isSensitive: isSensitive),
             tracers.filter(tracersFilter).allJoined(showLabel: false, isSensitive: isSensitive),
@@ -101,8 +101,8 @@ public enum Output {
             time,
             Marker.measurement,
             codePosition,
+            tracers.labelString(isSensitive: isSensitive),
             isSensitive ? "???" : "\(name)->\(value)",
-            tracers.labelTracer.map { isSensitive ? "???" : $0.string },
             meta()?.commaJoined(isSensitive: isSensitive),
             tracers.filter(tracersFilter).allJoined(showLabel: false, isSensitive: isSensitive),
         ].spaceMerged
@@ -117,7 +117,7 @@ public enum Output {
             time,
             Marker.tracer,
             codePosition,
-            tracers.labelTracer.map { isSensitive ? "???" : $0.string },
+            tracers.labelString(isSensitive: isSensitive),
             "Tracer: \(isSensitive ? "???" : tracer.output)",
             meta()?.commaJoined(isSensitive: isSensitive),
             tracers.filter(tracersFilter).allJoined(showLabel: false, isSensitive: isSensitive),
@@ -133,11 +133,18 @@ public enum Output {
             time,
             Marker.tracer,
             codePosition,
-            tracers.labelTracer.map { isSensitive ? "???" : $0.string },
+            tracers.labelString(isSensitive: isSensitive),
             "End Tracer: \(isSensitive ? "???" : tracer.output)",
             meta()?.commaJoined(isSensitive: isSensitive),
             tracers.filter(tracersFilter).allJoined(showLabel: false, isSensitive: isSensitive),
         ].spaceMerged
+    }
+}
+
+extension Array where Element == Tracer {
+    @usableFromInline
+    func labelString(isSensitive: Bool) -> String? {
+        labelTracer.map { isSensitive ? "???" : "[\($0.string)]" }
     }
 }
 
@@ -178,4 +185,3 @@ extension Tracer {
     @usableFromInline
     var output: String { string }
 }
-
