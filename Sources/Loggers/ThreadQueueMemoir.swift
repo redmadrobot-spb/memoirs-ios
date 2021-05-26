@@ -27,10 +27,10 @@ public class ThreadQueueMemoir: Memoir {
     ) {
         var tracers = tracers
         if let threadName = currentThreadName, !threadName.isEmpty {
-            tracers.insert(.thread(name: threadName), at: 0)
+            tracers.append(.thread(name: threadName))
         }
         if let queueName = currentQueueName, !queueName.isEmpty {
-            tracers.insert(.queue(name: queueName), at: 0)
+            tracers.append(.queue(name: queueName))
         }
         memoir.append(item, meta: meta(), tracers: tracers, date: date, file: file, function: function, line: line)
     }

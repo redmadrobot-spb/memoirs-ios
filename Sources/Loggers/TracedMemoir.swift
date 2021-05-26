@@ -45,7 +45,7 @@ public class TracedMemoir: Memoir, Traceable {
         self.tracer = tracer
         memoir.update(tracer: tracer, meta: meta, file: file, function: function, line: line)
         tracerHolder = TracerHolder(tracer: tracer) {
-            memoir.finish(tracer: tracer)
+            memoir.finish(tracer: tracer, file: file, function: function, line: line)
         }
 
         if let tracedParentMemoir = memoir as? TracedMemoir {

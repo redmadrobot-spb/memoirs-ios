@@ -9,7 +9,12 @@
 import Foundation
 import Robologs
 
-let lowLevelMemoir = PrintMemoir(onlyTime: true, shortSource: true) // Usually its Filtering/Multiplexing memoir
+let lowLevelMemoir = PrintMemoir(onlyTime: true, shortSource: true) { tracer in
+    switch tracer {
+        case .instance, .app: return false
+        case .label, .session, .thread, .queue, .request, .custom: return true
+    }
+}
 
 let appMemoir = AppMemoir(bundleId: "com.smth.myGreatApp", version: "0.1", memoir: lowLevelMemoir)
 appMemoir.info("AppLog")

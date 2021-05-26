@@ -65,15 +65,18 @@ public enum Output {
         isSensitive: Bool,
         tracersFilter: (Tracer) -> Bool
     ) -> String {
-        [
+        let prefix = [
             time,
-            "\(level.map { "\(Marker.printString(for: $0))" } ?? "")",
+        ].spaceMerged
+        let message = [
             codePosition,
+            "\(level.map { "\(Marker.printString(for: $0))" } ?? "")",
             tracers.labelString(isSensitive: isSensitive),
             message().string(isSensitive: isSensitive),
             meta()?.commaJoined(isSensitive: isSensitive),
-            tracers.filter(tracersFilter).allJoined(showLabel: false, isSensitive: isSensitive),
         ].spaceMerged
+        let suffix = tracers.filter(tracersFilter).allJoined(showLabel: false, isSensitive: isSensitive)
+        return format(prefix: prefix, message: message, suffix: suffix)
     }
 
     @inlinable
@@ -81,15 +84,18 @@ public enum Output {
         time: String, name: String, tracers: [Tracer], meta: () -> [String: SafeString]?, codePosition: String,
         isSensitive: Bool, tracersFilter: (Tracer) -> Bool
     ) -> String {
-        [
+        let prefix = [
             time,
-            Marker.event,
+        ].spaceMerged
+        let message = [
             codePosition,
+            Marker.event,
             tracers.labelString(isSensitive: isSensitive),
             isSensitive ? "???" : name,
             meta()?.commaJoined(isSensitive: isSensitive),
-            tracers.filter(tracersFilter).allJoined(showLabel: false, isSensitive: isSensitive),
         ].spaceMerged
+        let suffix = tracers.filter(tracersFilter).allJoined(showLabel: false, isSensitive: isSensitive)
+        return format(prefix: prefix, message: message, suffix: suffix)
     }
 
     @inlinable
@@ -97,15 +103,18 @@ public enum Output {
         time: String, name: String, value: Double, tracers: [Tracer], meta: () -> [String: SafeString]?,
         codePosition: String, isSensitive: Bool, tracersFilter: (Tracer) -> Bool
     ) -> String {
-        [
+        let prefix = [
             time,
-            Marker.measurement,
+        ].spaceMerged
+        let message = [
             codePosition,
+            Marker.measurement,
             tracers.labelString(isSensitive: isSensitive),
             isSensitive ? "???" : "\(name)->\(value)",
             meta()?.commaJoined(isSensitive: isSensitive),
-            tracers.filter(tracersFilter).allJoined(showLabel: false, isSensitive: isSensitive),
         ].spaceMerged
+        let suffix = tracers.filter(tracersFilter).allJoined(showLabel: false, isSensitive: isSensitive)
+        return format(prefix: prefix, message: message, suffix: suffix)
     }
 
     @inlinable
@@ -113,15 +122,18 @@ public enum Output {
         time: String, tracer: Tracer, tracers: [Tracer], meta: () -> [String: SafeString]?, codePosition: String,
         isSensitive: Bool, tracersFilter: (Tracer) -> Bool
     ) -> String {
-        [
+        let prefix = [
             time,
-            Marker.tracer,
+        ].spaceMerged
+        let message = [
             codePosition,
+            Marker.tracer,
             tracers.labelString(isSensitive: isSensitive),
             "Tracer: \(isSensitive ? "???" : tracer.output)",
             meta()?.commaJoined(isSensitive: isSensitive),
-            tracers.filter(tracersFilter).allJoined(showLabel: false, isSensitive: isSensitive),
         ].spaceMerged
+        let suffix = tracers.filter(tracersFilter).allJoined(showLabel: false, isSensitive: isSensitive)
+        return format(prefix: prefix, message: message, suffix: suffix)
     }
 
     @inlinable
@@ -129,15 +141,28 @@ public enum Output {
         time: String, tracer: Tracer, tracers: [Tracer], meta: () -> [String: SafeString]?, codePosition: String,
         isSensitive: Bool, tracersFilter: (Tracer) -> Bool
     ) -> String {
-        [
+        let prefix = [
             time,
-            Marker.tracer,
+        ].spaceMerged
+        let message = [
             codePosition,
+            Marker.tracer,
             tracers.labelString(isSensitive: isSensitive),
             "End Tracer: \(isSensitive ? "???" : tracer.output)",
             meta()?.commaJoined(isSensitive: isSensitive),
-            tracers.filter(tracersFilter).allJoined(showLabel: false, isSensitive: isSensitive),
         ].spaceMerged
+        let suffix = tracers.filter(tracersFilter).allJoined(showLabel: false, isSensitive: isSensitive)
+        return format(prefix: prefix, message: message, suffix: suffix)
+    }
+
+    @inlinable
+    static func format(prefix: String, message: String, suffix: String) -> String {
+        if suffix.isEmpty {
+            return "\(prefix) \(message)"
+        } else {
+            let suffixPadding: String = [String](repeating: " ", count: prefix.count + 1).joined()
+            return "\(prefix) \(message)\n\(suffixPadding)\(suffix)"
+        }
     }
 }
 
@@ -168,7 +193,7 @@ extension Array where Element == Tracer {
         let list = showLabel
             ? self
             : filter { $0 != label }
-        return list.isEmpty ? "" : isSensitive ? "???" : "{\(list.map { $0.string }.joined(separator: ", "))}"
+        return list.isEmpty ? "" : isSensitive ? "???" : list.map { $0.string }.joined(separator: ", ")
     }
 }
 
