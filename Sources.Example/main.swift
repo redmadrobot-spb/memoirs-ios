@@ -11,8 +11,8 @@ import Robologs
 
 let lowLevelMemoir = PrintMemoir(onlyTime: true, shortSource: true) { tracer in
     switch tracer {
-        case .instance, .app: return false
-        case .label, .session, .thread, .queue, .request, .custom: return true
+        case .instance, .app, .queue, .thread: return false
+        case .session, .request, .label, .custom: return true
     }
 }
 

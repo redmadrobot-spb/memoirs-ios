@@ -17,8 +17,17 @@ public class PrintMemoir: Memoir {
     @usableFromInline
     let formatter: DateFormatter
 
+    public static let defaultTracerFilter: (Tracer) -> Bool = { tracer in
+        switch tracer {
+            case .instance, .app, .queue, .thread: return false
+            case .session, .request, .label, .custom: return true
+        }
+    }
+
     /// Creates a new instance of `PrintMemoir`.
-    public init(onlyTime: Bool = false, shortSource: Bool = false, tracersFilter: @escaping (Tracer) -> Bool = { _ in false }) {
+    public init(
+        onlyTime: Bool = false, shortSource: Bool = false, tracersFilter: @escaping (Tracer) -> Bool = PrintMemoir.defaultTracerFilter
+    ) {
         self.shortSource = shortSource
         self.tracersFilter = tracersFilter
         formatter = DateFormatter()
