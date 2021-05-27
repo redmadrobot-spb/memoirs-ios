@@ -19,16 +19,17 @@ public class OSLogMemoir: Memoir {
     private var osLogs: SynchronizedDictionary<String, OSLog> = [:]
 
     @usableFromInline
-    let isSensitive: Bool
-    @usableFromInline
-    let tracersFilter: (Tracer) -> Bool
+    let output: Output
 
     /// Creates a new instance of `OSLogMemoir`.
     /// - Parameter subsystem: An identifier string, in reverse DNS notation, representing the subsystem that’s performing logging.
     public init(subsystem: String, isSensitive: Bool, tracersFilter: @escaping (Tracer) -> Bool = { _ in false }) {
-        self.isSensitive = isSensitive
         self.subsystem = subsystem
-        self.tracersFilter = tracersFilter
+        output = Output(
+            isSensitive: false,
+            shortCodePosition: false, shortTracers: false, separateTracers: true,
+            tracersFilter: tracersFilter
+        )
     }
 
     @inlinable
@@ -39,36 +40,31 @@ public class OSLogMemoir: Memoir {
         date: Date,
         file: String, function: String, line: UInt
     ) {
-        let codePosition = Output.codePosition(file: file, function: function, line: line)
+        let codePosition = output.codePosition(file: file, function: function, line: line)
         let description: String
         var osLogType: OSLogType = .debug
-        let label: OSLog = osLog(with: tracers.labelTracer.map { isSensitive ? "???" : $0.string } ?? "NoLabel")
+        let label: OSLog = osLog(with: tracers.labelTracer.map { output.isSensitive ? "???" : $0.string } ?? "NoLabel")
         switch item {
             case .log(let level, let message):
-                description = Output.logString(
-                    time: "", level: level, message: message, tracers: tracers, meta: meta, codePosition: codePosition,
-                    isSensitive: isSensitive, tracersFilter: tracersFilter
+                description = output.logString(
+                    time: "", level: level, message: message, tracers: tracers, meta: meta, codePosition: codePosition
                 )
                 osLogType = logType(from: level)
             case .event(let name):
-                description = Output.eventString(
-                    time: "", name: name, tracers: tracers, meta: meta, codePosition: codePosition,
-                    isSensitive: isSensitive, tracersFilter: tracersFilter
+                description = output.eventString(
+                    time: "", name: name, tracers: tracers, meta: meta, codePosition: codePosition
                 )
             case .tracer(let tracer, false):
-                description = Output.tracerString(
-                    time: "", tracer: tracer, tracers: tracers, meta: meta, codePosition: codePosition,
-                    isSensitive: isSensitive, tracersFilter: tracersFilter
+                description = output.tracerString(
+                    time: "", tracer: tracer, tracers: tracers, meta: meta, codePosition: codePosition
                 )
             case .tracer(let tracer, true):
-                description = Output.tracerEndString(
-                    time: "", tracer: tracer, tracers: tracers, meta: meta, codePosition: codePosition,
-                    isSensitive: isSensitive, tracersFilter: tracersFilter
+                description = output.tracerEndString(
+                    time: "", tracer: tracer, tracers: tracers, meta: meta, codePosition: codePosition
                 )
             case .measurement(let name, let value):
-                description = Output.measurementString(
-                    time: "", name: name, value: value, tracers: tracers, meta: meta, codePosition: codePosition,
-                    isSensitive: isSensitive, tracersFilter: tracersFilter
+                description = output.measurementString(
+                    time: "", name: name, value: value, tracers: tracers, meta: meta, codePosition: codePosition
                 )
         }
         os_log(osLogType, log: label, "%{public}@", description)
@@ -101,7 +97,7 @@ public class OSLogMemoir: Memoir {
 
 private class SynchronizedDictionary<Key, Value>: ExpressibleByDictionaryLiteral where Key: Hashable {
     private var dictionary: [Key: Value]
-    private let queue: DispatchQueue = DispatchQueue(label: "com.redmadrobot.robologs.synchronizedDictionary", attributes: .concurrent)
+    private let queue: DispatchQueue = DispatchQueue(label: "memoirs.synchronizedDictionary", attributes: .concurrent)
 
     required init(dictionaryLiteral elements: (Key, Value)...) {
         dictionary = Dictionary(uniqueKeysWithValues: elements)

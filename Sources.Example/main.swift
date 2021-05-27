@@ -9,10 +9,11 @@
 import Foundation
 import Robologs
 
-let lowLevelMemoir = PrintMemoir(onlyTime: true, shortSource: true) { tracer in
+let lowLevelMemoir = PrintMemoir(onlyTime: true, shortCodePosition: true) { tracer in
     switch tracer {
-        case .instance, .app, .queue, .thread: return false
-        case .session, .request, .label, .custom: return true
+        case .app, .instance, .session: return false
+        case .queue, .thread: return false
+        case .request, .label, .custom: return true
     }
 }
 
@@ -37,7 +38,18 @@ mark = stopwatch.logInterval(from: mark, label: "Initialization")
 func session() {
     stopwatch.measure(label: "Session") {
         let sessionMemoir = SessionMemoir(userId: UUID().uuidString, isGuest: true, memoir: addedLabelMemoir)
-        sessionMemoir.debug("SessionLog")
+        let tracers: [Tracer] = [
+            .request(id: UUID().uuidString),
+            .thread(name: "main-thread-or-else"),
+            .instance(id: UUID().uuidString)
+        ]
+        sessionMemoir.debug("SessionLog", tracers: tracers)
+        sessionMemoir.info("Session Info Log", tracers: tracers)
+        sessionMemoir.critical("Session Critical Log", tracers: tracers)
+        sessionMemoir.event(name: "Some Event", meta: [ "parameter": "value" ], tracers: tracers)
+        sessionMemoir.update(tracer: .custom("Some Event"), meta: [ "parameter": "value" ], tracers: tracers)
+        sessionMemoir.finish(tracer: .custom("Some Event"), tracers: tracers)
+        sessionMemoir.measurement(name: "Some Request time", value: 2.39, tracers: tracers)
     }
 }
 

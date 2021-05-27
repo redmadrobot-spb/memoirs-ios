@@ -31,6 +31,19 @@ public enum Tracer: Equatable {
             case .custom(let name): return name
         }
     }
+
+    public var stringShort: String {
+        switch self {
+            case .app: return "app:↑"
+            case .instance: return "instance:↑"
+            case .session: return "session:↑"
+            case .thread(let name): return name
+            case .queue(let name): return name
+            case .request(let id): return id
+            case .label(let label): return label
+            case .custom(let name): return name
+        }
+    }
 }
 
 extension Array where Element == Tracer {
