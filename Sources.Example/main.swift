@@ -20,14 +20,10 @@ let lowLevelMemoir = PrintMemoir(onlyTime: true, shortCodePosition: true) { trac
 let appMemoir = AppMemoir(bundleId: "com.smth.myGreatApp", version: "0.1", memoir: lowLevelMemoir)
 appMemoir.info("AppLog")
 
-let infoMemoir = ThreadQueueMemoir(memoir: appMemoir)
-infoMemoir.warning("ThreadInfoLog")
-
 let stopwatch = Stopwatch()
-
 var mark = stopwatch.mark
 
-var instanceMemoir = InstanceMemoir(deviceInfo: .init(osInfo: .macOS(version: "11.something")), memoir: infoMemoir)
+var instanceMemoir = InstanceMemoir(deviceInfo: .init(osInfo: .macOS(version: "11.something")), memoir: appMemoir)
 instanceMemoir.error("instance level log")
 
 var addedLabelMemoir = TracedMemoir(label: "SomeLabelALittleLonger", memoir: instanceMemoir)
