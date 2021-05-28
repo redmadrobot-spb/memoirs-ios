@@ -6,6 +6,8 @@
 // Copyright © 2020 Redmadrobot SPb. All rights reserved.
 //
 
+#if canImport(os)
+
 import Foundation
 import os.log
 
@@ -116,3 +118,5 @@ private class SynchronizedDictionary<Key, Value>: ExpressibleByDictionaryLiteral
         }
     }
 }
+
+#endif
