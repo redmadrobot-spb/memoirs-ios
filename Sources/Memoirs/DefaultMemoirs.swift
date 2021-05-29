@@ -88,7 +88,7 @@ public class InstanceMemoir: TracedMemoir {
         }
     }
 
-    private let keyInstallId: String = "__robologs.__internal.installId"
+    private let keyInstallId: String = "__memoirs.__internal.installId"
 
     public init(
         deviceInfo: DeviceInfo = .init(osInfo: .detected), memoir: Memoir,
