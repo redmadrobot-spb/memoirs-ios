@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import Robologs
+import Memoirs
 
 let lowLevelMemoir = PrintMemoir(onlyTime: true, shortCodePosition: true) { tracer in
     switch tracer {

@@ -7,7 +7,7 @@
 //
 
 import XCTest
-@testable import Robologs
+@testable import Memoirs
 
 class MemoirCompositionTests: GenericTestCase {
     let printMemoir = PrintMemoir()

@@ -3,17 +3,17 @@
 import PackageDescription
 
 let package = Package(
-    name: "Robologs",
+    name: "Memoirs",
     platforms: [ .iOS(.v11), .macOS(.v11) ],
     products: [
-        .library(name: "Robologs", type: .static, targets: [ "Robologs" ]),
-        .executable(name: "ExampleRobologs", targets: [ "ExampleRobologs" ]),
+        .library(name: "Memoirs", type: .static, targets: [ "Memoirs" ]),
+        .executable(name: "ExampleMemoirs", targets: [ "ExampleMemoirs" ]),
     ],
     targets: [
-        .target(name: "ExampleRobologs", dependencies: [ "Robologs" ], path: "Sources.Example"),
+        .target(name: "ExampleMemoirs", dependencies: [ "Memoirs" ], path: "Sources.Example"),
 
-        .target(name: "Robologs", dependencies: [], path: "Sources"),
-        .testTarget(name: "RobologsTests", dependencies: [ "Robologs" ]),
+        .target(name: "Memoirs", dependencies: [], path: "Sources"),
+        .testTarget(name: "MemoirsTests", dependencies: [ "Memoirs" ]),
     ],
     swiftLanguageVersions: [.v5]
 )

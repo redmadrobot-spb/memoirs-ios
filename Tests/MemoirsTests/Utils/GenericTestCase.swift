@@ -8,7 +8,7 @@
 
 import Foundation
 import XCTest
-@testable import Robologs
+@testable import Memoirs
 
 extension LogLevel {
     var testValue: String {

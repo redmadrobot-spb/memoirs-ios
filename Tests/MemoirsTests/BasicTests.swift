@@ -8,7 +8,7 @@
 
 import XCTest
 import Foundation
-@testable import Robologs
+@testable import Memoirs
 
 class BasicTests: GenericTestCase {
     private let basicMemoirsWithoutCensoring: [Memoir] = [
