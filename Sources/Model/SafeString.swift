@@ -1,6 +1,6 @@
 //
 // SafeString
-// Robologs
+// Memoirs
 //
 // Created by Dmitry Shadrin on 23 January 2020.
 // Copyright © 2020 Redmadrobot SPb. All rights reserved.

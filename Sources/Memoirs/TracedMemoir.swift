@@ -1,9 +1,9 @@
 //
 // TracedMemoir
-// Robologs
+// Memoirs
 //
 // Created by Alex Babaev on 22 May 2021.
-// Copyright © 2021 Alex Babaev. All rights reserved.
+// Copyright © 2021 Redmadrobot SPb. All rights reserved.
 //
 
 import Foundation

@@ -1,8 +1,8 @@
 //
-// Memoir.Convenience
-// Robologs
+// Memoir+Methods
+// Memoirs
 //
-// Created by Alex Babaev on 09.05.2021.
+// Created by Alex Babaev on 09 May 2021.
 // Copyright © 2021 Redmadrobot SPb. All rights reserved.
 //
 

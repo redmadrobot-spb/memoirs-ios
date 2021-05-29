@@ -1,8 +1,8 @@
 //
 // FilteringMemoir
-// Robologs
+// Memoirs
 //
-// Created by Dmitry Shadrin on 05.12.2019.
+// Created by Dmitry Shadrin on 05 December 2019.
 // Copyright © 2020 Redmadrobot SPb. All rights reserved.
 //
 

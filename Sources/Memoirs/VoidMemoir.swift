@@ -1,6 +1,6 @@
 //
-// NullMemoir
-// Robologs
+// VoidMemoir
+// Memoirs
 //
 // Created by Alex Babaev on 27 April 2020.
 // Copyright © 2020 Redmadrobot SPb. All rights reserved.

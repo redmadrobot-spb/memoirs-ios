@@ -1,6 +1,6 @@
 //
 // SafeStringConvertible
-// Robologs
+// Memoirs
 //
 // Created by Alex Babaev on 25 April 2020.
 // Copyright © 2020 Redmadrobot SPb. All rights reserved.

@@ -1,8 +1,8 @@
 //
 // OSLogMemoir
-// Robologs
+// Memoirs
 //
-// Created by Dmitry Shadrin on 03.12.2019.
+// Created by Dmitry Shadrin on 03 December 2019.
 // Copyright © 2020 Redmadrobot SPb. All rights reserved.
 //
 
