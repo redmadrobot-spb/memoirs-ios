@@ -10,6 +10,19 @@ import Foundation
 
 /// Default `(Memoir)` implementation which uses `print()` to output logs.
 public class PrintMemoir: Memoir {
+    private static let timeOnlyDateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm:ss.SSS"
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        return formatter
+    }()
+    private static let fullDateFormatter: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSSZ"
+        formatter.locale = Locale(identifier: "en_US_POSIX")
+        return formatter
+    }()
+
     @usableFromInline
     let formatter: DateFormatter
 
@@ -34,9 +47,7 @@ public class PrintMemoir: Memoir {
             shortCodePosition: shortCodePosition, shortTracers: shortTracers, separateTracers: true,
             tracersFilter: tracersFilter
         )
-        formatter = DateFormatter()
-        formatter.dateFormat = onlyTime ? "HH:mm:ss.SSS" : "yyyy-MM-dd HH:mm:ss.SSSZ"
-        formatter.locale = Locale(identifier: "en_US_POSIX")
+        formatter = onlyTime ? PrintMemoir.timeOnlyDateFormatter : PrintMemoir.fullDateFormatter
     }
 
     @inlinable
