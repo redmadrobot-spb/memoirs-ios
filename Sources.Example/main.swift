@@ -20,6 +20,9 @@ let lowLevelMemoir = PrintMemoir(onlyTime: true, shortCodePosition: true) { trac
 let appMemoir = AppMemoir(bundleId: "com.smth.myGreatApp", version: "0.1", memoir: lowLevelMemoir)
 appMemoir.info("AppLog")
 
+let statistics = Statistics(memoir: appMemoir)
+statistics.start(period: 1)
+
 let stopwatch = Stopwatch(memoir: appMemoir)
 var mark = stopwatch.mark
 
@@ -56,3 +59,5 @@ addedLabelMemoir.event(name: "EventLog", meta: [:])
 
 addedLabelMemoir = TracedMemoir(label: "AnotherLabelALittleLonger", memoir: instanceMemoir)
 addedLabelMemoir.debug("Another instance level log")
+
+RunLoop.main.run()
