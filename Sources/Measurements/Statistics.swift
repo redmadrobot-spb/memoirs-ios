@@ -9,7 +9,7 @@
 import Foundation
 
 public class Statistics {
-    private let memoir: Memoir?
+    private var memoir: Memoir?
     private var timer: Timer?
 
     private let cpuUsageMeasurementName: String
@@ -18,18 +18,23 @@ public class Statistics {
     public init(
         cpuUsageMeasurementName: String = "cpuUsagePercent", memoryUsageMeasurementName: String = "memoryUsage", memoir: Memoir? = nil
     ) {
-        self.memoir = memoir
         self.cpuUsageMeasurementName = cpuUsageMeasurementName
         self.memoryUsageMeasurementName = memoryUsageMeasurementName
+        self.memoir = memoir.map { TracedMemoir(object: self, memoir: $0) }
     }
 
     public func start(period: TimeInterval) {
         stop()
-        let timer = Timer(timeInterval: period, repeats: true) { [weak self] _ in
-            self?.measureProcessorAndMemoryFootprint()
-        }
-        RunLoop.main.add(timer, forMode: .common)
+        let timer = Timer(timeInterval: period, target: self, selector: #selector(timerFired), userInfo: nil, repeats: true)
+        RunLoop.current.add(timer, forMode: .default)
         self.timer = timer
+        memoir?.debug("Started; interval: \(period)")
+    }
+
+    @objc
+    private func timerFired(_ timer: Timer) {
+        memoir?.verbose("Timer fired")
+        measureProcessorAndMemoryFootprint()
     }
 
     public func stop() {
@@ -37,6 +42,7 @@ public class Statistics {
 
         timer?.invalidate()
         timer = nil
+        memoir?.debug("Stopped")
     }
 
     private func measureProcessorAndMemoryFootprint() {
