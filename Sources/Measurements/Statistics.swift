@@ -25,9 +25,11 @@ public class Statistics {
 
     public func start(period: TimeInterval) {
         stop()
-        timer = Timer.scheduledTimer(withTimeInterval: period, repeats: true) { [weak self] _ in
+        let timer = Timer(timeInterval: period, repeats: true) { [weak self] _ in
             self?.measureProcessorAndMemoryFootprint()
         }
+        RunLoop.main.add(timer, forMode: .common)
+        self.timer = timer
     }
 
     public func stop() {
