@@ -21,7 +21,7 @@ let appMemoir = AppMemoir(bundleId: "com.smth.myGreatApp", version: "0.1", memoi
 appMemoir.info("AppLog")
 
 let statistics = Statistics(memoir: appMemoir)
-statistics.start(period: 1)
+statistics.start(period: 5)
 
 let stopwatch = Stopwatch(memoir: appMemoir)
 var mark = stopwatch.mark
