@@ -60,21 +60,17 @@ public class Statistics {
     }
 }
 
+#if os(Linux)
 enum MyProcess {
     static var stats: (cpuPercent: String, memory: String?, memoryPercent: String?)? {
         let process = Process()
-        #if os(Linux)
-        process.launchPath = "/bin/ps"
+        process.executableURL = URL(fileURLWithPath: "/bin/ps")
         process.arguments = [ "-p", "\(ProcessInfo.processInfo.processIdentifier)", "-efo", "%cpu,%mem" ]
-        #else
-        process.launchPath = "/usr/bin/top"
-        process.arguments = [ "-stats", "cpu,mem", "-pid", "\(ProcessInfo.processInfo.processIdentifier)", "-l", "1" ]
-        #endif
         let outPipe = Pipe()
         process.standardOutput = outPipe
         let errPipe = Pipe()
         process.standardError = errPipe
-        process.launch()
+        try? process.run()
 
         let outputString = String(data: outPipe.fileHandleForReading.readDataToEndOfFile(), encoding: .utf8)
         let output = outputString?
@@ -104,59 +100,63 @@ enum MyProcess {
                 memory = "\(memoryValue)"
             }
 
-            #if os(Linux)
-            return (cpuPercent, memory, nil)
-            #else
             return (cpuPercent, nil, memory)
-            #endif
         } else {
             return nil
         }
     }
 }
-//    #else
-//    enum Process {
-//        private static let basicInfoCount = mach_msg_type_number_t(MemoryLayout<task_basic_info_data_t>.size /  MemoryLayout<UInt32>.size)
-//        private static let vmInfoCount = mach_msg_type_number_t(MemoryLayout<task_vm_info_data_t>.size / MemoryLayout<UInt32>.size)
-//
-//        static var cpuUsage: Double? {
-//            var threadsArray: thread_act_array_t?
-//            var threadCount: mach_msg_type_number_t = 0
-//            guard task_threads(mach_task_self_, &threadsArray, &threadCount) == KERN_SUCCESS else { return nil }
-//            guard let threads = threadsArray else { return nil }
-//
-//            defer {
-//                let size = MemoryLayout<thread_t>.size * Int(threadCount)
-//                vm_deallocate(mach_task_self_, vm_address_t(bitPattern: threads), vm_size_t(size))
-//            }
-//
-//            return (0 ..< Int(threadCount))
-//                .map { index in
-//                    var info = thread_basic_info()
-//                    var infoCount = basicInfoCount
-//                    let result = withUnsafeMutablePointer(to: &info) {
-//                        $0.withMemoryRebound(to: integer_t.self, capacity: 1) {
-//                            thread_info(threads[index], thread_flavor_t(THREAD_BASIC_INFO), $0, &infoCount)
-//                        }
-//                    }
-//                    guard result == KERN_SUCCESS else { return 0 }
-//
-//                    return info.flags & TH_FLAGS_IDLE == 0 ? Double(info.cpu_usage) / Double(TH_USAGE_SCALE) * 100.0 : 0
-//                }
-//                .reduce(0.0, +)
-//        }
-//
-//        static var memoryUsage: Int? {
-//            var info = task_vm_info_data_t()
-//            var infoCount = vmInfoCount
-//            let result = withUnsafeMutablePointer(to: &info) {
-//                $0.withMemoryRebound(to: integer_t.self, capacity: 1) {
-//                    task_info(mach_task_self_, thread_flavor_t(TASK_VM_INFO), $0, &infoCount)
-//                }
-//            }
-//            guard result == KERN_SUCCESS else { return nil }
-//
-//            return Int(info.internal)
-//        }
-//    }
-//    #endif
+#else
+enum MyProcess {
+    private static let basicInfoCount = mach_msg_type_number_t(MemoryLayout<task_basic_info_data_t>.size /  MemoryLayout<UInt32>.size)
+    private static let vmInfoCount = mach_msg_type_number_t(MemoryLayout<task_vm_info_data_t>.size / MemoryLayout<UInt32>.size)
+
+    static var cpuUsage: Double? {
+        var threadsArray: thread_act_array_t?
+        var threadCount: mach_msg_type_number_t = 0
+        guard task_threads(mach_task_self_, &threadsArray, &threadCount) == KERN_SUCCESS else { return nil }
+        guard let threads = threadsArray else { return nil }
+
+        defer {
+            let size = MemoryLayout<thread_t>.size * Int(threadCount)
+            vm_deallocate(mach_task_self_, vm_address_t(bitPattern: threads), vm_size_t(size))
+        }
+
+        return (0 ..< Int(threadCount))
+            .map { index in
+                var info = thread_basic_info()
+                var infoCount = basicInfoCount
+                let result = withUnsafeMutablePointer(to: &info) {
+                    $0.withMemoryRebound(to: integer_t.self, capacity: 1) {
+                        thread_info(threads[index], thread_flavor_t(THREAD_BASIC_INFO), $0, &infoCount)
+                    }
+                }
+                guard result == KERN_SUCCESS else { return 0 }
+
+                return info.flags & TH_FLAGS_IDLE == 0 ? Double(info.cpu_usage) / Double(TH_USAGE_SCALE) * 100.0 : 0
+            }
+            .reduce(0.0, +)
+    }
+
+    static var memoryUsage: Int? {
+        var info = task_vm_info_data_t()
+        var infoCount = vmInfoCount
+        let result = withUnsafeMutablePointer(to: &info) {
+            $0.withMemoryRebound(to: integer_t.self, capacity: 1) {
+                task_info(mach_task_self_, thread_flavor_t(TASK_VM_INFO), $0, &infoCount)
+            }
+        }
+        guard result == KERN_SUCCESS else { return nil }
+
+        return Int(info.internal)
+    }
+
+    static var stats: (cpuPercent: String, memory: String?, memoryPercent: String?)? {
+        if let cpu = cpuUsage, let memory = memoryUsage {
+            return ("\(cpu)", "\(memory)", nil)
+        } else {
+            return nil
+        }
+    }
+}
+#endif
