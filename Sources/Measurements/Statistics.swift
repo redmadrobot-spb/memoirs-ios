@@ -30,16 +30,13 @@ public class Statistics {
 
     public func start(period: TimeInterval) {
         stop()
-        let timer = Timer(timeInterval: period, target: self, selector: #selector(timerFired), userInfo: nil, repeats: true)
+        let timer = Timer(timeInterval: period, repeats: true) { _ in
+            self.memoir?.verbose("Timer fired")
+            self.measureProcessorAndMemoryFootprint()
+        }
         RunLoop.current.add(timer, forMode: .default)
         self.timer = timer
         memoir?.debug("Started; interval: \(period)")
-    }
-
-    @objc
-    private func timerFired(_ timer: Timer) {
-        memoir?.verbose("Timer fired")
-        measureProcessorAndMemoryFootprint()
     }
 
     public func stop() {
