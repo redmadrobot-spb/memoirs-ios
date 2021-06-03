@@ -47,7 +47,13 @@ public class Output {
     @usableFromInline
     var tracersFilter: (Tracer) -> Bool
 
-    public init(isSensitive: Bool, shortCodePosition: Bool, shortTracers: Bool, separateTracers: Bool, tracersFilter: @escaping (Tracer) -> Bool) {
+    public init(
+        isSensitive: Bool,
+        shortCodePosition: Bool,
+        shortTracers: Bool,
+        separateTracers: Bool,
+        tracersFilter: @escaping (Tracer) -> Bool
+    ) {
         self.isSensitive = isSensitive
         self.shortCodePosition = shortCodePosition
         self.shortTracers = shortTracers
@@ -63,8 +69,6 @@ public class Output {
 
     @inlinable
     public func codePosition(file: String, function: String, line: UInt) -> String {
-        // TODO: Remove this hack after Swift Evolution #0274 will be implemented
-        let file = file.components(separatedBy: "/").last ?? "?"
         let context = [ file, line == 0 ? "" : "\(line)", shortCodePosition ? "" : function ]
             .map { $0.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines) }
             .filter { !$0.isEmpty }

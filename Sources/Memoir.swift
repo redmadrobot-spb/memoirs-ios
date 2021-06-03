@@ -17,7 +17,7 @@ public protocol Memoir {
     ///  - meta: Parameters of the item.
     ///  - tracers: Tracers that group items in some way.
     ///  - date: date and time of the item creation.
-    ///  - file: The path to the file from which the method was called. Usually you should use the #file literal for this.
+    ///  - file: The path to the file from which the method was called. Usually you should use the #fileID literal for this.
     ///  - function: The function name from which the method was called. Usually you should use the #function literal for this.
     ///  - line: The line of code from which the method was called. Usually you should use the #line literal for this.
     func append(

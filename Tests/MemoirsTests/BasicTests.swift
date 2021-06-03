@@ -192,7 +192,7 @@ class BasicTests: GenericTestCase {
         memoir: Memoir,
         logShouldPresent: Bool,
         _ updateProbe: (inout LogProbe) -> Void = { _ in },
-        file: String = #file,
+        file: String = #fileID,
         line: UInt = #line
     ) throws {
         var probe = simpleProbe(memoir: memoir)
@@ -204,7 +204,7 @@ class BasicTests: GenericTestCase {
         }
     }
 
-    private func logShouldPresent(probe: LogProbe, memoir: Memoir, file: String = #file, line: UInt = #line) throws {
+    private func logShouldPresent(probe: LogProbe, memoir: Memoir, file: String = #fileID, line: UInt = #line) throws {
         let log = try expectLog(probe: probe)
         if !log.contains(probe.label) {
             fputs("\nProblem at \(file):\(line)\n", stderr)

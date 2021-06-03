@@ -13,7 +13,7 @@ public class AppMemoir: TracedMemoir {
     public init(
         bundleId: String? = nil, version: String? = nil,
         memoir: Memoir,
-        file: String = #file, function: String = #function, line: UInt = #line
+        file: String = #fileID, function: String = #function, line: UInt = #line
     ) {
         let meta: [String: SafeString]
         let foundBundleId: String
@@ -92,7 +92,7 @@ public class InstanceMemoir: TracedMemoir {
 
     public init(
         deviceInfo: DeviceInfo = .init(osInfo: .detected), memoir: Memoir,
-        file: String = #file, function: String = #function, line: UInt = #line
+        file: String = #fileID, function: String = #function, line: UInt = #line
     ) {
         let userDefaults = UserDefaults.standard
         let installId: String
@@ -112,7 +112,7 @@ public class InstanceMemoir: TracedMemoir {
 
 public class SessionMemoir: TracedMemoir {
     public init(
-        userId: String, isGuest: Bool, memoir: Memoir, file: String = #file, function: String = #function, line: UInt = #line
+        userId: String, isGuest: Bool, memoir: Memoir, file: String = #fileID, function: String = #function, line: UInt = #line
     ) {
         let meta: [String: SafeString] = [
             "userId": "\(userId)",

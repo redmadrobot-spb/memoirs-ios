@@ -104,7 +104,7 @@ class GenericTestCase: XCTestCase {
         }
     }
 
-    func expectNoLog(probe: LogProbe, file: String = #file, line: UInt = #line) throws {
+    func expectNoLog(probe: LogProbe, file: String = #fileID, line: UInt = #line) throws {
         probe.memoir.log(
             level: probe.level,
             probe.message,

@@ -40,7 +40,7 @@ public class TracedMemoir: Memoir, Traceable {
 
     public init(
         tracer: Tracer, meta: [String: SafeString], memoir: Memoir,
-        file: String = #file, function: String = #function, line: UInt = #line
+        file: String = #fileID, function: String = #function, line: UInt = #line
     ) {
         self.tracer = tracer
         memoir.update(tracer: tracer, meta: meta, file: file, function: function, line: line)
@@ -57,11 +57,11 @@ public class TracedMemoir: Memoir, Traceable {
         }
     }
 
-    public convenience init(label: String, memoir: Memoir, file: String = #file, function: String = #function, line: UInt = #line) {
+    public convenience init(label: String, memoir: Memoir, file: String = #fileID, function: String = #function, line: UInt = #line) {
         self.init(tracer: .label(label), meta: [:], memoir: memoir, file: file, function: function, line: line)
     }
 
-    public convenience init(object: Any, memoir: Memoir, file: String = #file, function: String = #function, line: UInt = #line) {
+    public convenience init(object: Any, memoir: Memoir, file: String = #fileID, function: String = #function, line: UInt = #line) {
         self.init(label: String(describing: type(of: object)), memoir: memoir, file: file, function: function, line: line)
     }
 

@@ -48,7 +48,7 @@ public class Stopwatch {
     public func measureTime(
         from mark: Mark, name: String,
         meta: [String: SafeString]? = nil, tracers: [Tracer] = [], date: Date = Date(),
-        file: String = #file, function: String = #function, line: UInt = #line
+        file: String = #fileID, function: String = #function, line: UInt = #line
     ) -> Mark {
         let newMark = self.mark
         let value = newMark - mark
@@ -79,7 +79,7 @@ public class Stopwatch {
     public func measure(
         name: String,
         meta: [String: SafeString]? = nil, tracers: [Tracer] = [], date: Date = Date(),
-        file: String = #file, function: String = #function, line: UInt = #line,
+        file: String = #fileID, function: String = #function, line: UInt = #line,
         _ closure: () -> Void
     ) -> Mark {
         let mark = mark
