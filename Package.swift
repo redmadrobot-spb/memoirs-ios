@@ -8,12 +8,16 @@ let package = Package(
     products: [
         .library(name: "Memoirs", type: .static, targets: [ "Memoirs" ]),
         .executable(name: "ExampleMemoirs", targets: [ "ExampleMemoirs" ]),
+
+        .library(name: "MemoirSubscriptions", type: .static, targets: [ "MemoirSubscriptions" ]),
     ],
     targets: [
-        .target(name: "ExampleMemoirs", dependencies: [ "Memoirs" ], path: "Sources.Example"),
+        .target(name: "Memoirs", dependencies: [ "MemoirSubscriptions" ], path: "Sources"),
+        .target(name: "MemoirSubscriptions", dependencies: [], path: "Sources.Subscriptions"),
 
-        .target(name: "Memoirs", dependencies: [], path: "Sources"),
         .testTarget(name: "MemoirsTests", dependencies: [ "Memoirs" ]),
+
+        .target(name: "ExampleMemoirs", dependencies: [ "Memoirs" ], path: "Sources.Example"),
     ],
     swiftLanguageVersions: [.v5]
 )

@@ -20,7 +20,7 @@ let lowLevelMemoir = PrintMemoir(onlyTime: true, shortCodePosition: true) { trac
 let appMemoir = AppMemoir(bundleId: "com.smth.myGreatApp", version: "0.1", memoir: lowLevelMemoir)
 appMemoir.info("AppLog")
 
-let statistics = Statistics(memoir: appMemoir)
+let statistics = MetricsMemoir(memoir: appMemoir)
 statistics.start(period: 5)
 
 let stopwatch = Stopwatch(memoir: appMemoir)
