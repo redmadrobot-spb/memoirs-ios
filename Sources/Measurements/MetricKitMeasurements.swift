@@ -14,11 +14,11 @@ import MemoirSubscriptions
 import MetricKit
 
 @available(iOS 13.0, *)
-final class MetricKitMeasurements: NSObject, MXMetricManagerSubscriber {
+public class MetricKitMeasurements: NSObject, MXMetricManagerSubscriber {
     private var memoir: Memoir
     private var metricManager: MXMetricManager?
 
-    init(memoir: Memoir) {
+    public init(memoir: Memoir) {
         self.memoir = memoir
         metricManager = MXMetricManager.shared
         super.init()
