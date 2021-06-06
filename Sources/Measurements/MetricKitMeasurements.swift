@@ -151,22 +151,22 @@ final class MetricKitMeasurements: NSObject, MXMetricManagerSubscriber {
                 }
             }
             if let metric = payload.applicationLaunchMetrics {
-                let bucketsTimeToFirstDraw: [(range: Range<Double>, count: Int)] = metric.histogrammedTimeToFirstDraw
+                let bucketsTimeToFirstDraw: [MeasurementValue.HistogramBucket] = metric.histogrammedTimeToFirstDraw
                     .bucketEnumerator
                     .compactMap { $0 as? MXHistogramBucket<UnitDuration> }
-                    .map { (rangeInSeconds(for: $0), $0.bucketCount) }
+                    .map { MeasurementValue.HistogramBucket(range: rangeInSeconds(for: $0), count: $0.bucketCount) }
                 metrics[keyLaunchTimeToFirstDraw] = .histogram(buckets: bucketsTimeToFirstDraw)
-                let bucketsResumeTime: [(range: Range<Double>, count: Int)] = metric.histogrammedApplicationResumeTime
+                let bucketsResumeTime: [MeasurementValue.HistogramBucket] = metric.histogrammedApplicationResumeTime
                     .bucketEnumerator
                     .compactMap { $0 as? MXHistogramBucket<UnitDuration> }
-                    .map { (rangeInSeconds(for: $0), $0.bucketCount) }
+                    .map { MeasurementValue.HistogramBucket(range: rangeInSeconds(for: $0), count: $0.bucketCount) }
                 metrics[keyLaunchResumeTime] = .histogram(buckets: bucketsResumeTime)
             }
             if let metric = payload.applicationResponsivenessMetrics {
-                let buckets: [(range: Range<Double>, count: Int)] = metric.histogrammedApplicationHangTime
+                let buckets: [MeasurementValue.HistogramBucket] = metric.histogrammedApplicationHangTime
                     .bucketEnumerator
                     .compactMap { $0 as? MXHistogramBucket<UnitDuration> }
-                    .map { (rangeInSeconds(for: $0), $0.bucketCount) }
+                    .map { MeasurementValue.HistogramBucket(range: rangeInSeconds(for: $0), count: $0.bucketCount) }
                 metrics[keyResponsivenessHangTime] = .histogram(buckets: buckets)
             }
             if let metric = payload.applicationTimeMetrics {
@@ -176,10 +176,10 @@ final class MetricKitMeasurements: NSObject, MXMetricManagerSubscriber {
                 metrics[keyTimeMetricsBackgroundLocation] = .double(metric.cumulativeBackgroundLocationTime.converted(to: .seconds).value)
             }
             if let metric = payload.cellularConditionMetrics {
-                let buckets: [(range: Range<Double>, count: Int)] = metric.histogrammedCellularConditionTime
+                let buckets: [MeasurementValue.HistogramBucket] = metric.histogrammedCellularConditionTime
                     .bucketEnumerator
                     .compactMap { $0 as? MXHistogramBucket<MXUnitSignalBars> }
-                    .map { (rangeOfBars(for: $0), $0.bucketCount) }
+                    .map { MeasurementValue.HistogramBucket(range: rangeOfBars(for: $0), count: $0.bucketCount) }
                 metrics[keyCellularConditionTime] = .histogram(buckets: buckets)
             }
             if let metric = payload.diskIOMetrics {

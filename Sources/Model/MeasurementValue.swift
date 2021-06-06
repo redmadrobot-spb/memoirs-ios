@@ -7,9 +7,14 @@
 //
 
 public enum MeasurementValue {
+    public struct HistogramBucket {
+        public var range: Range<Double>
+        public var count: Int
+    }
+
     case double(Double)
     case int(Int64)
-    case histogram(buckets: [(range: Range<Double>, count: Int)]) // range ends are exclusive
+    case histogram(buckets: [HistogramBucket]) // range ends are exclusive
 
     var isZero: Bool {
         switch self {
@@ -18,7 +23,7 @@ public enum MeasurementValue {
             case .int(let value):
                 return value == 0
             case .histogram(let buckets):
-                return buckets.isEmpty || buckets.allSatisfy { _, count in count == 0 }
+                return buckets.isEmpty || buckets.allSatisfy { bucket in bucket.count == 0 }
         }
     }
 }

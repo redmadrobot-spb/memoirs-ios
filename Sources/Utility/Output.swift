@@ -140,8 +140,8 @@ public class Output {
                 ].spaceMerged
             case .histogram(let value):
                 let values = value
-                    .map { range, count in
-                        "\(range.lowerBound)..\(range.upperBound): \(count)"
+                    .map { bucket in
+                        "\(bucket.range.lowerBound)..\(bucket.range.upperBound): \(bucket.count)"
                     }
                     .joined(separator: "; ")
                 message = [
