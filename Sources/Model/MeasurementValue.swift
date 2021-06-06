@@ -10,6 +10,11 @@ public enum MeasurementValue {
     public struct HistogramBucket {
         public var range: Range<Double>
         public var count: Int
+
+        public init(range: Range<Double>, count: Int) {
+            self.range = range
+            self.count = count
+        }
     }
 
     case double(Double)
