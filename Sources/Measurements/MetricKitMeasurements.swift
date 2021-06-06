@@ -98,7 +98,7 @@ public class MetricKitMeasurements: NSObject, MXMetricManagerSubscriber {
 
     private let keySignpostPrefix: String = "iOS.metrics.sp."
 
-    func didReceive(_ payloads: [MXMetricPayload]) {
+    public func didReceive(_ payloads: [MXMetricPayload]) {
         payloads.forEach { payload in
             var meta: [String: SafeString] = [:]
             meta[metaKeyLatestApplicationVersion] = "\(safe: payload.latestApplicationVersion)"
@@ -237,7 +237,7 @@ public class MetricKitMeasurements: NSObject, MXMetricManagerSubscriber {
     }
 
     @available(iOS 14.0, *)
-    func didReceive(_ payloads: [MXDiagnosticPayload]) {
+    public func didReceive(_ payloads: [MXDiagnosticPayload]) {
         payloads.forEach { payload in
             var meta: [String: SafeString] = [:]
             meta[metaKeyTimeStampBegin] = "\(safe: payload.timeStampBegin)"
