@@ -1,5 +1,5 @@
 //
-// DarwinMetricsManager
+// DarwinSystemMetrics
 // Memoirs
 //
 // Created by Alex Babaev on 05 June 2021.
@@ -10,7 +10,10 @@
 
 import Darwin
 
-final class DarwinMetricsExtractor: MetricsExtractor {
+final class DarwinSystemMetrics: AppMetrics {
+    private let keyCPUUsagePercent: String = "cpuUsagePercent"
+    private let keyMemoryUsageValue: String = "memoryUsageValue"
+
     private let basicInfoCount = mach_msg_type_number_t(MemoryLayout<task_basic_info_data_t>.size /  MemoryLayout<UInt32>.size)
     private let vmInfoCount = mach_msg_type_number_t(MemoryLayout<task_vm_info_data_t>.size / MemoryLayout<UInt32>.size)
 
@@ -57,10 +60,10 @@ final class DarwinMetricsExtractor: MetricsExtractor {
     var calculatedMetrics: [String: Double] {
         var result: [String: Double] = [:]
         if let cpuUsage = cpuUsage {
-            result[MetricsMemoir.keyCPUUsagePercent] = cpuUsage
+            result[keyCPUUsagePercent] = cpuUsage
         }
         if let memoryUsage = memoryUsage {
-            result[MetricsMemoir.keyMemoryUsageValue] = Double(memoryUsage)
+            result[keyMemoryUsageValue] = Double(memoryUsage)
         }
         return result
     }

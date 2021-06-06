@@ -1,5 +1,5 @@
 //
-// LinuxMetricsExtractor
+// LinuxSystemMetrics
 // Conveyor
 //
 // Created by Alex Babaev on 05 June 2021.
@@ -8,7 +8,10 @@
 
 import Foundation
 
-final class LinuxMetricsExtractor: MetricsExtractor {
+final class LinuxSystemMetrics: AppMetrics {
+    private let keyCPUUsagePercent: String = "cpuUsagePercent"
+    private let keyMemoryUsagePercent: String = "memoryUsagePercent"
+
     var calculatedMetrics: [String: Double] {
         let process = Process()
         process.executableURL = URL(fileURLWithPath: "/bin/ps")
@@ -49,10 +52,10 @@ final class LinuxMetricsExtractor: MetricsExtractor {
 
             var result: [String: Double] = [:]
             if let cpuPercent = Double(cpuPercent) {
-                result[MetricsMemoir.keyCPUUsagePercent] = cpuPercent
+                result[keyCPUUsagePercent] = cpuPercent
             }
             if let memoryPercent = Double(memory) {
-                result[MetricsMemoir.keyMemoryUsagePercent] = memoryPercent
+                result[keyMemoryUsagePercent] = memoryPercent
             }
             return result
         } else {

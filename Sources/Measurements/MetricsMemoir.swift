@@ -8,31 +8,27 @@
 
 import Foundation
 
-protocol MetricsExtractor {
+protocol AppMetrics {
     var calculatedMetrics: [String: Double] { get }
     func subscribeOnMetricEvents(listener: @escaping ([String: Double]) -> Void) -> Any?
 }
 
 public class MetricsMemoir {
-    static var keyCPUUsagePercent: String = "cpuUsagePercent"
-    static var keyMemoryUsagePercent: String = "memoryUsagePercent"
-    static var keyMemoryUsageValue: String = "memoryUsageValue"
-
     private var memoir: Memoir?
     private var timer: Timer?
 
-    private let metricExtractors: [MetricsExtractor]
+    private let metricExtractors: [AppMetrics]
     private var metricSubscriptions: [Any] = []
 
     public init(memoir: Memoir? = nil) {
         #if os(Linux)
-        metricExtractors = [ LinuxMetricsExtractor() ]
+        metricExtractors = [ LinuxSystemMetrics() ]
         #elseif canImport(MetricKit) && os(iOS)
-        metricExtractors = [ MetricKitMetricsExtractor(), DarwinMetricsExtractor() ]
+        metricExtractors = [ MetricKitMetricsExtractor(), DarwinSystemMetrics() ]
         #elseif canImport(Darwin)
-        metricExtractors = [ DarwinMetricsExtractor() ]
+        metricExtractors = [ DarwinSystemMetrics() ]
         #else
-        metricExtractors = [ VoidMetricsExtractor() ]
+        metricExtractors = [ VoidAppMetrics() ]
         #endif
 
         self.memoir = memoir.map { TracedMemoir(object: self, memoir: $0) }
@@ -66,6 +62,10 @@ public class MetricsMemoir {
     }
 
     private func send(metrics: [String: Double]) {
+        guard let memoir = memoir else { return }
 
+        metrics
+            .sorted { lhs, rhs in lhs.key < rhs.key }
+            .forEach { memoir.measurement(name: $0, value: $1) }
     }
 }
