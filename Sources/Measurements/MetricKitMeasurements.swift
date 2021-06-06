@@ -14,13 +14,15 @@ import MemoirSubscriptions
 import MetricKit
 
 @available(iOS 13.0, *)
-final class MetricKitAppMetrics: NSObject, AppMetrics, MXMetricManagerSubscriber {
+final class MetricKitMeasurements: NSObject, MXMetricManagerSubscriber {
+    private var memoir: Memoir
     private var metricManager: MXMetricManager?
 
-    override init() {
+    init(memoir: Memoir) {
+        self.memoir = memoir
+        metricManager = MXMetricManager.shared
         super.init()
 
-        metricManager = MXMetricManager.shared
         metricManager?.add(self)
     }
 
@@ -221,28 +223,82 @@ final class MetricKitAppMetrics: NSObject, AppMetrics, MXMetricManagerSubscriber
                 }
             }
 
-            metrics = metrics.filter { _, value in !value.isZero }
-            subscribers.fire((metrics, meta))
+            let payloadMemoir = TracedMemoir(
+                tracer: .label("metricPayloads.\(payload.timeStampBegin)/\(payload.timeStampEnd)"),
+                meta: meta,
+                memoir: memoir
+            )
+            metrics
+                .filter { _, value in !value.isZero }
+                .forEach { key, value in
+                    payloadMemoir.measurement(name: key, value: value)
+                }
         }
     }
 
     @available(iOS 14.0, *)
     func didReceive(_ payloads: [MXDiagnosticPayload]) {
         payloads.forEach { payload in
+            var meta: [String: SafeString] = [:]
+            meta[metaKeyTimeStampBegin] = "\(safe: payload.timeStampBegin)"
+            meta[metaKeyTimeStampEnd] = "\(safe: payload.timeStampEnd)"
 
+            let payloadMemoir = TracedMemoir(
+                tracer: .label("metricDiagnostics.\(payload.timeStampBegin)/\(payload.timeStampEnd)"),
+                meta: meta,
+                memoir: memoir
+            )
+
+            payload.crashDiagnostics?
+                .map { diagnostic in
+                    var diagnosticMeta: [String: SafeString] = [:]
+                    diagnosticMeta["type"] = diagnostic.exceptionType.map { "\(safe: $0)" }
+                    diagnosticMeta["code"] = diagnostic.exceptionCode.map { "\(safe: $0)" }
+                    diagnosticMeta["signal"] = diagnostic.signal.map { "\(safe: $0)" }
+                    diagnosticMeta["reason"] = diagnostic.terminationReason.map { "\(safe: $0)" }
+                    diagnosticMeta["memoryRegion"] = diagnostic.virtualMemoryRegionInfo.map { "\(safe: $0)" }
+                    let stackTraceData = diagnostic.callStackTree.jsonRepresentation()
+                    diagnosticMeta["stack"] = String(data: stackTraceData, encoding: .utf8).map { "\(safe: $0)" }
+                    return diagnosticMeta
+                }
+                .forEach {
+                    payloadMemoir.critical("MetricKit.crash", meta: $0)
+                }
+            payload.cpuExceptionDiagnostics?
+                .map { diagnostic in
+                    var diagnosticMeta: [String: SafeString] = [:]
+                    diagnosticMeta["totalCPU.secs"] = "\(safe: diagnostic.totalCPUTime.converted(to: .seconds).value)"
+                    diagnosticMeta["totalSampled.secs"] = "\(safe: diagnostic.totalSampledTime.converted(to: .seconds).value)"
+                    let stackTraceData = diagnostic.callStackTree.jsonRepresentation()
+                    diagnosticMeta["stack"] = String(data: stackTraceData, encoding: .utf8).map { "\(safe: $0)" }
+                    return diagnosticMeta
+                }
+                .forEach {
+                    payloadMemoir.critical("MetricKit.CPUException", meta: $0)
+                }
+            payload.hangDiagnostics?
+                .map { diagnostic in
+                    var diagnosticMeta: [String: SafeString] = [:]
+                    diagnosticMeta["duration.secs"] = "\(safe: diagnostic.hangDuration.converted(to: .seconds).value)"
+                    let stackTraceData = diagnostic.callStackTree.jsonRepresentation()
+                    diagnosticMeta["stack"] = String(data: stackTraceData, encoding: .utf8).map { "\(safe: $0)" }
+                    return diagnosticMeta
+                }
+                .forEach {
+                    payloadMemoir.error("MetricKit.hang", meta: $0)
+                }
+            payload.diskWriteExceptionDiagnostics?
+                .map { diagnostic in
+                    var diagnosticMeta: [String: SafeString] = [:]
+                    diagnosticMeta["total.bytes"] = "\(safe: diagnostic.totalWritesCaused.converted(to: .bytes).value)"
+                    let stackTraceData = diagnostic.callStackTree.jsonRepresentation()
+                    diagnosticMeta["stack"] = String(data: stackTraceData, encoding: .utf8).map { "\(safe: $0)" }
+                    return diagnosticMeta
+                }
+                .forEach {
+                    payloadMemoir.error("MetricKit.diskWrite", meta: $0)
+                }
         }
-    }
-
-    var calculatedMetrics: [String: MeasurementValue] {
-        [:]
-    }
-
-    private let subscribers: Subscribers<(measurements: [String: MeasurementValue], meta: [String: SafeString])> = .init()
-
-    func subscribeOnMetricEvents(
-        listener: @escaping ((measurements: [String: MeasurementValue], meta: [String: SafeString])) -> Void
-    ) -> Any? {
-        subscribers.subscribe(listener: listener)
     }
 
     private func rangeInSeconds(for bucket: MXHistogramBucket<UnitDuration>) -> Range<Double> {

@@ -29,8 +29,7 @@ public class PrintMemoir: Memoir {
     public static let defaultTracerFilter: (Tracer) -> Bool = { tracer in
         switch tracer {
             case .app, .instance, .session: return false
-            case .queue, .thread: return false
-            case .request, .label, .custom: return true
+            case .request, .label: return true
         }
     }
 

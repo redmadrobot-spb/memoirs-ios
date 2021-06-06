@@ -1,6 +1,6 @@
 //
 //  main.swift
-//  BonjourClientTest
+//  Memoir
 //
 //  Created by Alex Babaev on 28 April 2020.
 //  Copyright © 2020 Redmadrobot SPb. All rights reserved.
@@ -12,15 +12,14 @@ import Memoirs
 let lowLevelMemoir = PrintMemoir(onlyTime: true, shortCodePosition: true) { tracer in
     switch tracer {
         case .app, .instance, .session: return false
-        case .queue, .thread: return false
-        case .request, .label, .custom: return true
+        case .request, .label: return true
     }
 }
 
 let appMemoir = AppMemoir(bundleId: "com.smth.myGreatApp", version: "0.1", memoir: lowLevelMemoir)
 appMemoir.info("AppLog")
 
-let statistics = MetricsMemoir(memoir: appMemoir)
+let statistics = CPUMemoryMeasurements(memoir: appMemoir)
 statistics.start(period: 5)
 
 let stopwatch = Stopwatch(memoir: appMemoir)
@@ -39,15 +38,12 @@ func session() {
         let sessionMemoir = SessionMemoir(userId: UUID().uuidString, isGuest: true, memoir: addedLabelMemoir)
         let tracers: [Tracer] = [
             .request(id: UUID().uuidString),
-            .thread(name: "main-thread-or-else"),
             .instance(id: UUID().uuidString)
         ]
         sessionMemoir.debug("SessionLog", tracers: tracers)
         sessionMemoir.info("Session Info Log", tracers: tracers)
         sessionMemoir.critical("Session Critical Log", tracers: tracers)
         sessionMemoir.event(name: "Some Event", meta: [ "parameter": "value" ], tracers: tracers)
-        sessionMemoir.update(tracer: .custom("Some Event"), meta: [ "parameter": "value" ], tracers: tracers)
-        sessionMemoir.finish(tracer: .custom("Some Event"), tracers: tracers)
         sessionMemoir.measurement(name: "Some Request time", value: .double(2.39), tracers: tracers)
     }
 }

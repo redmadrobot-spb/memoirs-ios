@@ -12,13 +12,13 @@ public typealias Mark = TimeInterval
 public typealias Measurement = TimeInterval
 
 public class Stopwatch {
-    private let memoir: Memoir?
+    private let memoir: Memoir
 
     private let maxValuesToHold: Int
     private let tooManyMeasurementNames: Int = 100000
     private var values: [String: [Measurement]] = [:]
 
-    public init(maxValuesToHold: Int = 10, memoir: Memoir? = nil) {
+    public init(maxValuesToHold: Int = 10, memoir: Memoir) {
         self.maxValuesToHold = maxValuesToHold
         self.memoir = memoir
     }
@@ -61,16 +61,14 @@ public class Stopwatch {
         }
         self.values[name] = values
 
-        if let memoir = memoir {
-            if self.values.keys.count > tooManyMeasurementNames && !warnedAboutLotsOfValues {
-                warnedAboutLotsOfValues = true
-                memoir.warning("You have lots of different measurements in stopwatch \(self), please be careful")
-            }
-
-            memoir.measurement(
-                name: name, value: .double(value), meta: meta, tracers: tracers, date: date, file: file, function: function, line: line
-            )
+        if self.values.keys.count > tooManyMeasurementNames && !warnedAboutLotsOfValues {
+            warnedAboutLotsOfValues = true
+            memoir.warning("You have lots of different measurements in stopwatch \(self), please be careful")
         }
+
+        memoir.measurement(
+            name: name, value: .double(value), meta: meta, tracers: tracers, date: date, file: file, function: function, line: line
+        )
 
         return newMark
     }

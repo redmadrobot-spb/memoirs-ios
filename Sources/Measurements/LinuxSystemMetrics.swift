@@ -10,7 +10,7 @@
 
 import Foundation
 
-final class LinuxSystemMetrics: AppMetrics {
+final class LinuxSystemMetrics: MetricsRetriever {
     private let keyCPUUsagePercent: String = "cpuUsagePercent"
     private let keyMemoryUsagePercent: String = "memoryUsagePercent"
 

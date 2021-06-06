@@ -10,7 +10,7 @@
 
 import Darwin
 
-final class DarwinSystemMetrics: AppMetrics {
+final class DarwinSystemMetrics: MetricsRetriever {
     private let keyCPUUsagePercent: String = "cpuUsagePercent"
     private let keyMemoryUsageValue: String = "memoryUsageValue"
 
