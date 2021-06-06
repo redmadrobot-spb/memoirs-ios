@@ -9,6 +9,6 @@
 public enum MemoirItem {
     case log(level: LogLevel, message: @autoclosure () -> SafeString)
     case event(name: String)
-    case measurement(name: String, value: Double)
+    case measurement(name: String, value: MeasurementValue)
     case tracer(Tracer, isFinished: Bool)
 }

@@ -117,7 +117,7 @@ public class Output {
 
     @inlinable
     public func measurementString(
-        time: String, name: String, value: Double, tracers: [Tracer], meta: () -> [String: SafeString]?,
+        time: String, name: String, value: MeasurementValue, tracers: [Tracer], meta: () -> [String: SafeString]?,
         codePosition: String
     ) -> String {
         let prefix = [
@@ -126,10 +126,29 @@ public class Output {
             Marker.measurement,
             tracers.labelString(isSensitive: isSensitive),
         ].spaceMerged
-        let message = [
-            isSensitive ? "???" : "\(name) -> \(value)",
-            meta()?.commaJoined(isSensitive: isSensitive),
-        ].spaceMerged
+        let message: String
+        switch value {
+            case .double(let value):
+                message = [
+                    isSensitive ? "???" : "\(name) -> \(value)",
+                    meta()?.commaJoined(isSensitive: isSensitive),
+                ].spaceMerged
+            case .int(let value):
+                message = [
+                    isSensitive ? "???" : "\(name) -> \(value)",
+                    meta()?.commaJoined(isSensitive: isSensitive),
+                ].spaceMerged
+            case .histogram(let value):
+                let values = value
+                    .map { range, count in
+                        "\(range.lowerBound)..\(range.upperBound): \(count)"
+                    }
+                    .joined(separator: "; ")
+                message = [
+                    isSensitive ? "???" : "\(name) -> [ \(values) ]",
+                    meta()?.commaJoined(isSensitive: isSensitive),
+                ].spaceMerged
+        }
         let suffix = tracers.filter(tracersFilter).allJoined(showLabel: false, short: shortTracers, isSensitive: isSensitive)
         return format(prefix: prefix, message: message, suffix: suffix, separateTracers: separateTracers)
     }

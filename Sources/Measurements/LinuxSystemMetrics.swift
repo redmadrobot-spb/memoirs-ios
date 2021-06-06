@@ -6,13 +6,15 @@
 // Copyright © 2021 Alex Babaev. All rights reserved.
 //
 
+#if os(Linux)
+
 import Foundation
 
 final class LinuxSystemMetrics: AppMetrics {
     private let keyCPUUsagePercent: String = "cpuUsagePercent"
     private let keyMemoryUsagePercent: String = "memoryUsagePercent"
 
-    var calculatedMetrics: [String: Double] {
+    var calculatedMetrics: [String: MeasurementValue] {
         let process = Process()
         process.executableURL = URL(fileURLWithPath: "/bin/ps")
         process.arguments = [ "-p", "\(ProcessInfo.processInfo.processIdentifier)", "-efo", "%cpu,%mem" ]
@@ -50,20 +52,18 @@ final class LinuxSystemMetrics: AppMetrics {
                 memory = "\(memoryValue)"
             }
 
-            var result: [String: Double] = [:]
+            var result: [String: MeasurementValue] = [:]
             if let cpuPercent = Double(cpuPercent) {
-                result[keyCPUUsagePercent] = cpuPercent
+                result[keyCPUUsagePercent] = .double(cpuPercent)
             }
-            if let memoryPercent = Double(memory) {
-                result[keyMemoryUsagePercent] = memoryPercent
+            if let memoryPercent = Int64(memory) {
+                result[keyMemoryUsagePercent] = .int(memoryPercent)
             }
             return result
         } else {
             return [:]
         }
     }
-
-    func subscribeOnMetricEvents(listener: @escaping ([String: Double]) -> Void) -> Any? {
-        nil
-    }
 }
+
+#endif

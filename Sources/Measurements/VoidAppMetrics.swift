@@ -7,11 +7,7 @@
 //
 
 final class VoidAppMetrics: AppMetrics {
-    var calculatedMetrics: [String: Double] {
+    var calculatedMetrics: [String: MeasurementValue] {
         [:]
-    }
-
-    func subscribeOnMetricEvents(listener: @escaping ([String: Double]) -> Void) -> Any? {
-        nil
     }
 }

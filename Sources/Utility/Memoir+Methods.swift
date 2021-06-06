@@ -86,7 +86,7 @@ public extension Memoir {
 public extension Memoir {
     /// Logs measurement that was calculated somehow.
     @inlinable
-    func measurement(name: String, value: Double, meta: [String: SafeString]? = nil, tracers: [Tracer] = [], date: Date = Date(), file: String = #fileID, function: String = #function, line: UInt = #line) {
+    func measurement(name: String, value: MeasurementValue, meta: [String: SafeString]? = nil, tracers: [Tracer] = [], date: Date = Date(), file: String = #fileID, function: String = #function, line: UInt = #line) {
         append(.measurement(name: name, value: value), meta: meta, tracers: tracers, date: date, file: file, function: function, line: line)
     }
 }

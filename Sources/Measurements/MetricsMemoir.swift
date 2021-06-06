@@ -9,8 +9,18 @@
 import Foundation
 
 protocol AppMetrics {
-    var calculatedMetrics: [String: Double] { get }
-    func subscribeOnMetricEvents(listener: @escaping ([String: Double]) -> Void) -> Any?
+    var calculatedMetrics: [String: MeasurementValue] { get }
+    func subscribeOnMetricEvents(
+        listener: @escaping ((measurements: [String: MeasurementValue], meta: [String: SafeString])) -> Void
+    ) -> Any?
+}
+
+extension AppMetrics {
+    func subscribeOnMetricEvents(
+        listener: @escaping ((measurements: [String: MeasurementValue], meta: [String: SafeString])) -> Void
+    ) -> Any? {
+        nil
+    }
 }
 
 public class MetricsMemoir {
@@ -24,7 +34,11 @@ public class MetricsMemoir {
         #if os(Linux)
         metricExtractors = [ LinuxSystemMetrics() ]
         #elseif canImport(MetricKit) && os(iOS)
-        metricExtractors = [ MetricKitMetricsExtractor(), DarwinSystemMetrics() ]
+        if #available(iOS 13.0, *) {
+            metricExtractors = [ MetricKitAppMetrics(), DarwinSystemMetrics() ]
+        } else {
+            metricExtractors = [ DarwinSystemMetrics() ]
+        }
         #elseif canImport(Darwin)
         metricExtractors = [ DarwinSystemMetrics() ]
         #else
@@ -33,7 +47,7 @@ public class MetricsMemoir {
 
         self.memoir = memoir.map { TracedMemoir(object: self, memoir: $0) }
 
-        metricSubscriptions = metricExtractors.compactMap { $0.subscribeOnMetricEvents(listener: send(metrics:)) }
+        metricSubscriptions = metricExtractors.compactMap { $0.subscribeOnMetricEvents(listener: send(metrics:meta:)) }
     }
 
     public func start(period: TimeInterval) {
@@ -57,12 +71,12 @@ public class MetricsMemoir {
 
     private func measureProcessorAndMemoryFootprint() {
         metricExtractors.forEach { extractor in
-            send(metrics: extractor.calculatedMetrics)
+            send(metrics: extractor.calculatedMetrics, meta: [:])
         }
     }
 
-    private func send(metrics: [String: Double]) {
-        guard let memoir = memoir else { return }
+    private func send(metrics: [String: MeasurementValue], meta: [String: SafeString]) {
+        guard let memoir = memoir.map({TracedMemoir(tracer: .custom("metrics.\(UUID().uuidString)"), meta: meta, memoir: $0)}) else { return }
 
         metrics
             .sorted { lhs, rhs in lhs.key < rhs.key }

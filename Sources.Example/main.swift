@@ -48,7 +48,7 @@ func session() {
         sessionMemoir.event(name: "Some Event", meta: [ "parameter": "value" ], tracers: tracers)
         sessionMemoir.update(tracer: .custom("Some Event"), meta: [ "parameter": "value" ], tracers: tracers)
         sessionMemoir.finish(tracer: .custom("Some Event"), tracers: tracers)
-        sessionMemoir.measurement(name: "Some Request time", value: 2.39, tracers: tracers)
+        sessionMemoir.measurement(name: "Some Request time", value: .double(2.39), tracers: tracers)
     }
 }
 

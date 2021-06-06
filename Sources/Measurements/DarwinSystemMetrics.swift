@@ -57,19 +57,15 @@ final class DarwinSystemMetrics: AppMetrics {
         return Int(info.internal)
     }
 
-    var calculatedMetrics: [String: Double] {
-        var result: [String: Double] = [:]
+    var calculatedMetrics: [String: MeasurementValue] {
+        var result: [String: MeasurementValue] = [:]
         if let cpuUsage = cpuUsage {
-            result[keyCPUUsagePercent] = cpuUsage
+            result[keyCPUUsagePercent] = .double(cpuUsage)
         }
         if let memoryUsage = memoryUsage {
-            result[keyMemoryUsageValue] = Double(memoryUsage)
+            result[keyMemoryUsageValue] = .int(Int64(memoryUsage))
         }
         return result
-    }
-
-    func subscribeOnMetricEvents(listener: @escaping ([String: Double]) -> Void) -> Any? {
-        nil
     }
 }
 

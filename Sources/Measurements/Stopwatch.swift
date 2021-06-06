@@ -68,7 +68,7 @@ public class Stopwatch {
             }
 
             memoir.measurement(
-                name: name, value: value, meta: meta, tracers: tracers, date: date, file: file, function: function, line: line
+                name: name, value: .double(value), meta: meta, tracers: tracers, date: date, file: file, function: function, line: line
             )
         }
 
