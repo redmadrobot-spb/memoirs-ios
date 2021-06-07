@@ -19,6 +19,7 @@ public enum MeasurementValue {
 
     case double(Double)
     case int(Int64)
+    case meta // all data is stored in a meta field
     case histogram(buckets: [HistogramBucket]) // range ends are exclusive
 
     var isZero: Bool {
@@ -27,6 +28,8 @@ public enum MeasurementValue {
                 return value.isZero
             case .int(let value):
                 return value == 0
+            case .meta:
+                return false
             case .histogram(let buckets):
                 return buckets.isEmpty || buckets.allSatisfy { bucket in bucket.count == 0 }
         }

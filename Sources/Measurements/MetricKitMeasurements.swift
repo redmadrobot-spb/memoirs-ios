@@ -30,214 +30,340 @@ public class MetricKitMeasurements: NSObject, MXMetricManagerSubscriber {
         metricManager?.remove(self)
     }
 
-    private let metaKeyLatestApplicationVersion: String = "iOS.metrics.latestApplicationVersion"
-    private let metaKeyIncludesMultipleApplicationVersions: String = "iOS.metrics.includesMultipleApplicationVersions"
-    private let metaKeyTimeStampBegin: String = "iOS.metrics.timeStampBegin"
-    private let metaKeyTimeStampEnd: String = "iOS.metrics.timeStampEnd"
-    private let metaKeyRegionFormat: String = "iOS.metrics.metaRegionFormat"
-    private let metaKeyDeviceType: String = "iOS.metrics.metaDeviceType"
-    private let metaKeyOSVersion: String = "iOS.metrics.metaOSVersion"
-    private let metaKeyApplicationBuildVersion: String = "iOS.metrics.metaApplicationBuildVersion"
-    private let metaKeyPlatformArchitecture: String = "iOS.metrics.metaPlatformArchitecture"
+    // MARK: - Metrics transformations
 
-    private let keyCPUCumulativeTime: String = "iOS.metrics.cpu.cumulativeTime.secs"
-    private let keyCPUCumulativeInstructions: String = "iOS.metrics.cpu.cumulativeInstructions.secs"
+    private typealias NameValueAndMeta = [String: (value: MeasurementValue, meta: [String: SafeString])]
 
-    private let keyMemoryAverageSuspendedMemory: String = "iOS.metrics.memory.averageSuspendedMemory.bytes"
-    private let keyMemoryPeakUsage: String = "iOS.metrics.memory.peakMemoryUsage.bytes"
+    private func processMemoryMetric(_ metric: MXMemoryMetric, into metrics: inout NameValueAndMeta) {
+        let keyMemoryMetric = "iOSMetric.memory"
+        let keyMemoryAverageSuspendedMemory = "averageSuspended.bytes"
+        let keyMemoryPeakUsage = "peakUsage.bytes"
 
-    private let keyAnimationScrollHitchTimeRatio: String = "iOS.metrics.animation.keyAnimationScrollHitchTimeRatio"
+        let meta: [String: SafeString] = [
+            keyMemoryAverageSuspendedMemory: "\(safe: Int(metric.averageSuspendedMemory.averageMeasurement.converted(to: .bytes).value))",
+            keyMemoryPeakUsage: "\(safe: Int(metric.peakMemoryUsage.converted(to: .bytes).value))",
+        ]
+        metrics[keyMemoryMetric] = (value: .meta, meta: meta)
+    }
 
-    private let keyExitsBackgroundNormal: String = "iOS.metrics.exits.background.normal"
-    private let keyExitsBackgroundAbnormal: String = "iOS.metrics.exits.background.abnormal"
-    private let keyExitsBackgroundWatchdog: String = "iOS.metrics.exits.background.watchdog"
-    private let keyExitsBackgroundTaskAssertion: String = "iOS.metrics.exits.background.taskAssertion"
-    private let keyExitsBackgroundBadAccess: String = "iOS.metrics.exits.background.badAccess"
-    private let keyExitsBackgroundCPULimit: String = "iOS.metrics.exits.background.cpuLimit"
-    private let keyExitsBackgroundIllegalInstruction: String = "iOS.metrics.exits.background.illegalInstruction"
-    private let keyExitsBackgroundMemoryPressure: String = "iOS.metrics.exits.background.memoryPressure"
-    private let keyExitsBackgroundMemoryResource: String = "iOS.metrics.exits.background.memoryResource"
-    private let keyExitsBackgroundLockedFile: String = "iOS.metrics.exits.background.lockedFile"
+    private func processCPUMetric(_ metric: MXCPUMetric, into metrics: inout NameValueAndMeta) {
+        let keyCPUMetric = "iOSMetric.cpu"
+        let keyCPUCumulativeTime = "cumulativeTime.secs"
+        let keyCPUCumulativeInstructions = "cumulativeInstructions.secs"
 
-    private let keyExitsForegroundNormal: String = "iOS.metrics.exits.foreground.normal"
-    private let keyExitsForegroundAbnormal: String = "iOS.metrics.exits.foreground.abnormal"
-    private let keyExitsForegroundWatchdog: String = "iOS.metrics.exits.foreground.watchdog"
-    private let keyExitsForegroundBadAccess: String = "iOS.metrics.exits.foreground.badAccess"
-    private let keyExitsForegroundIllegalInstruction: String = "iOS.metrics.exits.foreground.illegalInstruction"
-    private let keyExitsForegroundResourceLimit: String = "iOS.metrics.exits.foreground.resourceLimit"
+        var meta: [String: SafeString] = [
+            keyCPUCumulativeTime: "\(safe: Int(metric.cumulativeCPUTime.converted(to: .seconds).value))"
+        ]
+        if #available(iOS 14.0, *) {
+            meta[keyCPUCumulativeInstructions] = "\(safe: Int64(metric.cumulativeCPUInstructions.value))"
+        }
+        metrics[keyCPUMetric] = (value: .meta, meta: meta)
+    }
 
-    private let keyLaunchTimeToFirstDraw: String = "iOS.metrics.launch.timeToFirstDraw.secs"
-    private let keyLaunchResumeTime: String = "iOS.metrics.launch.resumeTime.secs"
+    @available(iOS 14.0, *)private func processAnimationMetric(_ metric: MXAnimationMetric, into metrics: inout NameValueAndMeta) {
+        let keyAnimationMetric = "iOSMetric.animation"
+        let keyAnimationScrollHitchTimeRatio = "scrollHitchTimeRatio"
 
-    private let keyResponsivenessHangTime: String = "iOS.metrics.responsiveness.hangTime.secs"
+        let meta: [String: SafeString] = [
+            keyAnimationScrollHitchTimeRatio: "\(safe: metric.scrollHitchTimeRatio.value)",
+        ]
+        metrics[keyAnimationMetric] = (value: .meta, meta: meta)
+    }
 
-    private let keyCellularConditionTime: String = "iOS.metrics.cellular.conditionTime.bars"
+    @available(iOS 14.0, *)
+    private func processExitMetric(_ metric: MXAppExitMetric, into metrics: inout NameValueAndMeta) {
+        let keyExitBackgroundMetric = "iOSMetric.exits.background"
+        let keyExitBackgroundNormal = "normal"
+        let keyExitBackgroundAbnormal = "abnormal"
+        let keyExitBackgroundWatchdog = "watchdog"
+        let keyExitBackgroundTaskAssertion = "taskAssertion"
+        let keyExitBackgroundBadAccess = "badAccess"
+        let keyExitBackgroundCPULimit = "cpuLimit"
+        let keyExitBackgroundIllegalInstruction = "illegalInstruction"
+        let keyExitBackgroundMemoryPressure = "memoryPressure"
+        let keyExitBackgroundMemoryResource = "memoryResource"
+        let keyExitBackgroundLockedFile = "lockedFile"
 
-    private let keyTimeMetricsForeground: String = "iOS.metrics.appTime.foreground"
-    private let keyTimeMetricsBackground: String = "iOS.metrics.appTime.background"
-    private let keyTimeMetricsBackgroundAudio: String = "iOS.metrics.appTime.background.audio"
-    private let keyTimeMetricsBackgroundLocation: String = "iOS.metrics.appTime.background.location"
+        let keyExitForegroundMetric = "iOSMetric.exits.foreground"
+        let keyExitForegroundNormal = "normal"
+        let keyExitForegroundAbnormal = "abnormal"
+        let keyExitForegroundWatchdog = "watchdog"
+        let keyExitForegroundBadAccess = "badAccess"
+        let keyExitForegroundIllegalInstruction = "illegalInstruction"
+        let keyExitForegroundResourceLimit = "resourceLimit"
 
-    private let keyDiskWrites: String = "iOS.metrics.disk.writes.bytes"
+        let metaBackground: [String: SafeString] = [
+            keyExitBackgroundNormal: "\(safe: Int(metric.backgroundExitData.cumulativeNormalAppExitCount))",
+            keyExitBackgroundAbnormal: "\(safe: Int(metric.backgroundExitData.cumulativeAbnormalExitCount))",
+            keyExitBackgroundWatchdog: "\(safe: Int(metric.backgroundExitData.cumulativeAppWatchdogExitCount))",
+            keyExitBackgroundTaskAssertion: "\(safe: Int(metric.backgroundExitData.cumulativeBackgroundTaskAssertionTimeoutExitCount))",
+            keyExitBackgroundBadAccess: "\(safe: Int(metric.backgroundExitData.cumulativeBadAccessExitCount))",
+            keyExitBackgroundCPULimit: "\(safe: Int(metric.backgroundExitData.cumulativeCPUResourceLimitExitCount))",
+            keyExitBackgroundIllegalInstruction: "\(safe: Int(metric.backgroundExitData.cumulativeIllegalInstructionExitCount))",
+            keyExitBackgroundMemoryPressure: "\(safe: Int(metric.backgroundExitData.cumulativeMemoryPressureExitCount))",
+            keyExitBackgroundMemoryResource: "\(safe: Int(metric.backgroundExitData.cumulativeMemoryResourceLimitExitCount))",
+            keyExitBackgroundLockedFile: "\(safe: Int(metric.backgroundExitData.cumulativeSuspendedWithLockedFileExitCount))",
+        ]
+        let metaForeground: [String: SafeString] = [
+            keyExitForegroundNormal: "\(safe: Int(metric.foregroundExitData.cumulativeNormalAppExitCount))",
+            keyExitForegroundAbnormal: "\(safe: Int(metric.foregroundExitData.cumulativeAbnormalExitCount))",
+            keyExitForegroundWatchdog: "\(safe: Int(metric.foregroundExitData.cumulativeAppWatchdogExitCount))",
+            keyExitForegroundBadAccess: "\(safe: Int(metric.foregroundExitData.cumulativeBadAccessExitCount))",
+            keyExitForegroundIllegalInstruction: "\(safe: Int(metric.foregroundExitData.cumulativeIllegalInstructionExitCount))",
+            keyExitForegroundResourceLimit: "\(safe: Int(metric.foregroundExitData.cumulativeMemoryResourceLimitExitCount))",
+        ]
+        metrics[keyExitBackgroundMetric] = (value: .meta, meta: metaBackground)
+        metrics[keyExitForegroundMetric] = (value: .meta, meta: metaForeground)
+    }
 
-    private let keyDisplayAverageLuminance: String = "iOS.metrics.display.luminance.average.apl"
+    private func processLaunchMetric(_ metric: MXAppLaunchMetric, into metrics: inout NameValueAndMeta) {
+        let keyLaunchMetric = "iOSMetric.launch"
+        let keyLaunchTimeToFirstDraw = "timeToFirstDraw.secs"
+        let keyLaunchResumeTime = "resumeTime.secs"
 
-    private let keyGPUTime: String = "iOS.metrics.gpu.time.secs"
+        let bucketsTimeToFirstDraw: [MeasurementValue.HistogramBucket] = metric.histogrammedTimeToFirstDraw.bucketEnumerator
+            .compactMap { $0 as? MXHistogramBucket<UnitDuration> }
+            .map { MeasurementValue.HistogramBucket(range: rangeInSeconds(for: $0), count: $0.bucketCount) }
+        let bucketsResumeTime: [MeasurementValue.HistogramBucket] = metric.histogrammedApplicationResumeTime.bucketEnumerator
+            .compactMap { $0 as? MXHistogramBucket<UnitDuration> }
+            .map { MeasurementValue.HistogramBucket(range: rangeInSeconds(for: $0), count: $0.bucketCount) }
 
-    private let keyLocationNavigation: String = "iOS.metrics.location.navigation.secs"
-    private let keyLocationBest: String = "iOS.metrics.location.best.secs"
-    private let keyLocationTenMeters: String = "iOS.metrics.location.tenMeters.secs"
-    private let keyLocationHundredMeters: String = "iOS.metrics.location.hundredMeters.secs"
-    private let keyLocationKilometer: String = "iOS.metrics.location.kilometer.secs"
-    private let keyLocationThreeKilometers: String = "iOS.metrics.location.threeKilometers.secs"
+        metrics["\(keyLaunchMetric).\(keyLaunchTimeToFirstDraw)"] = (.histogram(buckets: bucketsTimeToFirstDraw), [:])
+        metrics["\(keyLaunchMetric).\(keyLaunchResumeTime)"] = (.histogram(buckets: bucketsResumeTime), [:])
+    }
 
-    private let keyNetworkWifiUpload: String = "iOS.metrics.net.WifiUpload.bytes"
-    private let keyNetworkWifiDownload: String = "iOS.metrics.net.WifiDownload.bytes"
-    private let keyNetworkCellularUpload: String = "iOS.metrics.net.cellularUpload.bytes"
-    private let keyNetworkCellularDownload: String = "iOS.metrics.net.cellularDownload.bytes"
+    private func processResponsivenessMetric(_ metric: MXAppResponsivenessMetric, into metrics: inout NameValueAndMeta) {
+        let keyResponsivenessMetric = "iOSMetric.responsiveness"
+        let keyResponsivenessHangTime = "hangTime.secs"
 
-    private let keySignpostPrefix: String = "iOS.metrics.sp."
+        let buckets: [MeasurementValue.HistogramBucket] = metric.histogrammedApplicationHangTime
+            .bucketEnumerator
+            .compactMap { $0 as? MXHistogramBucket<UnitDuration> }
+            .map { MeasurementValue.HistogramBucket(range: rangeInSeconds(for: $0), count: $0.bucketCount) }
+        metrics["\(keyResponsivenessMetric).\(keyResponsivenessHangTime)"] = (value: .histogram(buckets: buckets), meta: [:])
+    }
+
+    private func processAppRunTimeMetric(_ metric: MXAppRunTimeMetric, into metrics: inout NameValueAndMeta) {
+        let keyTimeMetric = "iOSMetric.appTime"
+        let keyTimeMetricsForeground = "foreground"
+        let keyTimeMetricsBackground = "background"
+        let keyTimeMetricsBackgroundAudio = "background.audio"
+        let keyTimeMetricsBackgroundLocation = "background.location"
+
+        let meta: [String: SafeString] = [
+            keyTimeMetricsForeground: "\(safe: metric.cumulativeForegroundTime.converted(to: .seconds).value)",
+            keyTimeMetricsBackground: "\(safe: metric.cumulativeBackgroundTime.converted(to: .seconds).value)",
+            keyTimeMetricsBackgroundAudio: "\(safe: metric.cumulativeBackgroundAudioTime.converted(to: .seconds).value)",
+            keyTimeMetricsBackgroundLocation: "\(safe: metric.cumulativeBackgroundLocationTime.converted(to: .seconds).value)",
+        ]
+        metrics[keyTimeMetric] = (value: .meta, meta: meta)
+    }
+
+    private func processCellularConditionsMetric(_ metric: MXCellularConditionMetric, into metrics: inout NameValueAndMeta) {
+        let keyCellularMetric = "iOSMetric.cellular"
+        let keyCellularConditionTime = "conditionTime.bars"
+
+        let buckets: [MeasurementValue.HistogramBucket] = metric.histogrammedCellularConditionTime
+            .bucketEnumerator
+            .compactMap { $0 as? MXHistogramBucket<MXUnitSignalBars> }
+            .map { MeasurementValue.HistogramBucket(range: rangeOfBars(for: $0), count: $0.bucketCount) }
+
+        metrics["\(keyCellularMetric).\(keyCellularConditionTime)"] = (value: .histogram(buckets: buckets), meta: [:])
+    }
+
+    private func processDiskIOMetric(_ metric: MXDiskIOMetric, into metrics: inout NameValueAndMeta) {
+        let keyDiskMetric = "iOSMetric.disk.writes.bytes"
+        let keyDiskWrites = "writes.bytes"
+
+        metrics["\(keyDiskMetric).\(keyDiskWrites)"] = (value: .double(metric.cumulativeLogicalWrites.converted(to: .bytes).value), meta: [:])
+    }
+
+    private func processDisplayMetric(_ metric: MXDisplayMetric, into metrics: inout NameValueAndMeta) {
+        let keyDisplayMetric = "iOSMetric.display"
+        let keyDisplayAverageLuminance = "luminance.average.apl"
+
+        if let value = metric.averagePixelLuminance?.averageMeasurement.converted(to: .apl).value {
+            metrics["\(keyDisplayMetric).\(keyDisplayAverageLuminance)"] = (value: .double(value), meta: [:])
+        }
+    }
+
+    private func processGPUMetric(_ metric: MXGPUMetric, into metrics: inout NameValueAndMeta) {
+        let keyGPUMetric = "iOSMetric.gpu"
+        let keyGPUTime = "time.secs"
+
+        metrics["\(keyGPUMetric).\(keyGPUTime)"] = (value: .double(metric.cumulativeGPUTime.converted(to: .seconds).value), meta: [:])
+    }
+
+    private func processLocationMetric(_ metric: MXLocationActivityMetric, into metrics: inout NameValueAndMeta) {
+        let keyLocationMetric = "iOSMetric.location"
+        let keyLocationNavigation = "navigation.secs"
+        let keyLocationBest = "best.secs"
+        let keyLocationTenMeters = "tenMeters.secs"
+        let keyLocationHundredMeters = "hundredMeters.secs"
+        let keyLocationKilometer = "kilometer.secs"
+        let keyLocationThreeKilometers = "threeKilometers.secs"
+
+        let meta: [String: SafeString] = [
+            keyLocationNavigation: "\(safe: metric.cumulativeBestAccuracyForNavigationTime.converted(to: .seconds).value)",
+            keyLocationBest: "\(safe: metric.cumulativeBestAccuracyTime.converted(to: .seconds).value)",
+            keyLocationTenMeters: "\(safe: metric.cumulativeNearestTenMetersAccuracyTime.converted(to: .seconds).value)",
+            keyLocationHundredMeters: "\(safe: metric.cumulativeHundredMetersAccuracyTime.converted(to: .seconds).value)",
+            keyLocationKilometer: "\(safe: metric.cumulativeKilometerAccuracyTime.converted(to: .seconds).value)",
+            keyLocationThreeKilometers: "\(safe: metric.cumulativeThreeKilometersAccuracyTime.converted(to: .seconds).value)",
+        ]
+        metrics[keyLocationMetric] = (value: .meta, meta: meta)
+    }
+
+    private func processNetworkTransferMetric(_ metric: MXNetworkTransferMetric, into metrics: inout NameValueAndMeta) {
+        let keyNetworkMetric = "iOSMetric.net"
+        let keyNetworkWifiUpload = "WifiUpload.bytes"
+        let keyNetworkWifiDownload = "WifiDownload.bytes"
+        let keyNetworkCellularUpload = "cellularUpload.bytes"
+        let keyNetworkCellularDownload = "cellularDownload.bytes"
+
+        let meta: [String: SafeString] = [
+            keyNetworkWifiUpload: "\(safe: Int(metric.cumulativeWifiUpload.converted(to: .bytes).value))",
+            keyNetworkWifiDownload: "\(safe: Int(metric.cumulativeWifiDownload.converted(to: .bytes).value))",
+            keyNetworkCellularUpload: "\(safe: Int(metric.cumulativeCellularUpload.converted(to: .bytes).value))",
+            keyNetworkCellularDownload: "\(safe: Int(metric.cumulativeCellularDownload.converted(to: .bytes).value))",
+        ]
+        metrics[keyNetworkMetric] = (value: .meta, meta: meta)
+    }
+
+    private func processSignpostMetrics(_ metric: MXSignpostMetric, into metrics: inout NameValueAndMeta) {
+        let keySignpostPrefix = "iOSMetric.sp."
+
+        var value: MeasurementValue = .meta
+        var meta: [String: SafeString] = [:]
+        if let interval = metric.signpostIntervalData {
+            meta["count"] = "\(safe: Int(metric.totalCount))"
+            if let value = interval.cumulativeCPUTime?.converted(to: .seconds).value {
+                meta["cumulativeCPU.secs"] = "\(safe: value)"
+            }
+            if let value = interval.averageMemory?.averageMeasurement.converted(to: .bytes).value {
+                meta["averageMemory.bytes"] = "\(safe: value)"
+            }
+
+            let buckets: [MeasurementValue.HistogramBucket] = interval.histogrammedSignpostDuration
+                .bucketEnumerator
+                .compactMap { $0 as? MXHistogramBucket<UnitDuration> }
+                .map { MeasurementValue.HistogramBucket(range: rangeInSeconds(for: $0), count: $0.bucketCount) }
+            value = .histogram(buckets: buckets)
+        }
+        metrics["\(keySignpostPrefix)\(metric.signpostCategory).\(metric.signpostName)"] = (value: value, meta: meta)
+    }
+
+    // MARK: - Diagnostics transformations
+
+    @available(iOS 14.0, *)
+    private func metaFor(crash diagnostic: MXCrashDiagnostic) -> [String: SafeString] {
+        var meta: [String: SafeString] = [:]
+        meta["type"] = diagnostic.exceptionType.map { "\(safe: $0)" }
+        meta["code"] = diagnostic.exceptionCode.map { "\(safe: $0)" }
+        meta["signal"] = diagnostic.signal.map { "\(safe: $0)" }
+        meta["reason"] = diagnostic.terminationReason.map { "\(safe: $0)" }
+        meta["memoryRegion"] = diagnostic.virtualMemoryRegionInfo.map { "\(safe: $0)" }
+        meta["stack"] = String(data: diagnostic.callStackTree.jsonRepresentation(), encoding: .utf8).map { "\(safe: $0)" }
+        return meta
+    }
+
+    @available(iOS 14.0, *)
+    private func metaFor(cpuException diagnostic: MXCPUExceptionDiagnostic) -> [String: SafeString] {
+        var meta: [String: SafeString] = [:]
+        meta["totalCPU.secs"] = "\(safe: diagnostic.totalCPUTime.converted(to: .seconds).value)"
+        meta["totalSampled.secs"] = "\(safe: diagnostic.totalSampledTime.converted(to: .seconds).value)"
+        let stackTraceData = diagnostic.callStackTree.jsonRepresentation()
+        meta["stack"] = String(data: stackTraceData, encoding: .utf8).map { "\(safe: $0)" }
+        return meta
+    }
+
+    @available(iOS 14.0, *)
+    private func metaFor(hang diagnostic: MXHangDiagnostic) -> [String: SafeString] {
+        var meta: [String: SafeString] = [:]
+        meta["duration.secs"] = "\(safe: diagnostic.hangDuration.converted(to: .seconds).value)"
+        let stackTraceData = diagnostic.callStackTree.jsonRepresentation()
+        meta["stack"] = String(data: stackTraceData, encoding: .utf8).map { "\(safe: $0)" }
+        return meta
+    }
+
+    @available(iOS 14.0, *)
+    private func metaFor(diskWriteException diagnostic: MXDiskWriteExceptionDiagnostic) -> [String: SafeString] {
+        var meta: [String: SafeString] = [:]
+        meta["total.bytes"] = "\(safe: diagnostic.totalWritesCaused.converted(to: .bytes).value)"
+        let stackTraceData = diagnostic.callStackTree.jsonRepresentation()
+        meta["stack"] = String(data: stackTraceData, encoding: .utf8).map { "\(safe: $0)" }
+        return meta
+    }
+
+    // MARK: - Delegate methods
 
     public func didReceive(_ payloads: [MXMetricPayload]) {
         payloads.forEach { payload in
-            var meta: [String: SafeString] = [:]
-            meta[metaKeyLatestApplicationVersion] = "\(safe: payload.latestApplicationVersion)"
-            meta[metaKeyIncludesMultipleApplicationVersions] = "\(safe: payload.includesMultipleApplicationVersions)"
-            meta[metaKeyTimeStampBegin] = "\(safe: payload.timeStampBegin)"
-            meta[metaKeyTimeStampEnd] = "\(safe: payload.timeStampEnd)"
-            if let metaData = payload.metaData {
-                meta[metaKeyRegionFormat] = "\(safe: metaData.regionFormat)"
-                meta[metaKeyOSVersion] = "\(safe: metaData.osVersion)"
-                meta[metaKeyApplicationBuildVersion] = "\(safe: metaData.applicationBuildVersion)"
-                if #available(iOS 14.0, *) {
-                    meta[metaKeyPlatformArchitecture] = "\(safe: metaData.platformArchitecture)"
-                }
-                meta[metaKeyDeviceType] = "\(safe: metaData.deviceType)"
-            }
-
-            var metrics: [String: MeasurementValue] = [:]
-            if let metric = payload.cpuMetrics {
-                metrics[keyCPUCumulativeTime] = .int(Int64(metric.cumulativeCPUTime.converted(to: .seconds).value))
-                if #available(iOS 14.0, *) {
-                    metrics[keyCPUCumulativeInstructions] = .int(Int64(metric.cumulativeCPUInstructions.value))
-                }
-            }
-            if let metric = payload.memoryMetrics {
-                metrics[keyMemoryAverageSuspendedMemory] = .int(Int64(metric.averageSuspendedMemory.averageMeasurement.converted(to: .bytes).value))
-                metrics[keyMemoryPeakUsage] = .int(Int64(metric.peakMemoryUsage.converted(to: .bytes).value))
-            }
+            var metrics: NameValueAndMeta = [:]
+            payload.cpuMetrics.map { processCPUMetric($0, into: &metrics) }
+            payload.memoryMetrics.map { processMemoryMetric($0, into: &metrics) }
             if #available(iOS 14.0, *) {
-                if let metric = payload.animationMetrics {
-                    metrics[keyAnimationScrollHitchTimeRatio] = .double(metric.scrollHitchTimeRatio.value)
-                }
-                if let metric = payload.applicationExitMetrics {
-                    metrics[keyExitsBackgroundNormal] = .int(Int64(metric.backgroundExitData.cumulativeNormalAppExitCount))
-                    metrics[keyExitsBackgroundAbnormal] = .int(Int64(metric.backgroundExitData.cumulativeAbnormalExitCount))
-                    metrics[keyExitsBackgroundWatchdog] = .int(Int64(metric.backgroundExitData.cumulativeAppWatchdogExitCount))
-                    metrics[keyExitsBackgroundTaskAssertion] = .int(Int64(metric.backgroundExitData.cumulativeBackgroundTaskAssertionTimeoutExitCount))
-                    metrics[keyExitsBackgroundBadAccess] = .int(Int64(metric.backgroundExitData.cumulativeBadAccessExitCount))
-                    metrics[keyExitsBackgroundCPULimit] = .int(Int64(metric.backgroundExitData.cumulativeCPUResourceLimitExitCount))
-                    metrics[keyExitsBackgroundIllegalInstruction] = .int(Int64(metric.backgroundExitData.cumulativeIllegalInstructionExitCount))
-                    metrics[keyExitsBackgroundMemoryPressure] = .int(Int64(metric.backgroundExitData.cumulativeMemoryPressureExitCount))
-                    metrics[keyExitsBackgroundMemoryResource] = .int(Int64(metric.backgroundExitData.cumulativeMemoryResourceLimitExitCount))
-                    metrics[keyExitsBackgroundLockedFile] = .int(Int64(metric.backgroundExitData.cumulativeSuspendedWithLockedFileExitCount))
-
-                    metrics[keyExitsForegroundNormal] = .int(Int64(metric.foregroundExitData.cumulativeNormalAppExitCount))
-                    metrics[keyExitsForegroundAbnormal] = .int(Int64(metric.foregroundExitData.cumulativeAbnormalExitCount))
-                    metrics[keyExitsForegroundWatchdog] = .int(Int64(metric.foregroundExitData.cumulativeAppWatchdogExitCount))
-                    metrics[keyExitsForegroundBadAccess] = .int(Int64(metric.foregroundExitData.cumulativeBadAccessExitCount))
-                    metrics[keyExitsForegroundIllegalInstruction] = .int(Int64(metric.foregroundExitData.cumulativeIllegalInstructionExitCount))
-                    metrics[keyExitsForegroundResourceLimit] = .int(Int64(metric.foregroundExitData.cumulativeMemoryResourceLimitExitCount))
-                }
+                payload.animationMetrics.map { processAnimationMetric($0, into: &metrics) }
+                payload.applicationExitMetrics.map { processExitMetric($0, into: &metrics) }
             }
-            if let metric = payload.applicationLaunchMetrics {
-                let bucketsTimeToFirstDraw: [MeasurementValue.HistogramBucket] = metric.histogrammedTimeToFirstDraw
-                    .bucketEnumerator
-                    .compactMap { $0 as? MXHistogramBucket<UnitDuration> }
-                    .map { MeasurementValue.HistogramBucket(range: rangeInSeconds(for: $0), count: $0.bucketCount) }
-                metrics[keyLaunchTimeToFirstDraw] = .histogram(buckets: bucketsTimeToFirstDraw)
-                let bucketsResumeTime: [MeasurementValue.HistogramBucket] = metric.histogrammedApplicationResumeTime
-                    .bucketEnumerator
-                    .compactMap { $0 as? MXHistogramBucket<UnitDuration> }
-                    .map { MeasurementValue.HistogramBucket(range: rangeInSeconds(for: $0), count: $0.bucketCount) }
-                metrics[keyLaunchResumeTime] = .histogram(buckets: bucketsResumeTime)
-            }
-            if let metric = payload.applicationResponsivenessMetrics {
-                let buckets: [MeasurementValue.HistogramBucket] = metric.histogrammedApplicationHangTime
-                    .bucketEnumerator
-                    .compactMap { $0 as? MXHistogramBucket<UnitDuration> }
-                    .map { MeasurementValue.HistogramBucket(range: rangeInSeconds(for: $0), count: $0.bucketCount) }
-                metrics[keyResponsivenessHangTime] = .histogram(buckets: buckets)
-            }
-            if let metric = payload.applicationTimeMetrics {
-                metrics[keyTimeMetricsForeground] = .double(metric.cumulativeForegroundTime.converted(to: .seconds).value)
-                metrics[keyTimeMetricsBackground] = .double(metric.cumulativeBackgroundTime.converted(to: .seconds).value)
-                metrics[keyTimeMetricsBackgroundAudio] = .double(metric.cumulativeBackgroundAudioTime.converted(to: .seconds).value)
-                metrics[keyTimeMetricsBackgroundLocation] = .double(metric.cumulativeBackgroundLocationTime.converted(to: .seconds).value)
-            }
-            if let metric = payload.cellularConditionMetrics {
-                let buckets: [MeasurementValue.HistogramBucket] = metric.histogrammedCellularConditionTime
-                    .bucketEnumerator
-                    .compactMap { $0 as? MXHistogramBucket<MXUnitSignalBars> }
-                    .map { MeasurementValue.HistogramBucket(range: rangeOfBars(for: $0), count: $0.bucketCount) }
-                metrics[keyCellularConditionTime] = .histogram(buckets: buckets)
-            }
-            if let metric = payload.diskIOMetrics {
-                metrics[keyDiskWrites] = .double(metric.cumulativeLogicalWrites.converted(to: .bytes).value)
-            }
-            if let metric = payload.displayMetrics {
-                if let value = metric.averagePixelLuminance?.averageMeasurement.converted(to: .apl).value {
-                    metrics[keyDisplayAverageLuminance] = .double(value)
-                }
-            }
-            if let metric = payload.gpuMetrics {
-                metrics[keyGPUTime] = .double(metric.cumulativeGPUTime.converted(to: .seconds).value)
-            }
-            if let metric = payload.locationActivityMetrics {
-                metrics[keyLocationNavigation] = .double(metric.cumulativeBestAccuracyForNavigationTime.converted(to: .seconds).value)
-                metrics[keyLocationBest] = .double(metric.cumulativeBestAccuracyTime.converted(to: .seconds).value)
-                metrics[keyLocationTenMeters] = .double(metric.cumulativeNearestTenMetersAccuracyTime.converted(to: .seconds).value)
-                metrics[keyLocationHundredMeters] = .double(metric.cumulativeHundredMetersAccuracyTime.converted(to: .seconds).value)
-                metrics[keyLocationKilometer] = .double(metric.cumulativeKilometerAccuracyTime.converted(to: .seconds).value)
-                metrics[keyLocationThreeKilometers] = .double(metric.cumulativeThreeKilometersAccuracyTime.converted(to: .seconds).value)
-            }
-            if let metric = payload.networkTransferMetrics {
-                metrics[keyNetworkWifiUpload] = .int(Int64(metric.cumulativeWifiUpload.converted(to: .bytes).value))
-                metrics[keyNetworkWifiDownload] = .int(Int64(metric.cumulativeWifiDownload.converted(to: .bytes).value))
-                metrics[keyNetworkCellularUpload] = .int(Int64(metric.cumulativeCellularUpload.converted(to: .bytes).value))
-                metrics[keyNetworkCellularDownload] = .int(Int64(metric.cumulativeCellularDownload.converted(to: .bytes).value))
-            }
-            if let metric = payload.signpostMetrics {
-                metric.forEach { metric in
-                    let prefix = "\(keySignpostPrefix)\(metric.signpostCategory).\(metric.signpostName)"
-                    metrics["\(prefix).count"] = .int(Int64(metric.totalCount))
-                    if let interval = metric.signpostIntervalData {
-                        if let value = interval.cumulativeCPUTime?.converted(to: .seconds).value {
-                            metrics["\(prefix).cumulativeCPU.secs"] = .double(value)
-                        }
-                        if let value = interval.averageMemory?.averageMeasurement.converted(to: .bytes).value {
-                            metrics["\(prefix).averageMemory.bytes"] = .double(value)
-                        }
-                        // TODO: Output histogram with durations
-                    }
-                }
-            }
+            payload.applicationLaunchMetrics.map { processLaunchMetric($0, into: &metrics) }
+            payload.applicationResponsivenessMetrics.map { processResponsivenessMetric($0, into: &metrics) }
+            payload.applicationTimeMetrics.map { processAppRunTimeMetric($0, into: &metrics) }
+            payload.cellularConditionMetrics.map { processCellularConditionsMetric($0, into: &metrics) }
+            payload.diskIOMetrics.map { processDiskIOMetric($0, into: &metrics) }
+            payload.displayMetrics.map { processDisplayMetric($0, into: &metrics) }
+            payload.gpuMetrics.map { processGPUMetric($0, into: &metrics) }
+            payload.locationActivityMetrics.map { processLocationMetric($0, into: &metrics) }
+            payload.networkTransferMetrics.map { processNetworkTransferMetric($0, into: &metrics) }
+            payload.signpostMetrics.map { $0.forEach { processSignpostMetrics($0, into: &metrics) } }
 
             let payloadMemoir = TracedMemoir(
                 tracer: .label("metricPayloads.\(payload.timeStampBegin)/\(payload.timeStampEnd)"),
-                meta: meta,
+                meta: meta(for: payload),
                 memoir: memoir
             )
             metrics
-                .filter { _, value in !value.isZero }
-                .forEach { key, value in
-                    payloadMemoir.measurement(name: key, value: value)
+                .filter { _, data in !data.value.isZero }
+                .forEach { name, data in
+                    let (value, meta) = data
+                    payloadMemoir.measurement(name: name, value: value, meta: meta)
                 }
         }
     }
 
+    private func meta(for payload: MXMetricPayload) -> [String: SafeString] {
+        let metaKeyLatestAppVersion = "latestAppVersion"
+        let metaKeyIncludesMultipleAppVersions = "includesMultipleAppVersions"
+        let metaKeyTimeStampBegin = "timeBegin"
+        let metaKeyTimeStampEnd = "timeEnd"
+        let metaKeyRegionFormat = "regionFormat"
+        let metaKeyDeviceType = "deviceType"
+        let metaKeyOSVersion = "osVersion"
+        let metaKeyApplicationBuildVersion = "applicationBuildVersion"
+        let metaKeyPlatformArchitecture = "platformArchitecture"
+
+        var meta: [String: SafeString] = [:]
+        meta[metaKeyLatestAppVersion] = "\(safe: payload.latestApplicationVersion)"
+        meta[metaKeyIncludesMultipleAppVersions] = "\(safe: payload.includesMultipleApplicationVersions)"
+        meta[metaKeyTimeStampBegin] = "\(safe: payload.timeStampBegin)"
+        meta[metaKeyTimeStampEnd] = "\(safe: payload.timeStampEnd)"
+        if let metaData = payload.metaData {
+            meta[metaKeyRegionFormat] = "\(safe: metaData.regionFormat)"
+            meta[metaKeyOSVersion] = "\(safe: metaData.osVersion)"
+            meta[metaKeyApplicationBuildVersion] = "\(safe: metaData.applicationBuildVersion)"
+            if #available(iOS 14.0, *) {
+                meta[metaKeyPlatformArchitecture] = "\(safe: metaData.platformArchitecture)"
+            }
+            meta[metaKeyDeviceType] = "\(safe: metaData.deviceType)"
+        }
+        return meta
+    }
+
     @available(iOS 14.0, *)
     public func didReceive(_ payloads: [MXDiagnosticPayload]) {
+        let metaKeyTimeStampBegin = "timeBegin"
+        let metaKeyTimeStampEnd = "timeEnd"
+
         payloads.forEach { payload in
             var meta: [String: SafeString] = [:]
             meta[metaKeyTimeStampBegin] = "\(safe: payload.timeStampBegin)"
@@ -250,54 +376,17 @@ public class MetricKitMeasurements: NSObject, MXMetricManagerSubscriber {
             )
 
             payload.crashDiagnostics?
-                .map { diagnostic in
-                    var diagnosticMeta: [String: SafeString] = [:]
-                    diagnosticMeta["type"] = diagnostic.exceptionType.map { "\(safe: $0)" }
-                    diagnosticMeta["code"] = diagnostic.exceptionCode.map { "\(safe: $0)" }
-                    diagnosticMeta["signal"] = diagnostic.signal.map { "\(safe: $0)" }
-                    diagnosticMeta["reason"] = diagnostic.terminationReason.map { "\(safe: $0)" }
-                    diagnosticMeta["memoryRegion"] = diagnostic.virtualMemoryRegionInfo.map { "\(safe: $0)" }
-                    let stackTraceData = diagnostic.callStackTree.jsonRepresentation()
-                    diagnosticMeta["stack"] = String(data: stackTraceData, encoding: .utf8).map { "\(safe: $0)" }
-                    return diagnosticMeta
-                }
-                .forEach {
-                    payloadMemoir.critical("MetricKit.crash", meta: $0)
-                }
+                .map(metaFor(crash:))
+                .forEach { payloadMemoir.critical("MetricKit.crash", meta: $0) }
             payload.cpuExceptionDiagnostics?
-                .map { diagnostic in
-                    var diagnosticMeta: [String: SafeString] = [:]
-                    diagnosticMeta["totalCPU.secs"] = "\(safe: diagnostic.totalCPUTime.converted(to: .seconds).value)"
-                    diagnosticMeta["totalSampled.secs"] = "\(safe: diagnostic.totalSampledTime.converted(to: .seconds).value)"
-                    let stackTraceData = diagnostic.callStackTree.jsonRepresentation()
-                    diagnosticMeta["stack"] = String(data: stackTraceData, encoding: .utf8).map { "\(safe: $0)" }
-                    return diagnosticMeta
-                }
-                .forEach {
-                    payloadMemoir.critical("MetricKit.CPUException", meta: $0)
-                }
+                .map(metaFor(cpuException:))
+                .forEach { payloadMemoir.critical("MetricKit.CPUException", meta: $0) }
             payload.hangDiagnostics?
-                .map { diagnostic in
-                    var diagnosticMeta: [String: SafeString] = [:]
-                    diagnosticMeta["duration.secs"] = "\(safe: diagnostic.hangDuration.converted(to: .seconds).value)"
-                    let stackTraceData = diagnostic.callStackTree.jsonRepresentation()
-                    diagnosticMeta["stack"] = String(data: stackTraceData, encoding: .utf8).map { "\(safe: $0)" }
-                    return diagnosticMeta
-                }
-                .forEach {
-                    payloadMemoir.error("MetricKit.hang", meta: $0)
-                }
+                .map(metaFor(hang:))
+                .forEach { payloadMemoir.error("MetricKit.hang", meta: $0) }
             payload.diskWriteExceptionDiagnostics?
-                .map { diagnostic in
-                    var diagnosticMeta: [String: SafeString] = [:]
-                    diagnosticMeta["total.bytes"] = "\(safe: diagnostic.totalWritesCaused.converted(to: .bytes).value)"
-                    let stackTraceData = diagnostic.callStackTree.jsonRepresentation()
-                    diagnosticMeta["stack"] = String(data: stackTraceData, encoding: .utf8).map { "\(safe: $0)" }
-                    return diagnosticMeta
-                }
-                .forEach {
-                    payloadMemoir.error("MetricKit.diskWrite", meta: $0)
-                }
+                .map(metaFor(diskWriteException:))
+                .forEach { payloadMemoir.error("MetricKit.diskWrite", meta: $0) }
         }
     }
 

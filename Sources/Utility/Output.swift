@@ -138,6 +138,11 @@ public class Output {
                     isSensitive ? "???" : "\(name) -> \(value)",
                     meta()?.commaJoined(isSensitive: isSensitive),
                 ].spaceMerged
+            case .meta:
+                message = [
+                    isSensitive ? "???" : "\(name)",
+                    meta()?.commaJoined(isSensitive: isSensitive),
+                ].spaceMerged
             case .histogram(let value):
                 let values = value
                     .map { bucket in
