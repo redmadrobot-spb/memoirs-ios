@@ -32,7 +32,7 @@ public class MetricKitMeasurements: NSObject, MXMetricManagerSubscriber {
 
     // MARK: - Metrics transformations
 
-    private typealias NameValueAndMeta = [String: (value: MeasurementValue, meta: [String: SafeString])]
+    private typealias NameValueAndMeta = [String: (value: MeasurementValue, meta: [String: SafeString]?)]
 
     private func processMemoryMetric(_ metric: MXMemoryMetric, into metrics: inout NameValueAndMeta) {
         let keyMemoryMetric = "iOSMetric.memory"
@@ -140,7 +140,7 @@ public class MetricKitMeasurements: NSObject, MXMetricManagerSubscriber {
             .bucketEnumerator
             .compactMap { $0 as? MXHistogramBucket<UnitDuration> }
             .map { MeasurementValue.HistogramBucket(range: rangeInSeconds(for: $0), count: $0.bucketCount) }
-        metrics["\(keyResponsivenessMetric).\(keyResponsivenessHangTime)"] = (value: .histogram(buckets: buckets), meta: [:])
+        metrics["\(keyResponsivenessMetric).\(keyResponsivenessHangTime)"] = (value: .histogram(buckets: buckets), meta: nil)
     }
 
     private func processAppRunTimeMetric(_ metric: MXAppRunTimeMetric, into metrics: inout NameValueAndMeta) {
@@ -168,14 +168,15 @@ public class MetricKitMeasurements: NSObject, MXMetricManagerSubscriber {
             .compactMap { $0 as? MXHistogramBucket<MXUnitSignalBars> }
             .map { MeasurementValue.HistogramBucket(range: rangeOfBars(for: $0), count: $0.bucketCount) }
 
-        metrics["\(keyCellularMetric).\(keyCellularConditionTime)"] = (value: .histogram(buckets: buckets), meta: [:])
+        metrics["\(keyCellularMetric).\(keyCellularConditionTime)"] = (value: .histogram(buckets: buckets), meta: nil)
     }
 
     private func processDiskIOMetric(_ metric: MXDiskIOMetric, into metrics: inout NameValueAndMeta) {
         let keyDiskMetric = "iOSMetric.disk.writes.bytes"
         let keyDiskWrites = "writes.bytes"
 
-        metrics["\(keyDiskMetric).\(keyDiskWrites)"] = (value: .double(metric.cumulativeLogicalWrites.converted(to: .bytes).value), meta: [:])
+        metrics["\(keyDiskMetric).\(keyDiskWrites)"] =
+            (value: .double(metric.cumulativeLogicalWrites.converted(to: .bytes).value), meta: nil)
     }
 
     private func processDisplayMetric(_ metric: MXDisplayMetric, into metrics: inout NameValueAndMeta) {
@@ -183,7 +184,7 @@ public class MetricKitMeasurements: NSObject, MXMetricManagerSubscriber {
         let keyDisplayAverageLuminance = "luminance.average.apl"
 
         if let value = metric.averagePixelLuminance?.averageMeasurement.converted(to: .apl).value {
-            metrics["\(keyDisplayMetric).\(keyDisplayAverageLuminance)"] = (value: .double(value), meta: [:])
+            metrics["\(keyDisplayMetric).\(keyDisplayAverageLuminance)"] = (value: .double(value), meta: nil)
         }
     }
 
@@ -191,7 +192,7 @@ public class MetricKitMeasurements: NSObject, MXMetricManagerSubscriber {
         let keyGPUMetric = "iOSMetric.gpu"
         let keyGPUTime = "time.secs"
 
-        metrics["\(keyGPUMetric).\(keyGPUTime)"] = (value: .double(metric.cumulativeGPUTime.converted(to: .seconds).value), meta: [:])
+        metrics["\(keyGPUMetric).\(keyGPUTime)"] = (value: .double(metric.cumulativeGPUTime.converted(to: .seconds).value), meta: nil)
     }
 
     private func processLocationMetric(_ metric: MXLocationActivityMetric, into metrics: inout NameValueAndMeta) {
@@ -318,7 +319,7 @@ public class MetricKitMeasurements: NSObject, MXMetricManagerSubscriber {
             payload.signpostMetrics.map { $0.forEach { processSignpostMetrics($0, into: &metrics) } }
 
             let payloadMemoir = TracedMemoir(
-                tracer: .label("metricPayloads.\(payload.timeStampBegin)/\(payload.timeStampEnd)"),
+                tracer: .label("metricPayloads.\(UUID().uuidString)"),
                 meta: meta(for: payload),
                 memoir: memoir
             )
@@ -364,29 +365,34 @@ public class MetricKitMeasurements: NSObject, MXMetricManagerSubscriber {
         let metaKeyTimeStampBegin = "timeBegin"
         let metaKeyTimeStampEnd = "timeEnd"
 
+        let keyCrash: SafeString = "iOSMetric.diagnostics.crash"
+        let keyCPUException: SafeString = "iOSMetric.diagnostics.cpuException"
+        let keyHang: SafeString = "iOSMetric.diagnostics.hang"
+        let keyDiskWriteException: SafeString = "iOSMetric.diagnostics.diskWriteException"
+
         payloads.forEach { payload in
             var meta: [String: SafeString] = [:]
             meta[metaKeyTimeStampBegin] = "\(safe: payload.timeStampBegin)"
             meta[metaKeyTimeStampEnd] = "\(safe: payload.timeStampEnd)"
 
             let payloadMemoir = TracedMemoir(
-                tracer: .label("metricDiagnostics.\(payload.timeStampBegin)/\(payload.timeStampEnd)"),
+                tracer: .label("metricDiagnostics.\(UUID().uuidString)"),
                 meta: meta,
                 memoir: memoir
             )
 
             payload.crashDiagnostics?
                 .map(metaFor(crash:))
-                .forEach { payloadMemoir.critical("MetricKit.crash", meta: $0) }
+                .forEach { payloadMemoir.critical(keyCrash, meta: $0) }
             payload.cpuExceptionDiagnostics?
                 .map(metaFor(cpuException:))
-                .forEach { payloadMemoir.critical("MetricKit.CPUException", meta: $0) }
+                .forEach { payloadMemoir.critical(keyCPUException, meta: $0) }
             payload.hangDiagnostics?
                 .map(metaFor(hang:))
-                .forEach { payloadMemoir.error("MetricKit.hang", meta: $0) }
+                .forEach { payloadMemoir.error(keyHang, meta: $0) }
             payload.diskWriteExceptionDiagnostics?
                 .map(metaFor(diskWriteException:))
-                .forEach { payloadMemoir.error("MetricKit.diskWrite", meta: $0) }
+                .forEach { payloadMemoir.error(keyDiskWriteException, meta: $0) }
         }
     }
 
