@@ -89,7 +89,7 @@ public class InstanceMemoir: TracedMemoir {
     }
 
     private let keyInstanceId: String = "__memoirs.__internal.instanceId"
-    private(set) var instanceId: String
+    public private(set) var instanceId: String
 
     public init(
         deviceInfo: DeviceInfo = .init(osInfo: .detected), memoir: Memoir,
