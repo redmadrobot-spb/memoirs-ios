@@ -88,25 +88,25 @@ public class InstanceMemoir: TracedMemoir {
         }
     }
 
-    private let keyInstallId: String = "__memoirs.__internal.installId"
+    private let keyInstanceId: String = "__memoirs.__internal.instanceId"
+    private(set) var instanceId: String
 
     public init(
         deviceInfo: DeviceInfo = .init(osInfo: .detected), memoir: Memoir,
         file: String = #fileID, function: String = #function, line: UInt = #line
     ) {
         let userDefaults = UserDefaults.standard
-        let installId: String
-        if let id = userDefaults.string(forKey: keyInstallId) {
-            installId = id
+        if let id = userDefaults.string(forKey: keyInstanceId) {
+            instanceId = id
         } else {
-            installId = UUID().uuidString
-            userDefaults.set(installId, forKey: keyInstallId)
+            instanceId = UUID().uuidString
+            userDefaults.set(instanceId, forKey: keyInstanceId)
         }
 
         let meta: [String: SafeString] = [
             "os": "\(deviceInfo.osInfo.string)"
         ]
-        super.init(tracer: .instance(id: installId), meta: meta, memoir: memoir, file: file, function: function, line: line)
+        super.init(tracer: .instance(id: instanceId), meta: meta, memoir: memoir, file: file, function: function, line: line)
     }
 }
 
