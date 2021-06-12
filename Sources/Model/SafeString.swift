@@ -26,7 +26,6 @@ public struct SafeString: CustomStringConvertible, ExpressibleByStringLiteral, E
     static let secretReplacement: String = "<secret>"
 
     private let interpolations: [SafeStringInterpolation.Kind]
-    private let isSensitive: Bool = SafeString.isSensitive
 
     public init(stringLiteral value: String) {
         interpolations = [ .open(value) ]
@@ -37,22 +36,26 @@ public struct SafeString: CustomStringConvertible, ExpressibleByStringLiteral, E
     }
 
     public init(_ any: Any) {
-        interpolations = [ isSensitive ? .sensitive(any) : .open(any) ]
+        interpolations = [ SafeString.isSensitive ? .sensitive(any) : .open(any) ]
     }
 
     public var description: String {
-        string(isSensitive: isSensitive)
+        string(isSensitive: SafeString.isSensitive)
     }
 
     public func string(isSensitive: Bool) -> String {
         interpolations.map { interpolation in
             switch interpolation {
+                case .open(let value as String):
+                    return value
                 case .open(let value as SafeStringConvertible):
-                    return "\(value.logDescription(isSensitive: false))"
+                    return value.logDescription(isSensitive: false)
                 case .open(let value):
                     return "\(value)"
                 case .sensitive(let value as SafeStringConvertible):
-                    return "\(value.logDescription(isSensitive: isSensitive))"
+                    return value.logDescription(isSensitive: isSensitive)
+                case .sensitive(let value as String):
+                    return isSensitive ? SafeString.secretReplacement : value
                 case .sensitive(let value):
                     return isSensitive ? SafeString.secretReplacement : "\(value)"
             }

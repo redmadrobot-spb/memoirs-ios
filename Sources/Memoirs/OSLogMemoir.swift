@@ -49,25 +49,25 @@ public class OSLogMemoir: Memoir {
         switch item {
             case .log(let level, let message):
                 description = output.logString(
-                    time: "", level: level, message: message, tracers: tracers, meta: meta, codePosition: codePosition
-                )
+                    date: nil, level: level, message: message, tracers: tracers, meta: meta, codePosition: codePosition
+                ).joined(separator: " ")
                 osLogType = logType(from: level)
             case .event(let name):
                 description = output.eventString(
-                    time: "", name: name, tracers: tracers, meta: meta, codePosition: codePosition
-                )
+                    date: "", name: name, tracers: tracers, meta: meta, codePosition: codePosition
+                ).joined(separator: " ")
             case .tracer(let tracer, false):
                 description = output.tracerString(
-                    time: "", tracer: tracer, tracers: tracers, meta: meta, codePosition: codePosition
-                )
+                    date: "", tracer: tracer, tracers: tracers, meta: meta, codePosition: codePosition
+                ).joined(separator: " ")
             case .tracer(let tracer, true):
                 description = output.tracerEndString(
-                    time: "", tracer: tracer, tracers: tracers, meta: meta, codePosition: codePosition
-                )
+                    date: "", tracer: tracer, tracers: tracers, meta: meta, codePosition: codePosition
+                ).joined(separator: " ")
             case .measurement(let name, let value):
                 description = output.measurementString(
-                    time: "", name: name, value: value, tracers: tracers, meta: meta, codePosition: codePosition
-                )
+                    date: "", name: name, value: value, tracers: tracers, meta: meta, codePosition: codePosition
+                ).joined(separator: " ")
         }
         os_log(osLogType, log: label, "%{public}@", description)
         Output.logInterceptor?(self, item, description)

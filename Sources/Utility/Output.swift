@@ -69,8 +69,8 @@ public class Output {
 
     @inlinable
     public func codePosition(file: String, function: String, line: UInt) -> String {
+        let file = file.firstIndex(of: "/").map { String(file[file.index(after: $0) ..< file.endIndex]) } ?? file
         let context = [ file, line == 0 ? "" : "\(line)", shortCodePosition ? "" : function ]
-            .map { $0.trimmingCharacters(in: CharacterSet.whitespacesAndNewlines) }
             .filter { !$0.isEmpty }
             .joined(separator: ":")
 
@@ -79,132 +79,123 @@ public class Output {
 
     @inlinable
     public func logString(
-        time: String, level: LogLevel?, message: () -> SafeString, tracers: [Tracer], meta: () -> [String: SafeString]?,
+        date: String?, level: LogLevel?, message: () -> SafeString, tracers: [Tracer], meta: () -> [String: SafeString]?,
         codePosition: String
-    ) -> String {
+    ) -> [String] {
         let prefix = [
-            time,
+            date,
             codePosition,
             "\(level.map { "\(Marker.printString(for: $0))" } ?? "")",
             tracers.labelString(isSensitive: isSensitive),
-        ].spaceMerged
-        let message = [
             message().string(isSensitive: isSensitive),
             meta()?.commaJoined(isSensitive: isSensitive),
-        ].spaceMerged
+        ].compactMap { $0 }
         let suffix = tracers.filter(tracersFilter).allJoined(showLabel: false, short: shortTracers, isSensitive: isSensitive)
-        return format(prefix: prefix, message: message, suffix: suffix, separateTracers: separateTracers)
+        return merge(prefix: prefix, suffix: suffix, separateTracers: separateTracers)
     }
 
     @inlinable
     public func eventString(
-        time: String, name: String, tracers: [Tracer], meta: () -> [String: SafeString]?,
+        date: String?, name: String, tracers: [Tracer], meta: () -> [String: SafeString]?,
         codePosition: String
-    ) -> String {
+    ) -> [String] {
         let prefix = [
-            time,
+            date,
             codePosition,
             Marker.event,
             tracers.labelString(isSensitive: isSensitive),
-        ].spaceMerged
-        let message = [
             isSensitive ? "???" : name,
             meta()?.commaJoined(isSensitive: isSensitive),
-        ].spaceMerged
+        ].compactMap { $0 }
         let suffix = tracers.filter(tracersFilter).allJoined(showLabel: false, short: shortTracers, isSensitive: isSensitive)
-        return format(prefix: prefix, message: message, suffix: suffix, separateTracers: separateTracers)
+        return merge(prefix: prefix, suffix: suffix, separateTracers: separateTracers)
     }
 
     @inlinable
     public func measurementString(
-        time: String, name: String, value: MeasurementValue, tracers: [Tracer], meta: () -> [String: SafeString]?,
+        date: String?, name: String, value: MeasurementValue, tracers: [Tracer], meta: () -> [String: SafeString]?,
         codePosition: String
-    ) -> String {
-        let prefix = [
-            time,
+    ) -> [String] {
+        var prefix = [
+            date,
             codePosition,
             Marker.measurement,
             tracers.labelString(isSensitive: isSensitive),
-        ].spaceMerged
-        let message: String
+        ]
         switch value {
             case .double(let value):
-                message = [
+                prefix.append(contentsOf: [
                     isSensitive ? "???" : "\(name) -> \(value)",
                     meta()?.commaJoined(isSensitive: isSensitive),
-                ].spaceMerged
+                ])
             case .int(let value):
-                message = [
+                prefix.append(contentsOf: [
                     isSensitive ? "???" : "\(name) -> \(value)",
                     meta()?.commaJoined(isSensitive: isSensitive),
-                ].spaceMerged
+                ])
             case .meta:
-                message = [
+                prefix.append(contentsOf: [
                     isSensitive ? "???" : "\(name)",
                     meta()?.commaJoined(isSensitive: isSensitive),
-                ].spaceMerged
+                ])
             case .histogram(let value):
                 let values = value
                     .map { bucket in
                         "\(bucket.range.lowerBound)..\(bucket.range.upperBound): \(bucket.count)"
                     }
                     .joined(separator: "; ")
-                message = [
+                prefix.append(contentsOf: [
                     isSensitive ? "???" : "\(name) -> [ \(values) ]",
                     meta()?.commaJoined(isSensitive: isSensitive),
-                ].spaceMerged
+                ])
         }
         let suffix = tracers.filter(tracersFilter).allJoined(showLabel: false, short: shortTracers, isSensitive: isSensitive)
-        return format(prefix: prefix, message: message, suffix: suffix, separateTracers: separateTracers)
+        return merge(prefix: prefix.compactMap { $0 }, suffix: suffix, separateTracers: separateTracers)
     }
 
     @inlinable
     public func tracerString(
-        time: String, tracer: Tracer, tracers: [Tracer], meta: () -> [String: SafeString]?,
+        date: String?, tracer: Tracer, tracers: [Tracer], meta: () -> [String: SafeString]?,
         codePosition: String
-    ) -> String {
+    ) -> [String] {
         let prefix = [
-            time,
+            date,
             codePosition,
             Marker.tracer,
             tracers.labelString(isSensitive: isSensitive),
-        ].spaceMerged
-        let message = [
             "Tracer: \(isSensitive ? "???" : tracer.output)",
             meta()?.commaJoined(isSensitive: isSensitive),
-        ].spaceMerged
+        ].compactMap { $0 }
         let suffix = tracers.filter(tracersFilter).allJoined(showLabel: false, short: shortTracers, isSensitive: isSensitive)
-        return format(prefix: prefix, message: message, suffix: suffix, separateTracers: separateTracers)
+        return merge(prefix: prefix, suffix: suffix, separateTracers: separateTracers)
     }
 
     @inlinable
     public func tracerEndString(
-        time: String, tracer: Tracer, tracers: [Tracer], meta: () -> [String: SafeString]?,
+        date: String?, tracer: Tracer, tracers: [Tracer], meta: () -> [String: SafeString]?,
         codePosition: String
-    ) -> String {
+    ) -> [String] {
         let prefix = [
-            time,
+            date,
             codePosition,
             Marker.tracer,
             tracers.labelString(isSensitive: isSensitive),
-        ].spaceMerged
-        let message = [
             "End Tracer: \(isSensitive ? "???" : tracer.output)",
             meta()?.commaJoined(isSensitive: isSensitive),
-        ].spaceMerged
+        ].compactMap { $0 }
         let suffix = tracers.filter(tracersFilter).allJoined(showLabel: false, short: shortTracers, isSensitive: isSensitive)
-        return format(prefix: prefix, message: message, suffix: suffix, separateTracers: separateTracers)
+        return merge(prefix: prefix, suffix: suffix, separateTracers: separateTracers)
     }
 
     @usableFromInline
-    let tracersSeparator: String = "            • "
+    let tracersSeparator: String = "..."
 
     @inlinable
-    func format(prefix: String, message: String, suffix: String, separateTracers: Bool) -> String {
+    func merge(prefix: [String], suffix: String, separateTracers: Bool) -> [String] {
         if suffix.isEmpty {
-            return "\(prefix) \(message)"
+            return prefix
         } else {
-            return "\(prefix) \(message)\(separateTracers ? tracersSeparator : " ")\(suffix)"
+            return prefix + (separateTracers ? [ tracersSeparator, suffix ] : [ suffix ])
         }
     }
 }
@@ -213,20 +204,6 @@ extension Array where Element == Tracer {
     @usableFromInline
     func labelString(isSensitive: Bool) -> String? {
         labelTracer.map { isSensitive ? "???" : "[\($0.string)]" }
-    }
-}
-
-extension Array where Element == String? {
-    @usableFromInline
-    var spaceMerged: String {
-        compactMap { $0 }.spaceMerged
-    }
-}
-
-extension Array where Element == String {
-    @usableFromInline
-    var spaceMerged: String {
-        filter { !$0.isEmpty }.joined(separator: " ")
     }
 }
 
@@ -242,10 +219,10 @@ extension Array where Element == Tracer {
 
 extension Dictionary where Key == String, Value == SafeString {
     @usableFromInline
-    func commaJoined(isSensitive: Bool) -> String {
+    func commaJoined(isSensitive: Bool) -> String? {
         isEmpty
-            ? ""
-            : "[\(sorted { $0.key < $1.key }.map { "\($0): \($1.string(isSensitive: isSensitive))" }.joined(separator: ", "))]"
+            ? nil
+            : "[\(map { "\($0): \($1.string(isSensitive: isSensitive))" }.joined(separator: ", "))]"
     }
 }
 

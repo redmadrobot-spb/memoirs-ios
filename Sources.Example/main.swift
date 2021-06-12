@@ -9,7 +9,23 @@
 import Foundation
 import Memoirs
 
-let lowLevelMemoir = PrintMemoir(onlyTime: true, shortCodePosition: true) { tracer in
+// https://github.com/minimaxir/big-list-of-naughty-strings
+private let naughtyStrings: [String] = {
+    guard let currentDirectory = ProcessInfo.processInfo.environment["PWD"] else { return [ "Not found..." ] }
+
+    let url = URL(fileURLWithPath: currentDirectory)
+        .deletingLastPathComponent()
+        .deletingLastPathComponent()
+        .appendingPathComponent("Tests/BigListOfNaughtyStringsBase64.json")
+    guard
+        let data = try? Data(contentsOf: url),
+            let strings = try? JSONDecoder().decode([String].self, from: data)
+    else { return [ ":-<" ] }
+
+    return strings
+}()
+
+let lowLevelMemoir = PrintMemoir(shortCodePosition: true) { tracer in
     switch tracer {
         case .app, .instance, .session: return false
         case .request, .label: return true
@@ -55,5 +71,25 @@ addedLabelMemoir.event(name: "EventLog", meta: [:])
 
 addedLabelMemoir = TracedMemoir(label: "AnotherLabelALittleLonger", memoir: instanceMemoir)
 addedLabelMemoir.debug("Another instance level log")
+
+DispatchQueue.main.async {
+    var naughtyStringIndex = -1
+    while (true) {
+        autoreleasepool {
+            naughtyStringIndex += 1
+            if naughtyStringIndex >= naughtyStrings.count {
+                naughtyStringIndex = 0
+            }
+
+            let string = naughtyStrings[naughtyStringIndex]
+            addedLabelMemoir.debug("Another instance level log \(string)")
+            addedLabelMemoir.update(
+                tracer: .label("Some Tracer \(naughtyStringIndex)"),
+                meta: [ "meta1": "value1", "meta2": "value2", "meta3": "value3", ]
+            )
+            addedLabelMemoir.measurement(name: "Measurement \(naughtyStringIndex)", value: .double(23.9))
+        }
+    }
+}
 
 RunLoop.main.run()

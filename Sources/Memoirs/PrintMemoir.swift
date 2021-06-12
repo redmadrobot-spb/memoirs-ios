@@ -10,21 +10,41 @@ import Foundation
 
 /// Default `(Memoir)` implementation which uses `print()` to output logs.
 public class PrintMemoir: Memoir {
-    private static let timeOnlyDateFormatter: DateFormatter = {
+    public static let timeOnlyDateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "HH:mm:ss.SSS"
         formatter.locale = Locale(identifier: "en_US_POSIX")
         return formatter
     }()
-    private static let fullDateFormatter: DateFormatter = {
+    public static let fullDateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "yyyy-MM-dd HH:mm:ss.SSSZ"
         formatter.locale = Locale(identifier: "en_US_POSIX")
         return formatter
     }()
 
-    @usableFromInline
-    let formatter: DateFormatter
+    public enum Time {
+        case disabled
+        case fastAndNonAccurate
+        case formatter(DateFormatter)
+
+        public func string(from date: Date) -> String? {
+            switch self {
+                case .disabled:
+                    return nil
+                case .fastAndNonAccurate:
+                    return withUnsafePointer(to: Int(date.timeIntervalSince1970)) { pointer in
+                        var time = String(cString: ctime(pointer))
+                        if let firstColon = time.firstIndex(of: ":"), let lastSpace = time.lastIndex(of: " ") {
+                            time = String(time[time.index(firstColon, offsetBy: -2) ..< lastSpace])
+                        }
+                        return time
+                    }
+                case .formatter(let formatter):
+                    return formatter.string(from: date)
+            }
+        }
+    }
 
     public static let defaultTracerFilter: (Tracer) -> Bool = { tracer in
         switch tracer {
@@ -34,11 +54,13 @@ public class PrintMemoir: Memoir {
     }
 
     @usableFromInline
+    let time: Time
+    @usableFromInline
     let output: Output
 
     /// Creates a new instance of `PrintMemoir`.
     public init(
-        onlyTime: Bool = false, shortCodePosition: Bool = true, shortTracers: Bool = true,
+        time: Time = .formatter(timeOnlyDateFormatter), shortCodePosition: Bool = true, shortTracers: Bool = true,
         tracersFilter: @escaping (Tracer) -> Bool = PrintMemoir.defaultTracerFilter
     ) {
         output = Output(
@@ -46,7 +68,7 @@ public class PrintMemoir: Memoir {
             shortCodePosition: shortCodePosition, shortTracers: shortTracers, separateTracers: true,
             tracersFilter: tracersFilter
         )
-        formatter = onlyTime ? PrintMemoir.timeOnlyDateFormatter : PrintMemoir.fullDateFormatter
+        self.time = time
     }
 
     @inlinable
@@ -57,32 +79,33 @@ public class PrintMemoir: Memoir {
         date: Date,
         file: String, function: String, line: UInt
     ) {
-        let time = formatter.string(from: date)
         let codePosition = output.codePosition(file: file, function: function, line: line)
-        let description: String
+        let parts: [String]
         switch item {
             case .log(let level, let message):
-                description = output.logString(
-                    time: time, level: level, message: message, tracers: tracers, meta: meta, codePosition: codePosition
+                parts = output.logString(
+                    date: time.string(from: date), level: level, message: message, tracers: tracers, meta: meta, codePosition: codePosition
                 )
             case .event(let name):
-                description = output.eventString(
-                    time: time, name: name, tracers: tracers, meta: meta, codePosition: codePosition
+                parts = output.eventString(
+                    date: time.string(from: date), name: name, tracers: tracers, meta: meta, codePosition: codePosition
                 )
             case .tracer(let tracer, false):
-                description = output.tracerString(
-                    time: time, tracer: tracer, tracers: tracers, meta: meta, codePosition: codePosition
+                parts = output.tracerString(
+                    date: time.string(from: date), tracer: tracer, tracers: tracers, meta: meta, codePosition: codePosition
                 )
             case .tracer(let tracer, true):
-                description = output.tracerEndString(
-                    time: time, tracer: tracer, tracers: tracers, meta: meta, codePosition: codePosition
+                parts = output.tracerEndString(
+                    date: time.string(from: date), tracer: tracer, tracers: tracers, meta: meta, codePosition: codePosition
                 )
             case .measurement(let name, let value):
-                description = output.measurementString(
-                    time: time, name: name, value: value, tracers: tracers, meta: meta, codePosition: codePosition
+                parts = output.measurementString(
+                    date: time.string(from: date), name: name, value: value, tracers: tracers, meta: meta, codePosition: codePosition
                 )
         }
-        print(description)
-        Output.logInterceptor?(self, item, description)
+
+        parts.forEach { print($0, terminator: ""); print(" ", terminator: "") }
+        print("")
+        Output.logInterceptor?(self, item, parts.joined(separator: " "))
     }
 }
