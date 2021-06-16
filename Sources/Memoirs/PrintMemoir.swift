@@ -104,8 +104,8 @@ public class PrintMemoir: Memoir {
                 )
         }
 
-        parts.forEach { print($0, terminator: ""); print(" ", terminator: "") }
-        print("")
-        Output.logInterceptor?(self, item, parts.joined(separator: " "))
+        let toOutput = parts.joined(separator: " ")
+        print(toOutput)
+        Output.logInterceptor?(self, item, toOutput)
     }
 }
