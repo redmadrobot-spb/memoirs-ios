@@ -47,7 +47,7 @@ public struct SafeString: CustomStringConvertible, ExpressibleByStringLiteral, E
         string(isSensitive: SafeString.isSensitive)
     }
 
-    func appending(_ safeString: SafeString) -> SafeString {
+    public func appending(_ safeString: SafeString) -> SafeString {
         SafeString(interpolations: interpolations + safeString.interpolations)
     }
 
