@@ -27,6 +27,10 @@ public struct SafeString: CustomStringConvertible, ExpressibleByStringLiteral, E
 
     private let interpolations: [SafeStringInterpolation.Kind]
 
+    init(interpolations: [SafeStringInterpolation.Kind]) {
+        self.interpolations = interpolations
+    }
+
     public init(stringLiteral value: String) {
         interpolations = [ .open(value) ]
     }
@@ -41,6 +45,10 @@ public struct SafeString: CustomStringConvertible, ExpressibleByStringLiteral, E
 
     public var description: String {
         string(isSensitive: SafeString.isSensitive)
+    }
+
+    func appending(_ safeString: SafeString) -> SafeString {
+        SafeString(interpolations: interpolations + safeString.interpolations)
     }
 
     public func string(isSensitive: Bool) -> String {
