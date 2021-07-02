@@ -30,12 +30,14 @@ timeline.xctimeline
 playground.xcworkspace
 
 # AppCode
-/.idea/workspace.xml
-/.idea/usage.statistics.xml
-/.idea/$CACHE_FILE$
-/.idea/shelf/
-/.idea/dictionaries/alex.xml
-/.idea/inspectionProfiles/Project_Default.xml
+# AppCode messes up some configuration for now, I have to remove all its project configuration from Git
+/.idea
+# /.idea/workspace.xml
+# /.idea/usage.statistics.xml
+# /.idea/$CACHE_FILE$
+# /.idea/shelf/
+# /.idea/dictionaries/alex.xml
+# /.idea/inspectionProfiles/Project_Default.xml
 
 # MacOS
 .DS_Store
