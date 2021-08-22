@@ -10,6 +10,7 @@ import XCTest
 import Foundation
 @testable import Memoirs
 
+// swiftlint:disable line_length
 class BasicTests: GenericTestCase {
     private let basicMemoirsWithoutCensoring: [Memoir] = [
         PrintMemoir(),
@@ -18,7 +19,7 @@ class BasicTests: GenericTestCase {
     ]
 
     public func testAllLogOverloads() {
-        let memoir: Memoir = PrintMemoir()
+        let memoir: Memoir = PrintMemoir(time: .formatter(PrintMemoir.fullDateFormatter))
         let tracer: Tracer = .label("TestTracer")
 
         memoir.log(level: .info, "Test log 1", meta: [ "Test Key": "Test Value" ], tracers: [ tracer ], date: Date(timeIntervalSince1970: 239), file: "file", function: "function", line: 239)
@@ -220,3 +221,4 @@ class BasicTests: GenericTestCase {
         }
     }
 }
+// swiftlint:enable line_length

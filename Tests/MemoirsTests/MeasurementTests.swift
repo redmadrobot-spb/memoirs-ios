@@ -12,11 +12,12 @@ import XCTest
 class MeasurementTests: GenericTestCase {
     func testMeasurementPerformance() {
         let iterations = 5000
+        let memoir = PrintMemoir()
 
         var overallTime: TimeInterval = 0
         measure {
             let startTime = ProcessInfo.processInfo.systemUptime
-            let stopwatch = Stopwatch(maxValuesToHold: Int.max)
+            let stopwatch = Stopwatch(maxValuesToHold: Int.max, memoir: memoir)
             var mark = stopwatch.mark
             for _ in 0 ..< iterations {
                 mark = stopwatch.measureTime(from: mark, name: "Test Measurement")
@@ -27,6 +28,6 @@ class MeasurementTests: GenericTestCase {
 
         let averageIterationTime = overallTime / TimeInterval(iterations * 10)
         print("Average execution time: \(averageIterationTime)")
-        XCTAssertTrue(averageIterationTime < 1e-5)
+        XCTAssertTrue(averageIterationTime < 1e-4)
     }
 }

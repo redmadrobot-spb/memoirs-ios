@@ -88,21 +88,25 @@ public class InstanceMemoir: TracedMemoir {
         }
     }
 
-    private let keyInstanceId: String = "__memoirs.__internal.instanceId"
+    private static let keyInstanceId: String = "__memoirs.__internal.instanceId"
+    public static var defaultInstanceId: String {
+        let userDefaults = UserDefaults.standard
+        if let id = userDefaults.string(forKey: keyInstanceId) {
+            return id
+        } else {
+            let instanceId = UUID().uuidString
+            userDefaults.set(instanceId, forKey: keyInstanceId)
+            return instanceId
+        }
+    }
+
     public private(set) var instanceId: String
 
     public init(
-        deviceInfo: DeviceInfo = .init(osInfo: .detected), memoir: Memoir,
+        deviceInfo: DeviceInfo = .init(osInfo: .detected), instanceId: String = InstanceMemoir.defaultInstanceId, memoir: Memoir,
         file: String = #fileID, function: String = #function, line: UInt = #line
     ) {
-        let userDefaults = UserDefaults.standard
-        if let id = userDefaults.string(forKey: keyInstanceId) {
-            instanceId = id
-        } else {
-            instanceId = UUID().uuidString
-            userDefaults.set(instanceId, forKey: keyInstanceId)
-        }
-
+        self.instanceId = instanceId
         let meta: [String: SafeString] = [
             "os": "\(deviceInfo.osInfo.string)"
         ]
@@ -120,5 +124,9 @@ public class SessionMemoir: TracedMemoir {
         ]
         let tracer: Tracer = .session(userId: "\(isGuest ? "guest." : "")\(userId)")
         super.init(tracer: tracer, meta: meta, memoir: memoir, file: file, function: function, line: line)
+    }
+
+    func updateSessionId(userId: String, isGuest: Bool) {
+        updateTracer(to: .session(userId: "\(isGuest ? "guest." : "")\(userId)"))
     }
 }
