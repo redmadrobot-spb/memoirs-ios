@@ -126,7 +126,7 @@ public class SessionMemoir: TracedMemoir {
         super.init(tracer: tracer, meta: meta, memoir: memoir, file: file, function: function, line: line)
     }
 
-    func updateSessionId(userId: String, isGuest: Bool) {
+    public func updateSessionId(userId: String, isGuest: Bool) {
         updateTracer(to: .session(userId: "\(isGuest ? "guest." : "")\(userId)"))
     }
 }
