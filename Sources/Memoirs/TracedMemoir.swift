@@ -7,13 +7,9 @@
 //
 
 import Foundation
+import MemoirSubscriptions
 
-/// Protocol that adds a tracer to every item that passes through.
-public protocol Traceable {
-    var tracer: Tracer { get }
-}
-
-public class TracedMemoir: Memoir, Traceable {
+public class TracedMemoir: Memoir {
     @usableFromInline
     class TracerHolder {
         @usableFromInline
@@ -30,7 +26,6 @@ public class TracedMemoir: Memoir, Traceable {
         }
     }
 
-    public let tracer: Tracer
     private let tracerHolder: TracerHolder
 
     @usableFromInline
@@ -42,7 +37,6 @@ public class TracedMemoir: Memoir, Traceable {
         tracer: Tracer, meta: [String: SafeString], memoir: Memoir,
         file: String = #fileID, function: String = #function, line: UInt = #line
     ) {
-        self.tracer = tracer
         memoir.update(tracer: tracer, meta: meta, file: file, function: function, line: line)
         tracerHolder = TracerHolder(tracer: tracer) {
             memoir.finish(tracer: tracer, file: file, function: function, line: line)
@@ -63,6 +57,10 @@ public class TracedMemoir: Memoir, Traceable {
 
     public convenience init(object: Any, memoir: Memoir, file: String = #fileID, function: String = #function, line: UInt = #line) {
         self.init(label: String(describing: type(of: object)), memoir: memoir, file: file, function: function, line: line)
+    }
+
+    public func updateTracer(to tracer: Tracer) {
+        tracerHolder.tracer = tracer
     }
 
     @inlinable

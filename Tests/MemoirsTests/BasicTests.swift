@@ -10,6 +10,7 @@ import XCTest
 import Foundation
 @testable import Memoirs
 
+// swiftlint:disable line_length
 class BasicTests: GenericTestCase {
     private let basicMemoirsWithoutCensoring: [Memoir] = [
         PrintMemoir(),
@@ -220,3 +221,4 @@ class BasicTests: GenericTestCase {
         }
     }
 }
+// swiftlint:enable line_length
