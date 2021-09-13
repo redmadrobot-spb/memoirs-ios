@@ -46,6 +46,12 @@ public class PrintMemoir: Memoir {
         }
     }
 
+    public enum CodePosition {
+        case full
+        case short
+        case none
+    }
+
     public static let defaultTracerFilter: (Tracer) -> Bool = { tracer in
         switch tracer {
             case .app, .instance, .session: return false
@@ -60,12 +66,13 @@ public class PrintMemoir: Memoir {
 
     /// Creates a new instance of `PrintMemoir`.
     public init(
-        time: Time = .formatter(timeOnlyDateFormatter), shortCodePosition: Bool = true, shortTracers: Bool = true,
+        time: Time = .formatter(timeOnlyDateFormatter), codePosition: CodePosition = .short, shortTracers: Bool = true,
         tracersFilter: @escaping (Tracer) -> Bool = PrintMemoir.defaultTracerFilter
     ) {
         output = Output(
             isSensitive: false,
-            shortCodePosition: shortCodePosition, shortTracers: shortTracers, separateTracers: true,
+            codePositionType: codePosition,
+            shortTracers: shortTracers, separateTracers: true,
             tracersFilter: tracersFilter
         )
         self.time = time

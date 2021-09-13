@@ -16,7 +16,7 @@ public class NSLogMemoir: Memoir {
     public init(isSensitive: Bool, tracersFilter: @escaping (Tracer) -> Bool = { _ in false }) {
         output = Output(
             isSensitive: isSensitive,
-            shortCodePosition: false, shortTracers: false, separateTracers: false,
+            codePositionType: .full, shortTracers: false, separateTracers: false,
             tracersFilter: tracersFilter
         )
     }

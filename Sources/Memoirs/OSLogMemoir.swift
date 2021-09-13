@@ -29,7 +29,7 @@ public class OSLogMemoir: Memoir {
         self.subsystem = subsystem
         output = Output(
             isSensitive: false,
-            shortCodePosition: false, shortTracers: false, separateTracers: true,
+            codePositionType: .full, shortTracers: false, separateTracers: true,
             tracersFilter: tracersFilter
         )
     }

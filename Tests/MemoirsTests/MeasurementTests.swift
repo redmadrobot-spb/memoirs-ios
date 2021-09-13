@@ -12,11 +12,12 @@ import XCTest
 class MeasurementTests: GenericTestCase {
     func testMeasurementPerformance() {
         let iterations = 5000
+        let memoir = VoidMemoir()
 
         var overallTime: TimeInterval = 0
         measure {
             let startTime = ProcessInfo.processInfo.systemUptime
-            let stopwatch = Stopwatch(maxValuesToHold: Int.max)
+            let stopwatch = Stopwatch(maxValuesToHold: Int.max, memoir: memoir)
             var mark = stopwatch.mark
             for _ in 0 ..< iterations {
                 mark = stopwatch.measureTime(from: mark, name: "Test Measurement")

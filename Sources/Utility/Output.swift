@@ -39,7 +39,7 @@ public class Output {
     @usableFromInline
     var isSensitive: Bool
     @usableFromInline
-    var shortCodePosition: Bool
+    var codePositionType: PrintMemoir.CodePosition
     @usableFromInline
     var shortTracers: Bool
     @usableFromInline
@@ -49,13 +49,13 @@ public class Output {
 
     public init(
         isSensitive: Bool,
-        shortCodePosition: Bool,
+        codePositionType: PrintMemoir.CodePosition,
         shortTracers: Bool,
         separateTracers: Bool,
         tracersFilter: @escaping (Tracer) -> Bool
     ) {
         self.isSensitive = isSensitive
-        self.shortCodePosition = shortCodePosition
+        self.codePositionType = codePositionType
         self.shortTracers = shortTracers
         self.separateTracers = separateTracers
         self.tracersFilter = tracersFilter
@@ -69,8 +69,10 @@ public class Output {
 
     @inlinable
     public func codePosition(file: String, function: String, line: UInt) -> String {
+        guard codePositionType != .none else { return "" }
+
         let file = file.firstIndex(of: "/").map { String(file[file.index(after: $0) ..< file.endIndex]) } ?? file
-        let context = [ file, line == 0 ? "" : "\(line)", shortCodePosition ? "" : function ]
+        let context = [ file, line == 0 ? "" : "\(line)", codePositionType == .short ? "" : function ]
             .filter { !$0.isEmpty }
             .joined(separator: ":")
 
