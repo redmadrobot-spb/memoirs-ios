@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import MemoirSubscriptions
 
 public class TracedMemoir: Memoir {
     @usableFromInline

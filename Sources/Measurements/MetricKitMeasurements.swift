@@ -7,7 +7,6 @@
 //
 
 import Foundation
-import MemoirSubscriptions
 
 #if canImport(MetricKit) && os(iOS)
 

@@ -20,6 +20,8 @@ xcuserdata/
 *.moved-aside
 *.xcuserstate
 
+.swiftpm/xcode/
+
 ## Obj-C/Swift specific
 *.hmap
 *.ipa
