@@ -197,3 +197,7 @@ There are some structural memoirs, that do not do logging themselves but instead
 ### Testing
 
 If you need to test, what memoirs are outputting, please set `Memoir.Output.logInterceptor` closure. It will be called from all basic memoir implementations.
+
+#### License
+
+MIT License, https://github.com/redmadrobot-spb/memoirs-ios/blob/main/LICENSE

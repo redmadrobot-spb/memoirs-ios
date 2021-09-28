@@ -4,6 +4,7 @@
 //
 // Created by Alex Babaev on 25 April 2020.
 // Copyright © 2020 Redmadrobot SPb. All rights reserved.
+// License: MIT License, https://github.com/redmadrobot-spb/memoirs-ios/blob/main/LICENSE
 //
 
 import Foundation
