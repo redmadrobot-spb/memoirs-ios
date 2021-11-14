@@ -69,8 +69,7 @@ public class TracedMemoir: Memoir {
         }
         // First part of every String(describing: ...) is module name. Let's separate it for possibility of shorter output in the console
         let tracer: Tracer
-        let dotIndex = label.firstIndex(of: ".")
-        if let index = dotIndex {
+        if let index = label.firstIndex(of: ".") {
             tracer = .type(name: String(label[label.index(after: index)...]), module: String(label[..<index]))
         } else {
             tracer = .label(label)

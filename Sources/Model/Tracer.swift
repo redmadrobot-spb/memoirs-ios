@@ -48,6 +48,8 @@ extension Array where Element == Tracer {
         first {
             if case .label = $0 {
                 return true
+            } else if case .type = $0 {
+                return true
             } else {
                 return false
             }
