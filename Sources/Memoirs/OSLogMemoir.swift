@@ -29,7 +29,7 @@ public class OSLogMemoir: Memoir {
     public init(subsystem: String, isSensitive: Bool, tracersFilter: @escaping (Tracer) -> Bool = { _ in false }) {
         self.subsystem = subsystem
         output = Output(
-            isSensitive: false,
+            isSensitive: isSensitive,
             codePositionType: .full, shortTracers: false, separateTracers: true,
             tracersFilter: tracersFilter
         )

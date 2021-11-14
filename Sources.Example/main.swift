@@ -29,7 +29,7 @@ private let naughtyStrings: [String] = {
 let lowLevelMemoir = PrintMemoir { tracer in
     switch tracer {
         case .app, .instance, .session: return false
-        case .request, .label: return true
+        case .request, .label, .type: return true
     }
 }
 

@@ -89,11 +89,11 @@ public class Output {
             date,
             codePosition,
             "\(level.map { "\(Marker.printString(for: $0))" } ?? "")",
-            tracers.labelString(isSensitive: isSensitive),
+            tracers.labelString(isShort: shortTracers, isSensitive: isSensitive),
             message().string(isSensitive: isSensitive),
             meta()?.commaJoined(isSensitive: isSensitive),
         ].compactMap { $0 }
-        let suffix = tracers.filter(tracersFilter).allJoined(showLabel: false, short: shortTracers, isSensitive: isSensitive)
+        let suffix = tracers.filter(tracersFilter).allJoined(showLabel: false, isShort: shortTracers, isSensitive: isSensitive)
         return merge(prefix: prefix, suffix: suffix, separateTracers: separateTracers)
     }
 
@@ -106,11 +106,11 @@ public class Output {
             date,
             codePosition,
             Marker.event,
-            tracers.labelString(isSensitive: isSensitive),
+            tracers.labelString(isShort: shortTracers, isSensitive: isSensitive),
             isSensitive ? "???" : name,
             meta()?.commaJoined(isSensitive: isSensitive),
         ].compactMap { $0 }
-        let suffix = tracers.filter(tracersFilter).allJoined(showLabel: false, short: shortTracers, isSensitive: isSensitive)
+        let suffix = tracers.filter(tracersFilter).allJoined(showLabel: false, isShort: shortTracers, isSensitive: isSensitive)
         return merge(prefix: prefix, suffix: suffix, separateTracers: separateTracers)
     }
 
@@ -123,7 +123,7 @@ public class Output {
             date,
             codePosition,
             Marker.measurement,
-            tracers.labelString(isSensitive: isSensitive),
+            tracers.labelString(isShort: shortTracers, isSensitive: isSensitive),
         ]
         switch value {
             case .double(let value):
@@ -152,7 +152,7 @@ public class Output {
                     meta()?.commaJoined(isSensitive: isSensitive),
                 ])
         }
-        let suffix = tracers.filter(tracersFilter).allJoined(showLabel: false, short: shortTracers, isSensitive: isSensitive)
+        let suffix = tracers.filter(tracersFilter).allJoined(showLabel: false, isShort: shortTracers, isSensitive: isSensitive)
         return merge(prefix: prefix.compactMap { $0 }, suffix: suffix, separateTracers: separateTracers)
     }
 
@@ -165,11 +165,11 @@ public class Output {
             date,
             codePosition,
             Marker.tracer,
-            tracers.labelString(isSensitive: isSensitive),
-            "Tracer: \(isSensitive ? "???" : tracer.output)",
+            tracers.labelString(isShort: shortTracers, isSensitive: isSensitive),
+            "Tracer: \(isSensitive ? "???" : (shortTracers ? tracer.stringShort : tracer.string))",
             meta()?.commaJoined(isSensitive: isSensitive),
         ].compactMap { $0 }
-        let suffix = tracers.filter(tracersFilter).allJoined(showLabel: false, short: shortTracers, isSensitive: isSensitive)
+        let suffix = tracers.filter(tracersFilter).allJoined(showLabel: false, isShort: shortTracers, isSensitive: isSensitive)
         return merge(prefix: prefix, suffix: suffix, separateTracers: separateTracers)
     }
 
@@ -182,11 +182,11 @@ public class Output {
             date,
             codePosition,
             Marker.tracer,
-            tracers.labelString(isSensitive: isSensitive),
-            "End Tracer: \(isSensitive ? "???" : tracer.output)",
+            tracers.labelString(isShort: shortTracers, isSensitive: isSensitive),
+            "End Tracer: \(isSensitive ? "???" : (shortTracers ? tracer.stringShort : tracer.string))",
             meta()?.commaJoined(isSensitive: isSensitive),
         ].compactMap { $0 }
-        let suffix = tracers.filter(tracersFilter).allJoined(showLabel: false, short: shortTracers, isSensitive: isSensitive)
+        let suffix = tracers.filter(tracersFilter).allJoined(showLabel: false, isShort: shortTracers, isSensitive: isSensitive)
         return merge(prefix: prefix, suffix: suffix, separateTracers: separateTracers)
     }
 
@@ -205,18 +205,18 @@ public class Output {
 
 extension Array where Element == Tracer {
     @usableFromInline
-    func labelString(isSensitive: Bool) -> String? {
-        labelTracer.map { isSensitive ? "???" : "[\($0.string)]" }
+    func labelString(isShort: Bool, isSensitive: Bool) -> String? {
+        labelTracer.map { isSensitive ? "???" : "[\(isShort ? $0.stringShort : $0.string)]" }
     }
 }
 
 extension Array where Element == Tracer {
     @usableFromInline
-    func allJoined(showLabel: Bool, short: Bool, isSensitive: Bool) -> String {
+    func allJoined(showLabel: Bool, isShort: Bool, isSensitive: Bool) -> String {
         let list = showLabel
             ? self
             : filter { $0 != label }
-        return list.isEmpty ? "" : isSensitive ? "???" : list.map { short ? $0.stringShort : $0.string }.joined(separator: ", ")
+        return list.isEmpty ? "" : isSensitive ? "???" : list.map { isShort ? $0.stringShort : $0.string }.joined(separator: ", ")
     }
 }
 
@@ -227,9 +227,4 @@ extension Dictionary where Key == String, Value == SafeString {
             ? nil
             : "[\(map { "\($0): \($1.string(isSensitive: isSensitive))" }.joined(separator: ", "))]"
     }
-}
-
-extension Tracer {
-    @usableFromInline
-    var output: String { string }
 }

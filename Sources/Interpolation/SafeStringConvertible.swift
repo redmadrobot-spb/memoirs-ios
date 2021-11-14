@@ -91,6 +91,6 @@ extension SafeStringConvertible {
             }
             .joined(separator: ", ")
 
-        return "\(String(describing: type(of: self)))(\(children))"
+        return "\(String(describing: self))(\(children))"
     }
 }

@@ -12,9 +12,10 @@ public enum Tracer: Equatable {
     case instance(id: String)
     case session(userId: String) // Yes, even for guests
 
-    case request(id: String)
-
     case label(String)
+
+    case request(id: String)
+    case type(name: String, module: String)
 
     public var string: String {
         switch self {
@@ -22,6 +23,7 @@ public enum Tracer: Equatable {
             case .instance(let id): return "instance:\(id)"
             case .session(let userId): return "session:\(userId)"
             case .request(let id): return "request:\(id)"
+            case .type(let name, let module): return "\(module).\(name)"
             case .label(let label): return label
         }
     }
@@ -32,6 +34,7 @@ public enum Tracer: Equatable {
             case .instance: return "instance:↑"
             case .session: return "session:↑"
             case .request(let id): return id
+            case .type(let name, _): return name
             case .label(let label): return label
         }
     }
