@@ -207,9 +207,9 @@ extension Array where Element == Tracer {
     @usableFromInline
     func labelString(isShort: Bool, isSensitive: Bool) -> String? {
         guard let first = first else { return nil }
-        guard !isSensitive else { return "???" }
+        guard !isSensitive else { return "[???]" }
 
-        return isShort ? first.stringShort : first.string
+        return "[\(isShort ? first.stringShort : first.string)]"
     }
 }
 
