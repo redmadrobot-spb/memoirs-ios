@@ -9,7 +9,7 @@
 
 import Foundation
 
-public class TracedMemoir: Memoir {
+open class TracedMemoir: Memoir {
     @usableFromInline
     class TracerHolder {
         @usableFromInline
@@ -27,11 +27,11 @@ public class TracedMemoir: Memoir {
     }
 
     private let tracerHolder: TracerHolder
+    @usableFromInline
+    let compactedTracerHolders: [TracerHolder]
 
     @usableFromInline
     let memoir: Memoir
-    @usableFromInline
-    let compactedTracerHolders: [TracerHolder]
 
     public init(
         tracer: Tracer, meta: [String: SafeString], memoir: Memoir,
