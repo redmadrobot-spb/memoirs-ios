@@ -153,7 +153,11 @@ class BasicTests: GenericTestCase {
                 (.critical, 5),
             ]
         for (configurationLevel, configurationIndex) in allConfigurationLevels {
-            let memoir = FilteringMemoir(memoir: PrintMemoir(), defaultConfiguration: .init(level: configurationLevel), configurationsByLabel: [:])
+            let memoir = FilteringMemoir(
+                memoir: PrintMemoir(),
+                defaultConfiguration: .init(minLevelShown: configurationLevel),
+                configurationsByTracer: [:]
+            )
             for (level, levelIndex) in allLevels {
                 try checkLog(memoir: memoir, logShouldPresent: levelIndex >= configurationIndex) { $0.level = level }
             }
@@ -161,22 +165,38 @@ class BasicTests: GenericTestCase {
     }
 
     func testFilteringLoggerOnAll() throws {
-        let memoir = FilteringMemoir(memoir: PrintMemoir(), defaultConfiguration: .init(level: .all), configurationsByLabel: [:])
+        let memoir = FilteringMemoir(
+            memoir: PrintMemoir(),
+            defaultConfiguration: .init(minLevelShown: .all),
+            configurationsByTracer: [:]
+        )
         try checkLog(memoir: memoir, logShouldPresent: true)
     }
 
     func testFilteringLoggerOffAll() throws {
-        let memoir = FilteringMemoir(memoir: PrintMemoir(), defaultConfiguration: .init(level: .disabled), configurationsByLabel: [:])
+        let memoir = FilteringMemoir(
+            memoir: PrintMemoir(),
+            defaultConfiguration: .init(minLevelShown: .disabled),
+            configurationsByTracer: [:]
+        )
         try checkLog(memoir: memoir, logShouldPresent: false)
     }
 
     func testFilteringLoggerOnInfo() throws {
-        let memoir = FilteringMemoir(memoir: PrintMemoir(), defaultConfiguration: .init(level: .info), configurationsByLabel: [:])
+        let memoir = FilteringMemoir(
+            memoir: PrintMemoir(),
+            defaultConfiguration: .init(minLevelShown: .info),
+            configurationsByTracer: [:]
+        )
         try checkLog(memoir: memoir, logShouldPresent: true)
     }
 
     func testFilteringLoggerOffInfo()throws {
-        let memoir = FilteringMemoir(memoir: PrintMemoir(), defaultConfiguration: .init(level: .warning), configurationsByLabel: [:])
+        let memoir = FilteringMemoir(
+            memoir: PrintMemoir(),
+            defaultConfiguration: .init(minLevelShown: .warning),
+            configurationsByTracer: [:]
+        )
         try checkLog(memoir: memoir, logShouldPresent: false)
     }
 

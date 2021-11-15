@@ -106,12 +106,7 @@ class GenericTestCase: XCTestCase {
     }
 
     func expectNoLog(probe: LogProbe, file: String = #fileID, line: UInt = #line) throws {
-        probe.memoir.log(
-            level: probe.level,
-            probe.message,
-            meta: probe.meta,
-            tracers: probe.tracers
-        )
+        probe.memoir.log(level: probe.level, probe.message, meta: probe.meta, tracers: probe.tracers)
         let result = logResult()
         if result != nil {
             fputs("\nProblem at \(file):\(line)\n", stderr)

@@ -14,6 +14,8 @@ public class FilteringMemoir: Memoir {
     public struct Configuration {
         @frozen
         public enum Level {
+            case all
+
             case verbose
             case debug
             case info
@@ -21,7 +23,6 @@ public class FilteringMemoir: Memoir {
             case error
             case critical
 
-            case all
             case disabled
 
             var integralValue: Int {
@@ -43,20 +44,30 @@ public class FilteringMemoir: Memoir {
             }
         }
 
-        public let level: Level
-        public let events: Bool
-        public let tracers: Bool
-        public let measurements: Bool
+        public let minLevelShown: Level
 
-        public init(level: Level, events: Bool = true, tracers: Bool = true, measurements: Bool = true) {
-            self.level = level
-            self.events = events
-            self.tracers = tracers
-            self.measurements = measurements
+        public let applyToNestedByTrace: Bool
+
+        public let showEvents: Bool
+        public let showTracers: Bool
+        public let showMeasurements: Bool
+
+        public init(
+            minLevelShown: Level,
+            applyToNestedByTrace: Bool = false,
+            showEvents: Bool = true,
+            showTracers: Bool = true,
+            showMeasurements: Bool = true
+        ) {
+            self.minLevelShown = minLevelShown
+            self.applyToNestedByTrace = applyToNestedByTrace
+            self.showEvents = showEvents
+            self.showTracers = showTracers
+            self.showMeasurements = showMeasurements
         }
     }
 
-    public let configurationsByLabel: [String: Configuration]
+    public let configurationsByTracer: [Tracer: Configuration]
     public let defaultConfiguration: Configuration
 
     @usableFromInline
@@ -66,14 +77,14 @@ public class FilteringMemoir: Memoir {
     /// - Parameters:
     ///  - memoir: The memoir for which items will be filtered.
     ///  - defaultConfiguration: Default configuration.
-    ///  - configurationsByLabel: Configurations for specific labels.
+    ///  - configurationsByTracer: Configurations for specific labels.
     public init(
         memoir: Memoir,
         defaultConfiguration: Configuration,
-        configurationsByLabel: [String: Configuration] = [:]
+        configurationsByTracer: [Tracer: Configuration] = [:]
     ) {
         self.memoir = memoir
-        self.configurationsByLabel = configurationsByLabel
+        self.configurationsByTracer = configurationsByTracer
         self.defaultConfiguration = defaultConfiguration
     }
 
@@ -85,22 +96,39 @@ public class FilteringMemoir: Memoir {
         date: Date,
         file: String, function: String, line: UInt
     ) {
-        let label = tracers.labelTracer.map { $0.string }
-        let configuration = label.flatMap { configurationsByLabel[$0] } ?? defaultConfiguration
-
-        var ok = false
-        switch item {
-            case .log(let level, _):
-                ok = configuration.level.allows(level)
-            case .event:
-                ok = configuration.events
-            case .tracer:
-                ok = configuration.tracers
-            case .measurement:
-                ok = configuration.measurements
+        let allowances: [Bool] = configurationsByTracer
+            .lazy
+            .filter { tracer, _ in
+                tracers.contains(tracer)
+            }
+            .map { tracer, configuration in
+                switch item {
+                    case .log(let level, _):
+                        let allowed = configuration.minLevelShown.allows(level)
+                        return allowed && (tracers.first == tracer || configuration.applyToNestedByTrace)
+                    case .event:
+                        return configuration.showEvents
+                    case .tracer:
+                        return configuration.showTracers
+                    case .measurement:
+                        return configuration.showMeasurements
+                }
+            }
+        var allowed = allowances.allSatisfy { $0 }
+        if allowances.isEmpty {
+            switch item {
+                case .log(let level, _):
+                    allowed = defaultConfiguration.minLevelShown.allows(level)
+                case .event:
+                    allowed = defaultConfiguration.showEvents
+                case .tracer:
+                    allowed = defaultConfiguration.showTracers
+                case .measurement:
+                    allowed = defaultConfiguration.showMeasurements
+            }
         }
 
-        if ok {
+        if allowed {
             memoir.append(item, meta: meta(), tracers: tracers, date: date, file: file, function: function, line: line)
         }
     }

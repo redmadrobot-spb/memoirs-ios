@@ -46,7 +46,20 @@ public class OSLogMemoir: Memoir {
         let codePosition = output.codePosition(file: file, function: function, line: line)
         let description: String
         var osLogType: OSLogType = .debug
-        let label: OSLog = osLog(with: tracers.labelTracer.map { output.isSensitive ? "???" : $0.string } ?? "NoLabel")
+
+        var label: String = output.isSensitive ? "???" : "NoLabel"
+        if !output.isSensitive {
+            switch tracers.first {
+                case .label(let name): label = name
+                case .type(let name, _): label = name
+                case .app(let name): label = name
+                case .instance(let name): label = name
+                case .session(let name): label = name
+                case .request(let name): label = name
+                case nil: label = "NoLabel"
+            }
+        }
+
         switch item {
             case .log(let level, let message):
                 description = output.logString(
@@ -70,7 +83,7 @@ public class OSLogMemoir: Memoir {
                     date: "", name: name, value: value, tracers: tracers, meta: meta, codePosition: codePosition
                 ).joined(separator: " ")
         }
-        os_log(osLogType, log: label, "%{public}@", description)
+        os_log(osLogType, log: osLog(with: label), "%{public}@", description)
         Output.logInterceptor?(self, item, description)
     }
 

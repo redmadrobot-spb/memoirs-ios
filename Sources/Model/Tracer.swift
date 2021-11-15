@@ -7,7 +7,7 @@
 // License: MIT License, https://github.com/redmadrobot-spb/memoirs-ios/blob/main/LICENSE
 //
 
-public enum Tracer: Equatable {
+public enum Tracer: Equatable, Hashable {
     case app(id: String)
     case instance(id: String)
     case session(userId: String) // Yes, even for guests
@@ -36,23 +36,6 @@ public enum Tracer: Equatable {
             case .request(let id): return id
             case .type(let name, _): return name
             case .label(let label): return label
-        }
-    }
-}
-
-extension Array where Element == Tracer {
-    public var label: Tracer? { labelTracer }
-
-    @usableFromInline
-    var labelTracer: Tracer? {
-        first {
-            if case .label = $0 {
-                return true
-            } else if case .type = $0 {
-                return true
-            } else {
-                return false
-            }
         }
     }
 }

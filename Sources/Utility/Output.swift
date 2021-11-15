@@ -93,7 +93,7 @@ public class Output {
             message().string(isSensitive: isSensitive),
             meta()?.commaJoined(isSensitive: isSensitive),
         ].compactMap { $0 }
-        let suffix = tracers.filter(tracersFilter).allJoined(showLabel: false, isShort: shortTracers, isSensitive: isSensitive)
+        let suffix = tracers.filter(tracersFilter).allJoined(showFirst: false, isShort: shortTracers, isSensitive: isSensitive)
         return merge(prefix: prefix, suffix: suffix, separateTracers: separateTracers)
     }
 
@@ -110,7 +110,7 @@ public class Output {
             isSensitive ? "???" : name,
             meta()?.commaJoined(isSensitive: isSensitive),
         ].compactMap { $0 }
-        let suffix = tracers.filter(tracersFilter).allJoined(showLabel: false, isShort: shortTracers, isSensitive: isSensitive)
+        let suffix = tracers.filter(tracersFilter).allJoined(showFirst: false, isShort: shortTracers, isSensitive: isSensitive)
         return merge(prefix: prefix, suffix: suffix, separateTracers: separateTracers)
     }
 
@@ -152,7 +152,7 @@ public class Output {
                     meta()?.commaJoined(isSensitive: isSensitive),
                 ])
         }
-        let suffix = tracers.filter(tracersFilter).allJoined(showLabel: false, isShort: shortTracers, isSensitive: isSensitive)
+        let suffix = tracers.filter(tracersFilter).allJoined(showFirst: false, isShort: shortTracers, isSensitive: isSensitive)
         return merge(prefix: prefix.compactMap { $0 }, suffix: suffix, separateTracers: separateTracers)
     }
 
@@ -169,7 +169,7 @@ public class Output {
             "Tracer: \(isSensitive ? "???" : (shortTracers ? tracer.stringShort : tracer.string))",
             meta()?.commaJoined(isSensitive: isSensitive),
         ].compactMap { $0 }
-        let suffix = tracers.filter(tracersFilter).allJoined(showLabel: false, isShort: shortTracers, isSensitive: isSensitive)
+        let suffix = tracers.filter(tracersFilter).allJoined(showFirst: false, isShort: shortTracers, isSensitive: isSensitive)
         return merge(prefix: prefix, suffix: suffix, separateTracers: separateTracers)
     }
 
@@ -186,7 +186,7 @@ public class Output {
             "End Tracer: \(isSensitive ? "???" : (shortTracers ? tracer.stringShort : tracer.string))",
             meta()?.commaJoined(isSensitive: isSensitive),
         ].compactMap { $0 }
-        let suffix = tracers.filter(tracersFilter).allJoined(showLabel: false, isShort: shortTracers, isSensitive: isSensitive)
+        let suffix = tracers.filter(tracersFilter).allJoined(showFirst: false, isShort: shortTracers, isSensitive: isSensitive)
         return merge(prefix: prefix, suffix: suffix, separateTracers: separateTracers)
     }
 
@@ -206,16 +206,19 @@ public class Output {
 extension Array where Element == Tracer {
     @usableFromInline
     func labelString(isShort: Bool, isSensitive: Bool) -> String? {
-        labelTracer.map { isSensitive ? "???" : "[\(isShort ? $0.stringShort : $0.string)]" }
+        guard let first = first else { return nil }
+        guard !isSensitive else { return "???" }
+
+        return isShort ? first.stringShort : first.string
     }
 }
 
 extension Array where Element == Tracer {
     @usableFromInline
-    func allJoined(showLabel: Bool, isShort: Bool, isSensitive: Bool) -> String {
-        let list = showLabel
+    func allJoined(showFirst: Bool, isShort: Bool, isSensitive: Bool) -> String {
+        let list = showFirst
             ? self
-            : filter { $0 != label }
+            : Array(dropFirst())
         return list.isEmpty ? "" : isSensitive ? "???" : list.map { isShort ? $0.stringShort : $0.string }.joined(separator: ", ")
     }
 }
