@@ -56,25 +56,7 @@ open class TracedMemoir: Memoir {
     }
 
     public convenience init(object: Any, memoir: Memoir, file: String = #fileID, function: String = #function, line: UInt = #line) {
-        var label = String(describing: object)
-        // Here we can have these options:
-        // <[Module].[Class] [Address]> for Objective-C classes
-        // [Module].[Class] for Swift Types
-        // I want to cut [Address] and angle brackets from ObjC classes.
-        if label.hasPrefix("<") && label.hasSuffix(">") && label.contains(": 0x") {
-            let start = label.index(after: label.startIndex)
-            let end = label.index(before: label.endIndex)
-            label = String(label[start ..< end])
-            label = label.components(separatedBy: ": 0x").first ?? label
-        }
-        // First part of every String(describing: ...) is module name. Let's separate it for possibility of shorter output in the console
-        let tracer: Tracer
-        if let index = label.firstIndex(of: ".") {
-            tracer = .type(name: String(label[label.index(after: index)...]), module: String(label[..<index]))
-        } else {
-            tracer = .label(label)
-        }
-
+        let tracer = tracer(forObject: object)
         self.init(tracer: tracer, meta: [:], memoir: memoir, file: file, function: function, line: line)
     }
 
