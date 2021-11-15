@@ -41,25 +41,33 @@ public enum Tracer: Equatable, Hashable {
 }
 
 public func tracer<T>(for object: T) -> Tracer {
-    (Mirror(reflecting: object).subjectType as? T.Type).map { tracer(for: $0) } ?? .label("—")
+    tracerFromString(for: String(reflecting: Mirror(reflecting: object).subjectType))
+}
+
+public func tracer(for type: Any.Type) -> Tracer {
+    tracerFromString(for: String(reflecting: type))
 }
 
 public func tracer<T>(for type: T.Type) -> Tracer {
-    var label = String(reflecting: type)
+    tracerFromString(for: String(reflecting: type))
+}
+
+private func tracerFromString(for string: String) -> Tracer {
     // Here we can have these options:
     // <[Module].[Class] [Address]> for Objective-C classes
     // [Module].[Class] for Swift Types
     // I want to cut [Address] and angle brackets from ObjC classes.
-    if label.hasPrefix("<") && label.hasSuffix(">") && label.contains(": 0x") {
-        let start = label.index(after: label.startIndex)
-        let end = label.index(before: label.endIndex)
-        label = String(label[start ..< end])
-        label = label.components(separatedBy: ": 0x").first ?? label
+    var string = string
+    if string.hasPrefix("<") && string.hasSuffix(">") && string.contains(": 0x") {
+        let start = string.index(after: string.startIndex)
+        let end = string.index(before: string.endIndex)
+        string = String(string[start ..< end])
+        string = string.components(separatedBy: ": 0x").first ?? string
     }
     // First part of every String(describing: ...) is module name. Let's separate it for possibility of shorter output in the console
-    if let index = label.firstIndex(of: ".") {
-        return .type(name: String(label[label.index(after: index)...]), module: String(label[..<index]))
+    if let index = string.firstIndex(of: ".") {
+        return .type(name: String(string[string.index(after: index)...]), module: String(string[..<index]))
     } else {
-        return .type(name: label, module: "")
+        return .type(name: string, module: "")
     }
 }

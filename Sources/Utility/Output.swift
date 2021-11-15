@@ -165,7 +165,6 @@ public class Output {
             date,
             codePosition,
             Marker.tracer,
-            tracers.labelString(isShort: shortTracers, isSensitive: isSensitive),
             "Tracer: \(isSensitive ? "???" : (shortTracers ? tracer.stringShort : tracer.string))",
             meta()?.commaJoined(isSensitive: isSensitive),
         ].compactMap { $0 }
@@ -182,7 +181,6 @@ public class Output {
             date,
             codePosition,
             Marker.tracer,
-            tracers.labelString(isShort: shortTracers, isSensitive: isSensitive),
             "End Tracer: \(isSensitive ? "???" : (shortTracers ? tracer.stringShort : tracer.string))",
             meta()?.commaJoined(isSensitive: isSensitive),
         ].compactMap { $0 }

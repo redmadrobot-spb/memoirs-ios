@@ -14,15 +14,14 @@ open class TracedMemoir: Memoir {
     class TracerHolder {
         @usableFromInline
         var tracer: Tracer
-        var completionHandler: () -> Void
+        var completionHandler: (() -> Void)?
 
-        init(tracer: Tracer, completionHandler: @escaping () -> Void) {
+        init(tracer: Tracer) {
             self.tracer = tracer
-            self.completionHandler = completionHandler
         }
 
         deinit {
-            completionHandler()
+            completionHandler?()
         }
     }
 
@@ -37,18 +36,23 @@ open class TracedMemoir: Memoir {
         tracer: Tracer, meta: [String: SafeString], memoir: Memoir,
         file: String = #fileID, function: String = #function, line: UInt = #line
     ) {
-        memoir.update(tracer: tracer, meta: meta, file: file, function: function, line: line)
-        tracerHolder = TracerHolder(tracer: tracer) {
-            memoir.finish(tracer: tracer, file: file, function: function, line: line)
-        }
+        tracerHolder = TracerHolder(tracer: tracer)
 
+        let selfMemoir: Memoir
         if let tracedParentMemoir = memoir as? TracedMemoir {
             compactedTracerHolders = [ tracerHolder ] + tracedParentMemoir.compactedTracerHolders
-            self.memoir = tracedParentMemoir.memoir
+            selfMemoir = tracedParentMemoir.memoir
         } else {
             compactedTracerHolders = [ tracerHolder ]
-            self.memoir = memoir
+            selfMemoir = memoir
         }
+        self.memoir = selfMemoir
+
+        let currentTracers: [Tracer] = compactedTracerHolders.map { $0.tracer }
+        tracerHolder.completionHandler = {
+            selfMemoir.finish(tracer: tracer, tracers: currentTracers)
+        }
+        selfMemoir.update(tracer: tracer, meta: meta, tracers: currentTracers, file: file, function: function, line: line)
     }
 
     public convenience init(label: String, memoir: Memoir, file: String = #fileID, function: String = #function, line: UInt = #line) {
