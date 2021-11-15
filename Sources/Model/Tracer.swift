@@ -40,11 +40,11 @@ public enum Tracer: Equatable, Hashable {
     }
 }
 
-public func tracer<T>(forObject object: T) -> Tracer {
-    (Mirror(reflecting: object).subjectType as? T.Type).map { tracer(forType: $0) } ?? .label("—")
+public func tracer<T>(for object: T) -> Tracer {
+    (Mirror(reflecting: object).subjectType as? T.Type).map { tracer(for: $0) } ?? .label("—")
 }
 
-public func tracer<T>(forType type: T.Type) -> Tracer {
+public func tracer<T>(for type: T.Type) -> Tracer {
     var label = String(reflecting: type)
     // Here we can have these options:
     // <[Module].[Class] [Address]> for Objective-C classes

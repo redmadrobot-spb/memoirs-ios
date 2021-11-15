@@ -27,26 +27,26 @@ class TracerTests: GenericTestCase {
     }
 
     func testTracerGeneration() {
-        XCTAssertEqual(tracer(forType: ObjCClass.self), Tracer.type(name: "TracerTests.ObjCClass", module: "MemoirsTests"))
-        XCTAssertEqual(tracer(forType: ObjCClassMangled.self), Tracer.type(name: "TracerTests.ObjCClassMangled", module: "MemoirsTests"))
-        XCTAssertEqual(tracer(forType: SwiftClass.self), Tracer.type(name: "TracerTests.SwiftClass", module: "MemoirsTests"))
-        XCTAssertEqual(tracer(forType: SwiftStruct.self), Tracer.type(name: "TracerTests.SwiftStruct", module: "MemoirsTests"))
-        XCTAssertEqual(tracer(forType: SwiftEnum.self), Tracer.type(name: "TracerTests.SwiftEnum", module: "MemoirsTests"))
-        XCTAssertEqual(tracer(forType: SwiftGenericClass<Int>.self), Tracer.type(name: "TracerTests.SwiftGenericClass<Swift.Int>", module: "MemoirsTests"))
+        XCTAssertEqual(tracer(for: ObjCClass.self), Tracer.type(name: "TracerTests.ObjCClass", module: "MemoirsTests"))
+        XCTAssertEqual(tracer(for: ObjCClassMangled.self), Tracer.type(name: "TracerTests.ObjCClassMangled", module: "MemoirsTests"))
+        XCTAssertEqual(tracer(for: SwiftClass.self), Tracer.type(name: "TracerTests.SwiftClass", module: "MemoirsTests"))
+        XCTAssertEqual(tracer(for: SwiftStruct.self), Tracer.type(name: "TracerTests.SwiftStruct", module: "MemoirsTests"))
+        XCTAssertEqual(tracer(for: SwiftEnum.self), Tracer.type(name: "TracerTests.SwiftEnum", module: "MemoirsTests"))
+        XCTAssertEqual(tracer(for: SwiftGenericClass<Int>.self), Tracer.type(name: "TracerTests.SwiftGenericClass<Swift.Int>", module: "MemoirsTests"))
 
-        XCTAssertEqual(tracer(forObject: ObjCClass()), Tracer.type(name: "TracerTests.ObjCClass", module: "MemoirsTests"))
-        XCTAssertEqual(tracer(forObject: ObjCClassMangled()), Tracer.type(name: "TracerTests.ObjCClassMangled", module: "MemoirsTests"))
-        XCTAssertEqual(tracer(forObject: SwiftClass()), Tracer.type(name: "TracerTests.SwiftClass", module: "MemoirsTests"))
-        XCTAssertEqual(tracer(forObject: SwiftStruct()), Tracer.type(name: "TracerTests.SwiftStruct", module: "MemoirsTests"))
-        XCTAssertEqual(tracer(forObject: SwiftEnum.test), Tracer.type(name: "TracerTests.SwiftEnum", module: "MemoirsTests"))
-        XCTAssertEqual(tracer(forObject: SwiftGenericClass<Int>(some: 239)), Tracer.type(name: "TracerTests.SwiftGenericClass<Swift.Int>", module: "MemoirsTests"))
+        XCTAssertEqual(tracer(for: ObjCClass()), Tracer.type(name: "TracerTests.ObjCClass", module: "MemoirsTests"))
+        XCTAssertEqual(tracer(for: ObjCClassMangled()), Tracer.type(name: "TracerTests.ObjCClassMangled", module: "MemoirsTests"))
+        XCTAssertEqual(tracer(for: SwiftClass()), Tracer.type(name: "TracerTests.SwiftClass", module: "MemoirsTests"))
+        XCTAssertEqual(tracer(for: SwiftStruct()), Tracer.type(name: "TracerTests.SwiftStruct", module: "MemoirsTests"))
+        XCTAssertEqual(tracer(for: SwiftEnum.test), Tracer.type(name: "TracerTests.SwiftEnum", module: "MemoirsTests"))
+        XCTAssertEqual(tracer(for: SwiftGenericClass<Int>(some: 239)), Tracer.type(name: "TracerTests.SwiftGenericClass<Swift.Int>", module: "MemoirsTests"))
 
-        XCTAssertEqual(tracer(forObject: ObjCClass().self), Tracer.type(name: "TracerTests.ObjCClass", module: "MemoirsTests"))
-        XCTAssertEqual(tracer(forObject: ObjCClassMangled().self), Tracer.type(name: "TracerTests.ObjCClassMangled", module: "MemoirsTests"))
-        XCTAssertEqual(tracer(forObject: SwiftClass().self), Tracer.type(name: "TracerTests.SwiftClass", module: "MemoirsTests"))
-        XCTAssertEqual(tracer(forObject: SwiftStruct().self), Tracer.type(name: "TracerTests.SwiftStruct", module: "MemoirsTests"))
-        XCTAssertEqual(tracer(forObject: SwiftEnum.test.self), Tracer.type(name: "TracerTests.SwiftEnum", module: "MemoirsTests"))
-        XCTAssertEqual(tracer(forObject: SwiftGenericClass<Int>(some: 239).self), Tracer.type(name: "TracerTests.SwiftGenericClass<Swift.Int>", module: "MemoirsTests"))
+        XCTAssertEqual(tracer(for: ObjCClass().self), Tracer.type(name: "TracerTests.ObjCClass", module: "MemoirsTests"))
+        XCTAssertEqual(tracer(for: ObjCClassMangled().self), Tracer.type(name: "TracerTests.ObjCClassMangled", module: "MemoirsTests"))
+        XCTAssertEqual(tracer(for: SwiftClass().self), Tracer.type(name: "TracerTests.SwiftClass", module: "MemoirsTests"))
+        XCTAssertEqual(tracer(for: SwiftStruct().self), Tracer.type(name: "TracerTests.SwiftStruct", module: "MemoirsTests"))
+        XCTAssertEqual(tracer(for: SwiftEnum.test.self), Tracer.type(name: "TracerTests.SwiftEnum", module: "MemoirsTests"))
+        XCTAssertEqual(tracer(for: SwiftGenericClass<Int>(some: 239).self), Tracer.type(name: "TracerTests.SwiftGenericClass<Swift.Int>", module: "MemoirsTests"))
     }
 }
 // swiftlint:enable line_length

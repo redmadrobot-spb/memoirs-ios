@@ -56,7 +56,7 @@ open class TracedMemoir: Memoir {
     }
 
     public convenience init(object: Any, memoir: Memoir, file: String = #fileID, function: String = #function, line: UInt = #line) {
-        let tracer = tracer(forObject: object)
+        let tracer = tracer(for: object)
         self.init(tracer: tracer, meta: [:], memoir: memoir, file: file, function: function, line: line)
     }
 
