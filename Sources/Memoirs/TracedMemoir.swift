@@ -32,6 +32,12 @@ open class TracedMemoir: Memoir {
     @usableFromInline
     let memoir: Memoir
 
+    public init(localMemoir: TracedMemoir, callStackMemoir: TracedMemoir) {
+        tracerHolder = localMemoir.tracerHolder
+        compactedTracerHolders = [ tracerHolder ] + callStackMemoir.compactedTracerHolders
+        memoir = callStackMemoir.memoir
+    }
+
     public init(
         tracer: Tracer, meta: [String: SafeString], memoir: Memoir,
         file: String = #fileID, function: String = #function, line: UInt = #line
