@@ -114,7 +114,7 @@ public class FilteringMemoir: Memoir {
                         return configuration.showMeasurements
                 }
             }
-        var allowed = allowances.allSatisfy { $0 }
+        var allowed = allowances.contains { $0 }
         if allowances.isEmpty {
             switch item {
                 case .log(let level, _):

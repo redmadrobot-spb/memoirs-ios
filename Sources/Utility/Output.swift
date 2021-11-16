@@ -189,7 +189,7 @@ public class Output {
     }
 
     @usableFromInline
-    let tracersSeparator: String = "..."
+    let tracersSeparator: String = "from"
 
     @inlinable
     func merge(prefix: [String], suffix: String, separateTracers: Bool) -> [String] {
@@ -217,7 +217,7 @@ extension Array where Element == Tracer {
         let list = showFirst
             ? self
             : Array(dropFirst())
-        return list.isEmpty ? "" : isSensitive ? "???" : list.map { isShort ? $0.stringShort : $0.string }.joined(separator: ", ")
+        return list.isEmpty ? "" : isSensitive ? "???" : list.map { isShort ? $0.stringShort : $0.string }.joined(separator: " <- ")
     }
 }
 
