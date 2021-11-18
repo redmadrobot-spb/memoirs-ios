@@ -54,8 +54,8 @@ public class OSLogMemoir: Memoir {
                 case .type(let name, _): label = name
                 case .app(let name): label = name
                 case .instance(let name): label = name
-                case .session(let name): label = name
-                case .request(let name): label = name
+                case .session: label = "session"
+                case .request: label = "requests"
                 case nil: label = "NoLabel"
             }
         }

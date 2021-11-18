@@ -14,7 +14,7 @@ public enum Tracer: Equatable, Hashable {
 
     case label(String)
 
-    case request(id: String)
+    case request(id: String, parentId: String? = nil)
     case type(name: String, module: String)
 
     public var string: String {
@@ -22,7 +22,7 @@ public enum Tracer: Equatable, Hashable {
             case .app(let id): return "app:\(id)"
             case .instance(let id): return "instance:\(id)"
             case .session(let userId): return "session:\(userId)"
-            case .request(let id): return "request:\(id)"
+            case .request(let id, let parentId): return parentId.map { "request:\(id)<-\($0)" } ?? "request:\(id)"
             case .type(let name, let module): return "\(module).\(name)"
             case .label(let label): return label
         }
@@ -33,7 +33,7 @@ public enum Tracer: Equatable, Hashable {
             case .app: return "app:↑"
             case .instance: return "instance:↑"
             case .session: return "session:↑"
-            case .request(let id): return id
+            case .request(let id, _): return id
             case .type(let name, _): return name
             case .label(let label): return label
         }
