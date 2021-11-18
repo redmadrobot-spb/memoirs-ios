@@ -54,7 +54,7 @@ func session() {
     stopwatch.measure(name: "Session") {
         let sessionMemoir = SessionMemoir(userId: UUID().uuidString, isGuest: true, memoir: addedLabelMemoir)
         let tracers: [Tracer] = [
-            .request(id: UUID().uuidString),
+            .request(trace: UUID().uuidString),
             .instance(id: UUID().uuidString)
         ]
         sessionMemoir.debug("SessionLog", tracers: tracers)
