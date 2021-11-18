@@ -8,10 +8,10 @@
 
 import Foundation
 
-struct MemoirContext {
-    let memoir: TracedMemoir
+public struct MemoirContext {
+    public let memoir: TracedMemoir
 
-    func appending(tracer: Tracer) -> MemoirContext {
+    public func appending(tracer: Tracer) -> MemoirContext {
         MemoirContext(memoir: memoir.with(tracer: tracer))
     }
 }
