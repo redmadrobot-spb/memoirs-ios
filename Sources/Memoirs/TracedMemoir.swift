@@ -32,20 +32,13 @@ open class TracedMemoir: Memoir {
     @usableFromInline
     let memoir: Memoir
 
+    public var tracer: Tracer { tracerHolder.tracer }
     public var tracers: [Tracer] { compactedTracerHolders.map { $0.tracer } }
 
     private init(currentTracerHolder: TracerHolder, parentTracerHolders: [TracerHolder], memoir: Memoir) {
         tracerHolder = currentTracerHolder
         compactedTracerHolders = [ currentTracerHolder ] + parentTracerHolders
         self.memoir = memoir
-    }
-
-    convenience public init(localMemoir: TracedMemoir, callStackMemoir: TracedMemoir) {
-        self.init(
-            currentTracerHolder: localMemoir.tracerHolder,
-            parentTracerHolders: callStackMemoir.compactedTracerHolders,
-            memoir: callStackMemoir.memoir
-        )
     }
 
     public init(
@@ -80,7 +73,7 @@ open class TracedMemoir: Memoir {
     }
 
     public convenience init(object: Any, memoir: Memoir, file: String = #fileID, function: String = #function, line: UInt = #line) {
-        let tracer = tracer(for: object)
+        let tracer = Memoirs.tracer(for: object)
         self.init(tracer: tracer, meta: [:], memoir: memoir, file: file, function: function, line: line)
     }
 
