@@ -42,7 +42,7 @@ open class TracedMemoir: Memoir {
     }
 
     public init(
-        tracer: Tracer, meta: [String: SafeString], memoir: Memoir,
+        tracer: Tracer, meta: [String: SafeString] = [:], memoir: Memoir,
         file: String = #fileID, function: String = #function, line: UInt = #line
     ) {
         tracerHolder = TracerHolder(tracer: tracer)

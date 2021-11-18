@@ -11,6 +11,10 @@ import Foundation
 public struct MemoirContext {
     public let memoir: TracedMemoir
 
+    public init(memoir: TracedMemoir) {
+        self.memoir = memoir
+    }
+
     public func appending(tracer: Tracer) -> MemoirContext {
         MemoirContext(memoir: memoir.with(tracer: tracer))
     }
