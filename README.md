@@ -145,6 +145,18 @@ memoir.measurement(name: "Counter", value: .int(counterValue))
 memoir.measurement(name: "MetaBasedMeasurement", value: .meta, meta: [ "key": "value" ])
 ```
 
+## Contexts
+
+`TracedMemoir` is designed to be able to hold information about the logging place. Usually in loggers, this is 
+specified by a string (that is sometimes derived from the type name), but this does not tell the whole story. 
+For example, if you have a service, that can be called from different parts of the app, all logs from the service will
+have identical mark.
+
+To be able to distinguish calls from different parts of the app, service must know source of the calls. This knowledge
+can be encapsulated in `MemoirContext`, and sent to the service. In the service we get `tracedMemoir` from the context, 
+create new memoir with local tracer (`tracedMemoir.with(tracer: localServiceTracer)`), and use it for logging and all 
+other things.
+
 ## Configuration and usage
 
 You can configure, how log levels and other items are marked with this method:
