@@ -99,14 +99,13 @@ public class FilteringMemoir: Memoir {
     ) {
         let allowances: [Bool] = configurationsByTracer
             .lazy
-            .filter { tracer, _ in
-                tracers.contains(tracer)
+            .filter { tracer, configuration in
+                tracers.contains(tracer) && (tracers.first == tracer || (tracers.first != tracer && configuration.applyToNestedByTrace))
             }
             .map { tracer, configuration in
                 switch item {
                     case .log(let level, _):
-                        let allowed = configuration.minLevelShown.allows(level)
-                        return allowed && (tracers.first == tracer || configuration.applyToNestedByTrace)
+                        return configuration.minLevelShown.allows(level)
                     case .event:
                         return configuration.showEvents
                     case .tracer:
