@@ -35,6 +35,8 @@ public protocol TaskLocalContextTraceable {
     var tracer: Tracer { get }
     var memoir: TracedMemoir { get }
 
+    static func nextRequestTracer(previousTracer: String?) -> String
+
     func tracing<R>(operation: () async throws -> R, file: String, line: UInt) async throws -> R
 }
 
@@ -42,12 +44,27 @@ public protocol TaskLocalContextTraceable {
 public extension TaskLocalContextTraceable {
     var memoir: TracedMemoir { TaskLocalMemoirContext.memoir.with(tracer: tracer) }
 
+    static func nextRequestTracer(previousTracer: String? = nil) -> String {
+        let traceId = (0 ..< 16)
+            .map { _ in UInt8.random(in: UInt8.min ... UInt8.max) }
+            .map { String(format: "%02hhx", $0) }
+            .joined()
+        let parentId = (0 ..< 8)
+            .map { _ in UInt8.random(in: UInt8.min ... UInt8.max) }
+            .map { String(format: "%02hhx", $0) }
+            .joined()
+        return "00-\(traceId)-\(parentId)-00"
+    }
+
     func tracing<R>(operation: () async throws -> R, file: String = #file, line: UInt = #line) async throws -> R {
         try await TaskLocalMemoirContext.$memoir.withValue(memoir, operation: operation, file: file, line: line)
     }
 
-    func tracingRequest<R>(operation: () async throws -> R, file: String = #file, line: UInt = #line) async throws -> R {
-        let memoir = TaskLocalMemoirContext.memoir.with(tracer: .request(trace: UUID().uuidString))
+    func tracingRequest<R>(
+        previousTracer: String? = nil, operation: () async throws -> R, file: String = #file, line: UInt = #line
+    ) async throws -> R {
+        let tracer: Tracer = .request(trace: Self.nextRequestTracer(previousTracer: previousTracer))
+        let memoir = TaskLocalMemoirContext.memoir.with(tracer: tracer)
         return try await TaskLocalMemoirContext.$memoir.withValue(memoir, operation: operation, file: file, line: line)
     }
 
