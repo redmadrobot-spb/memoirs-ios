@@ -61,7 +61,8 @@ public class MetricKitMeasurements: NSObject, MXMetricManagerSubscriber {
         metrics[keyCPUMetric] = (value: .meta, meta: meta)
     }
 
-    @available(iOS 14.0, *)private func processAnimationMetric(_ metric: MXAnimationMetric, into metrics: inout NameValueAndMeta) {
+    @available(iOS 14.0, *)
+    private func processAnimationMetric(_ metric: MXAnimationMetric, into metrics: inout NameValueAndMeta) {
         let keyAnimationMetric = "iOSMetric.animation"
         let keyAnimationScrollHitchTimeRatio = "scrollHitchTimeRatio"
 

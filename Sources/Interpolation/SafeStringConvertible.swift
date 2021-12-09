@@ -32,9 +32,7 @@ public struct TopSecret<T>: MemoirStringConvertibleProperty, CustomStringConvert
         self.wrappedValue = wrappedValue
     }
 
-    public var description: String {
-        "\(wrappedValue)"
-    }
+    public var description: String { "\(wrappedValue)" }
 }
 
 @propertyWrapper
@@ -46,9 +44,7 @@ public struct Sensitive<T>: MemoirStringConvertibleProperty, CustomStringConvert
         self.wrappedValue = wrappedValue
     }
 
-    public var description: String {
-        "\(wrappedValue)"
-    }
+    public var description: String { "\(wrappedValue)" }
 }
 
 @propertyWrapper
@@ -60,9 +56,7 @@ public struct SafeToShow<T>: MemoirStringConvertibleProperty, CustomStringConver
         self.wrappedValue = wrappedValue
     }
 
-    public var description: String {
-        "\(wrappedValue)"
-    }
+    public var description: String { "\(wrappedValue)" }
 }
 
 extension SafeStringConvertible {
