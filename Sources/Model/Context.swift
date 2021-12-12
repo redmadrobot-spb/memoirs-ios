@@ -27,24 +27,21 @@ public struct MemoirContext {
 @available(iOS 13, *)
 public struct TaskLocalMemoirContext {
     @TaskLocal
-    public static var memoir: TracedMemoir!
+    public static var memoir: TracedMemoir?
 }
 
 @available(iOS 13, *)
-public protocol TaskLocalContextTraceable {
-    var tracer: Tracer { get }
-    var memoir: TracedMemoir { get }
+public protocol TaskTraceable {
+    var memoir: ContextMemoir { get }
 
-    static func nextRequestTracer(previousTracer: String?) -> String
+    static func requestTracer(parentTracer: String?) -> String
 
     func tracing<R>(operation: () async throws -> R, file: String, line: UInt) async throws -> R
 }
 
 @available(iOS 13, *)
-public extension TaskLocalContextTraceable {
-    var memoir: TracedMemoir { TaskLocalMemoirContext.memoir.with(tracer: tracer) }
-
-    static func nextRequestTracer(previousTracer: String? = nil) -> String {
+public extension TaskTraceable {
+    static func requestTracer(parentTracer: String? = nil) -> String {
         let traceId = (0 ..< 16)
             .map { _ in UInt8.random(in: UInt8.min ... UInt8.max) }
             .map { String(format: "%02hhx", $0) }
@@ -57,14 +54,15 @@ public extension TaskLocalContextTraceable {
     }
 
     func tracing<R>(operation: () async throws -> R, file: String = #file, line: UInt = #line) async throws -> R {
-        try await TaskLocalMemoirContext.$memoir.withValue(memoir, operation: operation, file: file, line: line)
+        let memoir = TaskLocalMemoirContext.memoir?.with(tracer: memoir.tracedMemoir.tracer) ?? memoir.tracedMemoir
+        return try await TaskLocalMemoirContext.$memoir.withValue(memoir, operation: operation, file: file, line: line)
     }
 
     func tracingRequest<R>(
         previousTracer: String? = nil, operation: () async throws -> R, file: String = #file, line: UInt = #line
     ) async throws -> R {
-        let tracer: Tracer = .request(trace: Self.nextRequestTracer(previousTracer: previousTracer))
-        let memoir = TaskLocalMemoirContext.memoir.with(tracer: tracer)
+        let tracer: Tracer = .request(trace: Self.requestTracer(parentTracer: previousTracer))
+        let memoir = TaskLocalMemoirContext.memoir?.with(tracer: tracer)
         return try await TaskLocalMemoirContext.$memoir.withValue(memoir, operation: operation, file: file, line: line)
     }
 
@@ -77,18 +75,18 @@ public extension TaskLocalContextTraceable {
 }
 
 @available(iOS 13, *)
-public protocol ObjectContextTraceable {
-    var tracer: Tracer! { get }
-    var memoir: TracedMemoir! { get }
+public protocol ObjectTraceable {
+    var memoir: ContextMemoir! { get }
 
     func tracing(operation: @escaping () async throws -> Void, file: String, line: UInt)
 }
 
 @available(iOS 13, *)
-public extension ObjectContextTraceable {
+public extension ObjectTraceable {
     func tracing(operation: @escaping () async throws -> Void, file: String = #file, line: UInt = #line) {
         Task.detached {
-            try await TaskLocalMemoirContext.$memoir.withValue(self.memoir, operation: operation, file: file, line: line)
+            let memoir = TaskLocalMemoirContext.memoir?.with(tracer: memoir.tracedMemoir.tracer) ?? memoir.tracedMemoir
+            try await TaskLocalMemoirContext.$memoir.withValue(memoir, operation: operation, file: file, line: line)
         }
     }
 }
