@@ -24,13 +24,13 @@ public struct MemoirContext {
 
 #if swift(>=5.5)
 
-@available(iOS 13, *)
+@available(iOS 15, *)
 public struct TaskLocalMemoirContext {
     @TaskLocal
     public static var memoir: TracedMemoir?
 }
 
-@available(iOS 13, *)
+@available(iOS 15, *)
 public protocol TaskTraceable {
     var memoir: ContextMemoir { get }
 
@@ -39,7 +39,7 @@ public protocol TaskTraceable {
     func tracing<R>(operation: () async throws -> R, file: String, line: UInt) async throws -> R
 }
 
-@available(iOS 13, *)
+@available(iOS 15, *)
 public extension TaskTraceable {
     static func requestTracer(parentTracer: String? = nil) -> String {
         let traceId = (0 ..< 16)
@@ -74,14 +74,14 @@ public extension TaskTraceable {
     }
 }
 
-@available(iOS 13, *)
+@available(iOS 15, *)
 public protocol ObjectTraceable {
     var memoir: ContextMemoir! { get }
 
     func tracing(operation: @escaping () async throws -> Void, file: String, line: UInt)
 }
 
-@available(iOS 13, *)
+@available(iOS 15, *)
 public extension ObjectTraceable {
     func tracing(operation: @escaping () async throws -> Void, file: String = #file, line: UInt = #line) {
         Task.detached {
