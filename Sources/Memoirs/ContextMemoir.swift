@@ -10,7 +10,7 @@ import Foundation
 
 #if swift(>=5.5)
 
-@available(iOS 13, *)
+@available(iOS 15, *)
 public struct ContextMemoir: Memoir {
     public let tracedMemoir: TracedMemoir
 
