@@ -8,8 +8,8 @@
 // License: MIT License, https://github.com/redmadrobot-spb/memoirs-ios/blob/main/LICENSE
 //
 
-public enum MemoirItem {
-    case log(level: LogLevel, message: @autoclosure () -> SafeString)
+public enum MemoirItem: Sendable {
+    case log(level: LogLevel, message: @autoclosure @Sendable () -> SafeString)
     case event(name: String)
     case measurement(name: String, value: MeasurementValue)
     case tracer(Tracer, isFinished: Bool)

@@ -11,10 +11,10 @@
 import Foundation
 
 /// Memoir that filter items by level and redirects them to the target memoir.
-public class FilteringMemoir: Memoir {
-    public struct Configuration {
+public final class FilteringMemoir: Memoir {
+    public struct Configuration: Sendable {
         @frozen
-        public enum Level {
+        public enum Level: Sendable {
             case all
 
             case verbose
@@ -94,7 +94,7 @@ public class FilteringMemoir: Memoir {
         _ item: MemoirItem,
         meta: @autoclosure () -> [String: SafeString]?,
         tracers: [Tracer],
-        date: Date,
+        timeIntervalSinceReferenceDate: TimeInterval,
         file: String, function: String, line: UInt
     ) {
         let allowances: [Bool] = configurationsByTracer
@@ -129,7 +129,10 @@ public class FilteringMemoir: Memoir {
         }
 
         if allowed {
-            memoir.append(item, meta: meta(), tracers: tracers, date: date, file: file, function: function, line: line)
+            memoir.append(
+                item, meta: meta(), tracers: tracers, timeIntervalSinceReferenceDate: timeIntervalSinceReferenceDate,
+                file: file, function: function, line: line
+            )
         }
     }
 }

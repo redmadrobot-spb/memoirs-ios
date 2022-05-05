@@ -11,37 +11,56 @@
 #if canImport(os)
 
 import Foundation
-import os.log
+@preconcurrency import os.log
 
 /// `(Memoir)` - implementation which use `os.log` logging system.
 @available(iOS 12.0, *)
-public class OSLogMemoir: Memoir {
-    /// An identifier string, in reverse DNS notation, representing the subsystem that’s performing logging.
-    /// For example, `com.your_company.your_subsystem_name`.
-    /// The subsystem is used for categorization and filtering of related log messages, as well as for grouping related logging settings.
-    private let subsystem: String
-    private var osLogs: SynchronizedDictionary<String, OSLog> = [:]
+public final class OSLogMemoir: Memoir {
+    private actor OSLogHolder {
+        /// An identifier string, in reverse DNS notation, representing the subsystem that’s performing logging.
+        /// For example, `com.your_company.your_subsystem_name`.
+        /// The subsystem is used for categorization and filtering of related log messages, as well as for grouping related logging settings.
+        private let subsystem: String
+        private var osLogs: SynchronizedDictionary<String, OSLog> = [:]
+
+        init(subsystem: String) {
+            self.subsystem = subsystem
+        }
+
+        func osLog(for label: String) -> OSLog {
+            if let osLog = osLogs[label] {
+                return osLog
+            } else {
+                let osLog = OSLog(subsystem: subsystem, category: label)
+                osLogs[label] = osLog
+                return osLog
+            }
+        }
+    }
+
+    private let osLogHolder: OSLogHolder
 
     @usableFromInline
     let output: Output
 
     /// Creates a new instance of `OSLogMemoir`.
     /// - Parameter subsystem: An identifier string, in reverse DNS notation, representing the subsystem that’s performing logging.
-    public init(subsystem: String, isSensitive: Bool, tracersFilter: @escaping (Tracer) -> Bool = { _ in false }) {
-        self.subsystem = subsystem
+    /// - Parameter isSensitive: is log sensitive
+    /// - Parameter tracerFilter: filter for the tracers output
+    public init(subsystem: String, isSensitive: Bool, tracerFilter: @escaping @Sendable (Tracer) -> Bool = { _ in false }) {
+        osLogHolder = .init(subsystem: subsystem)
         output = Output(
             isSensitive: isSensitive,
             codePositionType: .full, shortTracers: false, separateTracers: true,
-            tracersFilter: tracersFilter
+            tracerFilter: tracerFilter
         )
     }
 
-    @inlinable
     public func append(
         _ item: MemoirItem,
         meta: @autoclosure () -> [String: SafeString]?,
         tracers: [Tracer],
-        date: Date,
+        timeIntervalSinceReferenceDate: TimeInterval,
         file: String, function: String, line: UInt
     ) {
         let codePosition = output.codePosition(file: file, function: function, line: line)
@@ -84,7 +103,9 @@ public class OSLogMemoir: Memoir {
                     date: "", name: name, value: value, tracers: tracers, meta: meta, codePosition: codePosition
                 ).joined(separator: " ")
         }
-        os_log(osLogType, log: osLog(with: label), "%{public}@", description)
+        Task { [osLogType, label] in
+            await os_log(osLogType, log: osLogHolder.osLog(for: label), "%{public}@", description)
+        }
         Output.logInterceptor?(self, item, description)
     }
 
@@ -97,17 +118,6 @@ public class OSLogMemoir: Memoir {
             case .warning: return .default
             case .error: return .error
             case .critical: return .fault
-        }
-    }
-
-    @usableFromInline
-    func osLog(with label: String) -> OSLog {
-        if let osLog = osLogs[label] {
-            return osLog
-        } else {
-            let osLog = OSLog(subsystem: subsystem, category: label)
-            osLogs[label] = osLog
-            return osLog
         }
     }
 }

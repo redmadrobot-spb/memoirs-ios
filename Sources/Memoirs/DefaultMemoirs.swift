@@ -11,15 +11,15 @@
 import Foundation
 
 /// Memoir that defines root scope for the application. It will be the same for all installations of the specific application version.
-public class AppMemoir: TracedMemoir {
-    public init(
-        bundleId: String? = nil, version: String? = nil,
+public extension TracedMemoir {
+    convenience init(
+        appWithBundleId: String? = nil, version: String? = nil,
         memoir: Memoir,
         file: String = #fileID, function: String = #function, line: UInt = #line
     ) {
         let meta: [String: SafeString]
         let foundBundleId: String
-        if let bundleId = bundleId, let version = version {
+        if let bundleId = appWithBundleId, let version = version {
             foundBundleId = bundleId
             meta = [
                 "bundleId": "\(safe: bundleId)",
@@ -36,14 +36,14 @@ public class AppMemoir: TracedMemoir {
             fatalError("Please specify bundleId and version. Automatic bundleId and version detection works only if Info.plist is present")
         }
 
-        super.init(tracer: .app(id: foundBundleId), meta: meta, memoir: memoir, file: file, function: function, line: line)
+        self.init(tracer: .app(id: foundBundleId), meta: meta, memoir: memoir, file: file, function: function, line: line)
     }
 }
 
 /// Memoir defines installation instance scope of the app. ID will stay the same for the duration of app installation on a single device.
 /// meta-properties of the scope include OS type/version.
-public class InstanceMemoir: TracedMemoir {
-    public struct DeviceInfo {
+public extension TracedMemoir {
+    struct DeviceInfo {
         public enum OSInfo {
             case iOS(version: String)
             case catalyst(version: String)
@@ -91,7 +91,7 @@ public class InstanceMemoir: TracedMemoir {
     }
 
     private static let keyInstanceId: String = "__memoirs.__internal.instanceId"
-    public static var defaultInstanceId: String {
+    static var defaultInstanceId: String {
         let userDefaults = UserDefaults.standard
         if let id = userDefaults.string(forKey: keyInstanceId) {
             return id
@@ -102,33 +102,32 @@ public class InstanceMemoir: TracedMemoir {
         }
     }
 
-    public private(set) var instanceId: String
+    var instanceId: String { get async { await traceData.tracer.string }}
 
-    public init(
-        deviceInfo: DeviceInfo = .init(osInfo: .detected), instanceId: String = InstanceMemoir.defaultInstanceId, memoir: Memoir,
+    convenience init(
+        instanceWithDeviceInfo: DeviceInfo = .init(osInfo: .detected), instanceId: String = TracedMemoir.defaultInstanceId, memoir: Memoir,
         file: String = #fileID, function: String = #function, line: UInt = #line
     ) {
-        self.instanceId = instanceId
         let meta: [String: SafeString] = [
-            "os": "\(deviceInfo.osInfo.string)"
+            "os": "\(instanceWithDeviceInfo.osInfo.string)"
         ]
-        super.init(tracer: .instance(id: instanceId), meta: meta, memoir: memoir, file: file, function: function, line: line)
+        self.init(tracer: .instance(id: instanceId), meta: meta, memoir: memoir, file: file, function: function, line: line)
     }
 }
 
-public class SessionMemoir: TracedMemoir {
-    public init(
-        userId: String, isGuest: Bool, memoir: Memoir, file: String = #fileID, function: String = #function, line: UInt = #line
+public extension TracedMemoir {
+    convenience init(
+        sessionWithUserId: String, isGuest: Bool, memoir: Memoir, file: String = #fileID, function: String = #function, line: UInt = #line
     ) {
         let meta: [String: SafeString] = [
-            "userId": "\(userId)",
+            "userId": "\(sessionWithUserId)",
             "isGuest": "\(isGuest)",
         ]
-        let tracer: Tracer = .session(userId: "\(isGuest ? "guest." : "")\(userId)")
-        super.init(tracer: tracer, meta: meta, memoir: memoir, file: file, function: function, line: line)
+        let tracer: Tracer = .session(userId: "\(isGuest ? "guest." : "")\(sessionWithUserId)")
+        self.init(tracer: tracer, meta: meta, memoir: memoir, file: file, function: function, line: line)
     }
 
-    public func updateSessionId(userId: String, isGuest: Bool) {
-        updateTracer(to: .session(userId: "\(isGuest ? "guest." : "")\(userId)"))
+    func updateSessionId(userId: String, isGuest: Bool) async {
+        await updateTracer(to: .session(userId: "\(isGuest ? "guest." : "")\(userId)"))
     }
 }

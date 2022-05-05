@@ -18,7 +18,7 @@
 ///
 ///    let logString: SafeString = "Username: \(safe: user.name), cardNumber: \(user.cardNumber)"
 ///
-public struct SafeString: CustomStringConvertible, ExpressibleByStringLiteral, ExpressibleByStringInterpolation {
+public struct SafeString: CustomStringConvertible, ExpressibleByStringLiteral, ExpressibleByStringInterpolation, Sendable {
     #if DEBUG
     public static var isSensitive: Bool = false
     #else

@@ -54,7 +54,8 @@ public extension TaskTraceable {
     }
 
     func tracing<R>(operation: () async throws -> R, file: String = #file, line: UInt = #line) async throws -> R {
-        let memoir = TaskLocalMemoirContext.memoir?.with(tracer: memoir.tracedMemoir.tracer) ?? memoir.tracedMemoir
+        let tracer = await memoir.tracedMemoir.traceData.tracer
+        let memoir = TaskLocalMemoirContext.memoir?.with(tracer: tracer) ?? memoir.tracedMemoir
         return try await TaskLocalMemoirContext.$memoir.withValue(memoir, operation: operation, file: file, line: line)
     }
 
@@ -66,7 +67,7 @@ public extension TaskTraceable {
         return try await TaskLocalMemoirContext.$memoir.withValue(memoir, operation: operation, file: file, line: line)
     }
 
-    func tracingDetached(operation: @escaping () async throws -> Void, file: String = #file, line: UInt = #line) {
+    func tracingDetached(operation: @escaping @Sendable () async throws -> Void, file: String = #file, line: UInt = #line) {
         let memoir = TaskLocalMemoirContext.memoir
         Task.detached {
             try await TaskLocalMemoirContext.$memoir.withValue(memoir, operation: operation, file: file, line: line)
@@ -83,9 +84,10 @@ public protocol ObjectTraceable {
 
 @available(iOS 15, *)
 public extension ObjectTraceable {
-    func tracing(operation: @escaping () async throws -> Void, file: String = #file, line: UInt = #line) {
+    func tracing(operation: @escaping @Sendable () async throws -> Void, file: String = #file, line: UInt = #line) {
         Task.detached {
-            let memoir = TaskLocalMemoirContext.memoir?.with(tracer: memoir.tracedMemoir.tracer) ?? memoir.tracedMemoir
+            let tracer = await memoir.tracedMemoir.traceData.tracer
+            let memoir = TaskLocalMemoirContext.memoir?.with(tracer: tracer) ?? memoir.tracedMemoir
             try await TaskLocalMemoirContext.$memoir.withValue(memoir, operation: operation, file: file, line: line)
         }
     }

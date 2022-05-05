@@ -10,35 +10,93 @@
 
 import Foundation
 
-open class TracedMemoir: Memoir {
-    @usableFromInline
-    class TracerHolder {
-        @usableFromInline
-        var tracer: Tracer
-        var completionHandler: (() -> Void)?
+class TracerSubscription {
+    private let onDispose: () -> Void
 
-        init(tracer: Tracer) {
-            self.tracer = tracer
-        }
+    public init(onDispose: @escaping () -> Void) {
+        self.onDispose = onDispose
+    }
 
-        deinit {
-            completionHandler?()
+    deinit {
+        onDispose()
+    }
+}
+
+actor TraceData {
+    private(set) var tracer: Tracer
+    private(set) var parent: TraceData?
+
+    private var updateSubscriptions: [UUID: () async -> Void] = [:]
+    private var completionHandler: (@Sendable () async -> Void)?
+
+    private var internalTracerListCache: [Tracer]?
+    var allTracers: [Tracer] {
+        get async {
+            if let cached = internalTracerListCache {
+                return cached
+            } else {
+                await updateTracerListCache()
+                return internalTracerListCache ?? []
+            }
         }
     }
 
-    private let tracerHolder: TracerHolder
-    @usableFromInline
-    let compactedTracerHolders: [TracerHolder]
+    private var parentUpdateSubscription: TracerSubscription?
 
-    @usableFromInline
-    let memoir: Memoir
+    init(tracer: Tracer, parent: TraceData?) {
+        self.tracer = tracer
+        self.parent = parent
+        subscribeOnParentUpdates()
+    }
 
-    public var tracer: Tracer { tracerHolder.tracer }
-    public var tracers: [Tracer] { compactedTracerHolders.map { $0.tracer } }
+    private func subscribeOnParentUpdates() {
+        Task {
+            parentUpdateSubscription = await parent?.subscribeOnUpdates { [weak self] in
+                await self?.updateTracerListCache()
+            }
+        }
+    }
 
-    private init(currentTracerHolder: TracerHolder, parentTracerHolders: [TracerHolder], memoir: Memoir) {
-        tracerHolder = currentTracerHolder
-        compactedTracerHolders = [ currentTracerHolder ] + parentTracerHolders
+    func subscribeOnUpdates(listener: @escaping () async -> Void) -> TracerSubscription {
+        let id = UUID()
+        updateSubscriptions[id] = listener
+        return TracerSubscription { [self] in
+            updateSubscriptions[id] = nil
+        }
+    }
+
+    deinit {
+        if let completionHandler = completionHandler {
+            Task {
+                await completionHandler()
+            }
+        }
+    }
+
+    func update(tracer: Tracer) async {
+        self.tracer = tracer
+        await updateTracerListCache()
+    }
+
+    func update(completionHandler: @escaping @Sendable () async -> Void) {
+        self.completionHandler = completionHandler
+    }
+
+    private func updateTracerListCache() async {
+        internalTracerListCache = [ tracer ] + (await parent?.allTracers ?? [])
+        for subscription in updateSubscriptions.values {
+            await subscription()
+        }
+    }
+}
+
+public final class TracedMemoir: Memoir {
+    let traceData: TraceData
+
+    private let memoir: Memoir
+
+    private init(traceData: TraceData, memoir: Memoir) {
+        self.traceData = traceData
         self.memoir = memoir
     }
 
@@ -46,27 +104,20 @@ open class TracedMemoir: Memoir {
         tracer: Tracer, meta: [String: SafeString] = [:], memoir: Memoir,
         file: String = #fileID, function: String = #function, line: UInt = #line
     ) {
-        tracerHolder = TracerHolder(tracer: tracer)
-
-        let selfMemoir: Memoir
-        if let tracedParentMemoir = memoir as? TracedMemoir {
-            compactedTracerHolders = [ tracerHolder ] + tracedParentMemoir.compactedTracerHolders
-            selfMemoir = tracedParentMemoir.memoir
+        if let parentMemoir = memoir as? TracedMemoir {
+            traceData = .init(tracer: tracer, parent: parentMemoir.traceData)
+            self.memoir = parentMemoir.memoir
         } else {
-            compactedTracerHolders = [ tracerHolder ]
-            selfMemoir = memoir
+            traceData = .init(tracer: tracer, parent: nil)
+            self.memoir = memoir
         }
-        self.memoir = selfMemoir
 
-        let currentTracers: [Tracer] = compactedTracerHolders.map { $0.tracer }
-        tracerHolder.completionHandler = {
-            selfMemoir.finish(tracer: tracer, tracers: currentTracers)
+        Task { [self] in
+            await traceData.update(completionHandler: { [self] in
+                await self.memoir.finish(tracer: tracer, tracers: traceData.allTracers)
+            })
+            await self.memoir.update(tracer: tracer, meta: meta, tracers: traceData.allTracers, file: file, function: function, line: line)
         }
-        selfMemoir.update(tracer: tracer, meta: meta, tracers: currentTracers, file: file, function: function, line: line)
-    }
-
-    public func with(tracer: Tracer) -> TracedMemoir {
-        TracedMemoir(currentTracerHolder: TracerHolder(tracer: tracer), parentTracerHolders: compactedTracerHolders, memoir: memoir)
     }
 
     public convenience init(label: String, memoir: Memoir, file: String = #fileID, function: String = #function, line: UInt = #line) {
@@ -78,18 +129,24 @@ open class TracedMemoir: Memoir {
         self.init(tracer: tracer, meta: [:], memoir: memoir, file: file, function: function, line: line)
     }
 
-    public func updateTracer(to tracer: Tracer) {
-        tracerHolder.tracer = tracer
+    public func with(tracer: Tracer) -> TracedMemoir {
+        TracedMemoir(traceData: TraceData(tracer: tracer, parent: traceData), memoir: memoir)
     }
 
-    @inlinable
+    public func updateTracer(to tracer: Tracer) async {
+        await traceData.update(tracer: tracer)
+    }
+
     public func append(
-        _ item: MemoirItem, meta: @autoclosure () -> [String: SafeString]?, tracers: [Tracer], date: Date,
+        _ item: MemoirItem, meta: @autoclosure () -> [String: SafeString]?, tracers: [Tracer], timeIntervalSinceReferenceDate: TimeInterval,
         file: String, function: String, line: UInt
     ) {
-        memoir.append(
-            item, meta: meta(), tracers: tracers + compactedTracerHolders.map { $0.tracer }, date: date,
-            file: file, function: function, line: line
-        )
+        let meta = meta()
+        Task { [item, meta, tracers, timeIntervalSinceReferenceDate, file, function, line] in
+            await memoir.append(
+                item, meta: meta, tracers: tracers + traceData.allTracers, timeIntervalSinceReferenceDate: timeIntervalSinceReferenceDate,
+                file: file, function: function, line: line
+            )
+        }
     }
 }

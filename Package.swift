@@ -10,6 +10,12 @@
 
 import PackageDescription
 
+let swiftSettings: [SwiftSetting] = [
+    .unsafeFlags(
+        ["-Xfrontend", "-warn-concurrency", "-Xfrontend", "-enable-actor-data-race-checks"], .when(configuration: .debug)
+    )
+]
+
 let package = Package(
     name: "Memoirs",
     platforms: [ .iOS(.v11), .macOS(.v11) ],
@@ -18,7 +24,7 @@ let package = Package(
         .executable(name: "ExampleMemoirs", targets: [ "ExampleMemoirs" ]),
     ],
     targets: [
-        .target(name: "Memoirs", dependencies: [], path: "Sources"),
+        .target(name: "Memoirs", dependencies: [], path: "Sources", swiftSettings: swiftSettings),
         .testTarget(name: "MemoirsTests", dependencies: [ "Memoirs" ]),
         .target(name: "ExampleMemoirs", dependencies: [ "Memoirs" ], path: "Sources.Example"),
     ],

@@ -10,7 +10,7 @@
 
 /// Logging level.
 @frozen
-public enum LogLevel: Hashable, Comparable {
+public enum LogLevel: Hashable, Comparable, Sendable {
     /// Extremely detailed log events. This is the only level that can spam output instantly.
     case verbose
     /// Events that can be useful for understanding steps that program does. Makes it easier to debug.

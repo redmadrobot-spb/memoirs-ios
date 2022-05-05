@@ -61,7 +61,7 @@ class GenericTestCase: XCTestCase {
     struct LogProbe {
         let memoir: Memoir
 
-        var date: Date
+        var timeIntervalSinceReferenceDate: TimeInterval
         var level: LogLevel
         var tracers: [Tracer]
 
@@ -92,30 +92,37 @@ class GenericTestCase: XCTestCase {
         }
     }
 
-    func expectLog(probe: LogProbe) throws -> String {
+    override func tearDown() {
+        super.tearDown()
+
+        Output.logInterceptor = nil
+    }
+
+    func expectLog(probe: LogProbe) async throws -> String {
         probe.memoir.log(
             level: probe.level,
             probe.message,
             meta: probe.meta,
             tracers: probe.tracers
         )
-        if let result = logResult() {
+        if let result = try await logResult() {
             return result
         } else {
             throw Problem.noLogFromMemoir(probe.memoir)
         }
     }
 
-    func expectNoLog(probe: LogProbe, file: String = #fileID, line: UInt = #line) throws {
+    func expectNoLog(probe: LogProbe, file: String = #fileID, line: UInt = #line) async throws {
         probe.memoir.log(level: probe.level, probe.message, meta: probe.meta, tracers: probe.tracers)
-        let result = logResult()
+        let result = try await logResult()
         if result != nil {
             fputs("\nProblem at \(file):\(line)\n", stderr)
             throw Problem.unexpectedLogFromMemoir(probe.memoir)
         }
     }
 
-    func logResult() -> String? {
+    func logResult() async throws -> String? {
+        try await Task.sleep(nanoseconds: 1_000_000_0)
         guard !logResults.isEmpty else { return nil }
 
         return logResults.remove(at: 0).result
@@ -128,7 +135,7 @@ class GenericTestCase: XCTestCase {
         let randomTwo = Int.random(in: Int.min ... Int.max)
         return LogProbe(
             memoir: memoir,
-            date: Date(),
+            timeIntervalSinceReferenceDate: Date.timeIntervalSinceReferenceDate,
             level: defaultLevel,
             tracers: [ .label("label \(randomOne)") ],
             message: "log message \(randomTwo)",

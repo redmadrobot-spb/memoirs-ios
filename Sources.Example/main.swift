@@ -33,7 +33,7 @@ let lowLevelMemoir = PrintMemoir { tracer in
     }
 }
 
-let appMemoir = AppMemoir(bundleId: "com.smth.myGreatApp", version: "0.1", memoir: lowLevelMemoir)
+let appMemoir = TracedMemoir(appWithBundleId: "com.smth.myGreatApp", version: "0.1", memoir: lowLevelMemoir)
 appMemoir.info("AppLog")
 
 let statistics = CPUMemoryMeasurements(memoir: appMemoir)
@@ -42,7 +42,7 @@ statistics.start(period: 5)
 let stopwatch = Stopwatch(memoir: appMemoir)
 var mark = stopwatch.mark
 
-var instanceMemoir = InstanceMemoir(deviceInfo: .init(osInfo: .macOS(version: "11.something")), memoir: appMemoir)
+var instanceMemoir = TracedMemoir(instanceWithDeviceInfo: .init(osInfo: .macOS(version: "11.something")), memoir: appMemoir)
 instanceMemoir.error("instance level log")
 
 var addedLabelMemoir = TracedMemoir(label: "SomeLabelALittleLonger", memoir: instanceMemoir)
@@ -52,7 +52,7 @@ mark = stopwatch.measureTime(from: mark, name: "Initialization")
 
 func session() {
     stopwatch.measure(name: "Session") {
-        let sessionMemoir = SessionMemoir(userId: UUID().uuidString, isGuest: true, memoir: addedLabelMemoir)
+        let sessionMemoir = TracedMemoir(sessionWithUserId: UUID().uuidString, isGuest: true, memoir: addedLabelMemoir)
         let tracers: [Tracer] = [
             .request(trace: UUID().uuidString),
             .instance(id: UUID().uuidString)

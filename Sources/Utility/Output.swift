@@ -10,7 +10,7 @@
 
 import Foundation
 
-public class Output {
+public final class Output: Sendable {
     public enum Marker {
         static var verbose: String = "👻"
         static var debug: String = "👣"
@@ -39,28 +39,28 @@ public class Output {
     }
 
     @usableFromInline
-    var isSensitive: Bool
+    let isSensitive: Bool
     @usableFromInline
-    var codePositionType: PrintMemoir.CodePosition
+    let codePositionType: PrintMemoir.CodePosition
     @usableFromInline
-    var shortTracers: Bool
+    let shortTracers: Bool
     @usableFromInline
-    var separateTracers: Bool
+    let separateTracers: Bool
     @usableFromInline
-    var tracersFilter: (Tracer) -> Bool
+    let tracerFilter: @Sendable (Tracer) -> Bool
 
     public init(
         isSensitive: Bool,
         codePositionType: PrintMemoir.CodePosition,
         shortTracers: Bool,
         separateTracers: Bool,
-        tracersFilter: @escaping (Tracer) -> Bool
+        tracerFilter: @escaping @Sendable (Tracer) -> Bool
     ) {
         self.isSensitive = isSensitive
         self.codePositionType = codePositionType
         self.shortTracers = shortTracers
         self.separateTracers = separateTracers
-        self.tracersFilter = tracersFilter
+        self.tracerFilter = tracerFilter
     }
 
     public static var logInterceptor: ((
@@ -94,7 +94,7 @@ public class Output {
             message().string(isSensitive: isSensitive),
             meta()?.commaJoined(isSensitive: isSensitive),
         ].compactMap { $0 }
-        let suffix = tracers.filter(tracersFilter).allJoined(showFirst: false, isShort: shortTracers, isSensitive: isSensitive)
+        let suffix = tracers.filter(tracerFilter).allJoined(showFirst: false, isShort: shortTracers, isSensitive: isSensitive)
         return merge(prefix: prefix, suffix: suffix, separateTracers: separateTracers)
     }
 
@@ -111,7 +111,7 @@ public class Output {
             isSensitive ? "???" : name,
             meta()?.commaJoined(isSensitive: isSensitive),
         ].compactMap { $0 }
-        let suffix = tracers.filter(tracersFilter).allJoined(showFirst: false, isShort: shortTracers, isSensitive: isSensitive)
+        let suffix = tracers.filter(tracerFilter).allJoined(showFirst: false, isShort: shortTracers, isSensitive: isSensitive)
         return merge(prefix: prefix, suffix: suffix, separateTracers: separateTracers)
     }
 
@@ -153,7 +153,7 @@ public class Output {
                     meta()?.commaJoined(isSensitive: isSensitive),
                 ])
         }
-        let suffix = tracers.filter(tracersFilter).allJoined(showFirst: false, isShort: shortTracers, isSensitive: isSensitive)
+        let suffix = tracers.filter(tracerFilter).allJoined(showFirst: false, isShort: shortTracers, isSensitive: isSensitive)
         return merge(prefix: prefix.compactMap { $0 }, suffix: suffix, separateTracers: separateTracers)
     }
 
@@ -169,7 +169,7 @@ public class Output {
             "Tracer: \(isSensitive ? "???" : (shortTracers ? tracer.stringShort : tracer.string))",
             meta()?.commaJoined(isSensitive: isSensitive),
         ].compactMap { $0 }
-        let suffix = tracers.filter(tracersFilter).allJoined(showFirst: false, isShort: shortTracers, isSensitive: isSensitive)
+        let suffix = tracers.filter(tracerFilter).allJoined(showFirst: false, isShort: shortTracers, isSensitive: isSensitive)
         return merge(prefix: prefix, suffix: suffix, separateTracers: separateTracers)
     }
 
@@ -185,12 +185,12 @@ public class Output {
             "End Tracer: \(isSensitive ? "???" : (shortTracers ? tracer.stringShort : tracer.string))",
             meta()?.commaJoined(isSensitive: isSensitive),
         ].compactMap { $0 }
-        let suffix = tracers.filter(tracersFilter).allJoined(showFirst: false, isShort: shortTracers, isSensitive: isSensitive)
+        let suffix = tracers.filter(tracerFilter).allJoined(showFirst: false, isShort: shortTracers, isSensitive: isSensitive)
         return merge(prefix: prefix, suffix: suffix, separateTracers: separateTracers)
     }
 
     @usableFromInline
-    let tracersSeparator: String = "from"
+    let tracersSeparator: String = " <<- "
 
     @inlinable
     func merge(prefix: [String], suffix: String, separateTracers: Bool) -> [String] {

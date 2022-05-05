@@ -8,8 +8,8 @@
 // License: MIT License, https://github.com/redmadrobot-spb/memoirs-ios/blob/main/LICENSE
 //
 
-public enum MeasurementValue {
-    public struct HistogramBucket {
+public enum MeasurementValue: Sendable {
+    public struct HistogramBucket: Sendable {
         public var range: Range<Double>
         public var count: Int
 

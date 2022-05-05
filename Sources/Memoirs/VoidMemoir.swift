@@ -10,7 +10,7 @@
 
 import Foundation
 
-public class VoidMemoir: Memoir {
+public final class VoidMemoir: Memoir {
     public init() {
     }
 
@@ -19,7 +19,7 @@ public class VoidMemoir: Memoir {
         _ item: MemoirItem,
         meta: @autoclosure () -> [String: SafeString]?,
         tracers: [Tracer],
-        date: Date,
+        timeIntervalSinceReferenceDate: TimeInterval,
         file: String, function: String, line: UInt
     ) {
     }

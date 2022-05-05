@@ -19,11 +19,15 @@ public struct ContextMemoir: Memoir {
     }
 
     public func append(
-        _ item: MemoirItem, meta: @autoclosure () -> [String: SafeString]?, tracers: [Tracer], date: Date,
+        _ item: MemoirItem, meta: @autoclosure () -> [String: SafeString]?, tracers: [Tracer], timeIntervalSinceReferenceDate: TimeInterval,
         file: String, function: String, line: UInt
     ) {
-        (TaskLocalMemoirContext.memoir?.with(tracer: tracedMemoir.tracer) ?? tracedMemoir)
-            .append(item, meta: meta(), tracers: tracers, date: date, file: file, function: function, line: line)
+        let meta = meta()
+        Task {
+            let tracer = await tracedMemoir.traceData.tracer
+            let memoir = TaskLocalMemoirContext.memoir?.with(tracer: tracer) ?? tracedMemoir
+            memoir.append(item, meta: meta, tracers: tracers, timeIntervalSinceReferenceDate: timeIntervalSinceReferenceDate, file: file, function: function, line: line)
+        }
     }
 }
 

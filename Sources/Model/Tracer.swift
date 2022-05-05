@@ -8,7 +8,7 @@
 // License: MIT License, https://github.com/redmadrobot-spb/memoirs-ios/blob/main/LICENSE
 //
 
-public enum Tracer: Equatable, Hashable {
+public enum Tracer: Equatable, Hashable, Sendable {
     case app(id: String)
     case instance(id: String)
     case session(userId: String) // Yes, even for guests

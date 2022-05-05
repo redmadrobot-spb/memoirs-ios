@@ -11,15 +11,15 @@
 import Foundation
 
 /// Memoir which encapsulate NSLog logging system.
-public class NSLogMemoir: Memoir {
+public final class NSLogMemoir: Memoir {
     @usableFromInline
     let output: Output
 
-    public init(isSensitive: Bool, tracersFilter: @escaping (Tracer) -> Bool = { _ in false }) {
+    public init(isSensitive: Bool, tracerFilter: @escaping @Sendable (Tracer) -> Bool = { _ in false }) {
         output = Output(
             isSensitive: isSensitive,
             codePositionType: .full, shortTracers: false, separateTracers: false,
-            tracersFilter: tracersFilter
+            tracerFilter: tracerFilter
         )
     }
 
@@ -28,7 +28,7 @@ public class NSLogMemoir: Memoir {
         _ item: MemoirItem,
         meta: @autoclosure () -> [String: SafeString]?,
         tracers: [Tracer],
-        date: Date,
+        timeIntervalSinceReferenceDate: TimeInterval,
         file: String, function: String, line: UInt
     ) {
         let codePosition = output.codePosition(file: file, function: function, line: line)

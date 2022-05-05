@@ -49,7 +49,8 @@ public class Stopwatch {
 
     public func measureTime(
         from mark: Mark, name: String,
-        meta: [String: SafeString]? = nil, tracers: [Tracer] = [], date: Date = Date(),
+        meta: [String: SafeString]? = nil, tracers: [Tracer] = [],
+        timeIntervalSinceReferenceDate: TimeInterval = Date.timeIntervalSinceReferenceDate,
         file: String = #fileID, function: String = #function, line: UInt = #line
     ) -> Mark {
         let newMark = self.mark
@@ -69,7 +70,8 @@ public class Stopwatch {
         }
 
         memoir.measurement(
-            name: name, value: .double(value), meta: meta, tracers: tracers, date: date, file: file, function: function, line: line
+            name: name, value: .double(value), meta: meta, tracers: tracers, timeIntervalSinceReferenceDate: timeIntervalSinceReferenceDate,
+            file: file, function: function, line: line
         )
 
         return newMark
@@ -78,12 +80,15 @@ public class Stopwatch {
     @discardableResult
     public func measure(
         name: String,
-        meta: [String: SafeString]? = nil, tracers: [Tracer] = [], date: Date = Date(),
+        meta: [String: SafeString]? = nil, tracers: [Tracer] = [], timeIntervalSinceReferenceDate: TimeInterval = TimeInterval(),
         file: String = #fileID, function: String = #function, line: UInt = #line,
         _ closure: () -> Void
     ) -> Mark {
         let mark = mark
         closure()
-        return measureTime(from: mark, name: name, meta: meta, tracers: tracers, date: date, file: file, function: function, line: line)
+        return measureTime(
+            from: mark, name: name, meta: meta, tracers: tracers, timeIntervalSinceReferenceDate: timeIntervalSinceReferenceDate,
+            file: file, function: function, line: line
+        )
     }
 }

@@ -9,7 +9,7 @@
 //
 
 public struct SafeStringInterpolation: StringInterpolationProtocol {
-    enum Kind {
+    enum Kind: @unchecked Sendable {
         case open(Any)
         case sensitive(Any)
     }
