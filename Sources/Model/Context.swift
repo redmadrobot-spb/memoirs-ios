@@ -76,7 +76,7 @@ public extension TaskTraceable {
 }
 
 @available(iOS 15, *)
-public protocol ObjectTraceable {
+public protocol ObjectTraceable: Sendable {
     var memoir: ContextMemoir! { get }
 
     func tracing(operation: @escaping () async throws -> Void, file: String, line: UInt)
@@ -85,7 +85,7 @@ public protocol ObjectTraceable {
 @available(iOS 15, *)
 public extension ObjectTraceable {
     func tracing(operation: @escaping @Sendable () async throws -> Void, file: String = #file, line: UInt = #line) {
-        Task.detached {
+        Task {
             let tracer = await memoir.tracedMemoir.traceData.tracer
             let memoir = TaskLocalMemoirContext.memoir?.with(tracer: tracer) ?? memoir.tracedMemoir
             try await TaskLocalMemoirContext.$memoir.withValue(memoir, operation: operation, file: file, line: line)

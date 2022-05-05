@@ -1,0 +1,4 @@
+module MemoirsC {
+    header "include/MachHelper.h"
+    export *
+}

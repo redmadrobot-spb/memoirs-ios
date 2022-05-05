@@ -38,9 +38,11 @@ public class CPUMemoryMeasurements {
             self.memoir.verbose("Timer fired")
             self.measureProcessorAndMemoryFootprint()
         }
-        RunLoop.current.add(timer, forMode: .default)
+        RunLoop.current.add(timer, forMode: .common)
         self.timer = timer
         memoir.debug("Started; interval: \(period)")
+
+        measureProcessorAndMemoryFootprint()
     }
 
     public func stop() {

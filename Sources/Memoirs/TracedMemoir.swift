@@ -10,15 +10,17 @@
 
 import Foundation
 
-class TracerSubscription {
-    private let onDispose: () -> Void
+actor TracerSubscription {
+    private let onDispose: @Sendable () async -> Void
 
-    public init(onDispose: @escaping () -> Void) {
+    public init(onDispose: @escaping @Sendable () async -> Void) {
         self.onDispose = onDispose
     }
 
     deinit {
-        onDispose()
+        Task {
+            await onDispose()
+        }
     }
 }
 
@@ -26,7 +28,7 @@ actor TraceData {
     private(set) var tracer: Tracer
     private(set) var parent: TraceData?
 
-    private var updateSubscriptions: [UUID: () async -> Void] = [:]
+    private var updateSubscriptions: [String: @Sendable () async -> Void] = [:]
     private var completionHandler: (@Sendable () async -> Void)?
 
     private var internalTracerListCache: [Tracer]?
@@ -46,23 +48,24 @@ actor TraceData {
     init(tracer: Tracer, parent: TraceData?) {
         self.tracer = tracer
         self.parent = parent
-        subscribeOnParentUpdates()
     }
 
-    private func subscribeOnParentUpdates() {
-        Task {
-            parentUpdateSubscription = await parent?.subscribeOnUpdates { [weak self] in
-                await self?.updateTracerListCache()
-            }
+    func postInitialize() async {
+        parentUpdateSubscription = await parent?.subscribeOnUpdates { [weak self] in
+            await self?.updateTracerListCache()
         }
     }
 
-    func subscribeOnUpdates(listener: @escaping () async -> Void) -> TracerSubscription {
-        let id = UUID()
+    func subscribeOnUpdates(listener: @escaping @Sendable () async -> Void) -> TracerSubscription {
+        let id = UUID().uuidString
         updateSubscriptions[id] = listener
         return TracerSubscription { [self] in
-            updateSubscriptions[id] = nil
+            await unsubscribe(from: id)
         }
+    }
+
+    private func unsubscribe(from id: String) async {
+        updateSubscriptions[id] = nil
     }
 
     deinit {
@@ -113,6 +116,7 @@ public final class TracedMemoir: Memoir {
         }
 
         Task { [self] in
+            await traceData.postInitialize()
             await traceData.update(completionHandler: { [self] in
                 await self.memoir.finish(tracer: tracer, tracers: traceData.allTracers)
             })
@@ -130,7 +134,11 @@ public final class TracedMemoir: Memoir {
     }
 
     public func with(tracer: Tracer) -> TracedMemoir {
-        TracedMemoir(traceData: TraceData(tracer: tracer, parent: traceData), memoir: memoir)
+        let traceData = TraceData(tracer: tracer, parent: traceData)
+        Task {
+            await traceData.postInitialize()
+        }
+        return TracedMemoir(traceData: traceData, memoir: memoir)
     }
 
     public func updateTracer(to tracer: Tracer) async {

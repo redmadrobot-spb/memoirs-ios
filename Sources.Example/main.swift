@@ -36,9 +36,6 @@ let lowLevelMemoir = PrintMemoir { tracer in
 let appMemoir = TracedMemoir(appWithBundleId: "com.smth.myGreatApp", version: "0.1", memoir: lowLevelMemoir)
 appMemoir.info("AppLog")
 
-let statistics = CPUMemoryMeasurements(memoir: appMemoir)
-statistics.start(period: 5)
-
 let stopwatch = Stopwatch(memoir: appMemoir)
 var mark = stopwatch.mark
 
@@ -74,6 +71,9 @@ addedLabelMemoir = TracedMemoir(label: "AnotherLabelALittleLonger", memoir: inst
 addedLabelMemoir.debug("Another instance level log")
 
 DispatchQueue.main.async {
+    let statistics = CPUMemoryMeasurements(memoir: appMemoir)
+    statistics.start(period: 2)
+
     var naughtyStringIndex = -1
     while (true) {
         autoreleasepool {

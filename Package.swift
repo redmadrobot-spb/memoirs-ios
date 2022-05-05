@@ -20,11 +20,12 @@ let package = Package(
     name: "Memoirs",
     platforms: [ .iOS(.v11), .macOS(.v11) ],
     products: [
-        .library(name: "Memoirs", targets: [ "Memoirs" ]),
+        .library(name: "Memoirs", targets: [ "MemoirsC", "Memoirs" ]),
         .executable(name: "ExampleMemoirs", targets: [ "ExampleMemoirs" ]),
     ],
     targets: [
-        .target(name: "Memoirs", dependencies: [], path: "Sources", swiftSettings: swiftSettings),
+        .target(name: "MemoirsC", dependencies: [], path: "Sources.CHelpers"),
+        .target(name: "Memoirs", dependencies: [ "MemoirsC" ], path: "Sources", swiftSettings: swiftSettings),
         .testTarget(name: "MemoirsTests", dependencies: [ "Memoirs" ]),
         .target(name: "ExampleMemoirs", dependencies: [ "Memoirs" ], path: "Sources.Example"),
     ],
