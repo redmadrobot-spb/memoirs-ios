@@ -28,7 +28,7 @@ let package = Package(
         .target(name: "MemoirsC", dependencies: [], path: "Sources.CHelpers"),
         .target(name: "Memoirs", dependencies: [ "MemoirsC" ], path: "Sources", swiftSettings: swiftSettings),
         .testTarget(name: "MemoirsTests", dependencies: [ "Memoirs" ]),
-        .target(name: "ExampleMemoirs", dependencies: [ "Memoirs" ], path: "Sources.Example"),
+        .executableTarget(name: "ExampleMemoirs", dependencies: [ "Memoirs" ], path: "Sources.Example"),
     ],
     swiftLanguageVersions: [.v5]
 )
