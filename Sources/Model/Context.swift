@@ -22,8 +22,6 @@ public struct MemoirContext {
     }
 }
 
-#if swift(>=5.5)
-
 @available(iOS 15, *)
 public struct TaskLocalMemoirContext {
     @TaskLocal
@@ -92,5 +90,3 @@ public extension ObjectTraceable {
         }
     }
 }
-
-#endif

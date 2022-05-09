@@ -1,4 +1,4 @@
-// swift-tools-version:5.3
+// swift-tools-version:5.5
 //
 // Memoirs
 //
@@ -18,12 +18,13 @@ let swiftSettings: [SwiftSetting] = [
 
 let package = Package(
     name: "Memoirs",
-    platforms: [ .iOS(.v11), .macOS(.v11) ],
+    platforms: [ .iOS(.v13), .macOS(.v12) ],
     products: [
         .library(name: "Memoirs", targets: [ "MemoirsC", "Memoirs" ]),
         .executable(name: "ExampleMemoirs", targets: [ "ExampleMemoirs" ]),
     ],
     targets: [
+        // TODO: Remove this when concurrency starts to work with global vars.
         .target(name: "MemoirsC", dependencies: [], path: "Sources.CHelpers"),
         .target(name: "Memoirs", dependencies: [ "MemoirsC" ], path: "Sources", swiftSettings: swiftSettings),
         .testTarget(name: "MemoirsTests", dependencies: [ "Memoirs" ]),
