@@ -11,16 +11,14 @@
 import Foundation
 
 actor TracerSubscription {
-    private let onDispose: @Sendable () async -> Void
+    private let onDispose: @Sendable () -> Void
 
-    public init(onDispose: @escaping @Sendable () async -> Void) {
+    public init(onDispose: @escaping @Sendable () -> Void) {
         self.onDispose = onDispose
     }
 
     deinit {
-        Task {
-            await onDispose()
-        }
+        onDispose()
     }
 }
 
@@ -60,11 +58,13 @@ actor TraceData {
         let id = UUID().uuidString
         updateSubscriptions[id] = listener
         return TracerSubscription { [self] in
-            await unsubscribe(from: id)
+            Task {
+                await unsubscribe(from: id)
+            }
         }
     }
 
-    private func unsubscribe(from id: String) async {
+    private func unsubscribe(from id: String) {
         updateSubscriptions[id] = nil
     }
 
