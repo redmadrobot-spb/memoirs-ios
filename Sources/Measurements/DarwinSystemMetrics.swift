@@ -11,7 +11,6 @@
 #if canImport(Darwin)
 
 import Darwin
-import MemoirsC
 
 final class DarwinSystemMetrics: MetricsRetriever {
     private let keyCPUUsagePercent: String = "cpuUsagePercent"
@@ -20,7 +19,7 @@ final class DarwinSystemMetrics: MetricsRetriever {
     private let basicInfoCount = mach_msg_type_number_t(MemoryLayout<task_basic_info_data_t>.size /  MemoryLayout<UInt32>.size)
     private let vmInfoCount = mach_msg_type_number_t(MemoryLayout<task_vm_info_data_t>.size / MemoryLayout<UInt32>.size)
 
-    private let machTaskSelf: mach_port_t = getCurrentMachTaskSelf()
+    private let machTaskSelf: mach_port_t = mach_task_self_
 
     private var cpuUsage: Double? {
         var threadCount: mach_msg_type_number_t = 0

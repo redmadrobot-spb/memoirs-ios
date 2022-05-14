@@ -20,13 +20,11 @@ let package = Package(
     name: "Memoirs",
     platforms: [ .iOS(.v13), .tvOS(.v13), .watchOS(.v6), .macOS(.v12) ],
     products: [
-        .library(name: "Memoirs", targets: [ "MemoirsC", "Memoirs" ]),
+        .library(name: "Memoirs", targets: [ "Memoirs" ]),
         .executable(name: "ExampleMemoirs", targets: [ "ExampleMemoirs" ]),
     ],
     targets: [
-        // TODO: Remove this when concurrency starts to work with global vars.
-        .target(name: "MemoirsC", dependencies: [], path: "Sources.CHelpers"),
-        .target(name: "Memoirs", dependencies: [ "MemoirsC" ], path: "Sources", swiftSettings: swiftSettings),
+        .target(name: "Memoirs", dependencies: [], path: "Sources", swiftSettings: swiftSettings),
         .testTarget(name: "MemoirsTests", dependencies: [ "Memoirs" ]),
         .executableTarget(name: "ExampleMemoirs", dependencies: [ "Memoirs" ], path: "Sources.Example"),
     ],
