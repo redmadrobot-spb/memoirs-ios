@@ -97,6 +97,16 @@ public final class TracedMemoir: Memoir {
     let traceData: TraceData
 
     private let memoir: Memoir
+    public var tracer: Tracer {
+        get async {
+            await traceData.tracer
+        }
+    }
+    public var tracers: [Tracer] {
+        get async {
+            await traceData.allTracers
+        }
+    }
 
     private init(traceData: TraceData, memoir: Memoir) {
         self.traceData = traceData

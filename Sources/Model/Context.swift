@@ -10,18 +10,6 @@
 
 import Foundation
 
-public struct MemoirContext {
-    public let memoir: TracedMemoir
-
-    public init(memoir: TracedMemoir) {
-        self.memoir = memoir
-    }
-
-    public func appending(tracer: Tracer) -> MemoirContext {
-        MemoirContext(memoir: memoir.with(tracer: tracer))
-    }
-}
-
 @available(iOS 15, *)
 public struct TaskLocalMemoirContext {
     @TaskLocal
@@ -29,12 +17,12 @@ public struct TaskLocalMemoirContext {
 }
 
 @available(iOS 15, *)
-public protocol TaskTraceable {
-    var memoir: ContextMemoir { get }
+public protocol TaskTraceable: Actor {
+    var memoir: TracedMemoir { get }
 
     static func requestTracer(parentTracer: String?) -> String
 
-    func tracing<R>(operation: () async throws -> R, file: String, line: UInt) async throws -> R
+    func tracing<R: Sendable>(operation: @Sendable () async throws -> R, file: String, line: UInt) async throws -> R
 }
 
 @available(iOS 15, *)
@@ -51,9 +39,9 @@ public extension TaskTraceable {
         return "00-\(traceId)-\(parentId)-00"
     }
 
-    func tracing<R>(operation: () async throws -> R, file: String = #file, line: UInt = #line) async throws -> R {
-        let tracer = await memoir.tracedMemoir.traceData.tracer
-        let memoir = TaskLocalMemoirContext.memoir?.with(tracer: tracer) ?? memoir.tracedMemoir
+    func tracing<R: Sendable>(operation: @Sendable () async throws -> R, file: String = #file, line: UInt = #line) async throws -> R {
+        let tracer = await memoir.traceData.tracer
+        let memoir = TaskLocalMemoirContext.memoir?.with(tracer: tracer) ?? memoir
         return try await TaskLocalMemoirContext.$memoir.withValue(memoir, operation: operation, file: file, line: line)
     }
 
@@ -74,18 +62,19 @@ public extension TaskTraceable {
 }
 
 @available(iOS 15, *)
-public protocol ObjectTraceable: Sendable {
-    var memoir: ContextMemoir! { get }
-
-    func tracing(operation: @escaping () async throws -> Void, file: String, line: UInt)
+public protocol ObjectTraceable {
+    func tracing(with tracedMemoir: TracedMemoir, operation: @escaping @Sendable () async throws -> Void, file: String, line: UInt)
 }
 
 @available(iOS 15, *)
 public extension ObjectTraceable {
-    func tracing(operation: @escaping @Sendable () async throws -> Void, file: String = #file, line: UInt = #line) {
+    func tracing(
+        with tracedMemoir: TracedMemoir, operation: @escaping @Sendable () async throws -> Void,
+        file: String = #file, line: UInt = #line
+    ) {
         Task {
-            let tracer = await memoir.tracedMemoir.traceData.tracer
-            let memoir = TaskLocalMemoirContext.memoir?.with(tracer: tracer) ?? memoir.tracedMemoir
+            let tracer = await tracedMemoir.traceData.tracer
+            let memoir = TaskLocalMemoirContext.memoir?.with(tracer: tracer) ?? tracedMemoir
             try await TaskLocalMemoirContext.$memoir.withValue(memoir, operation: operation, file: file, line: line)
         }
     }
