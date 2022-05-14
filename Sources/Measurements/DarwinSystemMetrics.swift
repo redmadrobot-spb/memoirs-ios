@@ -23,14 +23,22 @@ final class DarwinSystemMetrics: MetricsRetriever {
     private let machTaskSelf: mach_port_t = getCurrentMachTaskSelf()
 
     private var cpuUsage: Double? {
-        var threadsArray: thread_act_array_t?
         var threadCount: mach_msg_type_number_t = 0
+        var threadsArray: thread_act_array_t?
         guard task_threads(machTaskSelf, &threadsArray, &threadCount) == KERN_SUCCESS else { return nil }
         guard let threads = threadsArray else { return nil }
 
         defer {
             let size = MemoryLayout<thread_t>.size * Int(threadCount)
-            vm_deallocate(machTaskSelf, vm_address_t(bitPattern: threads), vm_size_t(size))
+            #if os(watchOS)
+            let address = threads.withMemoryRebound(to: Int32.self, capacity: 1) { value in
+                vm_address_t(bitPattern: value.pointee)
+            }
+            vm_deallocate(machTaskSelf, address, vm_size_t(size))
+            #else
+            let address: vm_offset_t = vm_address_t(bitPattern: threads)
+            vm_deallocate(machTaskSelf, address, vm_size_t(size))
+            #endif
         }
 
         return (0 ..< Int(threadCount))
