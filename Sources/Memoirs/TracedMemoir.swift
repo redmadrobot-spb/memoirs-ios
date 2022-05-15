@@ -10,90 +10,90 @@
 
 import Foundation
 
-actor TracerSubscription {
-    private let onDispose: @Sendable () -> Void
-
-    public init(onDispose: @escaping @Sendable () -> Void) {
-        self.onDispose = onDispose
-    }
-
-    deinit {
-        onDispose()
-    }
-}
-
-actor TraceData {
-    private(set) var tracer: Tracer
-    private(set) var parent: TraceData?
-
-    private var updateSubscriptions: [String: @Sendable () async -> Void] = [:]
-    private var completionHandler: (@Sendable () async -> Void)?
-
-    private var internalTracerListCache: [Tracer]?
-    var allTracers: [Tracer] {
-        get async {
-            if let cached = internalTracerListCache {
-                return cached
-            } else {
-                await updateTracerListCache()
-                return internalTracerListCache ?? []
-            }
-        }
-    }
-
-    private var parentUpdateSubscription: TracerSubscription?
-
-    init(tracer: Tracer, parent: TraceData?) {
-        self.tracer = tracer
-        self.parent = parent
-    }
-
-    func postInitialize() async {
-        parentUpdateSubscription = await parent?.subscribeOnUpdates { [weak self] in
-            await self?.updateTracerListCache()
-        }
-    }
-
-    func subscribeOnUpdates(listener: @escaping @Sendable () async -> Void) -> TracerSubscription {
-        let id = UUID().uuidString
-        updateSubscriptions[id] = listener
-        return TracerSubscription { [self] in
-            Task {
-                await unsubscribe(from: id)
-            }
-        }
-    }
-
-    private func unsubscribe(from id: String) {
-        updateSubscriptions[id] = nil
-    }
-
-    deinit {
-        if let completionHandler = completionHandler {
-            Task {
-                await completionHandler()
-            }
-        }
-    }
-
-    func update(tracer: Tracer) async {
-        self.tracer = tracer
-        await updateTracerListCache()
-    }
-
-    func update(completionHandler: @escaping @Sendable () async -> Void) {
-        self.completionHandler = completionHandler
-    }
-
-    private func updateTracerListCache() async {
-        internalTracerListCache = [ tracer ] + (await parent?.allTracers ?? [])
-        for subscription in updateSubscriptions.values {
-            await subscription()
-        }
-    }
-}
-
 public final class TracedMemoir: Memoir {
+    actor TraceData {
+        actor TracerSubscription {
+            private let onDispose: @Sendable () -> Void
+
+            public init(onDispose: @escaping @Sendable () -> Void) {
+                self.onDispose = onDispose
+            }
+
+            deinit {
+                onDispose()
+            }
+        }
+
+        private(set) var tracer: Tracer
+        private(set) var parent: TraceData?
+
+        private var updateSubscriptions: [String: @Sendable () async -> Void] = [:]
+        private var completionHandler: (@Sendable () async -> Void)?
+
+        private var internalTracerListCache: [Tracer]?
+        var allTracers: [Tracer] {
+            get async {
+                if let cached = internalTracerListCache {
+                    return cached
+                } else {
+                    await updateTracerListCache()
+                    return internalTracerListCache ?? []
+                }
+            }
+        }
+
+        private var parentUpdateSubscription: TracerSubscription?
+
+        init(tracer: Tracer, parent: TraceData?) {
+            self.tracer = tracer
+            self.parent = parent
+        }
+
+        func postInitialize() async {
+            parentUpdateSubscription = await parent?.subscribeOnUpdates { [weak self] in
+                await self?.updateTracerListCache()
+            }
+        }
+
+        func subscribeOnUpdates(listener: @escaping @Sendable () async -> Void) -> TracerSubscription {
+            let id = UUID().uuidString
+            updateSubscriptions[id] = listener
+            return TracerSubscription { [self] in
+                Task {
+                    await unsubscribe(from: id)
+                }
+            }
+        }
+
+        private func unsubscribe(from id: String) {
+            updateSubscriptions[id] = nil
+        }
+
+        deinit {
+            if let completionHandler = completionHandler {
+                Task {
+                    await completionHandler()
+                }
+            }
+        }
+
+        func update(tracer: Tracer) async {
+            self.tracer = tracer
+            await updateTracerListCache()
+        }
+
+        func update(completionHandler: @escaping @Sendable () async -> Void) {
+            self.completionHandler = completionHandler
+        }
+
+        private func updateTracerListCache() async {
+            internalTracerListCache = [ tracer ] + (await parent?.allTracers ?? [])
+            for subscription in updateSubscriptions.values {
+                await subscription()
+            }
+        }
+    }
+
     let traceData: TraceData
 
     private let memoir: Memoir

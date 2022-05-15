@@ -11,7 +11,7 @@
 #if canImport(os)
 
 import Foundation
-@preconcurrency import os.log
+import os.log
 
 /// `(Memoir)` - implementation which use `os.log` logging system.
 @available(iOS 12.0, *)
@@ -27,13 +27,13 @@ public final class OSLogMemoir: Memoir {
             self.subsystem = subsystem
         }
 
-        func osLog(for label: String) -> OSLog {
+        func osLog(for label: String, operation: @Sendable (OSLog) -> Void) {
             if let osLog = osLogs[label] {
-                return osLog
+                operation(osLog)
             } else {
                 let osLog = OSLog(subsystem: subsystem, category: label)
                 osLogs[label] = osLog
-                return osLog
+                operation(osLog)
             }
         }
     }
@@ -104,7 +104,7 @@ public final class OSLogMemoir: Memoir {
                 ).joined(separator: " ")
         }
         Task { [osLogType, label] in
-            await os_log(osLogType, log: osLogHolder.osLog(for: label), "%{public}@", description)
+            await osLogHolder.osLog(for: label) { os_log(osLogType, log: $0, "%{public}@", description) }
         }
         Output.logInterceptor?(self, item, description)
     }
