@@ -21,7 +21,7 @@ public final class OSLogMemoir: Memoir {
         /// For example, `com.your_company.your_subsystem_name`.
         /// The subsystem is used for categorization and filtering of related log messages, as well as for grouping related logging settings.
         private let subsystem: String
-        private var osLogs: SynchronizedDictionary<String, OSLog> = [:]
+        private var osLogs: [String: OSLog] = [:]
 
         init(subsystem: String) {
             self.subsystem = subsystem
@@ -118,28 +118,6 @@ public final class OSLogMemoir: Memoir {
             case .warning: return .default
             case .error: return .error
             case .critical: return .fault
-        }
-    }
-}
-
-private class SynchronizedDictionary<Key, Value>: ExpressibleByDictionaryLiteral where Key: Hashable {
-    private var dictionary: [Key: Value]
-    private let queue: DispatchQueue = DispatchQueue(label: "memoirs.synchronizedDictionary", attributes: .concurrent)
-
-    required init(dictionaryLiteral elements: (Key, Value)...) {
-        dictionary = Dictionary(uniqueKeysWithValues: elements)
-    }
-
-    subscript(key: Key) -> Value? {
-        get {
-            queue.sync {
-                dictionary[key]
-            }
-        }
-        set {
-            queue.async(flags: .barrier) { [weak self] in
-                self?.dictionary[key] = newValue
-            }
         }
     }
 }

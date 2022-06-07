@@ -12,7 +12,7 @@ import Foundation
 
 public final class TracedMemoir: Memoir {
     actor TraceData {
-        actor TracerSubscription {
+        private actor TracerSubscription {
             private let onDispose: @Sendable () -> Void
 
             public init(onDispose: @escaping @Sendable () -> Void) {
@@ -55,7 +55,7 @@ public final class TracedMemoir: Memoir {
             }
         }
 
-        func subscribeOnUpdates(listener: @escaping @Sendable () async -> Void) -> TracerSubscription {
+        private func subscribeOnUpdates(listener: @escaping @Sendable () async -> Void) -> TracerSubscription {
             let id = UUID().uuidString
             updateSubscriptions[id] = listener
             return TracerSubscription { [self] in
