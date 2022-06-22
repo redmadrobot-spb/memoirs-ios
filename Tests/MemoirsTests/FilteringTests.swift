@@ -150,7 +150,7 @@ class FilteringTests: GenericTestCase {
     private func check(
         memoir: Memoir, item: MemoirItem, testValue: String, mustPresent: Bool, file: StaticString = #file, line: UInt = #line
     ) async throws {
-        memoir.append(
+        await memoir.append(
             item, meta: nil, tracers: [], timeIntervalSinceReferenceDate: Date.timeIntervalSinceReferenceDate,
             file: "", function: "", line: 0
         )

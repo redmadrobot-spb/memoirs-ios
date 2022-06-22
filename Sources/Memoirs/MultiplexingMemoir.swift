@@ -25,7 +25,12 @@ public final class MultiplexingMemoir: Memoir {
         tracers: [Tracer],
         timeIntervalSinceReferenceDate: TimeInterval,
         file: String, function: String, line: UInt
-    ) {
-        memoirs.forEach { $0.append(item, meta: meta(), tracers: tracers, timeIntervalSinceReferenceDate: timeIntervalSinceReferenceDate, file: file, function: function, line: line) }
+    ) async {
+        for memoir in memoirs {
+            await memoir.append(
+                item, meta: meta(), tracers: tracers, timeIntervalSinceReferenceDate: timeIntervalSinceReferenceDate,
+                file: file, function: function, line: line
+            )
+        }
     }
 }

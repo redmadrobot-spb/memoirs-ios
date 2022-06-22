@@ -96,7 +96,7 @@ public final class FilteringMemoir: Memoir {
         tracers: [Tracer],
         timeIntervalSinceReferenceDate: TimeInterval,
         file: String, function: String, line: UInt
-    ) {
+    ) async {
         let allowances: [Bool] = configurationsByTracer
             .lazy
             .filter { tracer, configuration in
@@ -129,7 +129,7 @@ public final class FilteringMemoir: Memoir {
         }
 
         if allowed {
-            memoir.append(
+            await memoir.append(
                 item, meta: meta(), tracers: tracers, timeIntervalSinceReferenceDate: timeIntervalSinceReferenceDate,
                 file: file, function: function, line: line
             )

@@ -167,4 +167,15 @@ public final class TracedMemoir: Memoir {
             )
         }
     }
+
+    public func append(
+        _ item: MemoirItem, meta: @autoclosure () -> [String: SafeString]?, tracers: [Tracer], timeIntervalSinceReferenceDate: TimeInterval,
+        file: String, function: String, line: UInt
+    ) async {
+        let meta = meta()
+        await memoir.append(
+            item, meta: meta, tracers: tracers + traceData.allTracers, timeIntervalSinceReferenceDate: timeIntervalSinceReferenceDate,
+            file: file, function: function, line: line
+        )
+    }
 }

@@ -35,12 +35,12 @@ public class CPUMemoryMeasurements {
     public func start(period: TimeInterval) {
         stop()
         let timer = Timer(timeInterval: period, repeats: true) { _ in
-            self.memoir.verbose("Timer fired")
+            self.memoir.verboseLater("Timer fired")
             self.measureProcessorAndMemoryFootprint()
         }
         RunLoop.current.add(timer, forMode: .common)
         self.timer = timer
-        memoir.debug("Started; interval: \(period)")
+        memoir.debugLater("Started; interval: \(period)")
 
         measureProcessorAndMemoryFootprint()
     }
@@ -50,7 +50,7 @@ public class CPUMemoryMeasurements {
 
         timer?.invalidate()
         timer = nil
-        memoir.debug("Stopped")
+        memoir.debugLater("Stopped")
     }
 
     private func measureProcessorAndMemoryFootprint() {
@@ -60,6 +60,6 @@ public class CPUMemoryMeasurements {
     private func send(metrics: [String: MeasurementValue], meta: [String: SafeString]) {
         metrics
             .sorted { lhs, rhs in lhs.key < rhs.key }
-            .forEach { memoir.measurement(name: $0, value: $1) }
+            .forEach { memoir.measurementLater(name: $0, value: $1) }
     }
 }

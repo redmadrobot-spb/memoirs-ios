@@ -29,33 +29,33 @@ class BasicTests: GenericTestCase {
         let memoir: Memoir = PrintMemoir(time: .formatter(PrintMemoir.fullDateFormatter))
         let tracer: Tracer = .label("TestTracer")
 
-        memoir.log(level: .info, "Test log 1", meta: [ "Test Key": "Test Value" ], tracers: [ tracer ], timeIntervalSinceReferenceDate: referenceDate, file: "file", function: "function", line: 239)
+        await memoir.log(level: .info, "Test log 1", meta: [ "Test Key": "Test Value" ], tracers: [ tracer ], timeIntervalSinceReferenceDate: referenceDate, file: "file", function: "function", line: 239)
         let result = try await logResult()
         guard let result = result, result.contains(referenceDateString), result.contains("TestTracer"), result.contains("Test Key: Test Value"), result.contains("Test log 1") else {
             return XCTFail("Can't call log(level:_:label:scopes:meta:date:file:function:line:)")
         }
 
-        memoir.log(level: .info, "Test log 2", meta: [ "Test Key": "Test Value" ], tracers: [ tracer ], timeIntervalSinceReferenceDate: referenceDate, file: "file", function: "function")
+        await memoir.log(level: .info, "Test log 2", meta: [ "Test Key": "Test Value" ], tracers: [ tracer ], timeIntervalSinceReferenceDate: referenceDate, file: "file", function: "function")
         guard let result = try await logResult(), result.contains(referenceDateString), result.contains("TestTracer"), result.contains("Test Key: Test Value"), result.contains("Test log 2") else { // TODO: Check date and meta
             return XCTFail("Can't call log(level:_:label:scopes:meta:date:file:function:)")
         }
 
-        memoir.log(level: .info, "Test log 3", meta: [ "Test Key": "Test Value" ], tracers: [ tracer ], timeIntervalSinceReferenceDate: referenceDate, file: "file")
+        await memoir.log(level: .info, "Test log 3", meta: [ "Test Key": "Test Value" ], tracers: [ tracer ], timeIntervalSinceReferenceDate: referenceDate, file: "file")
         guard let result = try await logResult(), result.contains(referenceDateString), result.contains("TestTracer"), result.contains("Test Key: Test Value"), result.contains("Test log 3") else { // TODO: Check date and meta
             return XCTFail("Can't call log(level:_:label:scopes:meta:date:file:)")
         }
 
-        memoir.log(level: .info, "Test log 4", meta: [ "Test Key": "Test Value" ], tracers: [ tracer ], timeIntervalSinceReferenceDate: referenceDate)
+        await memoir.log(level: .info, "Test log 4", meta: [ "Test Key": "Test Value" ], tracers: [ tracer ], timeIntervalSinceReferenceDate: referenceDate)
         guard let result = try await logResult(), result.contains(referenceDateString), result.contains("TestTracer"), result.contains("Test Key: Test Value"), result.contains("Test log 4") else { // TODO: Check date and meta
             return XCTFail("Can't call log(level:_:label:scopes:meta:date:)")
         }
 
-        memoir.log(level: .info, "Test log 5", meta: [ "Test Key": "Test Value" ], tracers: [ tracer ])
+        await memoir.log(level: .info, "Test log 5", meta: [ "Test Key": "Test Value" ], tracers: [ tracer ])
         guard let result = try await logResult(), result.contains("TestTracer"), result.contains("Test Key: Test Value"), result.contains("Test log 5") else { // TODO: Check date and meta
             return XCTFail("Can't call log(level:_:label:scopes:meta:)")
         }
 
-        memoir.log(level: .info, "Test log 6", tracers: [ tracer ])
+        await memoir.log(level: .info, "Test log 6", tracers: [ tracer ])
         guard let result = try await logResult(), result.contains("TestTracer"), result.contains("Test log 6") else { // TODO: Check date and meta
             return XCTFail("Can't call log(level:_:label:scopes:meta:)")
         }

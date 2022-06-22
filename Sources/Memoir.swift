@@ -28,18 +28,5 @@ public protocol Memoir: Sendable {
         tracers: [Tracer],
         timeIntervalSinceReferenceDate: TimeInterval,
         file: String, function: String, line: UInt
-    )
+    ) async
 }
-
-//public extension Memoir {
-//    func append(
-//        _ item: MemoirItem,
-//        meta: @autoclosure () -> [String: SafeString]?,
-//        tracers: [Tracer],
-//        date: Date,
-//        file: String, function: String, line: UInt
-//    ) {
-//        let date = date.timeIntervalSinceReferenceDate
-//        append(item, meta: meta(), tracers: tracers, timeIntervalSinceReferenceDate: date, file: file, function: function, line: line)
-//    }
-//}
