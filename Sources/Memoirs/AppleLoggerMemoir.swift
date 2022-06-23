@@ -69,7 +69,7 @@ public final class AppleLoggerMemoir: Memoir {
         tracers: [Tracer],
         timeIntervalSinceReferenceDate: TimeInterval,
         file: String, function: String, line: UInt
-    ) {
+    ) async {
         let codePosition = output.codePosition(file: file, function: function, line: line)
         let description: String
 
@@ -120,7 +120,7 @@ public final class AppleLoggerMemoir: Memoir {
                     await loggers.logger(for: traceString) { $0.notice("\(description)") }
                 }
         }
-        Task(operation: logAction)
+        await logAction()
         Output.logInterceptor?(self, item, description)
     }
 }

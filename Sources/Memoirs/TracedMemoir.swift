@@ -158,19 +158,6 @@ public final class TracedMemoir: Memoir {
     public func append(
         _ item: MemoirItem, meta: @autoclosure () -> [String: SafeString]?, tracers: [Tracer], timeIntervalSinceReferenceDate: TimeInterval,
         file: String, function: String, line: UInt
-    ) {
-        let meta = meta()
-        Task { [item, meta, tracers, timeIntervalSinceReferenceDate, file, function, line] in
-            await memoir.append(
-                item, meta: meta, tracers: tracers + traceData.allTracers, timeIntervalSinceReferenceDate: timeIntervalSinceReferenceDate,
-                file: file, function: function, line: line
-            )
-        }
-    }
-
-    public func append(
-        _ item: MemoirItem, meta: @autoclosure () -> [String: SafeString]?, tracers: [Tracer], timeIntervalSinceReferenceDate: TimeInterval,
-        file: String, function: String, line: UInt
     ) async {
         let meta = meta()
         await memoir.append(
