@@ -66,10 +66,10 @@ public class Stopwatch {
 
         if self.values.keys.count > tooManyMeasurementNames && !warnedAboutLotsOfValues {
             warnedAboutLotsOfValues = true
-            memoir.warningLater("You have lots of different measurements in stopwatch \(self), please be careful")
+            memoir.warning("You have lots of different measurements in stopwatch \(self), please be careful")
         }
 
-        memoir.measurementLater(
+        memoir.measurement(
             name: name, value: .double(value), meta: meta, tracers: tracers, timeIntervalSinceReferenceDate: timeIntervalSinceReferenceDate,
             file: file, function: function, line: line
         )

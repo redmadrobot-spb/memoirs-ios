@@ -25,9 +25,9 @@ public final class MultiplexingMemoir: Memoir {
         tracers: [Tracer],
         timeIntervalSinceReferenceDate: TimeInterval,
         file: String, function: String, line: UInt
-    ) async {
+    ) {
         for memoir in memoirs {
-            await memoir.append(
+            memoir.append(
                 item, meta: meta(), tracers: tracers, timeIntervalSinceReferenceDate: timeIntervalSinceReferenceDate,
                 file: file, function: function, line: line
             )

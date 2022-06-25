@@ -62,6 +62,9 @@ public final class AppleLoggerMemoir: Memoir {
         return label
     }
 
+    @usableFromInline
+    let asyncTaskQueue: AsyncTaskQueue = .init()
+
     @inlinable
     public func append(
         _ item: MemoirItem,
@@ -69,7 +72,7 @@ public final class AppleLoggerMemoir: Memoir {
         tracers: [Tracer],
         timeIntervalSinceReferenceDate: TimeInterval,
         file: String, function: String, line: UInt
-    ) async {
+    ) {
         let codePosition = output.codePosition(file: file, function: function, line: line)
         let description: String
 
@@ -120,7 +123,9 @@ public final class AppleLoggerMemoir: Memoir {
                     await loggers.logger(for: traceString) { $0.notice("\(description)") }
                 }
         }
-        await logAction()
+        asyncTaskQueue.add {
+            await logAction()
+        }
         Output.logInterceptor?(self, item, description)
     }
 }

@@ -30,7 +30,7 @@ public final class NSLogMemoir: Memoir {
         tracers: [Tracer],
         timeIntervalSinceReferenceDate: TimeInterval,
         file: String, function: String, line: UInt
-    ) async {
+    ) {
         let codePosition = output.codePosition(file: file, function: function, line: line)
         let description: String
         switch item {

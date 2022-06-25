@@ -155,14 +155,19 @@ public final class TracedMemoir: Memoir {
         await traceData.update(tracer: tracer)
     }
 
+    private let asyncTaskQueue: AsyncTaskQueue = .init()
+
     public func append(
         _ item: MemoirItem, meta: @autoclosure () -> [String: SafeString]?, tracers: [Tracer], timeIntervalSinceReferenceDate: TimeInterval,
         file: String, function: String, line: UInt
-    ) async {
+    ) {
         let meta = meta()
-        await memoir.append(
-            item, meta: meta, tracers: tracers + traceData.allTracers, timeIntervalSinceReferenceDate: timeIntervalSinceReferenceDate,
-            file: file, function: function, line: line
-        )
+        asyncTaskQueue.add {
+            let selfTracers = await self.traceData.allTracers
+            self.memoir.append(
+                item, meta: meta, tracers: tracers + selfTracers, timeIntervalSinceReferenceDate: timeIntervalSinceReferenceDate,
+                file: file, function: function, line: line
+            )
+        }
     }
 }

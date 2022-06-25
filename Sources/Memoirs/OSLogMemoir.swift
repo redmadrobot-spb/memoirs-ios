@@ -56,13 +56,15 @@ public final class OSLogMemoir: Memoir {
         )
     }
 
+    private let asyncTaskQueue: AsyncTaskQueue = .init()
+
     public func append(
         _ item: MemoirItem,
         meta: @autoclosure () -> [String: SafeString]?,
         tracers: [Tracer],
         timeIntervalSinceReferenceDate: TimeInterval,
         file: String, function: String, line: UInt
-    ) async {
+    ) {
         let codePosition = output.codePosition(file: file, function: function, line: line)
         let description: String
         var osLogType: OSLogType = .debug
@@ -103,7 +105,9 @@ public final class OSLogMemoir: Memoir {
                     date: "", name: name, value: value, tracers: tracers, meta: meta, codePosition: codePosition
                 ).joined(separator: " ")
         }
-        await osLogHolder.osLog(for: label) { os_log(osLogType, log: $0, "%{public}@", description) }
+        asyncTaskQueue.add { [osLogType, label] in
+            await self.osLogHolder.osLog(for: label) { os_log(osLogType, log: $0, "%{public}@", description) }
+        }
         Output.logInterceptor?(self, item, description)
     }
 

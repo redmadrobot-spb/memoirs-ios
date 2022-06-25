@@ -28,5 +28,5 @@ public protocol Memoir: Sendable {
         tracers: [Tracer],
         timeIntervalSinceReferenceDate: TimeInterval,
         file: String, function: String, line: UInt
-    ) async
+    )
 }

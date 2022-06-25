@@ -34,16 +34,16 @@ let lowLevelMemoir = PrintMemoir { tracer in
 }
 
 let appMemoir = TracedMemoir(appWithBundleId: "com.smth.myGreatApp", version: "0.1", memoir: lowLevelMemoir)
-appMemoir.infoLater("AppLog")
+appMemoir.info("AppLog")
 
 let stopwatch = Stopwatch(memoir: appMemoir)
 var mark = stopwatch.mark
 
 var instanceMemoir = TracedMemoir(instanceWithDeviceInfo: .init(osInfo: .macOS(version: "11.something")), memoir: appMemoir)
-instanceMemoir.errorLater("instance level log")
+instanceMemoir.error("instance level log")
 
 var addedLabelMemoir = TracedMemoir(label: "SomeLabelALittleLonger", memoir: instanceMemoir)
-addedLabelMemoir.errorLater("Install+LabelLog")
+addedLabelMemoir.error("Install+LabelLog")
 
 mark = stopwatch.measureTime(from: mark, name: "Initialization")
 
@@ -54,21 +54,21 @@ func session() {
             .request(trace: UUID().uuidString),
             .instance(id: UUID().uuidString)
         ]
-        sessionMemoir.debugLater("SessionLog", tracers: tracers)
-        sessionMemoir.infoLater("Session Info Log", tracers: tracers)
-        sessionMemoir.criticalLater("Session Critical Log", tracers: tracers)
-        sessionMemoir.eventLater(name: "Some Event", meta: [ "parameter": "value" ], tracers: tracers)
-        sessionMemoir.measurementLater(name: "Some Request time", value: .double(2.39), tracers: tracers)
+        sessionMemoir.debug("SessionLog", tracers: tracers)
+        sessionMemoir.info("Session Info Log", tracers: tracers)
+        sessionMemoir.critical("Session Critical Log", tracers: tracers)
+        sessionMemoir.event(name: "Some Event", meta: [ "parameter": "value" ], tracers: tracers)
+        sessionMemoir.measurement(name: "Some Request time", value: .double(2.39), tracers: tracers)
     }
 }
 
 session()
-addedLabelMemoir.debugLater("AnotherInstallLog")
+addedLabelMemoir.debug("AnotherInstallLog")
 
-addedLabelMemoir.eventLater(name: "EventLog", meta: [:])
+addedLabelMemoir.event(name: "EventLog", meta: [:])
 
 addedLabelMemoir = TracedMemoir(label: "AnotherLabelALittleLonger", memoir: instanceMemoir)
-addedLabelMemoir.debugLater("Another instance level log")
+addedLabelMemoir.debug("Another instance level log")
 
 DispatchQueue.main.async {
     let statistics = CPUMemoryMeasurements(memoir: appMemoir)
@@ -83,12 +83,12 @@ DispatchQueue.main.async {
             }
 
             let string = naughtyStrings[naughtyStringIndex]
-            addedLabelMemoir.debugLater("Another instance level log \(string)")
-            addedLabelMemoir.updateLater(
+            addedLabelMemoir.debug("Another instance level log \(string)")
+            addedLabelMemoir.update(
                 tracer: .label("Some Tracer \(naughtyStringIndex)"),
                 meta: [ "meta1": "value1", "meta2": "value2", "meta3": "value3", ]
             )
-            addedLabelMemoir.measurementLater(name: "Measurement \(naughtyStringIndex)", value: .double(23.9))
+            addedLabelMemoir.measurement(name: "Measurement \(naughtyStringIndex)", value: .double(23.9))
         }
     }
 }

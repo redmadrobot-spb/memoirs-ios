@@ -14,7 +14,7 @@ class ConcurrencyTests: XCTestCase {
     func testTracedMemoirSendability() {
         let memoir = TracedMemoir(label: "test", memoir: VoidMemoir())
         Task {
-            memoir.debugLater("Some log")
+            memoir.debug("Some log")
         }
     }
 }

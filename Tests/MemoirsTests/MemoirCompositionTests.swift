@@ -17,14 +17,14 @@ class MemoirCompositionTests: GenericTestCase {
     func testLoggingLabel() async throws {
         let memoir = TracedMemoir(label: "[Memoir]", memoir: printMemoir)
 
-        await memoir.debug("Test log 1")
+        memoir.debug("Test log 1")
         guard let result1 = try await logResult() else { throw Problem.noLogFromMemoir(memoir) }
 
         if !result1.contains("[Memoir]") || !(result1.contains("Test log 1")) {
             throw Problem.wrongLabelInLog(memoir)
         }
 
-        await memoir.debug("Test log 2")
+        memoir.debug("Test log 2")
         guard let result2 = try await logResult() else { throw Problem.noLogFromMemoir(memoir) }
 
         if !result2.contains("[Memoir]") || !(result2.contains("Test log 2")) {
@@ -36,7 +36,7 @@ class MemoirCompositionTests: GenericTestCase {
         let innerMemoir = TracedMemoir(label: "[Inner]", memoir: printMemoir)
         let memoir = TracedMemoir(label: "[Outer]", memoir: innerMemoir)
 
-        await memoir.debug("Test log")
+        memoir.debug("Test log")
         guard let result = try await logResult() else { throw Problem.noLogFromMemoir(memoir) }
 
         if !result.contains("[Outer]") {
@@ -53,7 +53,7 @@ class MemoirCompositionTests: GenericTestCase {
         let tracedMemoir1 = TracedMemoir(tracer: tracer1, meta: [:], memoir: printMemoir)
         let tracedMemoir2 = TracedMemoir(tracer: tracer2, meta: [:], memoir: tracedMemoir1)
 
-        await tracedMemoir2.debug("Test log")
+        tracedMemoir2.debug("Test log")
         guard let result = try await logResult() else { throw Problem.noLogFromMemoir(tracedMemoir2) }
 
         if !result.contains("Tracer 1") || !result.contains("Tracer 2") {

@@ -99,7 +99,7 @@ class GenericTestCase: XCTestCase {
     }
 
     func expectLog(probe: LogProbe) async throws -> String {
-        await probe.memoir.log(
+        probe.memoir.log(
             level: probe.level,
             probe.message,
             meta: probe.meta,
@@ -113,7 +113,7 @@ class GenericTestCase: XCTestCase {
     }
 
     func expectNoLog(probe: LogProbe, file: String = #fileID, line: UInt = #line) async throws {
-        await probe.memoir.log(level: probe.level, probe.message, meta: probe.meta, tracers: probe.tracers)
+        probe.memoir.log(level: probe.level, probe.message, meta: probe.meta, tracers: probe.tracers)
         let result = try await logResult()
         if result != nil {
             fputs("\nProblem at \(file):\(line)\n", stderr)
