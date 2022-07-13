@@ -14,11 +14,17 @@ import Foundation
 
 // swiftlint:disable line_length
 class BasicTests: GenericTestCase {
-    private let basicMemoirsWithoutCensoring: [Memoir] = [
-        PrintMemoir(),
-        NSLogMemoir(isSensitive: false),
-        OSLogMemoir(subsystem: "Test", isSensitive: false),
-    ]
+    private var basicMemoirsWithoutCensoring: [Memoir] = []
+
+    override func setUp() {
+        super.setUp()
+
+        basicMemoirsWithoutCensoring = [
+            PrintMemoir(interceptor: { [self] in addIntercepted(log: $0) }),
+            NSLogMemoir(isSensitive: false, interceptor: { [self] in addIntercepted(log: $0) }),
+            OSLogMemoir(subsystem: "Test", isSensitive: false, interceptor: { [self] in addIntercepted(log: $0) }),
+        ]
+    }
 
     private lazy var referenceDate: TimeInterval = 239
     private lazy var referenceDateString: String = {
@@ -26,7 +32,7 @@ class BasicTests: GenericTestCase {
     }()
 
     public func testAllLogOverloads() async throws {
-        let memoir: Memoir = PrintMemoir(time: .formatter(PrintMemoir.fullDateFormatter))
+        let memoir: Memoir = PrintMemoir(time: .formatter(PrintMemoir.fullDateFormatter), interceptor: { [self] in addIntercepted(log: $0) })
         let tracer: Tracer = .label("TestTracer")
 
         memoir.log(level: .info, "Test log 1", meta: [ "Test Key": "Test Value" ], tracers: [ tracer ], timeIntervalSinceReferenceDate: referenceDate, file: "file", function: "function", line: 239)
@@ -79,7 +85,7 @@ class BasicTests: GenericTestCase {
             stringForCritical: levelStrings[.critical]!
         )
 
-        let memoir = PrintMemoir()
+        let memoir = PrintMemoir(interceptor: { [self] in addIntercepted(log: $0) })
         for (level, string) in levelStrings {
             var probe = simpleProbe(memoir: memoir)
             probe.level = level
@@ -101,7 +107,7 @@ class BasicTests: GenericTestCase {
 
     func testTracedMemoir() async throws {
         let allLevels: [LogLevel] = [ .verbose, .debug, .info, .warning, .error, .critical ]
-        let printMemoir = PrintMemoir()
+        let printMemoir = PrintMemoir(interceptor: { [self] in addIntercepted(log: $0) })
         let memoir = TracedMemoir(label: "label_\(Int.random(in: Int.min ... Int.max))", memoir: printMemoir)
         for level in allLevels {
             var probe = simpleProbe(memoir: memoir)
@@ -112,7 +118,7 @@ class BasicTests: GenericTestCase {
 
     func testLabeledScopedLogger() async throws {
         let allLevels: [LogLevel] = [ .verbose, .debug, .info, .warning, .error, .critical ]
-        let printMemoir = PrintMemoir()
+        let printMemoir = PrintMemoir(tracerFilter: { _ in false }, interceptor: { [self] in addIntercepted(log: $0) })
         let tracer: Tracer = .label("tracer_\(Int.random(in: Int.min ... Int.max))")
         let memoir = TracedMemoir(
             label: "label_\(Int.random(in: Int.min ... Int.max))",
@@ -149,7 +155,7 @@ class BasicTests: GenericTestCase {
             ]
         for (configurationLevel, configurationIndex) in allConfigurationLevels {
             let memoir = FilteringMemoir(
-                memoir: PrintMemoir(),
+                memoir: PrintMemoir(interceptor: { [self] in addIntercepted(log: $0) }),
                 defaultConfiguration: .init(minLevelShown: configurationLevel),
                 configurationsByTracer: [:]
             )
@@ -161,7 +167,7 @@ class BasicTests: GenericTestCase {
 
     func testFilteringLoggerOnAll() async throws {
         let memoir = FilteringMemoir(
-            memoir: PrintMemoir(),
+            memoir: PrintMemoir(interceptor: { [self] in addIntercepted(log: $0) }),
             defaultConfiguration: .init(minLevelShown: .all),
             configurationsByTracer: [:]
         )
@@ -170,7 +176,7 @@ class BasicTests: GenericTestCase {
 
     func testFilteringLoggerOffAll() async throws {
         let memoir = FilteringMemoir(
-            memoir: PrintMemoir(),
+            memoir: PrintMemoir(interceptor: { [self] in addIntercepted(log: $0) }),
             defaultConfiguration: .init(minLevelShown: .disabled),
             configurationsByTracer: [:]
         )
@@ -179,7 +185,7 @@ class BasicTests: GenericTestCase {
 
     func testFilteringLoggerOnInfo() async throws {
         let memoir = FilteringMemoir(
-            memoir: PrintMemoir(),
+            memoir: PrintMemoir(interceptor: { [self] in addIntercepted(log: $0) }),
             defaultConfiguration: .init(minLevelShown: .info),
             configurationsByTracer: [:]
         )
@@ -188,7 +194,7 @@ class BasicTests: GenericTestCase {
 
     func testFilteringLoggerOffInfo() async throws {
         let memoir = FilteringMemoir(
-            memoir: PrintMemoir(),
+            memoir: PrintMemoir(interceptor: { [self] in addIntercepted(log: $0) }),
             defaultConfiguration: .init(minLevelShown: .warning),
             configurationsByTracer: [:]
         )
@@ -196,7 +202,7 @@ class BasicTests: GenericTestCase {
     }
 
     func testMultiplexingLogger() async throws {
-        let memoir = MultiplexingMemoir(memoirs: [ PrintMemoir(), PrintMemoir() ])
+        let memoir = MultiplexingMemoir(memoirs: [ PrintMemoir(interceptor: { [self] in addIntercepted(log: $0) }), PrintMemoir(interceptor: { [self] in addIntercepted(log: $0) }) ])
         let probe = simpleProbe(memoir: memoir)
         for _ in 0 ..< 2 { // 2 same logs
             let log = try await expectLog(probe: probe)
@@ -222,6 +228,7 @@ class BasicTests: GenericTestCase {
     }
 
     private func logShouldPresent(probe: LogProbe, memoir: Memoir, file: String = #fileID, line: UInt = #line) async throws {
+        try await Task.sleep(nanoseconds: 1_000_000_000 / 100)
         let log = try await expectLog(probe: probe)
         if !log.contains(probe.label) {
             fputs("\nProblem at \(file):\(line)\n", stderr)

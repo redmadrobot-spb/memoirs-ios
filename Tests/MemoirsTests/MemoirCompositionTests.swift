@@ -12,7 +12,16 @@ import XCTest
 @testable import Memoirs
 
 class MemoirCompositionTests: GenericTestCase {
-    let printMemoir = PrintMemoir()
+    var printMemoir: PrintMemoir!
+
+    override func setUp() {
+        super.setUp()
+
+        printMemoir = PrintMemoir(
+            time: .formatter(PrintMemoir.fullDateFormatter), shortTracers: false, tracerFilter: { _ in true },
+            interceptor: { [self] in addIntercepted(log: $0) }
+        )
+    }
 
     func testLoggingLabel() async throws {
         let memoir = TracedMemoir(label: "[Memoir]", memoir: printMemoir)
@@ -48,7 +57,7 @@ class MemoirCompositionTests: GenericTestCase {
         let tracer1: Tracer = .label("Tracer 1")
         let tracer2: Tracer = .label("Tracer 2")
 
-        let printMemoir = PrintMemoir()
+        let printMemoir = PrintMemoir(interceptor: { [self] in addIntercepted(log: $0) })
 
         let tracedMemoir1 = TracedMemoir(tracer: tracer1, meta: [:], memoir: printMemoir)
         let tracedMemoir2 = TracedMemoir(tracer: tracer2, meta: [:], memoir: tracedMemoir1)

@@ -15,7 +15,14 @@ public final class NSLogMemoir: Memoir {
     @usableFromInline
     let output: Output
 
-    public init(isSensitive: Bool, tracerFilter: @escaping @Sendable (Tracer) -> Bool = { _ in false }) {
+    @usableFromInline
+    let interceptor: (@Sendable (String) -> Void)?
+
+    public init(
+        isSensitive: Bool, tracerFilter: @escaping @Sendable (Tracer) -> Bool = { _ in false },
+        interceptor: (@Sendable (String) -> Void)? = nil
+    ) {
+        self.interceptor = interceptor
         output = Output(
             isSensitive: isSensitive,
             codePositionType: .full, shortTracers: false, separateTracers: false,
@@ -56,6 +63,6 @@ public final class NSLogMemoir: Memoir {
                 ).joined(separator: " ")
         }
         NSLog("%@", description)
-        Output.logInterceptor?(self, item, description)
+        interceptor?(description)
     }
 }

@@ -63,12 +63,6 @@ public final class Output: Sendable {
         self.tracerFilter = tracerFilter
     }
 
-    public static var logInterceptor: ((
-        _ memoir: Memoir, // Memoir that called interceptor
-        _ item: MemoirItem, // Item that is being appended
-        _ logString: String // String, containing parts that were sent to output
-    ) -> Void)?
-
     @inlinable
     public func codePosition(file: String, function: String, line: UInt) -> String {
         guard codePositionType != .none else { return "" }

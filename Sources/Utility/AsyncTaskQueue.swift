@@ -8,7 +8,7 @@
 
 import Foundation
 
-public final actor AsyncTaskQueue: @unchecked Sendable {
+public final actor AsyncTaskQueue {
     private var queue: [@Sendable () async -> Void] = []
 
     public nonisolated func add(closure: @escaping @Sendable () async -> Void) {

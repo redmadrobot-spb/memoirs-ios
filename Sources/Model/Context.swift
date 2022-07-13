@@ -17,7 +17,7 @@ public struct TaskLocalMemoirContext {
 }
 
 @available(iOS 15, *)
-public protocol TaskTraceable: Actor {
+public protocol TaskTraceable {
     var memoir: TracedMemoir { get }
 
     static func requestTracer(parentTracer: String?) -> String

@@ -36,7 +36,14 @@ public final class AppleLoggerMemoir: Memoir {
     @usableFromInline
     let loggers: Loggers
 
-    public init(isSensitive: Bool, subsystem: String, tracerFilter: @escaping @Sendable (Tracer) -> Bool = { _ in false }) {
+    @usableFromInline
+    let interceptor: (@Sendable (String) -> Void)?
+
+    public init(
+        isSensitive: Bool, subsystem: String, tracerFilter: @escaping @Sendable (Tracer) -> Bool = { _ in false },
+        interceptor: (@Sendable (String) -> Void)? = nil
+    ) {
+        self.interceptor = interceptor
         loggers = .init(subsystem: subsystem)
         output = Output(
             isSensitive: isSensitive,
@@ -126,6 +133,6 @@ public final class AppleLoggerMemoir: Memoir {
         asyncTaskQueue.add {
             await logAction()
         }
-        Output.logInterceptor?(self, item, description)
+        interceptor?(description)
     }
 }

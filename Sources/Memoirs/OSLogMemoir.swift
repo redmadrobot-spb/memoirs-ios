@@ -43,11 +43,19 @@ public final class OSLogMemoir: Memoir {
     @usableFromInline
     let output: Output
 
+    @usableFromInline
+    let interceptor: (@Sendable (String) -> Void)?
+
     /// Creates a new instance of `OSLogMemoir`.
     /// - Parameter subsystem: An identifier string, in reverse DNS notation, representing the subsystem that’s performing logging.
     /// - Parameter isSensitive: is log sensitive
     /// - Parameter tracerFilter: filter for the tracers output
-    public init(subsystem: String, isSensitive: Bool, tracerFilter: @escaping @Sendable (Tracer) -> Bool = { _ in false }) {
+    /// - Parameter interceptor: method that catches all strings, that this logger emits
+    public init(
+        subsystem: String, isSensitive: Bool, tracerFilter: @escaping @Sendable (Tracer) -> Bool = { _ in false },
+        interceptor: (@Sendable (String) -> Void)? = nil
+    ) {
+        self.interceptor = interceptor
         osLogHolder = .init(subsystem: subsystem)
         output = Output(
             isSensitive: isSensitive,
@@ -108,7 +116,7 @@ public final class OSLogMemoir: Memoir {
         asyncTaskQueue.add { [osLogType, label] in
             await self.osLogHolder.osLog(for: label) { os_log(osLogType, log: $0, "%{public}@", description) }
         }
-        Output.logInterceptor?(self, item, description)
+        interceptor?(description)
     }
 
     @usableFromInline

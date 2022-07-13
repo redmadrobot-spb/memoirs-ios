@@ -15,25 +15,17 @@ import Foundation
 // swiftlint:disable line_length
 class FilteringTests: GenericTestCase {
     private var lastInterceptedOutput: String = ""
+    private var printMemoir: PrintMemoir!
 
     override func setUp() {
         super.setUp()
 
-        Output.logInterceptor = { memoir, item, logString in
+        printMemoir = PrintMemoir(interceptor: { [self] logString in
             guard !logString.contains("Tracer: FilteringTests") && !logString.contains("Tracer: FilteringLabel") else { return }
 
-            self.lastInterceptedOutput = logString
-            print(" -----------------> Intercepted \(logString)")
-        }
+            lastInterceptedOutput = logString
+        })
     }
-
-    override func tearDown() {
-        super.tearDown()
-
-        Output.logInterceptor = nil
-    }
-
-    private let printMemoir = PrintMemoir()
 
     func testDefaultFiltering() async throws {
         var memoir = FilteringMemoir(

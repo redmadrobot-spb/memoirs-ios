@@ -12,7 +12,16 @@ import XCTest
 @testable import Memoirs
 
 class TracerChangesTests: GenericTestCase {
-    let printMemoir = PrintMemoir(time: .formatter(PrintMemoir.fullDateFormatter), shortTracers: false) { _ in true }
+    var printMemoir: PrintMemoir!
+
+    override func setUp() {
+        super.setUp()
+
+        printMemoir = PrintMemoir(
+            time: .formatter(PrintMemoir.fullDateFormatter), shortTracers: false, tracerFilter: { _ in true },
+            interceptor: { [self] in addIntercepted(log: $0) }
+        )
+    }
 
     func testChangeTracer() async throws {
         let memoir = TracedMemoir(label: "First", memoir: printMemoir)

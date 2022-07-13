@@ -15,12 +15,12 @@ import XCTest
 extension LogLevel {
     var testValue: String {
         switch self {
-            case .verbose: return "[{verbose}]"
-            case .debug: return "[{debug}]"
-            case .info: return "[{info}]"
-            case .warning: return "[{warning}]"
-            case .error: return "[{error}]"
-            case .critical: return "[{critical}]"
+            case .verbose: return Output.Marker.verbose
+            case .debug: return Output.Marker.debug
+            case .info: return Output.Marker.info
+            case .warning: return Output.Marker.warning
+            case .error: return Output.Marker.error
+            case .critical: return Output.Marker.critical
         }
     }
 }
@@ -61,48 +61,27 @@ class GenericTestCase: XCTestCase {
     struct LogProbe {
         let memoir: Memoir
 
-        var timeIntervalSinceReferenceDate: TimeInterval
         var level: LogLevel
         var tracers: [Tracer]
 
         var message: SafeString
         var censoredMessage: String
-        var meta: [String: SafeString]
-        var censoredMeta: [String: String]
 
         var label: String { tracers.first?.string ?? "NO_LABEL_FOUND:(" }
     }
 
-    private var logResults: [(memoir: Memoir, result: String)] = []
+    private var logResults: [String] = []
 
-    override func setUp() {
-        super.setUp()
+    func addIntercepted(log: String) {
+        guard !log.contains(Output.Marker.tracer) else { return }
 
-        Output.logInterceptor = { memoir, item, log in
-            switch item {
-                case .log:
-                    self.logResults.append((memoir: memoir, result: log))
-                case .event:
-                    break
-                case .tracer:
-                    break
-                case .measurement:
-                    break
-            }
-        }
-    }
-
-    override func tearDown() {
-        super.tearDown()
-
-        Output.logInterceptor = nil
+        logResults.append(log)
     }
 
     func expectLog(probe: LogProbe) async throws -> String {
         probe.memoir.log(
             level: probe.level,
             probe.message,
-            meta: probe.meta,
             tracers: probe.tracers
         )
         if let result = try await logResult() {
@@ -113,7 +92,7 @@ class GenericTestCase: XCTestCase {
     }
 
     func expectNoLog(probe: LogProbe, file: String = #fileID, line: UInt = #line) async throws {
-        probe.memoir.log(level: probe.level, probe.message, meta: probe.meta, tracers: probe.tracers)
+        probe.memoir.log(level: probe.level, probe.message, tracers: probe.tracers)
         let result = try await logResult()
         if result != nil {
             fputs("\nProblem at \(file):\(line)\n", stderr)
@@ -122,10 +101,10 @@ class GenericTestCase: XCTestCase {
     }
 
     func logResult() async throws -> String? {
-        try await Task.sleep(nanoseconds: 1_000_000_0)
+        try await Task.sleep(nanoseconds: 1_000_000_000 / 100)
         guard !logResults.isEmpty else { return nil }
 
-        return logResults.remove(at: 0).result
+        return logResults.remove(at: 0)
     }
 
     let defaultLevel: LogLevel = .info
@@ -135,13 +114,10 @@ class GenericTestCase: XCTestCase {
         let randomTwo = Int.random(in: Int.min ... Int.max)
         return LogProbe(
             memoir: memoir,
-            timeIntervalSinceReferenceDate: Date.timeIntervalSinceReferenceDate,
             level: defaultLevel,
             tracers: [ .label("label \(randomOne)") ],
             message: "log message \(randomTwo)",
-            censoredMessage: "log message \(randomTwo)",
-            meta: [:],
-            censoredMeta: [:]
+            censoredMessage: "log message \(randomTwo)"
         )
     }
 }
