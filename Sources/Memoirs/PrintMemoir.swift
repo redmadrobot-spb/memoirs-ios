@@ -76,7 +76,7 @@ public final class PrintMemoir: Memoir {
         interceptor: (@Sendable (String) -> Void)? = nil
     ) {
         output = Output(
-            isSensitive: false,
+            hideSensitiveValues: false,
             codePositionType: codePosition,
             shortTracers: shortTracers, separateTracers: true,
             tracerFilter: tracerFilter

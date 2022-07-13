@@ -40,13 +40,13 @@ public final class AppleLoggerMemoir: Memoir {
     let interceptor: (@Sendable (String) -> Void)?
 
     public init(
-        isSensitive: Bool, subsystem: String, tracerFilter: @escaping @Sendable (Tracer) -> Bool = { _ in false },
+        hideSensitiveValues: Bool, subsystem: String, tracerFilter: @escaping @Sendable (Tracer) -> Bool = { _ in false },
         interceptor: (@Sendable (String) -> Void)? = nil
     ) {
         self.interceptor = interceptor
         loggers = .init(subsystem: subsystem)
         output = Output(
-            isSensitive: isSensitive,
+            hideSensitiveValues: hideSensitiveValues,
             codePositionType: .full, shortTracers: false, separateTracers: false,
             tracerFilter: tracerFilter
         )
@@ -54,8 +54,8 @@ public final class AppleLoggerMemoir: Memoir {
 
     @inlinable
     func tracerString(for tracers: [Tracer]) -> String {
-        var label: String = output.isSensitive ? "???" : "NoLabel"
-        if !output.isSensitive {
+        var label: String = output.hideSensitiveValues ? "???" : "NoLabel"
+        if !output.hideSensitiveValues {
             switch tracers.first {
                 case .label(let name): label = name
                 case .type(let name, _): label = name

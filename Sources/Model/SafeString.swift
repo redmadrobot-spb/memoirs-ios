@@ -19,13 +19,7 @@
 ///    let logString: SafeString = "Username: \(safe: user.name), cardNumber: \(user.cardNumber)"
 ///
 public struct SafeString: CustomStringConvertible, ExpressibleByStringLiteral, ExpressibleByStringInterpolation, Sendable {
-    #if DEBUG
-    public static var isSensitive: Bool = false
-    #else
-    public static var isSensitive: Bool = true
-    #endif
-
-    static let secretReplacement: String = "<secret>"
+    static let unsafeReplacement: String = "<private>"
 
     private let interpolations: [SafeStringInterpolation.Kind]
 
@@ -41,19 +35,15 @@ public struct SafeString: CustomStringConvertible, ExpressibleByStringLiteral, E
         interpolations = stringInterpolation.interpolations
     }
 
-    public init(_ any: Any) {
-        interpolations = [ SafeString.isSensitive ? .sensitive(any) : .open(any) ]
-    }
-
     public var description: String {
-        string(isSensitive: SafeString.isSensitive)
+        string(hideSensitiveValues: true)
     }
 
     public func appending(_ safeString: SafeString) -> SafeString {
         SafeString(interpolations: interpolations + safeString.interpolations)
     }
 
-    public func string(isSensitive: Bool) -> String {
+    public func string(hideSensitiveValues: Bool) -> String {
         interpolations.map { interpolation in
             switch interpolation {
                 case .open(let value as String):
@@ -63,11 +53,11 @@ public struct SafeString: CustomStringConvertible, ExpressibleByStringLiteral, E
                 case .open(let value):
                     return "\(value)"
                 case .sensitive(let value as SafeStringConvertible):
-                    return value.logDescription(isSensitive: isSensitive)
+                    return value.logDescription(isSensitive: hideSensitiveValues)
                 case .sensitive(let value as String):
-                    return isSensitive ? SafeString.secretReplacement : value
+                    return hideSensitiveValues ? SafeString.unsafeReplacement : value
                 case .sensitive(let value):
-                    return isSensitive ? SafeString.secretReplacement : "\(value)"
+                    return hideSensitiveValues ? SafeString.unsafeReplacement : "\(value)"
             }
         }
         .joined()

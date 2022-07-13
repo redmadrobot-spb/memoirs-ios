@@ -24,7 +24,7 @@ public final class NSLogMemoir: Memoir {
     ) {
         self.interceptor = interceptor
         output = Output(
-            isSensitive: isSensitive,
+            hideSensitiveValues: isSensitive,
             codePositionType: .full, shortTracers: false, separateTracers: false,
             tracerFilter: tracerFilter
         )

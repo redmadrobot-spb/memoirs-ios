@@ -10,6 +10,7 @@
 
 #if canImport(Darwin)
 
+import Foundation
 import Darwin
 
 final class DarwinSystemMetrics: MetricsRetriever {
@@ -19,12 +20,10 @@ final class DarwinSystemMetrics: MetricsRetriever {
     private let basicInfoCount = mach_msg_type_number_t(MemoryLayout<task_basic_info_data_t>.size /  MemoryLayout<UInt32>.size)
     private let vmInfoCount = mach_msg_type_number_t(MemoryLayout<task_vm_info_data_t>.size / MemoryLayout<UInt32>.size)
 
-    private let machTaskSelf: mach_port_t = mach_task_self_
-
     private var cpuUsage: Double? {
         var threadCount: mach_msg_type_number_t = 0
         var threadsArray: thread_act_array_t?
-        guard task_threads(machTaskSelf, &threadsArray, &threadCount) == KERN_SUCCESS else { return nil }
+        guard task_threads(mach_task_self_, &threadsArray, &threadCount) == KERN_SUCCESS else { return nil }
         guard let threads = threadsArray else { return nil }
 
         defer {
@@ -33,11 +32,10 @@ final class DarwinSystemMetrics: MetricsRetriever {
             let address = threads.withMemoryRebound(to: Int32.self, capacity: 1) { value in
                 vm_address_t(bitPattern: value.pointee)
             }
-            vm_deallocate(machTaskSelf, address, vm_size_t(size))
             #else
             let address: vm_offset_t = vm_address_t(bitPattern: threads)
-            vm_deallocate(machTaskSelf, address, vm_size_t(size))
             #endif
+            vm_deallocate(mach_task_self_, address, vm_size_t(size))
         }
 
         return (0 ..< Int(threadCount))
@@ -61,7 +59,7 @@ final class DarwinSystemMetrics: MetricsRetriever {
         var infoCount = vmInfoCount
         let result = withUnsafeMutablePointer(to: &info) {
             $0.withMemoryRebound(to: integer_t.self, capacity: 1) {
-                task_info(machTaskSelf, thread_flavor_t(TASK_VM_INFO), $0, &infoCount)
+                task_info(mach_task_self_, thread_flavor_t(TASK_VM_INFO), $0, &infoCount)
             }
         }
         guard result == KERN_SUCCESS else { return nil }

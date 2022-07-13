@@ -58,7 +58,7 @@ public final class OSLogMemoir: Memoir {
         self.interceptor = interceptor
         osLogHolder = .init(subsystem: subsystem)
         output = Output(
-            isSensitive: isSensitive,
+            hideSensitiveValues: isSensitive,
             codePositionType: .full, shortTracers: false, separateTracers: true,
             tracerFilter: tracerFilter
         )
@@ -77,8 +77,8 @@ public final class OSLogMemoir: Memoir {
         let description: String
         var osLogType: OSLogType = .debug
 
-        var label: String = output.isSensitive ? "???" : "NoLabel"
-        if !output.isSensitive {
+        var label: String = output.hideSensitiveValues ? "???" : "NoLabel"
+        if !output.hideSensitiveValues {
             switch tracers.first {
                 case .label(let name): label = name
                 case .type(let name, _): label = name

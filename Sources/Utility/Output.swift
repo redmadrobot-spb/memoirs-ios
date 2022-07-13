@@ -11,35 +11,63 @@
 import Foundation
 
 public final class Output: Sendable {
-    public enum Marker {
-        static var verbose: String = "👻"
-        static var debug: String = "👣"
-        static var info: String = "🌵"
-        static var warning: String = "🖖"
-        static var error: String = "⛑"
-        static var critical: String = "👿"
+    public struct Markers: Sendable {
+        @usableFromInline
+        let verbose: String
+        @usableFromInline
+        let debug: String
+        @usableFromInline
+        let info: String
+        @usableFromInline
+        let warning: String
+        @usableFromInline
+        let error: String
+        @usableFromInline
+        let critical: String
 
         @usableFromInline
-        static var event: String = "💥"
+        let event: String
         @usableFromInline
-        static var tracer: String = "🕶"
+        let tracer: String
         @usableFromInline
-        static var measurement: String = "📈"
+        let measurement: String
 
-        public static func printString(for level: LogLevel) -> String {
+        public init(
+            verbose: String = "👻",
+            debug: String = "👣",
+            info: String = "🌵",
+            warning: String = "🖖",
+            error: String = "⛑",
+            critical: String = "👿",
+            event: String = "💥",
+            tracer: String = "🕶",
+            measurement: String = "📈"
+        ) {
+            self.verbose = verbose
+            self.debug = debug
+            self.info = info
+            self.warning = warning
+            self.error = error
+            self.critical = critical
+            self.event = event
+            self.tracer = tracer
+            self.measurement = measurement
+        }
+
+        public func marker(for level: LogLevel) -> String {
             switch level {
-                case .verbose: return Self.verbose
-                case .debug: return Self.debug
-                case .info: return Self.info
-                case .warning: return Self.warning
-                case .error: return Self.error
-                case .critical: return Self.critical
+                case .verbose: return verbose
+                case .debug: return debug
+                case .info: return info
+                case .warning: return warning
+                case .error: return error
+                case .critical: return critical
             }
         }
     }
 
     @usableFromInline
-    let isSensitive: Bool
+    let hideSensitiveValues: Bool
     @usableFromInline
     let codePositionType: PrintMemoir.CodePosition
     @usableFromInline
@@ -49,14 +77,19 @@ public final class Output: Sendable {
     @usableFromInline
     let tracerFilter: @Sendable (Tracer) -> Bool
 
+    @usableFromInline
+    let markers: Markers
+
     public init(
-        isSensitive: Bool,
+        markers: Markers = .init(),
+        hideSensitiveValues: Bool,
         codePositionType: PrintMemoir.CodePosition,
         shortTracers: Bool,
         separateTracers: Bool,
         tracerFilter: @escaping @Sendable (Tracer) -> Bool
     ) {
-        self.isSensitive = isSensitive
+        self.markers = markers
+        self.hideSensitiveValues = hideSensitiveValues
         self.codePositionType = codePositionType
         self.shortTracers = shortTracers
         self.separateTracers = separateTracers
@@ -83,12 +116,12 @@ public final class Output: Sendable {
         let prefix = [
             date,
             codePosition,
-            "\(level.map { "\(Marker.printString(for: $0))" } ?? "")",
-            tracers.labelString(isShort: shortTracers, isSensitive: isSensitive),
-            message().string(isSensitive: isSensitive),
-            meta()?.commaJoined(isSensitive: isSensitive),
+            "\(level.map { "\(markers.marker(for: $0))" } ?? "")",
+            tracers.labelString(isShort: shortTracers, isSensitive: hideSensitiveValues),
+            message().string(hideSensitiveValues: hideSensitiveValues),
+            meta()?.commaJoined(isSensitive: hideSensitiveValues),
         ].compactMap { $0 }
-        let suffix = tracers.filter(tracerFilter).allJoined(showFirst: false, isShort: shortTracers, isSensitive: isSensitive)
+        let suffix = tracers.filter(tracerFilter).allJoined(showFirst: false, isShort: shortTracers, isSensitive: hideSensitiveValues)
         return merge(prefix: prefix, suffix: suffix, separateTracers: separateTracers)
     }
 
@@ -100,12 +133,12 @@ public final class Output: Sendable {
         let prefix = [
             date,
             codePosition,
-            Marker.event,
-            tracers.labelString(isShort: shortTracers, isSensitive: isSensitive),
-            isSensitive ? "???" : name,
-            meta()?.commaJoined(isSensitive: isSensitive),
+            markers.event,
+            tracers.labelString(isShort: shortTracers, isSensitive: hideSensitiveValues),
+            hideSensitiveValues ? "???" : name,
+            meta()?.commaJoined(isSensitive: hideSensitiveValues),
         ].compactMap { $0 }
-        let suffix = tracers.filter(tracerFilter).allJoined(showFirst: false, isShort: shortTracers, isSensitive: isSensitive)
+        let suffix = tracers.filter(tracerFilter).allJoined(showFirst: false, isShort: shortTracers, isSensitive: hideSensitiveValues)
         return merge(prefix: prefix, suffix: suffix, separateTracers: separateTracers)
     }
 
@@ -117,24 +150,24 @@ public final class Output: Sendable {
         var prefix = [
             date,
             codePosition,
-            Marker.measurement,
-            tracers.labelString(isShort: shortTracers, isSensitive: isSensitive),
+            markers.measurement,
+            tracers.labelString(isShort: shortTracers, isSensitive: hideSensitiveValues),
         ]
         switch value {
             case .double(let value):
                 prefix.append(contentsOf: [
-                    isSensitive ? "???" : "\(name) -> \(value)",
-                    meta()?.commaJoined(isSensitive: isSensitive),
+                    hideSensitiveValues ? "???" : "\(name) -> \(value)",
+                    meta()?.commaJoined(isSensitive: hideSensitiveValues),
                 ])
             case .int(let value):
                 prefix.append(contentsOf: [
-                    isSensitive ? "???" : "\(name) -> \(value)",
-                    meta()?.commaJoined(isSensitive: isSensitive),
+                    hideSensitiveValues ? "???" : "\(name) -> \(value)",
+                    meta()?.commaJoined(isSensitive: hideSensitiveValues),
                 ])
             case .meta:
                 prefix.append(contentsOf: [
-                    isSensitive ? "???" : "\(name)",
-                    meta()?.commaJoined(isSensitive: isSensitive),
+                    hideSensitiveValues ? "???" : "\(name)",
+                    meta()?.commaJoined(isSensitive: hideSensitiveValues),
                 ])
             case .histogram(let value):
                 let values = value
@@ -143,11 +176,11 @@ public final class Output: Sendable {
                     }
                     .joined(separator: "; ")
                 prefix.append(contentsOf: [
-                    isSensitive ? "???" : "\(name) -> [ \(values) ]",
-                    meta()?.commaJoined(isSensitive: isSensitive),
+                    hideSensitiveValues ? "???" : "\(name) -> [ \(values) ]",
+                    meta()?.commaJoined(isSensitive: hideSensitiveValues),
                 ])
         }
-        let suffix = tracers.filter(tracerFilter).allJoined(showFirst: false, isShort: shortTracers, isSensitive: isSensitive)
+        let suffix = tracers.filter(tracerFilter).allJoined(showFirst: false, isShort: shortTracers, isSensitive: hideSensitiveValues)
         return merge(prefix: prefix.compactMap { $0 }, suffix: suffix, separateTracers: separateTracers)
     }
 
@@ -159,11 +192,11 @@ public final class Output: Sendable {
         let prefix = [
             date,
             codePosition,
-            Marker.tracer,
-            "Tracer: \(isSensitive ? "???" : (shortTracers ? tracer.stringShort : tracer.string))",
-            meta()?.commaJoined(isSensitive: isSensitive),
+            markers.tracer,
+            "Tracer: \(hideSensitiveValues ? "???" : (shortTracers ? tracer.stringShort : tracer.string))",
+            meta()?.commaJoined(isSensitive: hideSensitiveValues),
         ].compactMap { $0 }
-        let suffix = tracers.filter(tracerFilter).allJoined(showFirst: false, isShort: shortTracers, isSensitive: isSensitive)
+        let suffix = tracers.filter(tracerFilter).allJoined(showFirst: false, isShort: shortTracers, isSensitive: hideSensitiveValues)
         return merge(prefix: prefix, suffix: suffix, separateTracers: separateTracers)
     }
 
@@ -175,11 +208,11 @@ public final class Output: Sendable {
         let prefix = [
             date,
             codePosition,
-            Marker.tracer,
-            "End Tracer: \(isSensitive ? "???" : (shortTracers ? tracer.stringShort : tracer.string))",
-            meta()?.commaJoined(isSensitive: isSensitive),
+            markers.tracer,
+            "End Tracer: \(hideSensitiveValues ? "???" : (shortTracers ? tracer.stringShort : tracer.string))",
+            meta()?.commaJoined(isSensitive: hideSensitiveValues),
         ].compactMap { $0 }
-        let suffix = tracers.filter(tracerFilter).allJoined(showFirst: false, isShort: shortTracers, isSensitive: isSensitive)
+        let suffix = tracers.filter(tracerFilter).allJoined(showFirst: false, isShort: shortTracers, isSensitive: hideSensitiveValues)
         return merge(prefix: prefix, suffix: suffix, separateTracers: separateTracers)
     }
 
@@ -221,6 +254,6 @@ extension Dictionary where Key == String, Value == SafeString {
     func commaJoined(isSensitive: Bool) -> String? {
         isEmpty
             ? nil
-            : "[\(map { "\($0): \($1.string(isSensitive: isSensitive))" }.joined(separator: ", "))]"
+            : "[\(map { "\($0): \($1.string(hideSensitiveValues: isSensitive))" }.joined(separator: ", "))]"
     }
 }

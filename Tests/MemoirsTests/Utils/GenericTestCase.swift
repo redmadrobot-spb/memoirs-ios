@@ -12,19 +12,6 @@ import Foundation
 import XCTest
 @testable import Memoirs
 
-extension LogLevel {
-    var testValue: String {
-        switch self {
-            case .verbose: return Output.Marker.verbose
-            case .debug: return Output.Marker.debug
-            case .info: return Output.Marker.info
-            case .warning: return Output.Marker.warning
-            case .error: return Output.Marker.error
-            case .critical: return Output.Marker.critical
-        }
-    }
-}
-
 class GenericTestCase: XCTestCase {
     enum Problem: Error, CustomDebugStringConvertible {
         case noLogFromMemoir(Memoir)
@@ -70,10 +57,11 @@ class GenericTestCase: XCTestCase {
         var label: String { tracers.first?.string ?? "NO_LABEL_FOUND:(" }
     }
 
+    public let markers: Output.Markers = .init()
     private var logResults: [String] = []
 
     func addIntercepted(log: String) {
-        guard !log.contains(Output.Marker.tracer) else { return }
+        guard !log.contains(markers.tracer) else { return }
 
         logResults.append(log)
     }
@@ -101,7 +89,7 @@ class GenericTestCase: XCTestCase {
     }
 
     func logResult() async throws -> String? {
-        try await Task.sleep(nanoseconds: 1_000_000_000 / 100)
+        try await Task.sleep(nanoseconds: 1_000_000_000 / 1000)
         guard !logResults.isEmpty else { return nil }
 
         return logResults.remove(at: 0)

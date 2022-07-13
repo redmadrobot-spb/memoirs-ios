@@ -32,4 +32,10 @@ class MeasurementTests: GenericTestCase {
         print("Average execution time: \(averageIterationTime)")
         XCTAssertTrue(averageIterationTime < 1e-5)
     }
+
+    func testDarwinSystemMetrics() {
+        let metrics = DarwinSystemMetrics()
+        let result = metrics.calculatedMetrics
+        XCTAssertNotEqual(result.count, 0)
+    }
 }

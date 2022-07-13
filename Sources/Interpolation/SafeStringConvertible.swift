@@ -73,15 +73,15 @@ extension SafeStringConvertible {
                                 return "\(label.dropFirst()): \(property)"
                             case .sensitive:
                                 return isSensitive
-                                    ? "\(label.dropFirst()): \(SafeString.secretReplacement)"
+                                    ? "\(label.dropFirst()): \(SafeString.unsafeReplacement)"
                                     : "\(label.dropFirst()): \(property)"
                             case .never:
-                                return "\(label.dropFirst()): \(SafeString.secretReplacement))"
+                                return "\(label.dropFirst()): \(SafeString.unsafeReplacement))"
                         }
                     case let loggable as SafeStringConvertible:
                         return "\(label): \(loggable.logDescription(isSensitive: isSensitive))"
                     default:
-                        return isSensitive ? "\(label): \(SafeString.secretReplacement)" : "\(label): \(child.value)"
+                        return isSensitive ? "\(label): \(SafeString.unsafeReplacement)" : "\(label): \(child.value)"
                 }
             }
             .joined(separator: ", ")

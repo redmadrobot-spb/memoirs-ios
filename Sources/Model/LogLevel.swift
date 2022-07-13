@@ -38,27 +38,4 @@ public enum LogLevel: Hashable, Comparable, Sendable {
     public static func < (lhs: LogLevel, rhs: LogLevel) -> Bool {
         lhs.integralValue < rhs.integralValue
     }
-
-    /// You can redefine these to display other symbols in PrintMemoir.
-    public static func configure(
-        stringForVerbose: String = "👻",
-        stringForDebug: String = "👣",
-        stringForInfo: String = "🌵",
-        stringForWarning: String = "🖖",
-        stringForError: String = "⛑",
-        stringForCritical: String = "👿",
-        stringForEvent: String = "💥",
-        stringForTracer: String = "🕶",
-        stringForMeasurement: String = "📈"
-    ) {
-        Output.Marker.verbose = stringForVerbose
-        Output.Marker.debug = stringForDebug
-        Output.Marker.info = stringForInfo
-        Output.Marker.warning = stringForWarning
-        Output.Marker.error = stringForError
-        Output.Marker.critical = stringForCritical
-        Output.Marker.event = stringForEvent
-        Output.Marker.tracer = stringForTracer
-        Output.Marker.measurement = stringForMeasurement
-    }
 }

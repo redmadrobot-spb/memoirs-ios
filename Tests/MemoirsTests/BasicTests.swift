@@ -67,26 +67,18 @@ class BasicTests: GenericTestCase {
         }
     }
 
-    func testConfigureOutput() async throws {
-        let levelStrings: [LogLevel: String] = [
-            .verbose: LogLevel.verbose.testValue,
-            .debug: LogLevel.debug.testValue,
-            .info: LogLevel.info.testValue,
-            .warning: LogLevel.warning.testValue,
-            .error: LogLevel.error.testValue,
-            .critical: LogLevel.critical.testValue,
-        ]
-        LogLevel.configure(
-            stringForVerbose: levelStrings[.verbose]!,
-            stringForDebug: levelStrings[.debug]!,
-            stringForInfo: levelStrings[.info]!,
-            stringForWarning: levelStrings[.warning]!,
-            stringForError: levelStrings[.error]!,
-            stringForCritical: levelStrings[.critical]!
-        )
+    lazy var levelMarkers: [LogLevel: String] = [
+        .verbose: markers.verbose,
+        .debug: markers.debug,
+        .info: markers.info,
+        .warning: markers.warning,
+        .error: markers.error,
+        .critical: markers.critical,
+    ]
 
+    func testConfigureOutput() async throws {
         let memoir = PrintMemoir(interceptor: { [self] in addIntercepted(log: $0) })
-        for (level, string) in levelStrings {
+        for (level, string) in levelMarkers {
             var probe = simpleProbe(memoir: memoir)
             probe.level = level
             let log = try await expectLog(probe: probe)
@@ -228,7 +220,7 @@ class BasicTests: GenericTestCase {
     }
 
     private func logShouldPresent(probe: LogProbe, memoir: Memoir, file: String = #fileID, line: UInt = #line) async throws {
-        try await Task.sleep(nanoseconds: 1_000_000_000 / 100)
+        try await Task.sleep(nanoseconds: 1_000_000_000 / 1000)
         let log = try await expectLog(probe: probe)
         if !log.contains(probe.label) {
             fputs("\nProblem at \(file):\(line)\n", stderr)
@@ -238,7 +230,7 @@ class BasicTests: GenericTestCase {
             fputs("\nProblem at \(file):\(line)\n", stderr)
             throw Problem.noMessageInLog(memoir)
         }
-        if !log.contains(probe.level.testValue) {
+        if !log.contains(levelMarkers[probe.level] ?? "NOT_A_MARKER") {
             fputs("\nProblem at \(file):\(line)\n", stderr)
             throw Problem.wrongLevelInLog(memoir)
         }
