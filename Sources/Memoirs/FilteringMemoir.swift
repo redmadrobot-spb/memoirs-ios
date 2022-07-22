@@ -128,7 +128,7 @@ public final class FilteringMemoir: Memoir {
             }
         }
 
-        if allowed {
+        if allowed /* by the filtering rules */ {
             memoir.append(
                 item, meta: meta(), tracers: tracers, timeIntervalSinceReferenceDate: timeIntervalSinceReferenceDate,
                 file: file, function: function, line: line

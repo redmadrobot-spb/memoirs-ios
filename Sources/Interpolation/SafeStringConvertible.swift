@@ -60,32 +60,7 @@ public struct SafeToShow<T>: MemoirStringConvertibleProperty, CustomStringConver
 }
 
 extension SafeStringConvertible {
-    func logDescription(isSensitive: Bool) -> String {
-        let mirror = Mirror(reflecting: self)
-        let children = mirror.children
-            .map { child in
-                guard let label = child.label else { return "" }
-
-                switch child.value {
-                    case let property as MemoirStringConvertibleProperty:
-                        switch property.safetyLevel {
-                            case .safeToShow:
-                                return "\(label.dropFirst()): \(property)"
-                            case .sensitive:
-                                return isSensitive
-                                    ? "\(label.dropFirst()): \(SafeString.unsafeReplacement)"
-                                    : "\(label.dropFirst()): \(property)"
-                            case .never:
-                                return "\(label.dropFirst()): \(SafeString.unsafeReplacement))"
-                        }
-                    case let loggable as SafeStringConvertible:
-                        return "\(label): \(loggable.logDescription(isSensitive: isSensitive))"
-                    default:
-                        return isSensitive ? "\(label): \(SafeString.unsafeReplacement)" : "\(label): \(child.value)"
-                }
-            }
-            .joined(separator: ", ")
-
-        return "\(String(describing: self))(\(children))"
+    func logDescription(hideSensitiveValues: Bool) -> String {
+        SafeString.logDescription(object: self, hideSensitiveValues: hideSensitiveValues)
     }
 }

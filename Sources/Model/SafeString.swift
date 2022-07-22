@@ -45,21 +45,56 @@ public struct SafeString: CustomStringConvertible, ExpressibleByStringLiteral, E
 
     public func string(hideSensitiveValues: Bool) -> String {
         interpolations.map { interpolation in
-            switch interpolation {
-                case .open(let value as String):
-                    return value
-                case .open(let value as SafeStringConvertible):
-                    return value.logDescription(isSensitive: false)
-                case .open(let value):
-                    return "\(value)"
-                case .sensitive(let value as SafeStringConvertible):
-                    return value.logDescription(isSensitive: hideSensitiveValues)
-                case .sensitive(let value as String):
-                    return hideSensitiveValues ? SafeString.unsafeReplacement : value
-                case .sensitive(let value):
-                    return hideSensitiveValues ? SafeString.unsafeReplacement : "\(value)"
+                switch interpolation {
+                    case .open(let value as String):
+                        return value
+                    case .open(let value as SafeStringConvertible):
+                        return value.logDescription(hideSensitiveValues: false)
+                    case .open(let value as SafeString):
+                        return value.string(hideSensitiveValues: false)
+                    case .open(let value):
+                        return "\(value)"
+                    case .sensitive(let value as SafeStringConvertible):
+                        return value.logDescription(hideSensitiveValues: hideSensitiveValues)
+                    case .sensitive(let value as String):
+                        return hideSensitiveValues ? SafeString.unsafeReplacement : value
+                    case .sensitive(let value as SafeString):
+                        return value.string(hideSensitiveValues: hideSensitiveValues)
+                    case .sensitive(let value):
+                        return hideSensitiveValues
+                            ? SafeString.unsafeReplacement
+                            : SafeString.logDescription(object: value, hideSensitiveValues: hideSensitiveValues)
+                }
             }
-        }
-        .joined()
+            .joined()
+    }
+
+    static func logDescription(object: Any, hideSensitiveValues: Bool) -> String {
+        let mirror = Mirror(reflecting: object)
+        let children = mirror.children
+            .map { child in
+                guard let label = child.label else { return "" }
+
+                switch child.value {
+                    case let property as MemoirStringConvertibleProperty:
+                        switch property.safetyLevel {
+                            case .safeToShow:
+                                return "\(label.dropFirst()): \(property)"
+                            case .sensitive:
+                                return hideSensitiveValues
+                                    ? "\(label.dropFirst()): \(SafeString.unsafeReplacement)"
+                                    : "\(label.dropFirst()): \(property)"
+                            case .never:
+                                return "\(label.dropFirst()): \(SafeString.unsafeReplacement))"
+                        }
+                    case let loggable as SafeStringConvertible:
+                        return "\(label): \(loggable.logDescription(hideSensitiveValues: hideSensitiveValues))"
+                    default:
+                        return hideSensitiveValues ? "\(label): \(SafeString.unsafeReplacement)" : "\(label): \(child.value)"
+                }
+            }
+            .joined(separator: ", ")
+
+        return "\(String(describing: object))(\(children))"
     }
 }
