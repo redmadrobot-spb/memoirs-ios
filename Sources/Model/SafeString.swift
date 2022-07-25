@@ -93,8 +93,9 @@ public struct SafeString: CustomStringConvertible, ExpressibleByStringLiteral, E
                         return hideSensitiveValues ? "\(label): \(SafeString.unsafeReplacement)" : "\(label): \(child.value)"
                 }
             }
+            .filter { !$0.isEmpty }
             .joined(separator: ", ")
 
-        return "\(String(describing: object))(\(children))"
+        return "\(String(describing: object))\(children.isEmpty ? "" : "(\(children))")"
     }
 }
