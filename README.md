@@ -77,19 +77,19 @@ Marking can be done in two ways:
    - default (sensitive): "Log data: \(data)"
    - safe: "Log data: \(safe: data)"
 - When designing model types, with property wrappers and implementing `SafeStringConvertible` marker protocol:
-   - `@TopSecret` will forbid outputting the property,
-   - `@Sensitive` will output only when `isSensitive` is false,
-   - `@SafeToShow` will output all the time.
+   - `@LogNever` will forbid outputting the property,
+   - `@LogSensitive` will output only when `isSensitive` is false,
+   - `@LogAlways` will output all the time.
 
 So if you develop some kind of _User_ type, it can look like this:
 
 ```swift
 struct User: SafeStringConvertible {
-    @SafeToShow
+    @LogAlways
     var id: String
-    @Sensitive
+    @LogSensitive
     var name: String
-    @TopSecret
+    @LogNever
     var password: String
 }
 ```

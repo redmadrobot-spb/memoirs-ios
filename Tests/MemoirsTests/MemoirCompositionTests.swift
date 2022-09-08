@@ -24,7 +24,7 @@ class MemoirCompositionTests: GenericTestCase {
     }
 
     func testLoggingLabel() async throws {
-        let memoir = TracedMemoir(label: "[Memoir]", memoir: printMemoir)
+        let memoir = TracedMemoir(label: "[Memoir]", memoir: printMemoir, useSyncOutput: true)
 
         memoir.debug("Test log 1")
         guard let result1 = try await logResult() else { throw Problem.noLogFromMemoir(memoir) }
@@ -42,8 +42,8 @@ class MemoirCompositionTests: GenericTestCase {
     }
 
     func testNestedLabeledMemoirs() async throws {
-        let innerMemoir = TracedMemoir(label: "[Inner]", memoir: printMemoir)
-        let memoir = TracedMemoir(label: "[Outer]", memoir: innerMemoir)
+        let innerMemoir = TracedMemoir(label: "[Inner]", memoir: printMemoir, useSyncOutput: true)
+        let memoir = TracedMemoir(label: "[Outer]", memoir: innerMemoir, useSyncOutput: true)
 
         memoir.debug("Test log")
         guard let result = try await logResult() else { throw Problem.noLogFromMemoir(memoir) }
@@ -59,8 +59,8 @@ class MemoirCompositionTests: GenericTestCase {
 
         let printMemoir = PrintMemoir(interceptor: { [self] in addIntercepted(log: $0) })
 
-        let tracedMemoir1 = TracedMemoir(tracer: tracer1, meta: [:], memoir: printMemoir)
-        let tracedMemoir2 = TracedMemoir(tracer: tracer2, meta: [:], memoir: tracedMemoir1)
+        let tracedMemoir1 = TracedMemoir(tracer: tracer1, meta: [:], memoir: printMemoir, useSyncOutput: true)
+        let tracedMemoir2 = TracedMemoir(tracer: tracer2, meta: [:], memoir: tracedMemoir1, useSyncOutput: true)
 
         tracedMemoir2.debug("Test log")
         guard let result = try await logResult() else { throw Problem.noLogFromMemoir(tracedMemoir2) }

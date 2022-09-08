@@ -24,7 +24,7 @@ class TracerChangesTests: GenericTestCase {
     }
 
     func testChangeTracer() async throws {
-        let memoir = TracedMemoir(label: "First", memoir: printMemoir)
+        let memoir = TracedMemoir(label: "First", memoir: printMemoir, useSyncOutput: true)
 
         memoir.debug("Test log 1")
         guard let result1 = try await logResult() else { throw Problem.noLogFromMemoir(memoir) }
@@ -44,8 +44,8 @@ class TracerChangesTests: GenericTestCase {
     }
 
     func testChangeParentTracer() async throws {
-        let memoirParent = TracedMemoir(label: "First", memoir: printMemoir)
-        let memoir = TracedMemoir(label: "Second", memoir: memoirParent)
+        let memoirParent = TracedMemoir(label: "First", memoir: printMemoir, useSyncOutput: true)
+        let memoir = TracedMemoir(label: "Second", memoir: memoirParent, useSyncOutput: true)
 
         memoir.debug("Test log 1")
         guard let result1 = try await logResult() else { throw Problem.noLogFromMemoir(memoir) }

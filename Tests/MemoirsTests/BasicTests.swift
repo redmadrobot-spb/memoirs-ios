@@ -100,7 +100,7 @@ class BasicTests: GenericTestCase {
     func testTracedMemoir() async throws {
         let allLevels: [LogLevel] = [ .verbose, .debug, .info, .warning, .error, .critical ]
         let printMemoir = PrintMemoir(interceptor: { [self] in addIntercepted(log: $0) })
-        let memoir = TracedMemoir(label: "label_\(Int.random(in: Int.min ... Int.max))", memoir: printMemoir)
+        let memoir = TracedMemoir(label: "label_\(Int.random(in: Int.min ... Int.max))", memoir: printMemoir, useSyncOutput: true)
         for level in allLevels {
             var probe = simpleProbe(memoir: memoir)
             probe.level = level
@@ -114,7 +114,8 @@ class BasicTests: GenericTestCase {
         let tracer: Tracer = .label("tracer_\(Int.random(in: Int.min ... Int.max))")
         let memoir = TracedMemoir(
             label: "label_\(Int.random(in: Int.min ... Int.max))",
-            memoir: TracedMemoir(tracer: tracer, meta: [:], memoir: printMemoir)
+            memoir: TracedMemoir(tracer: tracer, meta: [:], memoir: printMemoir, useSyncOutput: true),
+            useSyncOutput: true
         )
         for level in allLevels {
             var probe = simpleProbe(memoir: memoir)

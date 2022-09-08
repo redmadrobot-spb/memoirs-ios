@@ -11,8 +11,7 @@ import os
 
 @available(iOS 14.0, *)
 public final class AppleLoggerMemoir: Memoir {
-    @usableFromInline
-    actor Loggers {
+    private actor Loggers {
         private var loggers: [String: Logger] = [:]
         private let subsystem: String
 
@@ -31,19 +30,19 @@ public final class AppleLoggerMemoir: Memoir {
         }
     }
 
-    @usableFromInline
-    let output: Output
-    @usableFromInline
-    let loggers: Loggers
+    private let output: Output
+    private let loggers: Loggers
 
-    @usableFromInline
-    let interceptor: (@Sendable (String) -> Void)?
+    private let interceptor: (@Sendable (String) -> Void)?
+    private let asyncTaskQueue: AsyncTaskQueue
 
     public init(
         hideSensitiveValues: Bool, subsystem: String, tracerFilter: @escaping @Sendable (Tracer) -> Bool = { _ in false },
-        interceptor: (@Sendable (String) -> Void)? = nil
+        interceptor: (@Sendable (String) -> Void)? = nil,
+        useSyncOutput: Bool = false
     ) {
         self.interceptor = interceptor
+        asyncTaskQueue = .init(syncExecution: useSyncOutput)
         loggers = .init(subsystem: subsystem)
         output = Output(
             hideSensitiveValues: hideSensitiveValues,
@@ -52,7 +51,6 @@ public final class AppleLoggerMemoir: Memoir {
         )
     }
 
-    @inlinable
     func tracerString(for tracers: [Tracer]) -> String {
         var label: String = output.hideSensitiveValues ? "???" : "NoLabel"
         if !output.hideSensitiveValues {
@@ -69,10 +67,6 @@ public final class AppleLoggerMemoir: Memoir {
         return label
     }
 
-    @usableFromInline
-    let asyncTaskQueue: AsyncTaskQueue = .init()
-
-    @inlinable
     public func append(
         _ item: MemoirItem,
         meta: @autoclosure () -> [String: SafeString]?,

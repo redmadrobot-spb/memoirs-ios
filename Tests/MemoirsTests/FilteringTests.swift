@@ -84,8 +84,8 @@ class FilteringTests: GenericTestCase {
                 filteringTracer: allEnabledConfiguration
             ]
         )
-        let memoirShown = TracedMemoir(tracer: filteringTracer, memoir: filteringMemoir)
-        let memoirHidden = TracedMemoir(tracer: nonFilteringTracer, memoir: filteringMemoir)
+        let memoirShown = TracedMemoir(tracer: filteringTracer, memoir: filteringMemoir, useSyncOutput: true)
+        let memoirHidden = TracedMemoir(tracer: nonFilteringTracer, memoir: filteringMemoir, useSyncOutput: true)
 
         try await checkAllThings(memoir: memoirShown, infoLog: true, debugLog: true, event: true, tracer: true, measurement: true)
         try await checkAllThings(memoir: memoirHidden, infoLog: false, debugLog: false, event: false, tracer: false, measurement: false)
@@ -100,7 +100,7 @@ class FilteringTests: GenericTestCase {
                 filteringTracer: allEnabledConfiguration
             ]
         )
-        let memoirShown = TracedMemoir(object: self, memoir: filteringMemoir)
+        let memoirShown = TracedMemoir(object: self, memoir: filteringMemoir, useSyncOutput: true)
 
         try await checkAllThings(memoir: memoirShown, infoLog: true, debugLog: true, event: true, tracer: true, measurement: true)
     }
@@ -115,7 +115,7 @@ class FilteringTests: GenericTestCase {
                 filteringTracer: allEnabledConfiguration
             ]
         )
-        let memoirShown = TracedMemoir(tracer: filteringTracer, memoir: filteringMemoir)
+        let memoirShown = TracedMemoir(tracer: filteringTracer, memoir: filteringMemoir, useSyncOutput: true)
         let memoirNested = memoirShown.with(tracer: nestedTracer)
 
         try await checkAllThings(memoir: memoirShown, infoLog: true, debugLog: true, event: true, tracer: true, measurement: true)

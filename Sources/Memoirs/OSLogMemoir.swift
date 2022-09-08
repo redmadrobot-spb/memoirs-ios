@@ -39,23 +39,23 @@ public final class OSLogMemoir: Memoir {
     }
 
     private let osLogHolder: OSLogHolder
-
-    @usableFromInline
-    let output: Output
-
-    @usableFromInline
-    let interceptor: (@Sendable (String) -> Void)?
+    private let output: Output
+    private let interceptor: (@Sendable (String) -> Void)?
+    private let asyncTaskQueue: AsyncTaskQueue
 
     /// Creates a new instance of `OSLogMemoir`.
     /// - Parameter subsystem: An identifier string, in reverse DNS notation, representing the subsystem that’s performing logging.
     /// - Parameter isSensitive: is log sensitive
     /// - Parameter tracerFilter: filter for the tracers output
     /// - Parameter interceptor: method that catches all strings, that this logger emits
+    /// - Parameter useSyncOutput: Warning. This will slow down execution. Use this for tests when you need synchronous output.
     public init(
         subsystem: String, isSensitive: Bool, tracerFilter: @escaping @Sendable (Tracer) -> Bool = { _ in false },
-        interceptor: (@Sendable (String) -> Void)? = nil
+        interceptor: (@Sendable (String) -> Void)? = nil,
+        useSyncOutput: Bool = false
     ) {
         self.interceptor = interceptor
+        asyncTaskQueue = .init(syncExecution: useSyncOutput)
         osLogHolder = .init(subsystem: subsystem)
         output = Output(
             hideSensitiveValues: isSensitive,
@@ -63,8 +63,6 @@ public final class OSLogMemoir: Memoir {
             tracerFilter: tracerFilter
         )
     }
-
-    private let asyncTaskQueue: AsyncTaskQueue = .init()
 
     public func append(
         _ item: MemoirItem,

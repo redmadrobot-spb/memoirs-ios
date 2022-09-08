@@ -78,7 +78,7 @@ public struct SafeString: CustomStringConvertible, ExpressibleByStringLiteral, E
                 switch child.value {
                     case let property as MemoirStringConvertibleProperty:
                         switch property.safetyLevel {
-                            case .safeToShow:
+                            case .always:
                                 return "\(label.dropFirst()): \(property)"
                             case .sensitive:
                                 return hideSensitiveValues

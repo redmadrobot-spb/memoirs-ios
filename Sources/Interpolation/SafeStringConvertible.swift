@@ -14,7 +14,7 @@ import Foundation
 public protocol SafeStringConvertible {}
 
 public enum SafetyLevel {
-    case safeToShow
+    case always
     case sensitive
     case never
 }
@@ -24,19 +24,19 @@ public protocol MemoirStringConvertibleProperty {
 }
 
 @propertyWrapper
-public struct TopSecret<T>: MemoirStringConvertibleProperty, CustomStringConvertible {
+public struct LogAlways<T>: MemoirStringConvertibleProperty, CustomStringConvertible {
     public var wrappedValue: T
-    public let safetyLevel: SafetyLevel = .never
+    public let safetyLevel: SafetyLevel = .always
 
     public init(wrappedValue: T) {
         self.wrappedValue = wrappedValue
     }
 
-    public var description: String { "\(wrappedValue)" }
+    public var description: String { "\(String(describing: wrappedValue))" }
 }
 
 @propertyWrapper
-public struct Sensitive<T>: MemoirStringConvertibleProperty, CustomStringConvertible {
+public struct LogSensitive<T>: MemoirStringConvertibleProperty, CustomStringConvertible {
     public var wrappedValue: T
     public let safetyLevel: SafetyLevel = .sensitive
 
@@ -44,19 +44,19 @@ public struct Sensitive<T>: MemoirStringConvertibleProperty, CustomStringConvert
         self.wrappedValue = wrappedValue
     }
 
-    public var description: String { "\(wrappedValue)" }
+    public var description: String { "\(String(describing: wrappedValue))" }
 }
 
 @propertyWrapper
-public struct SafeToShow<T>: MemoirStringConvertibleProperty, CustomStringConvertible {
+public struct LogNever<T>: MemoirStringConvertibleProperty, CustomStringConvertible {
     public var wrappedValue: T
-    public let safetyLevel: SafetyLevel = .safeToShow
+    public let safetyLevel: SafetyLevel = .never
 
     public init(wrappedValue: T) {
         self.wrappedValue = wrappedValue
     }
 
-    public var description: String { "\(wrappedValue)" }
+    public var description: String { "\(String(describing: wrappedValue))" }
 }
 
 extension SafeStringConvertible {

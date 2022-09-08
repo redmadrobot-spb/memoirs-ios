@@ -89,7 +89,7 @@ class GenericTestCase: XCTestCase {
     }
 
     func logResult() async throws -> String? {
-        try await Task.sleep(nanoseconds: 1_000_000_000 / 1000)
+//        try await Task.sleep(nanoseconds: 1_000_000_000 / 1000)
         guard !logResults.isEmpty else { return nil }
 
         return logResults.remove(at: 0)

@@ -108,15 +108,21 @@ public final class TracedMemoir: Memoir {
         }
     }
 
-    private init(traceData: TraceData, memoir: Memoir) {
+    private let asyncTaskQueue: AsyncTaskQueue
+
+    private init(traceData: TraceData, memoir: Memoir, useSyncOutput: Bool = false) {
         self.traceData = traceData
         self.memoir = memoir
+        asyncTaskQueue = .init(syncExecution: useSyncOutput)
     }
 
     public init(
         tracer: Tracer, meta: [String: SafeString] = [:], memoir: Memoir,
+        useSyncOutput: Bool = false,
         file: String = #fileID, function: String = #function, line: UInt = #line
     ) {
+        asyncTaskQueue = .init(syncExecution: useSyncOutput)
+
         if let parentMemoir = memoir as? TracedMemoir {
             traceData = .init(tracer: tracer, parent: parentMemoir.traceData)
             self.memoir = parentMemoir.memoir
@@ -134,13 +140,29 @@ public final class TracedMemoir: Memoir {
         }
     }
 
-    public convenience init(label: String, memoir: Memoir, file: String = #fileID, function: String = #function, line: UInt = #line) {
-        self.init(tracer: .label(label), meta: [:], memoir: memoir, file: file, function: function, line: line)
+    public convenience init(
+        label: String, memoir: Memoir,
+        useSyncOutput: Bool = false,
+        file: String = #fileID, function: String = #function, line: UInt = #line
+    ) {
+        self.init(
+            tracer: .label(label), meta: [:], memoir: memoir,
+            useSyncOutput: useSyncOutput,
+            file: file, function: function, line: line
+        )
     }
 
-    public convenience init(object: Any, memoir: Memoir, file: String = #fileID, function: String = #function, line: UInt = #line) {
+    public convenience init(
+        object: Any, memoir: Memoir,
+        useSyncOutput: Bool = false,
+        file: String = #fileID, function: String = #function, line: UInt = #line
+    ) {
         let tracer = Memoirs.tracer(for: object)
-        self.init(tracer: tracer, meta: [:], memoir: memoir, file: file, function: function, line: line)
+        self.init(
+            tracer: tracer, meta: [:], memoir: memoir,
+            useSyncOutput: useSyncOutput,
+            file: file, function: function, line: line
+        )
     }
 
     public func with(tracer: Tracer) -> TracedMemoir {
@@ -154,8 +176,6 @@ public final class TracedMemoir: Memoir {
     public func updateTracer(to tracer: Tracer) async {
         await traceData.update(tracer: tracer)
     }
-
-    private let asyncTaskQueue: AsyncTaskQueue = .init()
 
     public func append(
         _ item: MemoirItem, meta: @autoclosure () -> [String: SafeString]?, tracers: [Tracer], timeIntervalSinceReferenceDate: TimeInterval,
