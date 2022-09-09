@@ -11,23 +11,13 @@
 import Foundation
 
 @available(iOS 15, *)
-public struct TaskLocalMemoirContext {
+public struct TaskLocalMemoir {
     @TaskLocal
-    public static var memoir: TracedMemoir?
+    public static var localValue: TracedMemoir?
 }
 
-@available(iOS 15, *)
-public protocol TaskTraceable {
-    var memoir: TracedMemoir { get }
-
-    static func requestTracer(parentTracer: String?) -> String
-
-    func tracing<R: Sendable>(operation: @Sendable () async throws -> R, file: String, line: UInt) async throws -> R
-}
-
-@available(iOS 15, *)
-public extension TaskTraceable {
-    static func requestTracer(parentTracer: String? = nil) -> String {
+public extension Tracer {
+    static func request() -> String {
         let traceId = (0 ..< 16)
             .map { _ in UInt8.random(in: UInt8.min ... UInt8.max) }
             .map { String(format: "%02hhx", $0) }
@@ -38,44 +28,29 @@ public extension TaskTraceable {
             .joined()
         return "00-\(traceId)-\(parentId)-00"
     }
-
-    func tracing<R: Sendable>(operation: @Sendable () async throws -> R, file: String = #file, line: UInt = #line) async throws -> R {
-        let tracer = await memoir.traceData.tracer
-        let memoir = TaskLocalMemoirContext.memoir?.with(tracer: tracer) ?? memoir
-        return try await TaskLocalMemoirContext.$memoir.withValue(memoir, operation: operation, file: file, line: line)
-    }
-
-    func tracingRequest<R>(
-        previousTracer: String? = nil, operation: () async throws -> R, file: String = #file, line: UInt = #line
-    ) async throws -> R {
-        let tracer: Tracer = .request(trace: Self.requestTracer(parentTracer: previousTracer))
-        let memoir = TaskLocalMemoirContext.memoir?.with(tracer: tracer)
-        return try await TaskLocalMemoirContext.$memoir.withValue(memoir, operation: operation, file: file, line: line)
-    }
-
-    func tracingDetached(operation: @escaping @Sendable () async throws -> Void, file: String = #file, line: UInt = #line) {
-        let memoir = TaskLocalMemoirContext.memoir
-        Task.detached {
-            try await TaskLocalMemoirContext.$memoir.withValue(memoir, operation: operation, file: file, line: line)
-        }
-    }
 }
 
 @available(iOS 15, *)
-public protocol ObjectTraceable {
-    func tracing(with tracedMemoir: TracedMemoir, operation: @escaping @Sendable () async throws -> Void, file: String, line: UInt)
-}
+public enum Tracing {
+    // TODO: I wish there was a function wrapper for this case
+    public static func with<Value: Sendable>(
+        _ tracer: Tracer,
+        file: String = #file, line: UInt = #line,
+        operation: @Sendable (_ localMemoir: Memoir) async throws -> Value
+    ) async rethrows -> Value {
+        guard let memoir = TaskLocalMemoir.localValue?.with(tracer: tracer) else { fatalError("Can't no memoir in TaskContext") }
 
-@available(iOS 15, *)
-public extension ObjectTraceable {
-    func tracing(
-        with tracedMemoir: TracedMemoir, operation: @escaping @Sendable () async throws -> Void,
-        file: String = #file, line: UInt = #line
+        return try await TaskLocalMemoir.$localValue.withValue(memoir, operation: { try await operation(memoir) }, file: file, line: line)
+    }
+
+    // TODO: I wish there was a function wrapper for this case
+    public static func withDetached(
+        _ tracer: Tracer,
+        file: String = #file, line: UInt = #line,
+        operation: @escaping @Sendable (_ localMemoir: Memoir) async throws -> Void
     ) {
-        Task {
-            let tracer = await tracedMemoir.traceData.tracer
-            let memoir = TaskLocalMemoirContext.memoir?.with(tracer: tracer) ?? tracedMemoir
-            try await TaskLocalMemoirContext.$memoir.withValue(memoir, operation: operation, file: file, line: line)
-        }
+        guard let memoir = TaskLocalMemoir.localValue?.with(tracer: tracer) else { fatalError("Can't no memoir in TaskContext") }
+
+        TaskLocalMemoir.$localValue.withValue(memoir, operation: { Task.detached { try await operation(memoir) } }, file: file, line: line)
     }
 }
