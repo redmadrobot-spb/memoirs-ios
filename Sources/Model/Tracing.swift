@@ -36,7 +36,7 @@ public enum Tracing {
         file: String = #file, line: UInt = #line,
         operation: @Sendable (_ localMemoir: Memoir) async throws -> Value
     ) async rethrows -> Value {
-        return try await TaskLocalMemoir.$localValue.withValue(memoir, operation: { try await operation(memoir) }, file: file, line: line)
+        try await TaskLocalMemoir.$localValue.withValue(memoir, operation: { try await operation(memoir) }, file: file, line: line)
     }
 
     /// For injecting child TracedMemoir over current one in the context.
