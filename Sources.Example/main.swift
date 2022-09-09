@@ -11,7 +11,7 @@ import Foundation
 import Memoirs
 
 // https://github.com/minimaxir/big-list-of-naughty-strings
-private let naughtyStrings: [String] = {
+private var naughtyStrings: [String] = {
     guard let currentDirectory = ProcessInfo.processInfo.environment["PWD"] else { return [ "Not found..." ] }
 
     let url = URL(fileURLWithPath: currentDirectory)
@@ -70,17 +70,15 @@ addedLabelMemoir.event(name: "EventLog", meta: [:])
 addedLabelMemoir = TracedMemoir(label: "AnotherLabelALittleLonger", memoir: instanceMemoir)
 addedLabelMemoir.debug("Another instance level log")
 
-DispatchQueue.main.async {
-    let statistics = CPUMemoryMeasurements(memoir: appMemoir)
-    statistics.start(period: 2)
+let statistics = CPUMemoryMeasurements(memoir: appMemoir)
+statistics.start(period: 1)
 
+DispatchQueue.global().async {
     var naughtyStringIndex = -1
-    while (true) {
+    while naughtyStringIndex < naughtyStrings.count {
         autoreleasepool {
             naughtyStringIndex += 1
-            if naughtyStringIndex >= naughtyStrings.count {
-                naughtyStringIndex = 0
-            }
+            guard naughtyStringIndex < naughtyStrings.count else { return }
 
             let string = naughtyStrings[naughtyStringIndex]
             addedLabelMemoir.debug("Another instance level log \(string)")
@@ -89,8 +87,11 @@ DispatchQueue.main.async {
                 meta: [ "meta1": "value1", "meta2": "value2", "meta3": "value3", ]
             )
             addedLabelMemoir.measurement(name: "Measurement \(naughtyStringIndex)", value: .double(23.9))
+            Thread.sleep(forTimeInterval: 0.01)
         }
     }
+
+    naughtyStrings = []
 }
 
 RunLoop.main.run()
