@@ -72,10 +72,12 @@ public final class PrintMemoir: Memoir {
     /// Creates a new instance of `PrintMemoir`.
     public init(
         time: Time = .formatter(timeOnlyDateFormatter), codePosition: CodePosition = .short, shortTracers: Bool = true,
+        markers: Output.Markers = .init(),
         tracerFilter: @escaping @Sendable (Tracer) -> Bool = PrintMemoir.defaultTracerFilter,
         interceptor: (@Sendable (String) -> Void)? = nil
     ) {
         output = Output(
+            markers: markers,
             hideSensitiveValues: false,
             codePositionType: codePosition,
             shortTracers: shortTracers, separateTracers: true,

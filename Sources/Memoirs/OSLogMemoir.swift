@@ -47,10 +47,12 @@ public final class OSLogMemoir: Memoir {
     /// - Parameter subsystem: An identifier string, in reverse DNS notation, representing the subsystem that’s performing logging.
     /// - Parameter isSensitive: is log sensitive
     /// - Parameter tracerFilter: filter for the tracers output
+    /// - Parameter markers: markers for distinguishing between different logging levels and items
     /// - Parameter interceptor: method that catches all strings, that this logger emits
     /// - Parameter useSyncOutput: Warning. This will slow down execution. Use this for tests when you need synchronous output.
     public init(
         subsystem: String, isSensitive: Bool, tracerFilter: @escaping @Sendable (Tracer) -> Bool = { _ in false },
+        markers: Output.Markers = .init(),
         interceptor: (@Sendable (String) -> Void)? = nil,
         useSyncOutput: Bool = false
     ) {
@@ -58,6 +60,7 @@ public final class OSLogMemoir: Memoir {
         asyncTaskQueue = .init(syncExecution: useSyncOutput)
         osLogHolder = .init(subsystem: subsystem)
         output = Output(
+            markers: markers,
             hideSensitiveValues: isSensitive,
             codePositionType: .full, shortTracers: false, separateTracers: true,
             tracerFilter: tracerFilter

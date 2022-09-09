@@ -38,6 +38,7 @@ public final class AppleLoggerMemoir: Memoir {
 
     public init(
         hideSensitiveValues: Bool, subsystem: String, tracerFilter: @escaping @Sendable (Tracer) -> Bool = { _ in false },
+        markers: Output.Markers = .init(),
         interceptor: (@Sendable (String) -> Void)? = nil,
         useSyncOutput: Bool = false
     ) {
@@ -45,6 +46,7 @@ public final class AppleLoggerMemoir: Memoir {
         asyncTaskQueue = .init(syncExecution: useSyncOutput)
         loggers = .init(subsystem: subsystem)
         output = Output(
+            markers: markers,
             hideSensitiveValues: hideSensitiveValues,
             codePositionType: .full, shortTracers: false, separateTracers: false,
             tracerFilter: tracerFilter

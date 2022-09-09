@@ -20,10 +20,12 @@ public final class NSLogMemoir: Memoir {
 
     public init(
         isSensitive: Bool, tracerFilter: @escaping @Sendable (Tracer) -> Bool = { _ in false },
+        markers: Output.Markers = .init(),
         interceptor: (@Sendable (String) -> Void)? = nil
     ) {
         self.interceptor = interceptor
         output = Output(
+            markers: markers,
             hideSensitiveValues: isSensitive,
             codePositionType: .full, shortTracers: false, separateTracers: false,
             tracerFilter: tracerFilter

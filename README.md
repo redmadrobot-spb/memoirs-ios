@@ -15,8 +15,8 @@ Only [Swift Package Manager](https://swift.org/package-manager/) is supported.
 
 #### Requirements
 
-- iOS 11+, macOS 11+, Linux.
-- Swift 5.3+
+- iOS 13+, macOS 11+, Linux.
+- Swift 5.5+
 
 #### Swift Package Manager
 
@@ -148,30 +148,56 @@ memoir.measurement(name: "MetaBasedMeasurement", value: .meta, meta: [ "key": "v
 ## Contexts
 
 `TracedMemoir` is designed to be able to hold information about the logging place. Usually in loggers, this is 
-specified by a string (that is sometimes derived from the type name), but this does not tell the whole story. 
+specified by a string (that generally is derived from the caller's type name), but this does not tell the whole story. 
 For example, if you have a service, that can be called from different parts of the app, all logs from the service will
 have identical mark.
 
-To be able to distinguish calls from different parts of the app, service must know source of the calls. This knowledge
-can be encapsulated in `MemoirContext`, and sent to the service. In the service we get `tracedMemoir` from the context, 
-create new memoir with local tracer (`tracedMemoir.with(tracer: localServiceTracer)`), and use it for logging and all 
-other things.
+To be able to distinguish calls from different parts of the app, service must know source of the calls. 
+This can be done with layers of `TracedMemoirs` (using its `with(tracer:)` method), or automatically, using `Task` local context.
+
+Latter is done using `Tracing` methods. First you need to setup root `TracedMemoir`:
+
+```swift
+Tracing.with(root: tracedMemoir) { memoir in 
+    /* so anything with the memoir */
+}
+```
+
+After that you can push new tracers to the context's memoir:
+
+```swift
+Tracing.with(.label("Some Label For a Child TracedMemoir")) { memoir in 
+    /* so anything with the memoir */
+}
+```
+
+To get current task local memoir, use
+
+```swift
+let memoir = TaskLocalMemoir.localValue
+```
 
 ## Configuration and usage
 
-You can configure, how log levels and other items are marked with this method:
+> You can configure, how log levels and other items are marked with Output.Markers, when creating a memoir:
+>
+> ```swift
+> PrintMemoir(markers: .init(verbose: "VERBOSE"))
+> ```
+
+To create custom `Memoir` for your application, you can use something like this:
 
 ```swift
-LogLevel.configure(..., stringForDebug: "DEBUG", ...)
-```
-
-Create your custom `Memoir` implementation or use one of the standard:
-```swift
+// Create memoir that will display everything
 let printMemoir = PrintMemoir(shortCodePosition: true, shortTracers: true)
 
-let appMemoir = AppMemoir(memoir: printMemoir)
-let instanceMemoir = InstanceMemoir(memoir: appMemoir)
+// Create root memoirs with information about your application. 
+// If arguments are nil, they will be determined from the Bundle. 
+let appMemoir = TracedMemoir(appWithBundleId: nil, version: nil)
+// Instance memoir. It contains information about the device, OS, and installation id. 
+let instanceMemoir = TracedMemoir(instanceWithDeviceInfo: DeviceInfo = .init(osInfo: .detected))
 
+// Now create FilteringMemoir, that will allow configuring what logs will be shown.
 let memoir = FilteringMemoir(
     memoir: MultiplexingMemoir(memoirs: [ instanceMemoir ]),
     defaultConfiguration: .init(level: .debug),
@@ -188,9 +214,13 @@ After this you can use `memoir` as a base to add specific memoirs into classes a
 class MyClass {
     private var memoir: TracedMemoir!
     
-    init(..., memoir: Memoir) {
+    init(memoir: Memoir) {
+        // This will create type-specific memoir to use in this class
         self.memoir = TracedMemoir(object: self, memoir: memoir)
-        self.memoir.debug("init")
+    }
+  
+    func doSomething() {
+        memoir.debug("We did something!")
     }
 }
 ```
@@ -208,7 +238,9 @@ There are some structural memoirs, that do not do logging themselves but instead
 
 ### Testing
 
-If you need to test, what memoirs are outputting, please set `Memoir.Output.logInterceptor` closure. It will be called from all basic memoir implementations.
+If you need to test, what memoirs are outputting, please set `interceptor` closure when creating memoir instance.
+Also for memoirs that are asynchronous, you can set `useSyncOutput` when initializing. This will be slower, but all logs will 
+be shown right away, when you called them.
 
 #### License
 

@@ -26,7 +26,7 @@ public extension TracedMemoir {
                 "version": "\(version)"
             ]
         } else if let infoPlist = Bundle.main.infoDictionary, let bundleId = infoPlist["CFBundleIdentifier"] as? String,
-               let version = infoPlist["CFBundleShortVersionString"] as? String, let build = infoPlist["CFBundleVersion"] as? String {
+                let version = infoPlist["CFBundleShortVersionString"] as? String, let build = infoPlist["CFBundleVersion"] as? String {
             foundBundleId = bundleId
             meta = [
                 "bundleId": "\(safe: bundleId)",
