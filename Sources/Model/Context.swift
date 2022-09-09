@@ -18,29 +18,45 @@ public struct TaskLocalMemoir {
 
 @available(iOS 15, *)
 public enum Tracing {
-    // TODO: I wish there was a function wrapper for this case
+    /// For injecting child TracedMemoir over current one in the context.
     public static func with<Value: Sendable>(
         _ tracer: Tracer,
-        memoir: TracedMemoir? = nil,
         file: String = #file, line: UInt = #line,
         operation: @Sendable (_ localMemoir: Memoir) async throws -> Value
     ) async rethrows -> Value {
-        let memoir = TaskLocalMemoir.localValue?.with(tracer: tracer) ?? memoir
+        let memoir = TaskLocalMemoir.localValue?.with(tracer: tracer)
         guard let memoir else { fatalError("No memoir in task context, please provide one in the call") }
 
         return try await TaskLocalMemoir.$localValue.withValue(memoir, operation: { try await operation(memoir) }, file: file, line: line)
     }
 
-    // TODO: I wish there was a function wrapper for this case
+    /// For injecting root TracedMemoir into context.
+    public static func with<Value: Sendable>(
+        root memoir: TracedMemoir,
+        file: String = #file, line: UInt = #line,
+        operation: @Sendable (_ localMemoir: Memoir) async throws -> Value
+    ) async rethrows -> Value {
+        return try await TaskLocalMemoir.$localValue.withValue(memoir, operation: { try await operation(memoir) }, file: file, line: line)
+    }
+
+    /// For injecting child TracedMemoir over current one in the context.
     public static func withDetached(
         _ tracer: Tracer,
-        memoir: TracedMemoir? = nil,
         file: String = #file, line: UInt = #line,
         operation: @escaping @Sendable (_ localMemoir: Memoir) async throws -> Void
     ) {
-        let memoir = TaskLocalMemoir.localValue?.with(tracer: tracer) ?? memoir
+        let memoir = TaskLocalMemoir.localValue?.with(tracer: tracer)
         guard let memoir else { fatalError("No memoir in task context, please provide one in the call") }
 
+        TaskLocalMemoir.$localValue.withValue(memoir, operation: { Task.detached { try await operation(memoir) } }, file: file, line: line)
+    }
+
+    /// For injecting root TracedMemoir.
+    public static func withDetached(
+        root memoir: TracedMemoir,
+        file: String = #file, line: UInt = #line,
+        operation: @escaping @Sendable (_ localMemoir: Memoir) async throws -> Void
+    ) {
         TaskLocalMemoir.$localValue.withValue(memoir, operation: { Task.detached { try await operation(memoir) } }, file: file, line: line)
     }
 }
