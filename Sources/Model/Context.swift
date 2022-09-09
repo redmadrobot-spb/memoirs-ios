@@ -16,20 +16,6 @@ public struct TaskLocalMemoir {
     public static var localValue: TracedMemoir?
 }
 
-public extension Tracer {
-    static func request() -> String {
-        let traceId = (0 ..< 16)
-            .map { _ in UInt8.random(in: UInt8.min ... UInt8.max) }
-            .map { String(format: "%02hhx", $0) }
-            .joined()
-        let parentId = (0 ..< 8)
-            .map { _ in UInt8.random(in: UInt8.min ... UInt8.max) }
-            .map { String(format: "%02hhx", $0) }
-            .joined()
-        return "00-\(traceId)-\(parentId)-00"
-    }
-}
-
 @available(iOS 15, *)
 public enum Tracing {
     // TODO: I wish there was a function wrapper for this case
