@@ -49,7 +49,7 @@ Here are examples of standard tracers:
 - Item label, that is usually based on app subsystem or class that emitted the item: `{label}`.
 - etc.
 
-Tracers have their lifetime from first usage to special item, that is called tracer end. End is not a guarantee (app can die and not end some of its tracers), but it can be very useful. For example, label tracers that are created with `TracedMemoir` are updated when initialized and ended when class is deinitialized. So you can basically see the lifetime of the specific object in the log. 
+Tracers have their lifetime from first usage to special item, that is called tracer end. End is not a guarantee (app can die and not end some of its tracers), but it can be very useful. For example, label tracers that are created with `TracedMemoir` are updated when initialized and ended when class is de-initialised. So you can basically see the lifetime of the specific object in the log. 
 
 Usually you create `TracedMemoir`, and it creates corresponding tracer for you. You can stack `TracedMemoirs` if you want. If you want, you can send tracer items to memoirs by yourself.
 
@@ -126,15 +126,15 @@ To measure time intervals, you can use `Stopwatch` like this:
 ```swift
 let stopwatch = Stopwatch(memoir: someMemoir)
 var mark = stopwatch.mark
-... // do some stuff
+// ... do some stuff
 mark = stopwatch.measureTime(from: mark, name: "MyMeasurement" /* meta, tracers if needed */)
-... // can measure next interval now
+// ... can measure next interval now
 ```
 
 or using closure-based API:
 ```swift
 stopwatch.measure(name: "AnotherMeasurement" /* meta, tracers if needed */) {
-    ... // do some other stuff
+    // ... do some other stuff
 }
 ```
 
