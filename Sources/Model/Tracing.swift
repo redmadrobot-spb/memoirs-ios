@@ -48,7 +48,9 @@ public enum Tracing {
         let memoir = TaskLocalMemoir.localValue?.with(tracer: tracer)
         guard let memoir else { fatalError("No memoir in task context, please provide one in the call") }
 
-        TaskLocalMemoir.$localValue.withValue(memoir, operation: { Task.detached { try await operation(memoir) } }, file: file, line: line)
+        Task.detached {
+            try await TaskLocalMemoir.$localValue.withValue(memoir, operation: { try await operation(memoir) }, file: file, line: line)
+        }
     }
 
     /// For injecting root TracedMemoir.
@@ -57,6 +59,8 @@ public enum Tracing {
         file: String = #file, line: UInt = #line,
         operation: @escaping @Sendable (_ localMemoir: Memoir) async throws -> Void
     ) {
-        TaskLocalMemoir.$localValue.withValue(memoir, operation: { Task.detached { try await operation(memoir) } }, file: file, line: line)
+        Task.detached {
+            try await TaskLocalMemoir.$localValue.withValue(memoir, operation: { try await operation(memoir) }, file: file, line: line)
+        }
     }
 }
