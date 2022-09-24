@@ -18,6 +18,10 @@ public struct TaskLocalMemoir {
 
 @available(iOS 15, *)
 public enum Tracing {
+    public static func memoir(_ tracer: Tracer) -> Memoir! {
+        TaskLocalMemoir.localValue!.with(tracer: tracer)
+    }
+
     /// For injecting child TracedMemoir over current one in the context.
     public static func with<Value: Sendable>(
         _ tracer: Tracer,

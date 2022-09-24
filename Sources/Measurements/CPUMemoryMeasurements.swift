@@ -1,6 +1,6 @@
 //
 // CPUMemoryMeasurements
-// Conveyor
+// Memoirs
 //
 // Created by Alex Babaev on 30 May 2021.
 // Copyright © 2021 Redmadrobot SPb. All rights reserved.
@@ -14,7 +14,7 @@ protocol MetricsRetriever {
     var calculatedMetrics: [String: MeasurementValue] { get }
 }
 
-public class CPUMemoryMeasurements {
+public class CPUMemoryMeasurements: @unchecked Sendable {
     private var memoir: Memoir!
     private var timer: Timer?
 
