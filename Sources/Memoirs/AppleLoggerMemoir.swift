@@ -6,6 +6,8 @@
 // Copyright © 2022 Alex Babaev. All rights reserved.
 //
 
+#if canImport(os)
+
 import Foundation
 import os
 
@@ -132,3 +134,5 @@ public final class AppleLoggerMemoir: Memoir {
         interceptor?(description)
     }
 }
+
+#endif

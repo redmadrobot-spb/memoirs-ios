@@ -76,7 +76,7 @@ statistics.start(period: 1)
 DispatchQueue.global().async {
     var naughtyStringIndex = -1
     while naughtyStringIndex < naughtyStrings.count {
-        autoreleasepool {
+//        autoreleasepool {
             naughtyStringIndex += 1
             guard naughtyStringIndex < naughtyStrings.count else { return }
 
@@ -88,7 +88,7 @@ DispatchQueue.global().async {
             )
             addedLabelMemoir.measurement(name: "Measurement \(naughtyStringIndex)", value: .double(23.9))
             Thread.sleep(forTimeInterval: 0.01)
-        }
+//        }
     }
 
     naughtyStrings = []
