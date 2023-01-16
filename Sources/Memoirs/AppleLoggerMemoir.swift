@@ -82,54 +82,44 @@ public final class AppleLoggerMemoir: Memoir {
         let description: String
 
         let traceString = tracerString(for: tracers)
-        let logAction: @Sendable () async -> Void
+        let osLogType: OSLogType
 
         switch item {
             case .log(let level, let message):
                 description = output.logString(
                     date: nil, level: level, message: message, tracers: tracers, meta: meta, codePosition: codePosition
                 ).joined(separator: " ")
-                logAction = { [self] in
-                    switch level {
-                        case .critical: await loggers.logger(for: traceString) { $0.fault("\(description)") }
-                        case .error: await loggers.logger(for: traceString) { $0.error("\(description)") }
-                        case .warning: await loggers.logger(for: traceString) { $0.warning("\(description)") }
-                        case .info: await loggers.logger(for: traceString) { $0.info("\(description)") }
-                        case .debug: await loggers.logger(for: traceString) { $0.debug("\(description)") }
-                        case .verbose: await loggers.logger(for: traceString) { $0.trace("\(description)") }
-                    }
+                switch level {
+                    case .critical: osLogType = .fault
+                    case .error: osLogType = .error
+                    case .warning: osLogType = .error
+                    case .info: osLogType = .info
+                    case .debug: osLogType = .debug
+                    case .verbose: osLogType = .debug
                 }
             case .event(let name):
                 description = output.eventString(
                     date: "", name: name, tracers: tracers, meta: meta, codePosition: codePosition
                 ).joined(separator: " ")
-                logAction = { [self] in
-                    await loggers.logger(for: traceString) { $0.notice("\(description)") }
-                }
+                osLogType = .info
             case .tracer(let tracer, false):
                 description = output.tracerString(
                     date: "", tracer: tracer, tracers: tracers, meta: meta, codePosition: codePosition
                 ).joined(separator: " ")
-                logAction = { [self] in
-                    await loggers.logger(for: traceString) { $0.notice("\(description)") }
-                }
+                osLogType = .info
             case .tracer(let tracer, true):
                 description = output.tracerEndString(
                     date: "", tracer: tracer, tracers: tracers, meta: meta, codePosition: codePosition
                 ).joined(separator: " ")
-                logAction = { [self] in
-                    await loggers.logger(for: traceString) { $0.notice("\(description)") }
-                }
+                osLogType = .info
             case .measurement(let name, let value):
                 description = output.measurementString(
                     date: "", name: name, value: value, tracers: tracers, meta: meta, codePosition: codePosition
                 ).joined(separator: " ")
-                logAction = { [self] in
-                    await loggers.logger(for: traceString) { $0.notice("\(description)") }
-                }
+                osLogType = .info
         }
         asyncTaskQueue.add {
-            await logAction()
+            await self.loggers.logger(for: traceString) { $0.log(level: osLogType, "\(description, privacy: .public)") }
         }
         interceptor?(description)
     }
