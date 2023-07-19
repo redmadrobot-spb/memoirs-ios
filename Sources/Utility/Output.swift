@@ -37,7 +37,7 @@ public final class Output: Sendable {
             debug: String = "👣",
             info: String = "🌵",
             warning: String = "🖖",
-            error: String = "⛑",
+            error: String = "⛑️",
             critical: String = "👿",
             event: String = "💥",
             tracer: String = "🕶",

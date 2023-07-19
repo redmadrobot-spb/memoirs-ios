@@ -11,10 +11,7 @@ import Foundation
 extension DispatchSemaphore: @unchecked Sendable {}
 
 public final class AsyncTaskQueue: @unchecked Sendable {
-    private let syncExecution: Bool
-
-    public init(syncExecution: Bool = false) {
-        self.syncExecution = syncExecution
+    public init() {
     }
 
     private let queue: DispatchQueue = .init(label: "AsyncTaskQueue")
@@ -22,30 +19,15 @@ public final class AsyncTaskQueue: @unchecked Sendable {
     private var actions: [@Sendable () async -> Void] = []
 
     public func add(closure: @escaping @Sendable () async -> Void) {
-        if syncExecution {
-            let semaphore = DispatchSemaphore(value: 0)
-            queue.async {
-                self.actions.append(closure)
-                self.startNext(semaphore: semaphore)
-            }
-            semaphore.wait()
-        } else {
-            queue.async {
-                self.actions.append(closure)
-                self.startNext(semaphore: nil)
-            }
+        queue.async {
+            self.actions.append(closure)
+            self.startNext(semaphore: nil)
         }
     }
 
     public func flush() {
         isExecutingAllAtOnce = true
-        if syncExecution {
-            let semaphore = DispatchSemaphore(value: 0)
-            startNext(semaphore: semaphore)
-            semaphore.wait()
-        } else {
-            startNext(semaphore: nil)
-        }
+        startNext(semaphore: nil)
     }
 
     private var isExecutingAllAtOnce: Bool = false

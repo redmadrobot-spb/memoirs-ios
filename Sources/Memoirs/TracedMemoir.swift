@@ -108,12 +108,11 @@ public final class TracedMemoir: Memoir {
         }
     }
 
-    private let asyncTaskQueue: AsyncTaskQueue
+    private static let asyncTaskQueue: AsyncTaskQueue = .init()
 
     private init(traceData: TraceData, memoir: Memoir, useSyncOutput: Bool = false) {
         self.traceData = traceData
         self.memoir = memoir
-        asyncTaskQueue = .init(syncExecution: useSyncOutput)
     }
 
     public init(
@@ -121,8 +120,6 @@ public final class TracedMemoir: Memoir {
         useSyncOutput: Bool = false,
         file: String = #fileID, function: String = #function, line: UInt = #line
     ) {
-        asyncTaskQueue = .init(syncExecution: useSyncOutput)
-
         if let parentMemoir = memoir as? TracedMemoir {
             traceData = .init(tracer: tracer, parent: parentMemoir.traceData)
             self.memoir = parentMemoir.memoir
@@ -182,7 +179,7 @@ public final class TracedMemoir: Memoir {
         file: String, function: String, line: UInt
     ) {
         let meta = meta()
-        asyncTaskQueue.add {
+        Self.asyncTaskQueue.add {
             let selfTracers = await self.traceData.allTracers
             self.memoir.append(
                 item, meta: meta, tracers: tracers + selfTracers, timeIntervalSinceReferenceDate: timeIntervalSinceReferenceDate,
