@@ -25,12 +25,6 @@ public final class AsyncTaskQueue: @unchecked Sendable {
         }
     }
 
-    public func flush() {
-        isExecutingAllAtOnce = true
-        startNext(semaphore: nil)
-    }
-
-    private var isExecutingAllAtOnce: Bool = false
     private var isExecuting: Bool = false
 
     private func startNext(semaphore: DispatchSemaphore?) {
@@ -40,25 +34,14 @@ public final class AsyncTaskQueue: @unchecked Sendable {
         }
 
         isExecuting = true
-        let closures: [@Sendable () async -> Void]
-        if isExecutingAllAtOnce {
-            closures = actions
-            actions = []
-        } else {
-            closures = [ actions.removeFirst() ]
-        }
+        let closures: [@Sendable () async -> Void] = [ actions.removeFirst() ]
         Task {
             for closure in closures {
                 await closure()
             }
             isExecuting = false
-            if isExecutingAllAtOnce && !actions.isEmpty {
+            queue.async {
                 self.startNext(semaphore: semaphore)
-            } else {
-                isExecutingAllAtOnce = false
-                queue.async {
-                    self.startNext(semaphore: semaphore)
-                }
             }
         }
     }

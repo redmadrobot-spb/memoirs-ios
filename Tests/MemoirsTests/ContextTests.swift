@@ -52,7 +52,7 @@ class ContextTests: XCTestCase {
         let testTraceable = TestTraceable()
         let memoir = TracedMemoir(tracer: .label("TestTracer"), memoir: PrintMemoir())
         try await TaskLocalMemoir.$localValue.withValue(memoir) { try await testTraceable.test() }
-        wait(for: [ testTraceable.expectation ], timeout: 5)
+        await fulfillment(of: [ testTraceable.expectation ], timeout: 5)
 
         XCTAssertEqual(testTraceable.result, "DetachedTracer")
     }

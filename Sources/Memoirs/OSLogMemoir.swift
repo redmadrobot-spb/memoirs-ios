@@ -57,7 +57,7 @@ public final class OSLogMemoir: Memoir {
         useSyncOutput: Bool = false
     ) {
         self.interceptor = interceptor
-        asyncTaskQueue = .init(syncExecution: useSyncOutput)
+        asyncTaskQueue = .init()
         osLogHolder = .init(subsystem: subsystem)
         output = Output(
             markers: markers,

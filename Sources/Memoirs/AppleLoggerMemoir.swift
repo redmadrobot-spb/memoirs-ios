@@ -45,7 +45,7 @@ public final class AppleLoggerMemoir: Memoir {
         useSyncOutput: Bool = false
     ) {
         self.interceptor = interceptor
-        asyncTaskQueue = .init(syncExecution: useSyncOutput)
+        asyncTaskQueue = .init()
         loggers = .init(subsystem: subsystem)
         output = Output(
             markers: markers,
