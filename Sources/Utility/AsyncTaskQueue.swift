@@ -21,17 +21,14 @@ public final class AsyncTaskQueue: @unchecked Sendable {
     public func add(closure: @escaping @Sendable () async -> Void) {
         queue.async {
             self.actions.append(closure)
-            self.startNext(semaphore: nil)
+            self.startNext()
         }
     }
 
     private var isExecuting: Bool = false
 
-    private func startNext(semaphore: DispatchSemaphore?) {
-        guard !isExecuting && !actions.isEmpty else {
-            semaphore?.signal()
-            return
-        }
+    private func startNext() {
+        guard !isExecuting && !actions.isEmpty else { return }
 
         isExecuting = true
         let closures: [@Sendable () async -> Void] = [ actions.removeFirst() ]
@@ -41,7 +38,7 @@ public final class AsyncTaskQueue: @unchecked Sendable {
             }
             isExecuting = false
             queue.async {
-                self.startNext(semaphore: semaphore)
+                self.startNext()
             }
         }
     }
