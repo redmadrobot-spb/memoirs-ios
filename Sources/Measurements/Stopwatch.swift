@@ -91,4 +91,19 @@ public class Stopwatch {
             file: file, function: function, line: line
         )
     }
+
+    @discardableResult
+    public func measure(
+        name: String,
+        meta: [String: SafeString]? = nil, tracers: [Tracer] = [], timeIntervalSinceReferenceDate: TimeInterval = TimeInterval(),
+        file: String = #fileID, function: String = #function, line: UInt = #line,
+        _ closure: () async -> Void
+    ) async -> Mark {
+        let mark = mark
+        await closure()
+        return measureTime(
+            from: mark, name: name, meta: meta, tracers: tracers, timeIntervalSinceReferenceDate: timeIntervalSinceReferenceDate,
+            file: file, function: function, line: line
+        )
+    }
 }
