@@ -45,7 +45,7 @@ public final class AppleLoggerMemoir: Memoir {
         useSyncOutput: Bool = false
     ) {
         self.interceptor = interceptor
-        asyncTaskQueue = .init()
+        asyncTaskQueue = .init(memoir: PrintMemoir())
         loggers = .init(subsystem: subsystem)
         output = Output(
             markers: markers,
@@ -73,11 +73,12 @@ public final class AppleLoggerMemoir: Memoir {
 
     public func append(
         _ item: MemoirItem,
+        message: @autoclosure @Sendable () throws -> SafeString,
         meta: @autoclosure () -> [String: SafeString]?,
         tracers: [Tracer],
         timeIntervalSinceReferenceDate: TimeInterval,
         file: String, function: String, line: UInt
-    ) {
+    ) rethrows {
         let codePosition = output.codePosition(file: file, function: function, line: line)
         let description: String
 
@@ -85,8 +86,8 @@ public final class AppleLoggerMemoir: Memoir {
         let osLogType: OSLogType
 
         switch item {
-            case .log(let level, let message):
-                description = output.logString(
+            case .log(let level):
+                description = try output.logString(
                     date: nil, level: level, message: message, tracers: tracers, meta: meta, codePosition: codePosition
                 ).joined(separator: " ")
                 switch level {

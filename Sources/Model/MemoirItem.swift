@@ -9,7 +9,7 @@
 //
 
 public enum MemoirItem: Sendable {
-    case log(level: LogLevel, message: @autoclosure @Sendable () -> SafeString)
+    case log(level: LogLevel)
     case event(name: String)
     case measurement(name: String, value: MeasurementValue)
     case tracer(Tracer, isFinished: Bool)

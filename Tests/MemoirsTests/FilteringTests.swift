@@ -131,8 +131,8 @@ class FilteringTests: GenericTestCase {
         let eventTest: String = "EVENT TESTING"
         let tracerTest: String = "TRACER TESTING"
         let measurementTest: String = "MEASUREMENT TESTING"
-        try await check(memoir: memoir, item: .log(level: .info, message: infoLogTest), testValue: "\(infoLogTest)", mustPresent: infoLog, file: file, line: line)
-        try await check(memoir: memoir, item: .log(level: .debug, message: debugLogTest), testValue: "\(debugLogTest)", mustPresent: debugLog, file: file, line: line)
+        try await check(memoir: memoir, item: .log(level: .info), message: infoLogTest, testValue: "\(infoLogTest)", mustPresent: infoLog, file: file, line: line)
+        try await check(memoir: memoir, item: .log(level: .debug), message: debugLogTest, testValue: "\(debugLogTest)", mustPresent: debugLog, file: file, line: line)
         try await check(memoir: memoir, item: .event(name: eventTest), testValue: eventTest, mustPresent: event, file: file, line: line)
         try await check(memoir: memoir, item: .tracer(.label(tracerTest), isFinished: false), testValue: tracerTest, mustPresent: tracer, file: file, line: line)
         try await check(memoir: memoir, item: .tracer(.label(tracerTest), isFinished: true), testValue: tracerTest, mustPresent: tracer, file: file, line: line)
@@ -140,10 +140,10 @@ class FilteringTests: GenericTestCase {
     }
 
     private func check(
-        memoir: Memoir, item: MemoirItem, testValue: String, mustPresent: Bool, file: StaticString = #file, line: UInt = #line
+        memoir: Memoir, item: MemoirItem, message: SafeString = "", testValue: String, mustPresent: Bool, file: StaticString = #file, line: UInt = #line
     ) async throws {
         memoir.append(
-            item, meta: nil, tracers: [], timeIntervalSinceReferenceDate: Date.timeIntervalSinceReferenceDate,
+            item, message: message, meta: nil, tracers: [], timeIntervalSinceReferenceDate: Date.timeIntervalSinceReferenceDate,
             file: "", function: "", line: 0
         )
         try await Task.sleep(nanoseconds: 1_000_000_0)

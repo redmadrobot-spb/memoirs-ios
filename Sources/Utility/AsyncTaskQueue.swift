@@ -11,14 +11,17 @@ import Foundation
 extension DispatchSemaphore: @unchecked Sendable {}
 
 public final class AsyncTaskQueue: @unchecked Sendable {
-    public init() {
+    private let memoir: Memoir
+
+    public init(memoir: Memoir) {
+        self.memoir = memoir
     }
 
     private let queue: DispatchQueue = .init(label: "AsyncTaskQueue")
 
-    private var actions: [@Sendable () async -> Void] = []
+    private var actions: [@Sendable () async throws -> Void] = []
 
-    public func add(closure: @escaping @Sendable () async -> Void) {
+    public func add(closure: @escaping @Sendable () async throws-> Void) {
         queue.async {
             self.actions.append(closure)
             self.startNext()
@@ -31,10 +34,14 @@ public final class AsyncTaskQueue: @unchecked Sendable {
         guard !isExecuting && !actions.isEmpty else { return }
 
         isExecuting = true
-        let closures: [@Sendable () async -> Void] = [ actions.removeFirst() ]
+        let closures: [@Sendable () async throws -> Void] = [ actions.removeFirst() ]
         Task {
             for closure in closures {
-                await closure()
+                do {
+                    try await closure()
+                } catch {
+                    memoir.error("Problem while executing queue task: \(error)")
+                }
             }
             isExecuting = false
             queue.async {

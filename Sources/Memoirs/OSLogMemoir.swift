@@ -57,7 +57,7 @@ public final class OSLogMemoir: Memoir {
         useSyncOutput: Bool = false
     ) {
         self.interceptor = interceptor
-        asyncTaskQueue = .init()
+        asyncTaskQueue = .init(memoir: PrintMemoir())
         osLogHolder = .init(subsystem: subsystem)
         output = Output(
             markers: markers,
@@ -69,11 +69,12 @@ public final class OSLogMemoir: Memoir {
 
     public func append(
         _ item: MemoirItem,
+        message: @autoclosure @Sendable () throws -> SafeString,
         meta: @autoclosure () -> [String: SafeString]?,
         tracers: [Tracer],
         timeIntervalSinceReferenceDate: TimeInterval,
         file: String, function: String, line: UInt
-    ) {
+    ) rethrows {
         let codePosition = output.codePosition(file: file, function: function, line: line)
         let description: String
         var osLogType: OSLogType = .debug
@@ -92,8 +93,8 @@ public final class OSLogMemoir: Memoir {
         }
 
         switch item {
-            case .log(let level, let message):
-                description = output.logString(
+            case .log(let level):
+                description = try output.logString(
                     date: nil, level: level, message: message, tracers: tracers, meta: meta, codePosition: codePosition
                 ).joined(separator: " ")
                 osLogType = logType(from: level)

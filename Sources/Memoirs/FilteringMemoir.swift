@@ -92,11 +92,12 @@ public final class FilteringMemoir: Memoir {
     @inlinable
     public func append(
         _ item: MemoirItem,
+        message: @autoclosure @Sendable () throws -> SafeString,
         meta: @autoclosure () -> [String: SafeString]?,
         tracers: [Tracer],
         timeIntervalSinceReferenceDate: TimeInterval,
         file: String, function: String, line: UInt
-    ) {
+    ) rethrows {
         let allowances: [Bool] = configurationsByTracer
             .lazy
             .filter { tracer, configuration in
@@ -104,7 +105,7 @@ public final class FilteringMemoir: Memoir {
             }
             .map { tracer, configuration in
                 switch item {
-                    case .log(let level, _):
+                    case .log(let level):
                         return configuration.minLevelShown.allows(level)
                     case .event:
                         return configuration.showEvents
@@ -117,7 +118,7 @@ public final class FilteringMemoir: Memoir {
         var allowed = allowances.contains { $0 }
         if allowances.isEmpty {
             switch item {
-                case .log(let level, _):
+                case .log(let level):
                     allowed = defaultConfiguration.minLevelShown.allows(level)
                 case .event:
                     allowed = defaultConfiguration.showEvents
@@ -129,8 +130,8 @@ public final class FilteringMemoir: Memoir {
         }
 
         if allowed /* by the filtering rules */ {
-            memoir.append(
-                item, meta: meta(), tracers: tracers, timeIntervalSinceReferenceDate: timeIntervalSinceReferenceDate,
+            try memoir.append(
+                item, message: try message(), meta: meta(), tracers: tracers, timeIntervalSinceReferenceDate: timeIntervalSinceReferenceDate,
                 file: file, function: function, line: line
             )
         }

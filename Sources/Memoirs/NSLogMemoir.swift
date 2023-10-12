@@ -35,16 +35,17 @@ public final class NSLogMemoir: Memoir {
     @inlinable
     public func append(
         _ item: MemoirItem,
+        message: @autoclosure @Sendable () throws -> SafeString,
         meta: @autoclosure () -> [String: SafeString]?,
         tracers: [Tracer],
         timeIntervalSinceReferenceDate: TimeInterval,
         file: String, function: String, line: UInt
-    ) {
+    ) rethrows {
         let codePosition = output.codePosition(file: file, function: function, line: line)
         let description: String
         switch item {
-            case .log(let level, let message):
-                description = output.logString(
+            case .log(let level):
+                description = try output.logString(
                     date: nil, level: level, message: message, tracers: tracers, meta: meta, codePosition: codePosition
                 ).joined(separator: " ")
             case .event(let name):

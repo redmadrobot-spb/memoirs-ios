@@ -110,15 +110,15 @@ public final class Output: Sendable {
 
     @inlinable
     public func logString(
-        date: String?, level: LogLevel?, message: () -> SafeString, tracers: [Tracer], meta: () -> [String: SafeString]?,
+        date: String?, level: LogLevel?, message: () throws -> SafeString, tracers: [Tracer], meta: () -> [String: SafeString]?,
         codePosition: String
-    ) -> [String] {
+    ) rethrows -> [String] {
         let prefix = [
             date,
             codePosition,
             "\(level.map { "\(markers.marker(for: $0))" } ?? "")",
             tracers.labelString(isShort: shortTracers, hideSensitiveValues: hideSensitiveValues),
-            message().string(hideSensitiveValues: hideSensitiveValues),
+            try message().string(hideSensitiveValues: hideSensitiveValues),
             meta()?.commaJoined(hideSensitiveValues: hideSensitiveValues),
         ].compactMap { $0 }
         let suffix = tracers.filter(tracerFilter).allJoined(showFirst: false, isShort: shortTracers, hideSensitiveValues: hideSensitiveValues)

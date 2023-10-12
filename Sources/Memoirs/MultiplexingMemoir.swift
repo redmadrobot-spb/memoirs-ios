@@ -21,14 +21,15 @@ public final class MultiplexingMemoir: Memoir {
     @inlinable
     public func append(
         _ item: MemoirItem,
+        message: @autoclosure @Sendable () throws -> SafeString,
         meta: @autoclosure () -> [String: SafeString]?,
         tracers: [Tracer],
         timeIntervalSinceReferenceDate: TimeInterval,
         file: String, function: String, line: UInt
-    ) {
+    ) rethrows {
         for memoir in memoirs {
-            memoir.append(
-                item, meta: meta(), tracers: tracers, timeIntervalSinceReferenceDate: timeIntervalSinceReferenceDate,
+            try memoir.append(
+                item, message: try message(), meta: meta(), tracers: tracers, timeIntervalSinceReferenceDate: timeIntervalSinceReferenceDate,
                 file: file, function: function, line: line
             )
         }

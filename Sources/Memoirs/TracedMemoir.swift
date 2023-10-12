@@ -108,7 +108,7 @@ public final class TracedMemoir: Memoir {
         }
     }
 
-    static let asyncTaskQueue: AsyncTaskQueue = .init()
+    static let asyncTaskQueue: AsyncTaskQueue = .init(memoir: PrintMemoir())
 
     private init(traceData: TraceData, memoir: Memoir, useSyncOutput: Bool = false) {
         self.traceData = traceData
@@ -175,14 +175,17 @@ public final class TracedMemoir: Memoir {
     }
 
     public func append(
-        _ item: MemoirItem, meta: @autoclosure () -> [String: SafeString]?, tracers: [Tracer], timeIntervalSinceReferenceDate: TimeInterval,
+        _ item: MemoirItem, message: @autoclosure @Sendable () throws -> SafeString,
+        meta: @autoclosure () -> [String: SafeString]?, tracers: [Tracer], timeIntervalSinceReferenceDate: TimeInterval,
         file: String, function: String, line: UInt
-    ) {
+    ) rethrows {
         let meta = meta()
+        let message = try message()
         Self.asyncTaskQueue.add {
             let selfTracers = await self.traceData.allTracers
             self.memoir.append(
-                item, meta: meta, tracers: tracers + selfTracers, timeIntervalSinceReferenceDate: timeIntervalSinceReferenceDate,
+                item, message: message, meta: meta, tracers: tracers + selfTracers,
+                timeIntervalSinceReferenceDate: timeIntervalSinceReferenceDate,
                 file: file, function: function, line: line
             )
         }

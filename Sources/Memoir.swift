@@ -16,6 +16,7 @@ public protocol Memoir: Sendable {
     /// Method appends Memoir item to a Memoir.
     /// - Parameters:
     ///  - item: Item to append.
+    ///  - message: Message for the item. Should be used only for the log item for now.
     ///  - meta: Parameters of the item.
     ///  - tracers: Tracers that group items in some way.
     ///  - timeIntervalSinceReferenceDate: date and time of the item creation.
@@ -24,9 +25,10 @@ public protocol Memoir: Sendable {
     ///  - line: The line of code from which the method was called. Usually you should use the #line literal for this.
     func append(
         _ item: MemoirItem,
+        message: @autoclosure @Sendable () throws -> SafeString,
         meta: @autoclosure () -> [String: SafeString]?,
         tracers: [Tracer],
         timeIntervalSinceReferenceDate: TimeInterval,
         file: String, function: String, line: UInt
-    )
+    ) rethrows
 }

@@ -90,16 +90,17 @@ public final class PrintMemoir: Memoir {
     @inlinable
     public func append(
         _ item: MemoirItem,
+        message: @autoclosure @Sendable () throws -> SafeString,
         meta: @autoclosure () -> [String: SafeString]?,
         tracers: [Tracer],
         timeIntervalSinceReferenceDate: TimeInterval,
         file: String, function: String, line: UInt
-    ) {
+    ) rethrows {
         let codePosition = output.codePosition(file: file, function: function, line: line)
         let parts: [String]
         switch item {
-            case .log(let level, let message):
-                parts = output.logString(
+            case .log(let level):
+                parts = try output.logString(
                     date: time.string(from: timeIntervalSinceReferenceDate), level: level, message: message, tracers: tracers, meta: meta, codePosition: codePosition
                 )
             case .event(let name):
