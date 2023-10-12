@@ -15,39 +15,42 @@ import Foundation
 public extension Memoir {
     /// Common log method.
     @inlinable
-    func log(level: LogLevel, _ message: SafeString, meta: [String: SafeString]? = nil, tracers: [Tracer] = [], timeIntervalSinceReferenceDate: TimeInterval = Date.timeIntervalSinceReferenceDate, file: String = #fileID, function: String = #function, line: UInt = #line) {
-        append(.log(level: level, message: message), meta: meta, tracers: tracers, timeIntervalSinceReferenceDate: timeIntervalSinceReferenceDate, file: file, function: function, line: line)
+    func log(level: LogLevel, _ message: @escaping @autoclosure @Sendable () -> SafeString, meta: [String: SafeString]? = nil, tracers: [Tracer] = [], timeIntervalSinceReferenceDate: TimeInterval = Date.timeIntervalSinceReferenceDate, file: String = #fileID, function: String = #function, line: UInt = #line) {
+        append(.log(level: level, message: message()), meta: meta, tracers: tracers, timeIntervalSinceReferenceDate: timeIntervalSinceReferenceDate, file: file, function: function, line: line)
     }
 
     /// Method that reports the log event with `verbose` logging level.
     @inlinable
-    func verbose(_ message: SafeString, meta: [String: SafeString]? = nil, tracers: [Tracer] = [], timeIntervalSinceReferenceDate: TimeInterval = Date.timeIntervalSinceReferenceDate, file: String = #fileID, function: String = #function, line: UInt = #line) {
-        append(.log(level: .verbose, message: message), meta: meta, tracers: tracers, timeIntervalSinceReferenceDate: timeIntervalSinceReferenceDate, file: file, function: function, line: line)
+    func verbose(_ message: @escaping @autoclosure @Sendable () -> SafeString, meta: [String: SafeString]? = nil, tracers: [Tracer] = [], timeIntervalSinceReferenceDate: TimeInterval = Date.timeIntervalSinceReferenceDate, file: String = #fileID, function: String = #function, line: UInt = #line) {
+        append(.log(level: .verbose, message: message()), meta: meta, tracers: tracers, timeIntervalSinceReferenceDate: timeIntervalSinceReferenceDate, file: file, function: function, line: line)
     }
 
     /// Method that reports the log event with `debug` logging level.
     @inlinable
-    func debug(_ message: SafeString, meta: [String: SafeString]? = nil, tracers: [Tracer] = [], timeIntervalSinceReferenceDate: TimeInterval = Date.timeIntervalSinceReferenceDate, file: String = #fileID, function: String = #function, line: UInt = #line) {
-        append(.log(level: .debug, message: message), meta: meta, tracers: tracers, timeIntervalSinceReferenceDate: timeIntervalSinceReferenceDate, file: file, function: function, line: line)
+    func debug(_ message: @escaping @autoclosure @Sendable () -> SafeString, meta: [String: SafeString]? = nil, tracers: [Tracer] = [], timeIntervalSinceReferenceDate: TimeInterval = Date.timeIntervalSinceReferenceDate, file: String = #fileID, function: String = #function, line: UInt = #line) {
+        append(.log(level: .debug, message: message()), meta: meta, tracers: tracers, timeIntervalSinceReferenceDate: timeIntervalSinceReferenceDate, file: file, function: function, line: line)
     }
 
     /// Method that reports the log event with `info` logging level.
     @inlinable
-    func info(_ message: SafeString, meta: [String: SafeString]? = nil, tracers: [Tracer] = [], timeIntervalSinceReferenceDate: TimeInterval = Date.timeIntervalSinceReferenceDate, file: String = #fileID, function: String = #function, line: UInt = #line) {
-        append(.log(level: .info, message: message), meta: meta, tracers: tracers, timeIntervalSinceReferenceDate: timeIntervalSinceReferenceDate, file: file, function: function, line: line)
+    func info(_ message: @escaping @autoclosure @Sendable () -> SafeString, meta: [String: SafeString]? = nil, tracers: [Tracer] = [], timeIntervalSinceReferenceDate: TimeInterval = Date.timeIntervalSinceReferenceDate, file: String = #fileID, function: String = #function, line: UInt = #line) {
+        append(.log(level: .info, message: message()), meta: meta, tracers: tracers, timeIntervalSinceReferenceDate: timeIntervalSinceReferenceDate, file: file, function: function, line: line)
     }
 
     /// Method that reports the log event with `warning` logging level.
     @inlinable
-    func warning(_ message: SafeString, meta: [String: SafeString]? = nil, tracers: [Tracer] = [], timeIntervalSinceReferenceDate: TimeInterval = Date.timeIntervalSinceReferenceDate, file: String = #fileID, function: String = #function, line: UInt = #line) {
-        append(.log(level: .warning, message: message), meta: meta, tracers: tracers, timeIntervalSinceReferenceDate: timeIntervalSinceReferenceDate, file: file, function: function, line: line)
+    func warning(_ message: @escaping @autoclosure @Sendable () -> SafeString, meta: [String: SafeString]? = nil, tracers: [Tracer] = [], timeIntervalSinceReferenceDate: TimeInterval = Date.timeIntervalSinceReferenceDate, file: String = #fileID, function: String = #function, line: UInt = #line) {
+        append(.log(level: .warning, message: message()), meta: meta, tracers: tracers, timeIntervalSinceReferenceDate: timeIntervalSinceReferenceDate, file: file, function: function, line: line)
     }
 
     /// Method that reports the log event with `error` logging level.
     @inlinable
-    func error(_ message: SafeString? = nil, error: Error? = nil, meta: [String: SafeString]? = nil, tracers: [Tracer] = [], timeIntervalSinceReferenceDate: TimeInterval = Date.timeIntervalSinceReferenceDate, file: String = #fileID, function: String = #function, line: UInt = #line) {
-        let message: SafeString = error.map { error in message.map { message in "\(message): \(error)" } ?? "\(error)" } ?? message.map { "\($0)" } ?? "Unknown Error"
-        append(.log(level: .error, message: message), meta: meta, tracers: tracers, timeIntervalSinceReferenceDate: timeIntervalSinceReferenceDate, file: file, function: function, line: line)
+    func error(_ message: @escaping @autoclosure @Sendable () -> SafeString? = nil, error: Error? = nil, meta: [String: SafeString]? = nil, tracers: [Tracer] = [], timeIntervalSinceReferenceDate: TimeInterval = Date.timeIntervalSinceReferenceDate, file: String = #fileID, function: String = #function, line: UInt = #line) {
+        if let error {
+            append(.log(level: .error, message: "\(message().map { message in "\(message): \(error)" } ?? "\(error)")"), meta: meta, tracers: tracers, timeIntervalSinceReferenceDate: timeIntervalSinceReferenceDate, file: file, function: function, line: line)
+        } else {
+            append(.log(level: .error, message: "\(message() ?? "Unknown Error")"), meta: meta, tracers: tracers, timeIntervalSinceReferenceDate: timeIntervalSinceReferenceDate, file: file, function: function, line: line)
+        }
     }
 
     /// Method that reports the log event with `error` logging level.
@@ -58,8 +61,8 @@ public extension Memoir {
 
     /// Method that reports the log event with `assert` logging level.
     @inlinable
-    func critical(_ message: SafeString, meta: [String: SafeString]? = nil, tracers: [Tracer] = [], timeIntervalSinceReferenceDate: TimeInterval = Date.timeIntervalSinceReferenceDate, file: String = #fileID, function: String = #function, line: UInt = #line) {
-        append(.log(level: .critical, message: message), meta: meta, tracers: tracers, timeIntervalSinceReferenceDate: timeIntervalSinceReferenceDate, file: file, function: function, line: line)
+    func critical(_ message: @escaping @autoclosure @Sendable () -> SafeString, meta: [String: SafeString]? = nil, tracers: [Tracer] = [], timeIntervalSinceReferenceDate: TimeInterval = Date.timeIntervalSinceReferenceDate, file: String = #fileID, function: String = #function, line: UInt = #line) {
+        append(.log(level: .critical, message: message()), meta: meta, tracers: tracers, timeIntervalSinceReferenceDate: timeIntervalSinceReferenceDate, file: file, function: function, line: line)
     }
 }
 
