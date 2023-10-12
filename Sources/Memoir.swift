@@ -25,7 +25,7 @@ public protocol Memoir: Sendable {
     ///  - line: The line of code from which the method was called. Usually you should use the #line literal for this.
     func append(
         _ item: MemoirItem,
-        message: @autoclosure @Sendable () throws -> SafeString,
+        message: @autoclosure () throws -> SafeString,
         meta: @autoclosure () -> [String: SafeString]?,
         tracers: [Tracer],
         timeIntervalSinceReferenceDate: TimeInterval,

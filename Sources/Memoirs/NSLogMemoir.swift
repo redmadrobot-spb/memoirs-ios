@@ -35,7 +35,7 @@ public final class NSLogMemoir: Memoir {
     @inlinable
     public func append(
         _ item: MemoirItem,
-        message: @autoclosure @Sendable () throws -> SafeString,
+        message: @autoclosure () throws -> SafeString,
         meta: @autoclosure () -> [String: SafeString]?,
         tracers: [Tracer],
         timeIntervalSinceReferenceDate: TimeInterval,

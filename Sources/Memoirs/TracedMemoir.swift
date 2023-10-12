@@ -175,7 +175,7 @@ public final class TracedMemoir: Memoir {
     }
 
     public func append(
-        _ item: MemoirItem, message: @autoclosure @Sendable () throws -> SafeString,
+        _ item: MemoirItem, message: @autoclosure () throws -> SafeString,
         meta: @autoclosure () -> [String: SafeString]?, tracers: [Tracer], timeIntervalSinceReferenceDate: TimeInterval,
         file: String, function: String, line: UInt
     ) rethrows {
