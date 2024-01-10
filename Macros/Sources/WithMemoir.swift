@@ -6,5 +6,5 @@
 // Copyright © 2024 Alexander Babaev. All rights reserved.
 //
 
-@attached(member, names: named(memoir), named(tracer))
+@attached(member, names: named($memoir), named($tracer))
 public macro WithMemoir() = #externalMacro(module: "MemoirMacros", type: "WithMemoirMacro")

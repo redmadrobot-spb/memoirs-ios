@@ -3,13 +3,11 @@
 // Memoirs
 //
 // Created by Alex Babaev on 10 May 2021.
-// Copyright © 2021 Redmadrobot SPb. All rights reserved.
 // Copyright © 2021 Alex Babaev. All rights reserved.
 // License: MIT License, https://github.com/redmadrobot-spb/memoirs-ios/blob/main/LICENSE
 //
 
 import PackageDescription
-import CompilerPluginSupport
 
 let swiftSettings: [SwiftSetting] = [
     .enableExperimentalFeature("StrictConcurrency")
@@ -23,24 +21,22 @@ let package = Package(
         .executable(name: "ExampleMemoirs", targets: [ "ExampleMemoirs" ]),
     ],
     dependencies: [
-        .package(url: "https://github.com/apple/swift-syntax.git", from: "509.1.0"),
+        .package(name: "MemoirMacros", path: "Macros"),
     ],
     targets: [
         .target(name: "MemoirsWorkaroundC", dependencies: [], path: "Sources.Workaround"),
-        .target(name: "Memoirs", dependencies: [ "MemoirsWorkaroundC", "MemoirMacros" ], path: "Sources", swiftSettings: swiftSettings),
-
-        .testTarget(name: "MemoirsTests", dependencies: [ "Memoirs", "MemoirMacros" ]),
-        .executableTarget(name: "ExampleMemoirs", dependencies: [ "Memoirs", "MemoirMacros" ], path: "Sources.Example"),
-
-        .macro(
-            name: "MemoirMacros",
-            dependencies: [
-                .product(name: "SwiftSyntax", package: "swift-syntax"),
-                .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
-                .product(name: "SwiftCompilerPlugin", package: "swift-syntax")
+        .target(
+            name: "Memoirs",
+            dependencies: [ 
+                "MemoirsWorkaroundC", 
+                .product(name: "MemoirMacrosLibrary", package: "MemoirMacros")
             ],
-            path: "Macros"
+            path: "Sources",
+            swiftSettings: swiftSettings
         ),
+
+        .testTarget(name: "MemoirsTests", dependencies: [ "Memoirs" ]),
+        .executableTarget(name: "ExampleMemoirs", dependencies: [ "Memoirs" ], path: "Sources.Example"),
     ],
     swiftLanguageVersions: [.v5]
 )

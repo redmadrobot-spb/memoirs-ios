@@ -9,6 +9,12 @@
 
 import Foundation
 import Memoirs
+import MemoirMacros
+
+@WithMemoir
+class Test {
+    var a: String?
+}
 
 // https://github.com/minimaxir/big-list-of-naughty-strings
 private var naughtyStrings: [String] = {
