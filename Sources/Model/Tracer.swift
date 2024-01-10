@@ -3,7 +3,6 @@
 // Memoirs
 //
 // Created by Alex Babaev on 21 May 2021.
-// Copyright © 2021 Redmadrobot SPb. All rights reserved.
 // Copyright © 2021 Alex Babaev. All rights reserved.
 // License: MIT License, https://github.com/redmadrobot-spb/memoirs-ios/blob/main/LICENSE
 //
@@ -38,6 +37,18 @@ public enum Tracer: Equatable, Hashable, Sendable {
             case .type(let name, _): return name
             case .label(let label): return label
         }
+    }
+
+    public static func object<T>(_ object: T) -> Tracer {
+        tracer(for: object)
+    }
+
+    public static func type(_ type: Any.Type) -> Tracer {
+        tracer(for: type)
+    }
+
+    public static func type<T>(_ type: T.Type) -> Tracer {
+        tracer(for: type)
     }
 }
 

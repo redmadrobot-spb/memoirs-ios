@@ -9,26 +9,38 @@
 //
 
 import PackageDescription
+import CompilerPluginSupport
 
 let swiftSettings: [SwiftSetting] = [
-    .unsafeFlags(
-        ["-Xfrontend", "-warn-concurrency", "-Xfrontend", "-enable-actor-data-race-checks"], .when(configuration: .debug)
-    )
+    .enableExperimentalFeature("StrictConcurrency")
 ]
 
 let package = Package(
     name: "Memoirs",
-    platforms: [ .iOS(.v15), .tvOS(.v15), .watchOS(.v9), .macOS(.v14) ],
+    platforms: [ .iOS(.v14), .tvOS(.v14), .watchOS(.v8), .macOS(.v13) ],
     products: [
         .library(name: "Memoirs", targets: [ "Memoirs" ]),
         .executable(name: "ExampleMemoirs", targets: [ "ExampleMemoirs" ]),
     ],
+    dependencies: [
+        .package(url: "https://github.com/apple/swift-syntax.git", from: "509.1.0"),
+    ],
     targets: [
         .target(name: "MemoirsWorkaroundC", dependencies: [], path: "Sources.Workaround"),
-        .target(name: "Memoirs", dependencies: [ "MemoirsWorkaroundC" ], path: "Sources", swiftSettings: swiftSettings),
+        .target(name: "Memoirs", dependencies: [ "MemoirsWorkaroundC", "MemoirMacros" ], path: "Sources", swiftSettings: swiftSettings),
 
-        .testTarget(name: "MemoirsTests", dependencies: [ "Memoirs" ]),
-        .executableTarget(name: "ExampleMemoirs", dependencies: [ "Memoirs" ], path: "Sources.Example"),
+        .testTarget(name: "MemoirsTests", dependencies: [ "Memoirs", "MemoirMacros" ]),
+        .executableTarget(name: "ExampleMemoirs", dependencies: [ "Memoirs", "MemoirMacros" ], path: "Sources.Example"),
+
+        .macro(
+            name: "MemoirMacros",
+            dependencies: [
+                .product(name: "SwiftSyntax", package: "swift-syntax"),
+                .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
+                .product(name: "SwiftCompilerPlugin", package: "swift-syntax")
+            ],
+            path: "Macros"
+        ),
     ],
     swiftLanguageVersions: [.v5]
 )

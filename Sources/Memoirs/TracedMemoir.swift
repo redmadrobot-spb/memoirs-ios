@@ -3,7 +3,6 @@
 // Memoirs
 //
 // Created by Alex Babaev on 22 May 2021.
-// Copyright © 2021 Redmadrobot SPb. All rights reserved.
 // Copyright © 2021 Alex Babaev. All rights reserved.
 // License: MIT License, https://github.com/redmadrobot-spb/memoirs-ios/blob/main/LICENSE
 //
@@ -108,7 +107,7 @@ public final class TracedMemoir: Memoir {
         }
     }
 
-    static let asyncTaskQueue: AsyncTaskQueue = .init(memoir: PrintMemoir())
+    private static let asyncTaskQueue: AsyncTaskQueue = .init(memoir: PrintMemoir())
 
     private init(traceData: TraceData, memoir: Memoir, useSyncOutput: Bool = false) {
         self.traceData = traceData

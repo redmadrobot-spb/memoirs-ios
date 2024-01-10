@@ -3,7 +3,6 @@
 // Memoirs
 //
 // Created by Dmitry Shadrin on 23 January 2020. Updated by Alex Babaev
-// Copyright © 2020 Redmadrobot SPb. All rights reserved.
 // Copyright © 2021 Alex Babaev. All rights reserved.
 // License: MIT License, https://github.com/redmadrobot-spb/memoirs-ios/blob/main/LICENSE
 //

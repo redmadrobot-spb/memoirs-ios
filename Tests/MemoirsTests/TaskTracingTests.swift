@@ -1,5 +1,5 @@
 //
-// ContextTests
+// TaskTracingTests
 // memoirs-ios
 //
 // Created by Alex Babaev on 09 September 2022.
@@ -8,9 +8,17 @@
 
 import Foundation
 import Memoirs
+import MemoirMacros
 import XCTest
 
-class ContextTests: XCTestCase {
+@WithMemoir
+class SomeService {
+    func doSomething(param: String, parentMemoir: Memoir /* automatic */) {
+    }
+}
+
+@available(iOS 15, *)
+class TaskTracingTests: XCTestCase {
     func testTaskLocalInitialization() async throws {
         var tracer: Tracer?
         let initialValue = await TaskLocalMemoir.localValue?.tracer.string

@@ -36,7 +36,7 @@ public final class AppleLoggerMemoir: Memoir {
     private let loggers: Loggers
 
     private let interceptor: (@Sendable (String) -> Void)?
-    private let asyncTaskQueue: AsyncTaskQueue
+    private static let asyncTaskQueue: AsyncTaskQueue = .init(memoir: PrintMemoir())
 
     public init(
         hideSensitiveValues: Bool, subsystem: String, tracerFilter: @escaping @Sendable (Tracer) -> Bool = { _ in false },
@@ -45,7 +45,6 @@ public final class AppleLoggerMemoir: Memoir {
         useSyncOutput: Bool = false
     ) {
         self.interceptor = interceptor
-        asyncTaskQueue = .init(memoir: PrintMemoir())
         loggers = .init(subsystem: subsystem)
         output = Output(
             markers: markers,
@@ -119,7 +118,7 @@ public final class AppleLoggerMemoir: Memoir {
                 ).joined(separator: " ")
                 osLogType = .info
         }
-        asyncTaskQueue.add {
+        Self.asyncTaskQueue.add {
             await self.loggers.logger(for: traceString) { $0.log(level: osLogType, "\(description, privacy: .public)") }
         }
         interceptor?(description)

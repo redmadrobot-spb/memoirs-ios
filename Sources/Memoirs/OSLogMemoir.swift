@@ -3,7 +3,6 @@
 // Memoirs
 //
 // Created by Dmitry Shadrin on 03 December 2019. Updated by Alex Babaev
-// Copyright © 2020 Redmadrobot SPb. All rights reserved.
 // Copyright © 2021 Alex Babaev. All rights reserved.
 // License: MIT License, https://github.com/redmadrobot-spb/memoirs-ios/blob/main/LICENSE
 //
@@ -41,7 +40,7 @@ public final class OSLogMemoir: Memoir {
     private let osLogHolder: OSLogHolder
     private let output: Output
     private let interceptor: (@Sendable (String) -> Void)?
-    private let asyncTaskQueue: AsyncTaskQueue
+    private static let asyncTaskQueue: AsyncTaskQueue = .init(memoir: PrintMemoir())
 
     /// Creates a new instance of `OSLogMemoir`.
     /// - Parameter subsystem: An identifier string, in reverse DNS notation, representing the subsystem that’s performing logging.
@@ -57,7 +56,6 @@ public final class OSLogMemoir: Memoir {
         useSyncOutput: Bool = false
     ) {
         self.interceptor = interceptor
-        asyncTaskQueue = .init(memoir: PrintMemoir())
         osLogHolder = .init(subsystem: subsystem)
         output = Output(
             markers: markers,
@@ -115,7 +113,7 @@ public final class OSLogMemoir: Memoir {
                     date: "", name: name, value: value, tracers: tracers, meta: meta, codePosition: codePosition
                 ).joined(separator: " ")
         }
-        asyncTaskQueue.add { [osLogType, label] in
+        Self.asyncTaskQueue.add { [osLogType, label] in
             await self.osLogHolder.osLog(for: label) { os_log(osLogType, log: $0, "%{public}@", description) }
         }
         interceptor?(description)
