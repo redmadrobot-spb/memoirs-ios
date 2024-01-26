@@ -10,13 +10,13 @@
 import Foundation
 
 @available(iOS 15, *)
-public struct TaskLocalMemoir {
-    static let `default`: TracedMemoir = .init(label: "TaskLocalDefaultUnset", memoir: PrintMemoir())
-
+public enum Tracing {
     @TaskLocal
     public static var localValue: TracedMemoir?
 
-    static func memoir(file: StaticString = #file, line: UInt = #line) -> TracedMemoir {
+    static let `default`: TracedMemoir = .init(label: "TaskLocalDefaultUnset", memoir: PrintMemoir())
+
+    public static func memoir(file: StaticString = #file, line: UInt = #line) -> TracedMemoir {
         #if DEBUG
         if let localValue {
             localValue
@@ -27,55 +27,64 @@ public struct TaskLocalMemoir {
         localValue ?? `default`
         #endif
     }
-}
-
-@available(iOS 15, *)
-public enum Tracing {
-    public static var tracingMemoir: TracedMemoir? { TaskLocalMemoir.localValue }
 
     public static func memoir(_ tracer: Tracer) -> Memoir {
-        TaskLocalMemoir.memoir().with(tracer: tracer)
+        memoir().with(tracer: tracer)
     }
 
     /// For injecting child TracedMemoir over current one in the context.
+    @inlinable
+    public static func with<Value: Sendable>(
+        _ memoir: TracedMemoir,
+        file: String = #file, line: UInt = #line,
+        operation: @Sendable (_ localMemoir: Memoir) async throws -> Value
+    ) async rethrows -> Value {
+        return try await $localValue.withValue(memoir, operation: { try await operation(memoir) }, file: file, line: line)
+    }
+
+    /// For injecting child TracedMemoir over current one in the context.
+    @inlinable
     public static func with<Value: Sendable>(
         _ tracer: Tracer,
         file: String = #file, line: UInt = #line,
         operation: @Sendable (_ localMemoir: Memoir) async throws -> Value
     ) async rethrows -> Value {
-        let memoir = TaskLocalMemoir.memoir().with(tracer: tracer)
-        return try await TaskLocalMemoir.$localValue.withValue(memoir, operation: { try await operation(memoir) }, file: file, line: line)
+        let memoir = memoir().with(tracer: tracer)
+        return try await $localValue.withValue(memoir, operation: { try await operation(memoir) }, file: file, line: line)
     }
 
     /// For injecting root TracedMemoir into context.
+    @inlinable
     public static func with<Value: Sendable>(
         root memoir: TracedMemoir,
         file: String = #file, line: UInt = #line,
         operation: @Sendable (_ localMemoir: Memoir) async throws -> Value
     ) async rethrows -> Value {
-        try await TaskLocalMemoir.$localValue.withValue(memoir, operation: { try await operation(memoir) }, file: file, line: line)
+        try await $localValue.withValue(memoir, operation: { try await operation(memoir) }, file: file, line: line)
     }
 
     /// For injecting child TracedMemoir over current one in the context.
+    @inlinable
     public static func withDetached(
         _ tracer: Tracer,
         file: String = #file, line: UInt = #line,
         operation: @escaping @Sendable (_ localMemoir: Memoir) async throws -> Void
     ) {
-        let memoir = TaskLocalMemoir.memoir().with(tracer: tracer)
+        let memoir = memoir().with(tracer: tracer)
         Task.detached {
-            try await TaskLocalMemoir.$localValue.withValue(memoir, operation: { try await operation(memoir) }, file: file, line: line)
+            try await $localValue.withValue(memoir, operation: { try await operation(memoir) }, file: file, line: line)
         }
     }
 
     /// For injecting root TracedMemoir.
+    @inlinable
     public static func withDetached(
         root memoir: TracedMemoir,
         file: String = #file, line: UInt = #line,
         operation: @escaping @Sendable (_ localMemoir: Memoir) async throws -> Void
     ) {
         Task.detached {
-            try await TaskLocalMemoir.$localValue.withValue(memoir, operation: { try await operation(memoir) }, file: file, line: line)
+            try await $localValue.withValue(memoir, operation: { try await operation(memoir) }, file: file, line: line)
         }
     }
 }

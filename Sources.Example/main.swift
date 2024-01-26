@@ -11,11 +11,6 @@ import Foundation
 import Memoirs
 import MemoirMacros
 
-@WithMemoir
-class Test {
-    var a: String?
-}
-
 // https://github.com/minimaxir/big-list-of-naughty-strings
 private var naughtyStrings: [String] = {
     guard let currentDirectory = ProcessInfo.processInfo.environment["PWD"] else { return [ "Not found..." ] }

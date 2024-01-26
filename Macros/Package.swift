@@ -11,17 +11,19 @@ import CompilerPluginSupport
 import PackageDescription
 
 let package = Package(
-    name: "Macros",
-    platforms: [ .iOS(.v14), .macOS(.v12) ],
+    name: "MemoirMacros",
+    platforms: [ .macOS(.v13), .iOS(.v13), .tvOS(.v13), .watchOS(.v6), .macCatalyst(.v13) ],
     products: [
-        .library(name: "MemoirMacrosLibrary", targets: [ "MemoirMacros" ]),
+        .library(name: "MemoirMacros", targets: [ "MemoirMacros" ]),
     ],
     dependencies: [
         .package(url: "https://github.com/apple/swift-syntax.git", from: "509.1.0"),
     ],
     targets: [
+        .target(name: "MemoirMacros", dependencies: [ "Macros", ], path: "Sources.Definitions"),
+
         .macro(
-            name: "MemoirMacros",
+            name: "Macros",
             dependencies: [
                 .product(name: "SwiftSyntax", package: "swift-syntax"),
                 .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
@@ -29,8 +31,21 @@ let package = Package(
             ],
             path: "Sources"
         ),
-        .executableTarget(name: "MemoirMacroExample", dependencies: [ "MemoirMacros" ], path: "Sources.Example"),
-        .testTarget(name: "MemoirMacrosTest", dependencies: [ "MemoirMacros", .product(name: "SwiftSyntaxMacrosTestSupport", package: "swift-syntax"), ], path: "Tests")
+
+        .executableTarget(
+            name: "MemoirMacroExample",
+            dependencies: [ "MemoirMacros" ], 
+            path: "Sources.Example"
+        ),
+
+        .testTarget(
+            name: "MemoirMacrosTest",
+            dependencies: [
+                "Macros",
+                .product(name: "SwiftSyntaxMacrosTestSupport", package: "swift-syntax"),
+            ],
+            path: "Tests"
+        )
     ],
     swiftLanguageVersions: [.v5]
 )

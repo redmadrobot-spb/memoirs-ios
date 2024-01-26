@@ -15,7 +15,7 @@ let swiftSettings: [SwiftSetting] = [
 
 let package = Package(
     name: "Memoirs",
-    platforms: [ .iOS(.v14), .tvOS(.v14), .watchOS(.v8), .macOS(.v13) ],
+    platforms: [ .iOS(.v14), .tvOS(.v14), .watchOS(.v8), .macOS(.v13), .macCatalyst(.v14) ],
     products: [
         .library(name: "Memoirs", targets: [ "Memoirs" ]),
         .executable(name: "ExampleMemoirs", targets: [ "ExampleMemoirs" ]),
@@ -29,7 +29,7 @@ let package = Package(
             name: "Memoirs",
             dependencies: [ 
                 "MemoirsWorkaroundC", 
-                .product(name: "MemoirMacrosLibrary", package: "MemoirMacros")
+                .product(name: "MemoirMacros", package: "MemoirMacros")
             ],
             path: "Sources",
             swiftSettings: swiftSettings
