@@ -82,7 +82,7 @@ public final class AppleLoggerMemoir: Memoir {
         let description: String
 
         let traceString = tracerString(for: tracers)
-        let osLogType: OSLogType
+        let osLogClosure: @Sendable (Logger, String) -> Void
 
         switch item {
             case .log(let level):
@@ -90,36 +90,38 @@ public final class AppleLoggerMemoir: Memoir {
                     date: nil, level: level, message: message, tracers: tracers, meta: meta, codePosition: codePosition
                 ).joined(separator: " ")
                 switch level {
-                    case .critical: osLogType = .fault
-                    case .error: osLogType = .error
-                    case .warning: osLogType = .error
-                    case .info: osLogType = .info
-                    case .debug: osLogType = .debug
-                    case .verbose: osLogType = .debug
+                    case .critical: osLogClosure = { $0.critical("\($1, privacy: .public)") }
+                    case .error: osLogClosure = { $0.error("\($1, privacy: .public)") }
+                    case .warning: osLogClosure = { $0.warning("\($1, privacy: .public)") }
+                    case .info: osLogClosure = { $0.info("\($1, privacy: .public)") }
+                    case .debug: osLogClosure = { $0.debug("\($1, privacy: .public)") }
+                    case .verbose: osLogClosure = { $0.trace("\($1, privacy: .public)") }
                 }
             case .event(let name):
                 description = output.eventString(
                     date: "", name: name, tracers: tracers, meta: meta, codePosition: codePosition
                 ).joined(separator: " ")
-                osLogType = .info
+                osLogClosure = { $0.info("\($1, privacy: .public)") }
             case .tracer(let tracer, false):
                 description = output.tracerString(
                     date: "", tracer: tracer, tracers: tracers, meta: meta, codePosition: codePosition
                 ).joined(separator: " ")
-                osLogType = .info
+                osLogClosure = { $0.info("\($1, privacy: .public)") }
             case .tracer(let tracer, true):
                 description = output.tracerEndString(
                     date: "", tracer: tracer, tracers: tracers, meta: meta, codePosition: codePosition
                 ).joined(separator: " ")
-                osLogType = .info
+                osLogClosure = { $0.info("\($1, privacy: .public)") }
             case .measurement(let name, let value):
                 description = output.measurementString(
                     date: "", name: name, value: value, tracers: tracers, meta: meta, codePosition: codePosition
                 ).joined(separator: " ")
-                osLogType = .info
+                osLogClosure = { $0.info("\($1, privacy: .public)") }
         }
         Self.asyncTaskQueue.add {
-            await self.loggers.logger(for: traceString) { $0.log(level: osLogType, "\(description, privacy: .public)") }
+            await self.loggers.logger(for: traceString) {
+                osLogClosure($0, description)
+            }
         }
         interceptor?(description)
     }
