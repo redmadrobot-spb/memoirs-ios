@@ -21,15 +21,15 @@ let package = Package(
         .executable(name: "ExampleMemoirs", targets: [ "ExampleMemoirs" ]),
     ],
     dependencies: [
-        .package(name: "MemoirMacros", path: "Macros"),
+//        .package(name: "MemoirMacros", path: "Macros"),
     ],
     targets: [
         .target(name: "MemoirsWorkaroundC", dependencies: [], path: "Sources.Workaround"),
         .target(
             name: "Memoirs",
-            dependencies: [ 
-                "MemoirsWorkaroundC", 
-                .product(name: "MemoirMacros", package: "MemoirMacros")
+            dependencies: [
+                "MemoirsWorkaroundC",
+//                .product(name: "MemoirMacros", package: "MemoirMacros")
             ],
             path: "Sources",
             swiftSettings: swiftSettings
