@@ -55,7 +55,7 @@ public final class FileMemoir: Memoir {
         file: String, function: String, line: UInt
     ) rethrows {
         let codePosition = output.codePosition(file: file, function: function, line: line)
-        let parts: [String]
+        var parts: [String]
         switch item {
             case .log(let level):
                 parts = try output.logString(
@@ -78,6 +78,7 @@ public final class FileMemoir: Memoir {
                     date: time.string(from: timeIntervalSinceReferenceDate), name: name, value: value, tracers: tracers, meta: meta, codePosition: codePosition
                 )
         }
+        parts.append("\n")
 
         let toOutput = parts.joined(separator: " ")
         do {
