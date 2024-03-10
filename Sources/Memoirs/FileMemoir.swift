@@ -22,10 +22,13 @@ public final class FileMemoir: Memoir {
 
     @usableFromInline
     let fileUrl: URL
+    @usableFromInline
+    let maxFileSizeBytes: Int
 
     /// Creates a new instance of `PrintMemoir`.
     public init(
         fileUrl: URL,
+        maxFileSizeBytes: Int = 1024 * 1024 * 50, // 50 MB
         time: PrintMemoir.Time = .formatter(PrintMemoir.timeOnlyDateFormatter),
         codePosition: PrintMemoir.CodePosition = .short,
         shortTracers: Bool = true,
@@ -34,6 +37,7 @@ public final class FileMemoir: Memoir {
         interceptor: (@Sendable (String) -> Void)? = nil
     ) {
         self.fileUrl = fileUrl
+        self.maxFileSizeBytes = maxFileSizeBytes
         output = Output(
             markers: markers,
             hideSensitiveValues: false,
@@ -83,17 +87,30 @@ public final class FileMemoir: Memoir {
         let toOutput = parts.joined(separator: " ")
         do {
             try toOutput.append(toFile: fileUrl)
+
         } catch {
             NSLog("Error while writing log to the file “\(fileUrl)”: \(error)")
         }
         interceptor?(toOutput)
+    }
+
+    private func rotateLogFile() {
+        if let resourceValues = try? fileUrl.resourceValues(forKeys: [ .fileSizeKey ]), resourceValues.fileSize ?? 0 > maxFileSizeBytes {
+            let otherLogFile = fileUrl.appendingPathExtension(".previous")
+            do {
+                try FileManager.default.removeItem(at: otherLogFile)
+                try FileManager.default.moveItem(at: fileUrl, to: otherLogFile)
+            } catch {
+                NSLog("Error while rotating log file “\(fileUrl)” with “\(otherLogFile)” \(error)")
+            }
+        }
     }
 }
 
 public extension String {
     func append(toFile fileUrl: URL) throws {
         let data = Data(self.utf8)
-        if let fileHandle = FileHandle(forWritingAtPath: fileUrl.path) {
+        if let fileHandle = try? FileHandle(forWritingTo: fileUrl) {
             defer { fileHandle.closeFile() }
             fileHandle.seekToEndOfFile()
             fileHandle.write(data)
