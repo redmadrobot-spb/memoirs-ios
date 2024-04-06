@@ -129,8 +129,10 @@ public final class TracedMemoir: Memoir {
 
         Task { [self] in
             await traceData.postInitialize()
-            await traceData.update(completionHandler: { [self] in
-                await self.memoir.finish(tracer: tracer, tracers: traceData.allTracers)
+            await traceData.update(completionHandler: { [weak self] in
+                guard let self else { return }
+
+                await self.memoir.finish(tracer: tracer, tracers: self.traceData.allTracers)
             })
             await self.memoir.update(tracer: tracer, meta: meta, tracers: traceData.allTracers, file: file, function: function, line: line)
         }
