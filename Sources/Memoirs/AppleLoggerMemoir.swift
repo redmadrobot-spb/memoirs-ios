@@ -99,22 +99,22 @@ public final class AppleLoggerMemoir: Memoir {
                 }
             case .event(let name):
                 description = output.eventString(
-                    date: "", name: name, tracers: tracers, meta: meta, codePosition: codePosition
+                    date: nil, name: name, tracers: tracers, meta: meta, codePosition: codePosition
                 ).joined(separator: " ")
                 osLogClosure = { $0.info("\($1, privacy: .public)") }
             case .tracer(let tracer, false):
                 description = output.tracerString(
-                    date: "", tracer: tracer, tracers: tracers, meta: meta, codePosition: codePosition
+                    date: nil, tracer: tracer, tracers: tracers, meta: meta, codePosition: codePosition
                 ).joined(separator: " ")
                 osLogClosure = { $0.info("\($1, privacy: .public)") }
             case .tracer(let tracer, true):
                 description = output.tracerEndString(
-                    date: "", tracer: tracer, tracers: tracers, meta: meta, codePosition: codePosition
+                    date: nil, tracer: tracer, tracers: tracers, meta: meta, codePosition: codePosition
                 ).joined(separator: " ")
                 osLogClosure = { $0.info("\($1, privacy: .public)") }
             case .measurement(let name, let value):
                 description = output.measurementString(
-                    date: "", name: name, value: value, tracers: tracers, meta: meta, codePosition: codePosition
+                    date: nil, name: name, value: value, tracers: tracers, meta: meta, codePosition: codePosition
                 ).joined(separator: " ")
                 osLogClosure = { $0.info("\($1, privacy: .public)") }
         }
