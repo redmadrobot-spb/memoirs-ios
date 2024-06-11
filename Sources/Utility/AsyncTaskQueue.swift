@@ -43,8 +43,8 @@ public final class AsyncTaskQueue: @unchecked Sendable {
                     memoir.error("Problem while executing queue task: \(error)")
                 }
             }
-            isExecuting = false
             queue.async {
+                self.isExecuting = false
                 self.startNext()
             }
         }
