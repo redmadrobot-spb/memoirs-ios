@@ -19,18 +19,22 @@ class TracerChangesTests: GenericTestCase {
 
         printMemoir = PrintMemoir(
             time: .formatter(PrintMemoir.fullDateFormatter), shortTracers: false, tracerFilter: { _ in true },
-            interceptor: { [self] in addIntercepted(log: $0) }
+            interceptor: { [resultSaver] log in
+                Task {
+                    await resultSaver.appendIfNotTracer(log: log)
+                }
+            }
         )
     }
 
     func testChangeTracer() async throws {
-        let memoir = TracedMemoir(label: "First", memoir: printMemoir, useSyncOutput: true)
+        let memoir = TracedMemoir(label: "First", memoir: printMemoir)
 
         memoir.debug("Test log 1")
         guard let result1 = try await logResult() else { throw Problem.noLogFromMemoir(memoir) }
 
         if !result1.contains("First") || !(result1.contains("Test log 1")) {
-            throw Problem.wrongLabelInLog(memoir)
+            throw Problem.wrongLabelInLog(memoir, "Test log 1")
         }
 
         await memoir.updateTracer(to: .label("Second"))
@@ -39,19 +43,19 @@ class TracerChangesTests: GenericTestCase {
         guard let result2 = try await logResult() else { throw Problem.noLogFromMemoir(memoir) }
 
         if result2.contains("First") || !result2.contains("Second") || !(result2.contains("Test log 2")) {
-            throw Problem.wrongLabelInLog(memoir)
+            throw Problem.wrongLabelInLog(memoir, "Test log 2")
         }
     }
 
     func testChangeParentTracer() async throws {
-        let memoirParent = TracedMemoir(label: "First", memoir: printMemoir, useSyncOutput: true)
-        let memoir = TracedMemoir(label: "Second", memoir: memoirParent, useSyncOutput: true)
+        let memoirParent = TracedMemoir(label: "First", memoir: printMemoir)
+        let memoir = TracedMemoir(label: "Second", memoir: memoirParent)
 
         memoir.debug("Test log 1")
         guard let result1 = try await logResult() else { throw Problem.noLogFromMemoir(memoir) }
 
         if !result1.contains("First") || !result1.contains("Second") || !(result1.contains("Test log 1")) {
-            throw Problem.wrongLabelInLog(memoir)
+            throw Problem.wrongLabelInLog(memoir, "First, Second, Test log 1")
         }
 
         await memoirParent.updateTracer(to: .label("Third"))
@@ -60,7 +64,7 @@ class TracerChangesTests: GenericTestCase {
         guard let result2 = try await logResult() else { throw Problem.noLogFromMemoir(memoir) }
 
         if result2.contains("First") || !result2.contains("Second") || !result2.contains("Third") || !(result2.contains("Test log 2")) {
-            throw Problem.wrongLabelInLog(memoir)
+            throw Problem.wrongLabelInLog(memoir, "First, Second, Third, Test log 1")
         }
     }
 }

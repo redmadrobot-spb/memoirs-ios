@@ -12,8 +12,7 @@ import SwiftSyntaxMacros
 @main
 struct MemoirMacrosPlugin: CompilerPlugin {
     let providingMacros: [Macro.Type] = [
-//        CreateMemoirMacro.self,
-        TraceTheSyntaxMacro.self,
-        WithMemoirMacro.self,
+        WithTracerMacro.self,
+        AutoTracedMacro.self
     ]
 }

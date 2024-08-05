@@ -12,15 +12,40 @@ import Foundation
 import XCTest
 @testable import Memoirs
 
+actor ResultSaver {
+    private let markers: Output.Markers = .init()
+    private(set) var logResults: [String] = []
+
+    func clear() {
+        logResults = []
+    }
+
+    func append(log: String) {
+        logResults.append(log)
+    }
+
+    func appendIfNotTracer(log: String) {
+        guard !log.contains(markers.tracer) else { return }
+
+        logResults.append(log)
+    }
+
+    var pop: String? {
+        guard !logResults.isEmpty else { return nil }
+
+        return logResults.remove(at: 0)
+    }
+}
+
 class GenericTestCase: XCTestCase {
     enum Problem: Error, CustomDebugStringConvertible {
         case noLogFromMemoir(Memoir)
         case unexpectedLogFromMemoir(Memoir)
         case noLevelInLog(Memoir)
-        case noLabelInLog(Memoir)
-        case noMessageInLog(Memoir)
+        case noLabelInLog(Memoir, String)
+        case noMessageInLog(Memoir, String)
         case wrongLevelInLog(Memoir)
-        case wrongLabelInLog(Memoir)
+        case wrongLabelInLog(Memoir, String)
         case wrongScopeInLog(Memoir)
 
         var debugDescription: String {
@@ -31,14 +56,14 @@ class GenericTestCase: XCTestCase {
                     return "Log found, but not expected (memoir: \(memoir))"
                 case .noLevelInLog(let memoir):
                     return "No level in log (memoir: \(memoir))"
-                case .noLabelInLog(let memoir):
-                    return "No label in log (memoir: \(memoir))"
-                case .noMessageInLog(let memoir):
-                    return "No message in log (memoir: \(memoir))"
+                case .noLabelInLog(let memoir, let label):
+                    return "No label “\(label)” in log (memoir: \(memoir))"
+                case .noMessageInLog(let memoir, let message):
+                    return "No message “\(message)” in log (memoir: \(memoir))"
                 case .wrongLevelInLog(let memoir):
                     return "Wrong level in log (memoir: \(memoir))"
-                case .wrongLabelInLog(let memoir):
-                    return "Wrong label in log (memoir: \(memoir))"
+                case .wrongLabelInLog(let memoir, let label):
+                    return "Wrong label “\(label)” in log (memoir: \(memoir))"
                 case .wrongScopeInLog(let memoir):
                     return "Wrong scope in log (memoir: \(memoir))"
             }
@@ -58,20 +83,11 @@ class GenericTestCase: XCTestCase {
     }
 
     public let markers: Output.Markers = .init()
-    private var logResults: [String] = []
-
-    func addIntercepted(log: String) {
-        guard !log.contains(markers.tracer) else { return }
-
-        logResults.append(log)
-    }
+    let resultSaver: ResultSaver = .init()
 
     func expectLog(probe: LogProbe) async throws -> String {
-        probe.memoir.log(
-            level: probe.level,
-            probe.message,
-            tracers: probe.tracers
-        )
+        await resultSaver.clear()
+        probe.memoir.log(level: probe.level, probe.message, tracers: probe.tracers)
         if let result = try await logResult() {
             return result
         } else {
@@ -89,10 +105,8 @@ class GenericTestCase: XCTestCase {
     }
 
     func logResult() async throws -> String? {
-        try await Task.sleep(nanoseconds: 1_000_000_000 / 1000)
-        guard !logResults.isEmpty else { return nil }
-
-        return logResults.remove(at: 0)
+        try await Task.sleep(for: .seconds(0.01))
+        return await resultSaver.pop
     }
 
     let defaultLevel: LogLevel = .info

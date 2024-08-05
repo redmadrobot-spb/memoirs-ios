@@ -66,14 +66,14 @@ public final class PrintMemoir: Memoir {
     let output: Output
 
     @usableFromInline
-    let interceptor: (@Sendable (String) -> Void)?
+    let interceptor: (@Sendable (String) async -> Void)?
 
     /// Creates a new instance of `PrintMemoir`.
     public init(
         time: Time = .formatter(timeOnlyDateFormatter), codePosition: CodePosition = .short, shortTracers: Bool = true,
         markers: Output.Markers = .init(),
         tracerFilter: @escaping @Sendable (Tracer) -> Bool = PrintMemoir.defaultTracerFilter,
-        interceptor: (@Sendable (String) -> Void)? = nil
+        interceptor: (@Sendable (String) async -> Void)? = nil
     ) {
         output = Output(
             markers: markers,
@@ -122,6 +122,10 @@ public final class PrintMemoir: Memoir {
 
         let toOutput = parts.joined(separator: " ")
         print(toOutput)
-        interceptor?(toOutput)
+        if let interceptor {
+            Task.detached { [interceptor] in
+                await interceptor(toOutput)
+            }
+        }
     }
 }

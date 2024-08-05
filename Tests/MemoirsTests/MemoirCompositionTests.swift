@@ -19,37 +19,41 @@ class MemoirCompositionTests: GenericTestCase {
 
         printMemoir = PrintMemoir(
             time: .formatter(PrintMemoir.fullDateFormatter), shortTracers: false, tracerFilter: { _ in true },
-            interceptor: { [self] in addIntercepted(log: $0) }
+            interceptor: { [resultSaver] log in
+                Task {
+                    await resultSaver.appendIfNotTracer(log: log)
+                }
+            }
         )
     }
 
     func testLoggingLabel() async throws {
-        let memoir = TracedMemoir(label: "[Memoir]", memoir: printMemoir, useSyncOutput: true)
+        let memoir = TracedMemoir(label: "[Memoir]", memoir: printMemoir)
 
         memoir.debug("Test log 1")
         guard let result1 = try await logResult() else { throw Problem.noLogFromMemoir(memoir) }
 
         if !result1.contains("[Memoir]") || !(result1.contains("Test log 1")) {
-            throw Problem.wrongLabelInLog(memoir)
+            throw Problem.wrongLabelInLog(memoir, "Test log 1")
         }
 
         memoir.debug("Test log 2")
         guard let result2 = try await logResult() else { throw Problem.noLogFromMemoir(memoir) }
 
         if !result2.contains("[Memoir]") || !(result2.contains("Test log 2")) {
-            throw Problem.wrongLabelInLog(memoir)
+            throw Problem.wrongLabelInLog(memoir, "Test log 2")
         }
     }
 
     func testNestedLabeledMemoirs() async throws {
-        let innerMemoir = TracedMemoir(label: "[Inner]", memoir: printMemoir, useSyncOutput: true)
-        let memoir = TracedMemoir(label: "[Outer]", memoir: innerMemoir, useSyncOutput: true)
+        let innerMemoir = TracedMemoir(label: "[Inner]", memoir: printMemoir)
+        let memoir = TracedMemoir(label: "[Outer]", memoir: innerMemoir)
 
         memoir.debug("Test log")
         guard let result = try await logResult() else { throw Problem.noLogFromMemoir(memoir) }
 
         if !result.contains("[Outer]") {
-            throw Problem.wrongLabelInLog(memoir)
+            throw Problem.wrongLabelInLog(memoir, "[Outer]")
         }
     }
 
@@ -57,10 +61,14 @@ class MemoirCompositionTests: GenericTestCase {
         let tracer1: Tracer = .label("Tracer 1")
         let tracer2: Tracer = .label("Tracer 2")
 
-        let printMemoir = PrintMemoir(interceptor: { [self] in addIntercepted(log: $0) })
+        let printMemoir = PrintMemoir(interceptor: { [resultSaver] log in
+            Task {
+                await resultSaver.appendIfNotTracer(log: log)
+            }
+        })
 
-        let tracedMemoir1 = TracedMemoir(tracer: tracer1, meta: [:], memoir: printMemoir, useSyncOutput: true)
-        let tracedMemoir2 = TracedMemoir(tracer: tracer2, meta: [:], memoir: tracedMemoir1, useSyncOutput: true)
+        let tracedMemoir1 = TracedMemoir(tracer: tracer1, meta: [:], memoir: printMemoir)
+        let tracedMemoir2 = TracedMemoir(tracer: tracer2, meta: [:], memoir: tracedMemoir1)
 
         tracedMemoir2.debug("Test log")
         guard let result = try await logResult() else { throw Problem.noLogFromMemoir(tracedMemoir2) }

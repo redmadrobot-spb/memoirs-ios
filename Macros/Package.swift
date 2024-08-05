@@ -1,4 +1,4 @@
-// swift-tools-version:5.9
+// swift-tools-version:6.0
 //
 // Memoirs
 //
@@ -17,7 +17,8 @@ let package = Package(
         .library(name: "MemoirMacros", targets: [ "MemoirMacros" ]),
     ],
     dependencies: [
-        .package(url: "https://github.com/apple/swift-syntax.git", from: "509.1.0"),
+        .package(url: "https://github.com/apple/swift-syntax.git", from: "600.0.0-prerelease-2024-07-30"),
+        .package(name: "Memoirs", path: "../")
     ],
     targets: [
         .target(name: "MemoirMacros", dependencies: [ "Macros", ], path: "Sources.Definitions"),
@@ -27,14 +28,18 @@ let package = Package(
             dependencies: [
                 .product(name: "SwiftSyntax", package: "swift-syntax"),
                 .product(name: "SwiftSyntaxMacros", package: "swift-syntax"),
-                .product(name: "SwiftCompilerPlugin", package: "swift-syntax")
+                .product(name: "SwiftCompilerPlugin", package: "swift-syntax"),
             ],
             path: "Sources"
+//            swiftSettings: [ .enableExperimentalFeature("PreambleMacro"), ]
         ),
 
         .executableTarget(
             name: "MemoirMacroExample",
-            dependencies: [ "MemoirMacros" ], 
+            dependencies: [
+                "MemoirMacros",
+                .product(name: "Memoirs", package: "Memoirs"),
+            ],
             path: "Sources.Example"
         ),
 
@@ -43,9 +48,10 @@ let package = Package(
             dependencies: [
                 "Macros",
                 .product(name: "SwiftSyntaxMacrosTestSupport", package: "swift-syntax"),
+                .product(name: "Memoirs", package: "Memoirs"),
             ],
             path: "Tests"
         )
     ],
-    swiftLanguageVersions: [.v5]
+    swiftLanguageVersions: [.v6]
 )

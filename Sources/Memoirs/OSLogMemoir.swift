@@ -39,7 +39,7 @@ public final class OSLogMemoir: Memoir {
 
     private let osLogHolder: OSLogHolder
     private let output: Output
-    private let interceptor: (@Sendable (String) -> Void)?
+    private let interceptor: (@Sendable (String) async -> Void)?
     private static let asyncTaskQueue: AsyncTaskQueue = .init(memoir: PrintMemoir())
 
     /// Creates a new instance of `OSLogMemoir`.
@@ -52,7 +52,7 @@ public final class OSLogMemoir: Memoir {
     public init(
         subsystem: String, isSensitive: Bool, tracerFilter: @escaping @Sendable (Tracer) -> Bool = { _ in false },
         markers: Output.Markers = .init(),
-        interceptor: (@Sendable (String) -> Void)? = nil,
+        interceptor: (@Sendable (String) async -> Void)? = nil,
         useSyncOutput: Bool = false
     ) {
         self.interceptor = interceptor
@@ -116,7 +116,11 @@ public final class OSLogMemoir: Memoir {
         Self.asyncTaskQueue.add { [osLogType, label] in
             await self.osLogHolder.osLog(for: label) { os_log(osLogType, log: $0, "%{public}@", description) }
         }
-        interceptor?(description)
+        if let interceptor {
+            Task.detached { [interceptor] in
+                await interceptor(description)
+            }
+        }
     }
 
     @usableFromInline

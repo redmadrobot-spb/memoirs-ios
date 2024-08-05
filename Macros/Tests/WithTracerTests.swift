@@ -1,5 +1,5 @@
 //
-// main
+// WithTracerTests
 // memoirs-ios
 //
 // Created by Alexander Babaev on 09 January 2024.
@@ -13,27 +13,27 @@ import XCTest
 
 import Macros
 
-class SimpleTests: XCTestCase {
+class WithTracerTests: XCTestCase {
     let testMacros: [String: Macro.Type] = [
-        "WithMemoir": WithMemoirMacro.self,
+        "WithTracer": WithTracerMacro.self,
     ]
 
     func testEmpty() throws {
         assertMacroExpansion(
                 #"""
-                @WithMemoir({ PrintMemoir() })
+                @WithTracer
                 class Test {
                 }
                 """#,
             expandedSource:
                 """
                 class Test {
-
-                    var $tracer: Tracer = .type(Test.self)
-
-                    var $memoir: TracedMemoir = TracedMemoir(tracer: .type(Test.self), memoir: {
-                            PrintMemoir()
-                        }())
+                
+                    private static let $memoirTracer: Tracer = .type(Test.self)
+                
+                    private var $memoir: TracedMemoir {
+                        AutoTracingContext.memoir
+                    }
                 }
                 """,
             macros: testMacros

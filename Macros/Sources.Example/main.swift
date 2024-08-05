@@ -7,7 +7,38 @@
 //
 
 import MemoirMacros
+import Memoirs
 
-@WithMemoir({ "Default Memoir" })
-class Test {
+let appMemoir = PrintMemoir()
+
+@WithTracer
+class Test1: @unchecked Sendable {
+    private let test2 = Test2()
+
+    @AutoTraced
+    func foo() {
+        $memoir.debug("Test log 1")
+        Task { [self] in
+            await bar()
+            test2.foo()
+        }
+    }
+
+    @AutoTraced
+    func bar() async {
+        $memoir.debug("Test log 2")
+    }
 }
+
+@WithTracer
+class Test2: @unchecked Sendable {
+    @AutoTraced
+    func foo() {
+        $memoir.debug("Test log 1")
+    }
+}
+
+let test = Test1()
+test.foo()
+
+try? await Task.sleep(for: .seconds(2))

@@ -20,9 +20,9 @@ class BasicTests: GenericTestCase {
         super.setUp()
 
         basicMemoirsWithoutCensoring = [
-            PrintMemoir(interceptor: { [self] in addIntercepted(log: $0) }),
-            NSLogMemoir(isSensitive: false, interceptor: { [self] in addIntercepted(log: $0) }),
-            OSLogMemoir(subsystem: "Test", isSensitive: false, interceptor: { [self] in addIntercepted(log: $0) }),
+            PrintMemoir(interceptor: { [self] in await resultSaver.append(log: $0) }),
+            NSLogMemoir(isSensitive: false, interceptor: { [self] in await resultSaver.append(log: $0) }),
+            OSLogMemoir(subsystem: "Test", isSensitive: false, interceptor: { [self] in await resultSaver.append(log: $0) }),
         ]
     }
 
@@ -32,7 +32,7 @@ class BasicTests: GenericTestCase {
     }()
 
     public func testAllLogOverloads() async throws {
-        let memoir: Memoir = PrintMemoir(time: .formatter(PrintMemoir.fullDateFormatter), interceptor: { [self] in addIntercepted(log: $0) })
+        let memoir: Memoir = PrintMemoir(time: .formatter(PrintMemoir.fullDateFormatter), interceptor: { [self] in await resultSaver.append(log: $0) })
         let tracer: Tracer = .label("TestTracer")
 
         memoir.log(level: .info, "Test log 1", meta: [ "Test Key": "Test Value" ], tracers: [ tracer ], timeIntervalSinceReferenceDate: referenceDate, file: "file", function: "function", line: 239)
@@ -77,13 +77,13 @@ class BasicTests: GenericTestCase {
     ]
 
     func testConfigureOutput() async throws {
-        let memoir = PrintMemoir(interceptor: { [self] in addIntercepted(log: $0) })
+        let memoir = PrintMemoir(interceptor: { [self] in await resultSaver.append(log: $0) })
         for (level, string) in levelMarkers {
             var probe = simpleProbe(memoir: memoir)
             probe.level = level
             let log = try await expectLog(probe: probe)
             if !log.contains(string) {
-                throw Problem.noLabelInLog(memoir)
+                throw Problem.noLabelInLog(memoir, string)
             }
         }
     }
@@ -92,36 +92,35 @@ class BasicTests: GenericTestCase {
         for memoir: Memoir in basicMemoirsWithoutCensoring {
             let probe = simpleProbe(memoir: memoir)
             let log = try await expectLog(probe: probe)
-            if !log.contains(probe.label) { throw Problem.noLabelInLog(memoir) }
-            if !log.contains(probe.censoredMessage) { throw Problem.noMessageInLog(memoir) }
+            if !log.contains(probe.label) { throw Problem.noLabelInLog(memoir, probe.label) }
+            if !log.contains(probe.censoredMessage) { throw Problem.noMessageInLog(memoir, probe.censoredMessage) }
         }
     }
 
     func testTracedMemoir() async throws {
         let allLevels: [LogLevel] = [ .verbose, .debug, .info, .warning, .error, .critical ]
-        let printMemoir = PrintMemoir(interceptor: { [self] in addIntercepted(log: $0) })
-        let memoir = TracedMemoir(label: "label_\(Int.random(in: Int.min ... Int.max))", memoir: printMemoir, useSyncOutput: true)
+        let printMemoir = PrintMemoir(shortTracers: true, interceptor: { [self] in await resultSaver.append(log: $0) })
+        let memoir = TracedMemoir(label: "label_\(Int.random(in: Int.min ... Int.max))", memoir: printMemoir)
         for level in allLevels {
             var probe = simpleProbe(memoir: memoir)
             probe.level = level
-            try await logShouldPresent(probe: probe, memoir: memoir)
+            try await logShouldPresent(probe: probe)
         }
     }
 
     func testLabeledScopedLogger() async throws {
         let allLevels: [LogLevel] = [ .verbose, .debug, .info, .warning, .error, .critical ]
-        let printMemoir = PrintMemoir(tracerFilter: { _ in false }, interceptor: { [self] in addIntercepted(log: $0) })
+        let printMemoir = PrintMemoir(tracerFilter: { _ in false }, interceptor: { [self] in await resultSaver.append(log: $0) })
         let tracer: Tracer = .label("tracer_\(Int.random(in: Int.min ... Int.max))")
         let memoir = TracedMemoir(
             label: "label_\(Int.random(in: Int.min ... Int.max))",
-            memoir: TracedMemoir(tracer: tracer, meta: [:], memoir: printMemoir, useSyncOutput: true),
-            useSyncOutput: true
+            memoir: TracedMemoir(tracer: tracer, meta: [:], memoir: printMemoir)
         )
         for level in allLevels {
             var probe = simpleProbe(memoir: memoir)
             probe.tracers = [ tracer ]
             probe.level = level
-            try await logShouldPresent(probe: probe, memoir: memoir)
+            try await logShouldPresent(probe: probe)
         }
     }
 
@@ -148,7 +147,7 @@ class BasicTests: GenericTestCase {
             ]
         for (configurationLevel, configurationIndex) in allConfigurationLevels {
             let memoir = FilteringMemoir(
-                memoir: PrintMemoir(interceptor: { [self] in addIntercepted(log: $0) }),
+                memoir: PrintMemoir(interceptor: { [self] in await resultSaver.append(log: $0) }),
                 defaultConfiguration: .init(minLevelShown: configurationLevel),
                 configurationsByTracer: [:]
             )
@@ -160,7 +159,7 @@ class BasicTests: GenericTestCase {
 
     func testFilteringLoggerOnAll() async throws {
         let memoir = FilteringMemoir(
-            memoir: PrintMemoir(interceptor: { [self] in addIntercepted(log: $0) }),
+            memoir: PrintMemoir(interceptor: { [self] in await resultSaver.append(log: $0) }),
             defaultConfiguration: .init(minLevelShown: .all),
             configurationsByTracer: [:]
         )
@@ -169,7 +168,7 @@ class BasicTests: GenericTestCase {
 
     func testFilteringLoggerOffAll() async throws {
         let memoir = FilteringMemoir(
-            memoir: PrintMemoir(interceptor: { [self] in addIntercepted(log: $0) }),
+            memoir: PrintMemoir(interceptor: { [self] in await resultSaver.append(log: $0) }),
             defaultConfiguration: .init(minLevelShown: .disabled),
             configurationsByTracer: [:]
         )
@@ -178,7 +177,7 @@ class BasicTests: GenericTestCase {
 
     func testFilteringLoggerOnInfo() async throws {
         let memoir = FilteringMemoir(
-            memoir: PrintMemoir(interceptor: { [self] in addIntercepted(log: $0) }),
+            memoir: PrintMemoir(interceptor: { [self] in await resultSaver.append(log: $0) }),
             defaultConfiguration: .init(minLevelShown: .info),
             configurationsByTracer: [:]
         )
@@ -187,7 +186,7 @@ class BasicTests: GenericTestCase {
 
     func testFilteringLoggerOffInfo() async throws {
         let memoir = FilteringMemoir(
-            memoir: PrintMemoir(interceptor: { [self] in addIntercepted(log: $0) }),
+            memoir: PrintMemoir(interceptor: { [self] in await resultSaver.append(log: $0) }),
             defaultConfiguration: .init(minLevelShown: .warning),
             configurationsByTracer: [:]
         )
@@ -195,12 +194,12 @@ class BasicTests: GenericTestCase {
     }
 
     func testMultiplexingLogger() async throws {
-        let memoir = MultiplexingMemoir(memoirs: [ PrintMemoir(interceptor: { [self] in addIntercepted(log: $0) }), PrintMemoir(interceptor: { [self] in addIntercepted(log: $0) }) ])
+        let memoir = MultiplexingMemoir(memoirs: [ PrintMemoir(interceptor: { [self] in await resultSaver.append(log: $0) }), PrintMemoir(interceptor: { [self] in await resultSaver.append(log: $0) }) ])
         let probe = simpleProbe(memoir: memoir)
         for _ in 0 ..< 2 { // 2 same logs
             let log = try await expectLog(probe: probe)
-            if !log.contains(probe.label) { throw Problem.noLabelInLog(memoir) }
-            if !log.contains(probe.censoredMessage) { throw Problem.noMessageInLog(memoir) }
+            if !log.contains(probe.label) { throw Problem.noLabelInLog(memoir, probe.label) }
+            if !log.contains(probe.censoredMessage) { throw Problem.noMessageInLog(memoir, probe.censoredMessage) }
         }
     }
 
@@ -214,26 +213,26 @@ class BasicTests: GenericTestCase {
         var probe = simpleProbe(memoir: memoir)
         updateProbe(&probe)
         if logShouldPresent {
-            try await self.logShouldPresent(probe: probe, memoir: memoir, file: file, line: line)
+            try await self.logShouldPresent(probe: probe, file: file, line: line)
         } else {
             try await expectNoLog(probe: probe, file: file, line: line)
         }
     }
 
-    private func logShouldPresent(probe: LogProbe, memoir: Memoir, file: String = #fileID, line: UInt = #line) async throws {
-        try await Task.sleep(nanoseconds: 1_000_000_000 / 1000)
+    private func logShouldPresent(probe: LogProbe, file: String = #fileID, line: UInt = #line) async throws {
+        try await Task.sleep(for: .seconds(0.01))
         let log = try await expectLog(probe: probe)
         if !log.contains(probe.label) {
             fputs("\nProblem at \(file):\(line)\n", stderr)
-            throw Problem.noLabelInLog(memoir)
+            throw Problem.noLabelInLog(probe.memoir, probe.label)
         }
         if !log.contains(probe.censoredMessage) {
             fputs("\nProblem at \(file):\(line)\n", stderr)
-            throw Problem.noMessageInLog(memoir)
+            throw Problem.noMessageInLog(probe.memoir, probe.censoredMessage)
         }
         if !log.contains(levelMarkers[probe.level] ?? "NOT_A_MARKER") {
             fputs("\nProblem at \(file):\(line)\n", stderr)
-            throw Problem.wrongLevelInLog(memoir)
+            throw Problem.wrongLevelInLog(probe.memoir)
         }
     }
 }

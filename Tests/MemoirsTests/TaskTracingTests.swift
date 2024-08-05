@@ -40,7 +40,7 @@ class TaskTracingTests: XCTestCase {
     }
 
     func testDetachedTracing() async throws {
-        class TestTraceable {
+        class TestTraceable: @unchecked Sendable {
             let expectation = XCTestExpectation(description: "Detached Tracing")
             var result: String?
 

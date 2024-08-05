@@ -10,6 +10,12 @@
 import Foundation
 
 @available(iOS 15, *)
+public enum AutoTracingContext {
+    @TaskLocal
+    public static var memoir: TracedMemoir = TracedMemoir(label: "Root", memoir: PrintMemoir(tracerFilter: { _ in true }))
+}
+
+@available(iOS 15, *)
 public enum Tracing {
     @TaskLocal
     public static var localValue: TracedMemoir?

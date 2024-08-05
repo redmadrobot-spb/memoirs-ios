@@ -15,12 +15,12 @@ public final class NSLogMemoir: Memoir {
     let output: Output
 
     @usableFromInline
-    let interceptor: (@Sendable (String) -> Void)?
+    let interceptor: (@Sendable (String) async -> Void)?
 
     public init(
         isSensitive: Bool, tracerFilter: @escaping @Sendable (Tracer) -> Bool = { _ in false },
         markers: Output.Markers = .init(),
-        interceptor: (@Sendable (String) -> Void)? = nil
+        interceptor: (@Sendable (String) async -> Void)? = nil
     ) {
         self.interceptor = interceptor
         output = Output(
@@ -65,6 +65,8 @@ public final class NSLogMemoir: Memoir {
                 ).joined(separator: " ")
         }
         NSLog("%@", description)
-        interceptor?(description)
+        Task {
+            await interceptor?(description)
+        }
     }
 }

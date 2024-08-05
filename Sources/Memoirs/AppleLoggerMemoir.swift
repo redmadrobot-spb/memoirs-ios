@@ -35,13 +35,13 @@ public final class AppleLoggerMemoir: Memoir {
     private let output: Output
     private let loggers: Loggers
 
-    private let interceptor: (@Sendable (String) -> Void)?
+    private let interceptor: (@Sendable (String) async -> Void)?
     private static let asyncTaskQueue: AsyncTaskQueue = .init(memoir: PrintMemoir())
 
     public init(
         hideSensitiveValues: Bool, subsystem: String, tracerFilter: @escaping @Sendable (Tracer) -> Bool = { _ in false },
         markers: Output.Markers = .init(),
-        interceptor: (@Sendable (String) -> Void)? = nil,
+        interceptor: (@Sendable (String) async -> Void)? = nil,
         useSyncOutput: Bool = false
     ) {
         self.interceptor = interceptor
@@ -123,7 +123,11 @@ public final class AppleLoggerMemoir: Memoir {
                 osLogClosure($0, description)
             }
         }
-        interceptor?(description)
+        if let interceptor {
+            Task.detached { [interceptor] in
+                await interceptor(description)
+            }
+        }
     }
 }
 

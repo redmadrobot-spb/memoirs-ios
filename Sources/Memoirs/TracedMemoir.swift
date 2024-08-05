@@ -96,6 +96,7 @@ public final class TracedMemoir: Memoir {
     let traceData: TraceData
 
     private let memoir: Memoir
+    private let initTracer: Tracer?
     public var tracer: Tracer {
         get async {
             await traceData.tracer
@@ -109,16 +110,18 @@ public final class TracedMemoir: Memoir {
 
     private static let asyncTaskQueue: AsyncTaskQueue = .init(memoir: PrintMemoir())
 
-    private init(traceData: TraceData, memoir: Memoir, useSyncOutput: Bool = false) {
+    private init(tracer: Tracer, traceData: TraceData, memoir: Memoir) {
+        self.initTracer = tracer
         self.traceData = traceData
         self.memoir = memoir
     }
 
     public init(
         tracer: Tracer, meta: [String: SafeString] = [:], memoir: Memoir,
-        useSyncOutput: Bool = false,
         file: String = #fileID, function: String = #function, line: UInt = #line
     ) {
+        initTracer = tracer
+
         if let parentMemoir = memoir as? TracedMemoir {
             traceData = .init(tracer: tracer, parent: parentMemoir.traceData)
             self.memoir = parentMemoir.memoir
@@ -140,25 +143,21 @@ public final class TracedMemoir: Memoir {
 
     public convenience init(
         label: String, memoir: Memoir,
-        useSyncOutput: Bool = false,
         file: String = #fileID, function: String = #function, line: UInt = #line
     ) {
         self.init(
             tracer: .label(label), meta: [:], memoir: memoir,
-            useSyncOutput: useSyncOutput,
             file: file, function: function, line: line
         )
     }
 
     public convenience init(
         object: Any, memoir: Memoir,
-        useSyncOutput: Bool = false,
         file: String = #fileID, function: String = #function, line: UInt = #line
     ) {
         let tracer = Memoirs.tracer(for: object)
         self.init(
             tracer: tracer, meta: [:], memoir: memoir,
-            useSyncOutput: useSyncOutput,
             file: file, function: function, line: line
         )
     }
@@ -168,7 +167,15 @@ public final class TracedMemoir: Memoir {
         Task {
             await traceData.postInitialize()
         }
-        return TracedMemoir(traceData: traceData, memoir: memoir)
+        return TracedMemoir(tracer: tracer, traceData: traceData, memoir: memoir)
+    }
+
+    public func withUnique(tracer: Tracer) -> TracedMemoir {
+        if initTracer == tracer {
+            self
+        } else {
+            self.with(tracer: tracer)
+        }
     }
 
     public func updateTracer(to tracer: Tracer) async {
