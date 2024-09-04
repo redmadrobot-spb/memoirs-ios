@@ -9,7 +9,7 @@
 
 import Foundation
 import Memoirs
-import MemoirMacros
+//import MemoirMacros
 
 // https://github.com/minimaxir/big-list-of-naughty-strings
 private var naughtyStrings: [String] = {

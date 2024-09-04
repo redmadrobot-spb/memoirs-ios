@@ -29,11 +29,9 @@ class WithTracerTests: XCTestCase {
                 """
                 class Test {
                 
-                    private static let $memoirTracer: Tracer = .type(Test.self)
-                
-                    private var $memoir: TracedMemoir {
-                        AutoTracingContext.memoir
-                    }
+                    private static nonisolated let $memoirTracer: Tracer = .type(Test.self)
+
+                    private nonisolated let $memoir: TracedMemoir = TracedMemoir(tracer: .type(Test.self), memoir: AutoTracingContext.memoir)
                 }
                 """,
             macros: testMacros

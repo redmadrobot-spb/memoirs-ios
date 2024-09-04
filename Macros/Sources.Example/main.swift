@@ -20,12 +20,19 @@ class Test1: @unchecked Sendable {
         $memoir.debug("Test log 1")
         Task { [self] in
             await bar()
+            await barMainActor()
             test2.foo()
         }
     }
 
     @AutoTraced
     func bar() async {
+        $memoir.debug("Test log 2")
+        await barMainActor()
+    }
+
+    @MainActor @AutoTraced
+    func barMainActor() async {
         $memoir.debug("Test log 2")
     }
 }

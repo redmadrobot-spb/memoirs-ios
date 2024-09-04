@@ -12,19 +12,31 @@ import SwiftSyntaxMacros
 
 public struct AutoTracedMacro: BodyMacro {
     public static func expansion(
-        of node: SwiftSyntax.AttributeSyntax,
-        providingBodyFor declaration: some SwiftSyntax.DeclSyntaxProtocol & SwiftSyntax.WithOptionalCodeBlockSyntax,
-        in context: some SwiftSyntaxMacros.MacroExpansionContext
-    ) throws -> [SwiftSyntax.CodeBlockItemSyntax] {
+        of node: AttributeSyntax,
+        providingBodyFor declaration: some DeclSyntaxProtocol & WithOptionalCodeBlockSyntax,
+        in context: some MacroExpansionContext
+    ) throws -> [CodeBlockItemSyntax] {
         guard let statements = declaration.body?.statements else { return [] }
 
-        return [
-            """
-            AutoTracingContext.$memoir.withValue(AutoTracingContext.memoir.withUnique(tracer: Self.$memoirTracer)) {
-                let $memoir = self.$memoir     
+        let isAsync = declaration.as(FunctionDeclSyntax.self)?.signature.effectSpecifiers?.asyncSpecifier != nil
+        return if isAsync {
+            [
+                """
+                let $memoir = AutoTracingContext.memoir.withUnique(tracer: Self.$memoirTracer)
+                await AutoTracingContext.$memoir.withValue($memoir) {
                 \(statements)
-            }
-            """
-        ]
+                }
+                """
+            ]
+        } else {
+            [
+                """
+                let $memoir = AutoTracingContext.memoir.withUnique(tracer: Self.$memoirTracer)
+                AutoTracingContext.$memoir.withValue($memoir) {
+                \(statements)
+                }
+                """
+            ]
+        }
     }
 }

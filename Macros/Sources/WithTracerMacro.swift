@@ -31,8 +31,8 @@ public struct WithTracerMacro: MemberMacro {
     ) throws -> [DeclSyntax] {
         let name = try self.name(providingMembersOf: declaration)
         return [
-            "private static let $memoirTracer: Tracer = .type(\(raw: name).self)",
-            "private var $memoir: TracedMemoir { AutoTracingContext.memoir }",
+            "private static nonisolated let $memoirTracer: Tracer = .type(\(raw: name).self)",
+            "private nonisolated let $memoir: TracedMemoir = TracedMemoir(tracer: .type(\(raw: name).self), memoir: AutoTracingContext.memoir)",
         ]
     }
 

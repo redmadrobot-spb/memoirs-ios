@@ -1,9 +1,9 @@
 //
-// FileMemoir
+// PlainTextFileMemoir
 // Memoirs
 //
-// Created by Dmitry Shadrin on 27 December 2019. Updated by Alex Babaev
-// Copyright © 2021 Alex Babaev. All rights reserved.
+// Created by Alexander Babaev on 12 June 2024. Updated by Alex Babaev
+// Copyright © 2024 Alex Babaev. All rights reserved.
 // License: MIT License, https://github.com/redmadrobot-spb/memoirs-ios/blob/main/LICENSE
 //
 
@@ -11,7 +11,7 @@ import Foundation
 
 /// `(Memoir)` implementation which outputs logs to the specified file.
 /// `FileMemoir` uses the same configuration as `(PrintMemoir)`.
-public final class FileMemoir: Memoir {
+public final class PlainTextFileMemoir: Memoir {
     @usableFromInline
     let time: PrintMemoir.Time
     @usableFromInline
@@ -86,36 +86,33 @@ public final class FileMemoir: Memoir {
 
         let toOutput = parts.joined(separator: " ")
         do {
-            try toOutput.append(toFile: fileUrl)
-
+            try append(string: toOutput, toFile: fileUrl)
         } catch {
             NSLog("Error while writing log to the file “\(fileUrl)”: \(error)")
         }
         interceptor?(toOutput)
     }
 
-    private func rotateLogFile() {
-        if let resourceValues = try? fileUrl.resourceValues(forKeys: [ .fileSizeKey ]), resourceValues.fileSize ?? 0 > maxFileSizeBytes {
-            let otherLogFile = fileUrl.appendingPathExtension(".previous")
-            do {
-                try FileManager.default.removeItem(at: otherLogFile)
-                try FileManager.default.moveItem(at: fileUrl, to: otherLogFile)
-            } catch {
-                NSLog("Error while rotating log file “\(fileUrl)” with “\(otherLogFile)” \(error)")
+    @usableFromInline
+    let queue: DispatchQueue = .init(label: "memoir.fileQueue.\(UUID())")
+
+    @inlinable
+    func append(string: String, toFile fileUrl: URL) throws {
+        let action: @Sendable () -> Void = {
+            let data = Data(string.utf8)
+            if let fileHandle = try? FileHandle(forWritingTo: fileUrl) {
+                defer { fileHandle.closeFile() }
+                fileHandle.seekToEndOfFile()
+                fileHandle.write(data)
+            } else {
+                do {
+                    try data.write(to: fileUrl, options: .atomic)
+                } catch {
+                    NSLog("Error while writing log to the file “\(fileUrl)”: \(error)")
+                }
             }
         }
-    }
-}
 
-public extension String {
-    func append(toFile fileUrl: URL) throws {
-        let data = Data(self.utf8)
-        if let fileHandle = try? FileHandle(forWritingTo: fileUrl) {
-            defer { fileHandle.closeFile() }
-            fileHandle.seekToEndOfFile()
-            fileHandle.write(data)
-        } else {
-            try data.write(to: fileUrl, options: .atomic)
-        }
+        queue.async(execute: action)
     }
 }

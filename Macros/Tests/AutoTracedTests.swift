@@ -34,18 +34,16 @@ class AutoTracedTests: XCTestCase {
                 """
                 class Test {
                     func foo() {
-                        AutoTracingContext.$memoir.withValue(AutoTracingContext.memoir.withUnique(tracer: Self.$memoirTracer)) {
-                            let $memoir = self.$memoir
-
-                                    $memoir.debug("Debug log")
+                        let $memoir = AutoTracingContext.memoir.withUnique(tracer: Self.$memoirTracer)
+                        AutoTracingContext.$memoir.withValue($memoir) {
+                
+                                $memoir.debug("Debug log")
                         }
                     }
+
+                    private static nonisolated let $memoirTracer: Tracer = .type(Test.self)
                 
-                    private static let $memoirTracer: Tracer = .type(Test.self)
-                
-                    private var $memoir: TracedMemoir {
-                        AutoTracingContext.memoir
-                    }
+                    private nonisolated let $memoir: TracedMemoir = TracedMemoir(tracer: .type(Test.self), memoir: AutoTracingContext.memoir)
                 }
                 """,
             macros: testMacros
