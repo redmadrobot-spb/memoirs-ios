@@ -32,7 +32,7 @@ public struct SafeStringInterpolation: StringInterpolationProtocol {
         interpolations.append(.open(interpolation))
     }
 
-    public mutating func appendInterpolation(interpolation: Any, sensitive: Any) {
+    public mutating func appendInterpolation(safe interpolation: Any, sensitive: Any) {
         interpolations.append(.select(open: interpolation, sensitive: sensitive))
     }
 }
