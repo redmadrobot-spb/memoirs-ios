@@ -11,6 +11,7 @@ public struct SafeStringInterpolation: StringInterpolationProtocol {
     enum Kind: @unchecked Sendable {
         case open(Any)
         case sensitive(Any)
+        case select(open: Any, sensitive: Any)
     }
 
     var interpolations: [Kind] = []
@@ -29,5 +30,9 @@ public struct SafeStringInterpolation: StringInterpolationProtocol {
 
     public mutating func appendInterpolation(safe interpolation: Any) {
         interpolations.append(.open(interpolation))
+    }
+
+    public mutating func appendInterpolation(interpolation: Any, sensitive: Any) {
+        interpolations.append(.select(open: interpolation, sensitive: sensitive))
     }
 }

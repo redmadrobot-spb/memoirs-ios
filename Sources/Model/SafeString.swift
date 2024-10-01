@@ -45,6 +45,20 @@ public struct SafeString: CustomStringConvertible, ExpressibleByStringLiteral, E
     public func string(hideSensitiveValues: Bool) -> String {
         interpolations.map { interpolation in
                 switch interpolation {
+                    case .select(let open as String, let sensitive as String):
+                        return hideSensitiveValues ? sensitive : open
+                    case .select(let open as SafeStringConvertible, let sensitive as SafeStringConvertible):
+                        return hideSensitiveValues
+                            ? sensitive.logDescription(hideSensitiveValues: hideSensitiveValues)
+                            : open.logDescription(hideSensitiveValues: hideSensitiveValues)
+                    case .select(let open as SafeString, let sensitive as SafeString):
+                        return hideSensitiveValues
+                            ? sensitive.string(hideSensitiveValues: hideSensitiveValues)
+                            : open.string(hideSensitiveValues: hideSensitiveValues)
+                    case .select(let open, let sensitive):
+                        return hideSensitiveValues
+                            ? "\(sensitive)"
+                            : "\(open)"
                     case .open(let value as String):
                         return value
                     case .open(let value as SafeStringConvertible):
