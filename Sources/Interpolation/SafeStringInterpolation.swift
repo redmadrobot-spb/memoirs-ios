@@ -25,6 +25,10 @@ public struct SafeStringInterpolation: StringInterpolationProtocol {
     }
 
     public mutating func appendInterpolation(_ interpolation: Any) {
+        interpolations.append(.open(interpolation))
+    }
+
+    public mutating func appendInterpolation(sensitive interpolation: Any) {
         interpolations.append(.sensitive(interpolation))
     }
 
