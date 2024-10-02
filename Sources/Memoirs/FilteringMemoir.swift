@@ -10,7 +10,7 @@
 import Foundation
 
 /// Memoir that filter items by level and redirects them to the target memoir.
-public final class FilteringMemoir: Memoir {
+public final class FilteringMemoir: Memoir, @unchecked Sendable {
     public struct Configuration: Sendable {
         @frozen
         public enum Level: Sendable {
@@ -67,8 +67,8 @@ public final class FilteringMemoir: Memoir {
         }
     }
 
-    public let configurationsByTracer: [Tracer: Configuration]
-    public let defaultConfiguration: Configuration
+    public private(set) var configurationsByTracer: [Tracer: Configuration]
+    public private(set) var defaultConfiguration: Configuration
 
     @usableFromInline
     let memoir: Memoir
@@ -88,6 +88,14 @@ public final class FilteringMemoir: Memoir {
         self.defaultConfiguration = defaultConfiguration
     }
 
+    public func update(defaultConfiguration: Configuration) {
+        self.defaultConfiguration = defaultConfiguration
+    }
+
+    public func update(configurationsByTracer: [Tracer: Configuration]) {
+        self.configurationsByTracer = configurationsByTracer
+    }
+
     @inlinable
     public func append(
         _ item: MemoirItem,
@@ -97,6 +105,9 @@ public final class FilteringMemoir: Memoir {
         timeIntervalSinceReferenceDate: TimeInterval,
         file: String, function: String, line: UInt
     ) rethrows {
+        let defaultConfiguration = defaultConfiguration
+        let configurationsByTracer = configurationsByTracer
+
         let allowances: [Bool] = configurationsByTracer
             .lazy
             .filter { tracer, configuration in
