@@ -116,7 +116,7 @@ public final class PlainTextFileMemoir: Memoir {
         queue.async(execute: action)
     }
 
-    func waitFor() {
+    public func waitFor() {
         queue.async(flags: [ .barrier ]) {
             NSLog("Memoir items should be written to file")
         }
