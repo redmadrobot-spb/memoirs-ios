@@ -220,7 +220,11 @@ class BasicTests: GenericTestCase {
     }
 
     private func logShouldPresent(probe: LogProbe, file: String = #fileID, line: UInt = #line) async throws {
-        try await Task.sleep(for: .seconds(0.01))
+        if #available(iOS 16.0, *) {
+            try await Task.sleep(for: .seconds(0.01))
+        } else {
+            try await Task.sleep(nanoseconds: 10_000_000)
+        }
         let log = try await expectLog(probe: probe)
         if !log.contains(probe.label) {
             fputs("\nProblem at \(file):\(line)\n", stderr)

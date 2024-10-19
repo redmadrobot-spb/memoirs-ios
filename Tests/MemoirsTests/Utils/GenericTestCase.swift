@@ -105,7 +105,11 @@ class GenericTestCase: XCTestCase {
     }
 
     func logResult() async throws -> String? {
-        try await Task.sleep(for: .seconds(0.01))
+        if #available(iOS 16.0, *) {
+            try await Task.sleep(for: .seconds(0.01))
+        } else {
+            try await Task.sleep(nanoseconds: 10_000_000)
+        }
         return await resultSaver.pop
     }
 
