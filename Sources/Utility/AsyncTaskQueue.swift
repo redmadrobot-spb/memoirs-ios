@@ -6,7 +6,7 @@
 // Copyright © 2022 Alex Babaev. All rights reserved.
 //
 
-import os
+//import os
 import Foundation
 
 //public typealias AsyncTaskQueue = AsyncTaskQueueArray
@@ -128,59 +128,59 @@ public final class AsyncTaskQueueList: @unchecked Sendable {
     }
 }
 
-// slowest for now
-public final class AsyncTaskQueueWithLocks: @unchecked Sendable {
-    public typealias Action = @Sendable () async throws -> Void
-
-    var executeAlongsideCallback: (() -> Void)?
-
-    private let memoir: Memoir
-
-    public init(memoir: Memoir) {
-        self.memoir = memoir
-    }
-
-    private var actions: [Action] = []
-    private let protectedState = OSAllocatedUnfairLock(initialState: Void())
-
-    public func add(closure: @escaping Action) {
-        protectedState.withLock {
-            actions.append(closure)
-        }
-
-        self.startNext()
-    }
-
-    private var isExecuting: Bool = false
-
-    private func startNext() {
-        let closureToExecute: Action? = protectedState.withLock {
-            let result = !isExecuting && !actions.isEmpty
-            if result {
-                isExecuting = true
-            }
-
-            return result ? actions.removeFirst() : nil
-        }
-        guard let closureToExecute else {
-            isExecuting = false
-            return
-        }
-
-        Task {
-            do {
-                try await closureToExecute()
-                executeAlongsideCallback?()
-            } catch {
-                memoir.error("Problem while executing queue task: \(error)")
-            }
-            let isEmpty = protectedState.withLock {
-                isExecuting = false
-                return actions.isEmpty
-            }
-            if !isEmpty {
-                startNext()
-            }
-        }
-    }
-}
+//// slowest for now
+//public final class AsyncTaskQueueWithLocks: @unchecked Sendable {
+//    public typealias Action = @Sendable () async throws -> Void
+//
+//    var executeAlongsideCallback: (() -> Void)?
+//
+//    private let memoir: Memoir
+//
+//    public init(memoir: Memoir) {
+//        self.memoir = memoir
+//    }
+//
+//    private var actions: [Action] = []
+//    private let protectedState = OSAllocatedUnfairLock(initialState: Void())
+//
+//    public func add(closure: @escaping Action) {
+//        protectedState.withLock {
+//            actions.append(closure)
+//        }
+//
+//        self.startNext()
+//    }
+//
+//    private var isExecuting: Bool = false
+//
+//    private func startNext() {
+//        let closureToExecute: Action? = protectedState.withLock {
+//            let result = !isExecuting && !actions.isEmpty
+//            if result {
+//                isExecuting = true
+//            }
+//
+//            return result ? actions.removeFirst() : nil
+//        }
+//        guard let closureToExecute else {
+//            isExecuting = false
+//            return
+//        }
+//
+//        Task {
+//            do {
+//                try await closureToExecute()
+//                executeAlongsideCallback?()
+//            } catch {
+//                memoir.error("Problem while executing queue task: \(error)")
+//            }
+//            let isEmpty = protectedState.withLock {
+//                isExecuting = false
+//                return actions.isEmpty
+//            }
+//            if !isEmpty {
+//                startNext()
+//            }
+//        }
+//    }
+//}
