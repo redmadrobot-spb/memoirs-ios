@@ -56,6 +56,10 @@ struct TestStruct {
 @available(iOS 15, *)
 @WithMemoir(rootMemoir)
 class MacroTests: XCTestCase {
+    func testEmpty() {
+        // for Xcode test results to work properly
+    }
+
     func testMacros() async {
         let testStruct = TestStruct()
         testStruct.testMemoirUsage()

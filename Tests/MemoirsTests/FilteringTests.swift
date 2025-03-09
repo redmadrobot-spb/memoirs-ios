@@ -123,8 +123,20 @@ class FilteringTests: GenericTestCase {
     }
 
     func testTracingMemoirSpeed() async throws {
+        class Counter: @unchecked Sendable {
+            var counter: Int
+
+            init(counter: Int) {
+                self.counter = counter
+            }
+        }
+
+        let numberOfOutputs = 5000
+        let counter = Counter(counter: numberOfOutputs)
+
         let tracedMemoir = TracedMemoir(object: self, memoir: VoidMemoir())
 //        let tracedMemoir = TracedMemoir(object: self, memoir: PrintMemoir(time: .disabled))
+        TracedMemoir.asyncTaskQueue.executeAlongsideCallback = { counter.counter -= 1 }
 
         measure {
             for _ in 0 ..< 1000 {
@@ -134,6 +146,10 @@ class FilteringTests: GenericTestCase {
                     file: "Some Fime", function: "function", line: 239
                 )
             }
+        }
+
+        while counter.counter > 0 {
+            try await Task.sleep(for: .seconds(0.1))
         }
     }
 

@@ -85,6 +85,9 @@ class GenericTestCase: XCTestCase {
     public let markers: Output.Markers = .init()
     let resultSaver: ResultSaver = .init()
 
+    func testEmpty() {
+    }
+
     func expectLog(probe: LogProbe) async throws -> String {
         await resultSaver.clear()
         probe.memoir.log(level: probe.level, probe.message, tracers: probe.tracers)
