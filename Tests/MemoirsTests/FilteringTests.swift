@@ -14,7 +14,7 @@ import Foundation
 
 // swiftlint:disable line_length
 class FilteringTests: GenericTestCase {
-    private var lastInterceptedOutput: String = ""
+    private var lastInterceptedOutput: String?
     private var printMemoir: PrintMemoir!
 
     override func setUp() {
@@ -122,6 +122,48 @@ class FilteringTests: GenericTestCase {
         try await checkAllThings(memoir: memoirNested, infoLog: true, debugLog: true, event: true, tracer: true, measurement: true)
     }
 
+    func testTracingMemoirSpeed() async throws {
+        let tracedMemoir = TracedMemoir(object: self, memoir: PrintMemoir(time: .disabled))
+
+        measure {
+            for _ in 0 ..< 1000 {
+                tracedMemoir.append(
+                    .log(level: .info), message: "Simple string", meta: nil,
+                    tracers: [], timeIntervalSinceReferenceDate: Date.timeIntervalSinceReferenceDate,
+                    file: "Some Fime", function: "function", line: 239
+                )
+            }
+        }
+    }
+
+    func testTracingMemoirSpeedConcurrent() async throws {
+        let tracedMemoir = TracedMemoir(object: self, memoir: VoidMemoir())
+//        let tracedMemoir = TracedMemoir(object: self, memoir: PrintMemoir(time: .disabled))
+
+        let threads = 100
+        let instances = 3000
+
+        var counter = threads * instances
+        TracedMemoir.asyncTaskQueue.executeAlongsideCallback = {
+            counter -= 1
+        }
+        for thread in 0 ..< threads {
+            Task.detached {
+                for instance in 0 ..< instances {
+                    tracedMemoir.append(
+                        .log(level: .info), message: "S \(thread) \(instance)", meta: nil,
+                        tracers: [], timeIntervalSinceReferenceDate: Date.timeIntervalSinceReferenceDate,
+                        file: "Some File", function: "function", line: 239
+                    )
+                }
+            }
+        }
+
+        while counter > 0 {
+            try await Task.sleep(for: .seconds(0.1))
+        }
+    }
+
     private func checkAllThings(
         memoir: Memoir, infoLog: Bool, debugLog: Bool, event: Bool, tracer: Bool, measurement: Bool,
         file: StaticString = #file, line: UInt = #line
@@ -142,17 +184,24 @@ class FilteringTests: GenericTestCase {
     private func check(
         memoir: Memoir, item: MemoirItem, message: SafeString = "", testValue: String, mustPresent: Bool, file: StaticString = #file, line: UInt = #line
     ) async throws {
+        lastInterceptedOutput = nil
         memoir.append(
             item, message: message, meta: nil, tracers: [], timeIntervalSinceReferenceDate: Date.timeIntervalSinceReferenceDate,
             file: "", function: "", line: 0
         )
-        try await Task.sleep(nanoseconds: 1_000_000_0)
-
-        if mustPresent && !lastInterceptedOutput.contains(testValue) {
-            XCTFail("Test string \"\(testValue)\" is NOT found in \"\(lastInterceptedOutput)\"", file: file, line: line)
-        } else if !mustPresent && lastInterceptedOutput.contains(testValue) {
-            XCTFail("Test string \"\(testValue)\" is FOUND (but not needed) in \"\(lastInterceptedOutput)\"", file: file, line: line)
+        let startTime = Date.timeIntervalSinceReferenceDate
+        while lastInterceptedOutput == nil {
+            try await Task.sleep(for: .seconds(0.001))
+            if Date.timeIntervalSinceReferenceDate - startTime > 0.01 {
+                break
+            }
         }
-        lastInterceptedOutput = ""
+        let result = lastInterceptedOutput
+
+        if mustPresent, let result, !result.contains(testValue) {
+            XCTFail("Test string \"\(testValue)\" is NOT found in \"\(result)\"", file: file, line: line)
+        } else if !mustPresent, let result, result.contains(testValue) {
+            XCTFail("Test string \"\(testValue)\" is FOUND (but not needed) in \"\(result)\"", file: file, line: line)
+        }
     }
 }

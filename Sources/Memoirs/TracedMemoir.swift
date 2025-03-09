@@ -108,7 +108,7 @@ public final class TracedMemoir: Memoir {
         }
     }
 
-    private static let asyncTaskQueue: AsyncTaskQueue = .init(memoir: PrintMemoir())
+    internal static let asyncTaskQueue: AsyncTaskQueue = .init(memoir: PrintMemoir())
 
     private init(tracer: Tracer, traceData: TraceData, memoir: Memoir) {
         self.initTracer = tracer
