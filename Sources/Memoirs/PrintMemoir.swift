@@ -65,6 +65,9 @@ public final class PrintMemoir: Memoir {
     @usableFromInline
     let output: Output
 
+    private static let asyncTaskQueue: AsyncTaskQueue = .init(memoir: PrintMemoir())
+    private let useAsyncQueue: Bool
+
     @usableFromInline
     let interceptor: (@Sendable (String) async -> Void)?
 
@@ -73,6 +76,7 @@ public final class PrintMemoir: Memoir {
         time: Time = .formatter(timeOnlyDateFormatter), codePosition: CodePosition = .short, shortTracers: Bool = true,
         markers: Output.Markers = .init(),
         tracerFilter: @escaping @Sendable (Tracer) -> Bool = PrintMemoir.defaultTracerFilter,
+        useAsyncQueue: Bool = false,
         interceptor: (@Sendable (String) async -> Void)? = nil
     ) {
         output = Output(
@@ -83,10 +87,10 @@ public final class PrintMemoir: Memoir {
             tracerFilter: tracerFilter
         )
         self.time = time
+        self.useAsyncQueue = useAsyncQueue
         self.interceptor = interceptor
     }
 
-    @inlinable
     public func append(
         _ item: MemoirItem,
         message: @autoclosure () throws -> SafeString,
@@ -121,9 +125,13 @@ public final class PrintMemoir: Memoir {
         }
 
         let toOutput = parts.joined(separator: " ")
-        print(toOutput)
+        if useAsyncQueue {
+            Self.asyncTaskQueue.add { print(toOutput) }
+        } else {
+            print(toOutput)
+        }
         if let interceptor {
-            Task.detached { [interceptor] in
+            Task { [interceptor] in
                 await interceptor(toOutput)
             }
         }

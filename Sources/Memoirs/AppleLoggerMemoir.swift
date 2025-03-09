@@ -21,6 +21,16 @@ public final class AppleLoggerMemoir: Memoir {
             self.subsystem = subsystem
         }
 
+        public func logger(for tracerString: String) -> Logger {
+            if let logger = loggers[tracerString] {
+                return logger
+            } else {
+                let logger = Logger(subsystem: subsystem, category: tracerString)
+                loggers[tracerString] = logger
+                return logger
+            }
+        }
+
         public func logger(for tracerString: String, operation: @Sendable (Logger) -> Void) {
             if let logger = loggers[tracerString] {
                 operation(logger)
@@ -32,6 +42,7 @@ public final class AppleLoggerMemoir: Memoir {
         }
     }
 
+    private let subsystem: String
     private let output: Output
     private let loggers: Loggers
 
@@ -44,6 +55,7 @@ public final class AppleLoggerMemoir: Memoir {
         interceptor: (@Sendable (String) async -> Void)? = nil,
         useSyncOutput: Bool = false
     ) {
+        self.subsystem = subsystem
         self.interceptor = interceptor
         loggers = .init(subsystem: subsystem)
         output = Output(
@@ -118,13 +130,12 @@ public final class AppleLoggerMemoir: Memoir {
                 ).joined(separator: " ")
                 osLogClosure = { $0.info("\($1, privacy: .public)") }
         }
+        let logger = Logger(subsystem: subsystem, category: traceString)
         Self.asyncTaskQueue.add {
-            await self.loggers.logger(for: traceString) {
-                osLogClosure($0, description)
-            }
+            osLogClosure(logger, description)
         }
         if let interceptor {
-            Task.detached { [interceptor] in
+            Task { [interceptor] in
                 await interceptor(description)
             }
         }

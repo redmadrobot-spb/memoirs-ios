@@ -117,7 +117,7 @@ public final class OSLogMemoir: Memoir {
             await self.osLogHolder.osLog(for: label) { os_log(osLogType, log: $0, "%{public}@", description) }
         }
         if let interceptor {
-            Task.detached { [interceptor] in
+            Task { [interceptor] in
                 await interceptor(description)
             }
         }

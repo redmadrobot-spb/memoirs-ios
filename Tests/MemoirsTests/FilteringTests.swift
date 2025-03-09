@@ -123,7 +123,8 @@ class FilteringTests: GenericTestCase {
     }
 
     func testTracingMemoirSpeed() async throws {
-        let tracedMemoir = TracedMemoir(object: self, memoir: PrintMemoir(time: .disabled))
+        let tracedMemoir = TracedMemoir(object: self, memoir: VoidMemoir())
+//        let tracedMemoir = TracedMemoir(object: self, memoir: PrintMemoir(time: .disabled))
 
         measure {
             for _ in 0 ..< 1000 {
@@ -136,12 +137,68 @@ class FilteringTests: GenericTestCase {
         }
     }
 
+    func testAppleLoggerMemoirSpeed() async throws {
+        class Counter: @unchecked Sendable {
+            var counter: Int
+
+            init(counter: Int) {
+                self.counter = counter
+            }
+        }
+
+        let numberOfOutputs = 5000
+        let counter = Counter(counter: numberOfOutputs)
+        let memoir = AppleLoggerMemoir(hideSensitiveValues: false, subsystem: "test", interceptor: { _ in counter.counter -= 1 })
+
+        measure {
+            for index in 0 ..< numberOfOutputs {
+                memoir.append(
+                    .log(level: .info), message: "Simple string \(index)", meta: nil,
+                    tracers: [], timeIntervalSinceReferenceDate: Date.timeIntervalSinceReferenceDate,
+                    file: "Some Fime", function: "function", line: 239
+                )
+            }
+        }
+
+        while counter.counter > 0 {
+            try await Task.sleep(for: .seconds(0.1))
+        }
+    }
+
+    func testPrintLoggerMemoirSpeed() async throws {
+        class Counter: @unchecked Sendable {
+            var counter: Int
+
+            init(counter: Int) {
+                self.counter = counter
+            }
+        }
+
+        let numberOfOutputs = 5000
+        let counter = Counter(counter: numberOfOutputs)
+        let memoir = PrintMemoir(useAsyncQueue: true, interceptor: { _ in counter.counter -= 1 })
+
+        measure {
+            for index in 0 ..< numberOfOutputs {
+                memoir.append(
+                    .log(level: .info), message: "Simple string \(index)", meta: nil,
+                    tracers: [], timeIntervalSinceReferenceDate: Date.timeIntervalSinceReferenceDate,
+                    file: "Some Fime", function: "function", line: 239
+                )
+            }
+        }
+
+        while counter.counter > 0 {
+            try await Task.sleep(for: .seconds(0.1))
+        }
+    }
+
     func testTracingMemoirSpeedConcurrent() async throws {
         let tracedMemoir = TracedMemoir(object: self, memoir: VoidMemoir())
 //        let tracedMemoir = TracedMemoir(object: self, memoir: PrintMemoir(time: .disabled))
 
         let threads = 100
-        let instances = 3000
+        let instances = 1000
 
         var counter = threads * instances
         TracedMemoir.asyncTaskQueue.executeAlongsideCallback = {
