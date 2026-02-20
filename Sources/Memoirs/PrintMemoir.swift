@@ -124,7 +124,7 @@ public final class PrintMemoir: Memoir {
                 )
         }
 
-        let toOutput = parts.joined(separator: " ")
+        let toOutput = parts.joined(separator: " ") + "\n"
         if useAsyncQueue {
             Self.asyncTaskQueue.add {
                 StdioOutputStream.stdout.write(toOutput)
