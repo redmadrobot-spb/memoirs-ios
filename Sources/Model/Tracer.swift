@@ -23,7 +23,7 @@ public enum Tracer: Equatable, Hashable, Sendable {
             case .instance(let id): return "instance:\(id)"
             case .session(let userId): return "session:\(userId)"
             case .request(let trace): return "request:\(trace)"
-            case .type(let name, let module): return "\(module).\(name)"
+            case .type(let name, let module): return module.isEmpty ? name : "\(module).\(name)"
             case .label(let label): return label
         }
     }
