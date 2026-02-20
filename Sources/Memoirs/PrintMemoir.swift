@@ -126,9 +126,11 @@ public final class PrintMemoir: Memoir {
 
         let toOutput = parts.joined(separator: " ")
         if useAsyncQueue {
-            Self.asyncTaskQueue.add { print(toOutput) }
+            Self.asyncTaskQueue.add {
+                StdioOutputStream.stdout.write(toOutput)
+            }
         } else {
-            print(toOutput)
+            StdioOutputStream.stdout.write(toOutput)
         }
         if let interceptor {
             Task { [interceptor] in

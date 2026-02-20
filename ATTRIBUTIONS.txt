@@ -1,0 +1,6 @@
+This project uses several pieces of code from other projects. Here are all attributions,
+links to original projects and what exactly was used. Attributed pieces of code are also marked with
+the attribution comment
+// Attribution: #ATTRIBUTION_TAG
+
+1. #swift-log, https://github.com/apple/swift-log. Awesome library. Used StdioOutputStream from there almost directly.
